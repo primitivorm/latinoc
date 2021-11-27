@@ -1,0 +1,22 @@
+[package]
+name = "latino_lexer"
+version = "0.1.0"
+authors = ["PrimitivoRM <cibercafe_montero@hotmail.com>"]
+edition = "2018"
+
+repository = "https://github.com/primitivorm/latinoc/"
+description = """
+Latino lexer used by latinoc. No stability guarantees are provided.
+"""
+
+# Note: do not remove this blank `[lib]` section.
+# This will be used when publishing this crate as `latinoc-ap-latinoc_lexer`.
+[lib]
+doctest = false
+
+# Note that this crate purposefully does not depend on other rustc crates
+[dependencies]
+unicode-xid = "0.2.0"
+
+[dev-dependencies]
+expect-test = "1.0"
