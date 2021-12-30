@@ -44,8 +44,6 @@ pub enum TokenKind {
     /// "ident" or "continue"
     /// At this step keywords are also considered identifiers.
     Ident,
-    /// "r#ident"
-    //RawIdent,
     /// "12_u8", "1.0e-40", "b"123"". See `LiteralKind` for more details.
     Literal {
         kind: LiteralKind,

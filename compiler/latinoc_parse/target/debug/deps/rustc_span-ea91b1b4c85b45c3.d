@@ -1,0 +1,17 @@
+D:\work\lenguaje-latino\latinoc\compiler\latinoc_parse\target\debug\deps\rustc_span-ea91b1b4c85b45c3.rmeta: D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\lib.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\caching_source_map_view.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\source_map.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\edition.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\hygiene.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\def_id.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\lev_distance.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\span_encoding.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\symbol.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\analyze_source_file.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\fatal_error.rs
+
+D:\work\lenguaje-latino\latinoc\compiler\latinoc_parse\target\debug\deps\librustc_span-ea91b1b4c85b45c3.rlib: D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\lib.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\caching_source_map_view.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\source_map.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\edition.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\hygiene.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\def_id.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\lev_distance.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\span_encoding.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\symbol.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\analyze_source_file.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\fatal_error.rs
+
+D:\work\lenguaje-latino\latinoc\compiler\latinoc_parse\target\debug\deps\rustc_span-ea91b1b4c85b45c3.d: D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\lib.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\caching_source_map_view.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\source_map.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\edition.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\hygiene.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\def_id.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\lev_distance.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\span_encoding.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\symbol.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\analyze_source_file.rs D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\fatal_error.rs
+
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\lib.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\caching_source_map_view.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\source_map.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\edition.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\hygiene.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\def_id.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\lev_distance.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\span_encoding.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\symbol.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\analyze_source_file.rs:
+D:\work\lenguaje-latino\latinoc\compiler\rustc_span\src\fatal_error.rs:

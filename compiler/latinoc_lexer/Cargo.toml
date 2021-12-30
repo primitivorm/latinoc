@@ -1,8 +1,8 @@
 [package]
-name = "latino_lexer"
+name = "latinoc_lexer"
 version = "0.1.0"
-authors = ["PrimitivoRM <cibercafe_montero@hotmail.com>"]
-edition = "2018"
+authors = ["Equipo del proyecto latino"]
+edition = "2021"
 
 repository = "https://github.com/primitivorm/latinoc/"
 description = """
@@ -17,6 +17,7 @@ doctest = false
 # Note that this crate purposefully does not depend on other rustc crates
 [dependencies]
 unicode-xid = "0.2.0"
+unic-emoji-char = "0.9.0"
 
 [dev-dependencies]
 expect-test = "1.0"

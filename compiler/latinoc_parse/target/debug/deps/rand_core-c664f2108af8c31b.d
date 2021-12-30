@@ -1,0 +1,12 @@
+D:\work\lenguaje-latino\latinoc\compiler\latinoc_parse\target\debug\deps\rand_core-c664f2108af8c31b.rmeta: C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\lib.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\block.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\error.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\impls.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\le.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\os.rs
+
+D:\work\lenguaje-latino\latinoc\compiler\latinoc_parse\target\debug\deps\librand_core-c664f2108af8c31b.rlib: C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\lib.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\block.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\error.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\impls.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\le.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\os.rs
+
+D:\work\lenguaje-latino\latinoc\compiler\latinoc_parse\target\debug\deps\rand_core-c664f2108af8c31b.d: C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\lib.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\block.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\error.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\impls.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\le.rs C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\os.rs
+
+C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\lib.rs:
+C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\block.rs:
+C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\error.rs:
+C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\impls.rs:
+C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\le.rs:
+C:\Users\ciber\.cargo\registry\src\github.com-1ecc6299db9ec823\rand_core-0.6.3\src\os.rs:
