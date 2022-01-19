@@ -116,7 +116,7 @@ impl IntrinsicCallMethods<'tcx> for Builder<'a, 'll, 'tcx> {
             }
             sym::unlikely => self
                 .call_intrinsic("llvm.expect.i1", &[args[0].immediate(), self.const_bool(false)]),
-            kw::Try => {
+            /*kw::Try => {
                 try_intrinsic(
                     self,
                     args[0].immediate(),
@@ -125,7 +125,7 @@ impl IntrinsicCallMethods<'tcx> for Builder<'a, 'll, 'tcx> {
                     llresult,
                 );
                 return;
-            }
+            }*/
             sym::breakpoint => self.call_intrinsic("llvm.debugtrap", &[]),
             sym::va_copy => {
                 self.call_intrinsic("llvm.va_copy", &[args[0].immediate(), args[1].immediate()])

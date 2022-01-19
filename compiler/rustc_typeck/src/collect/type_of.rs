@@ -46,7 +46,14 @@ pub(super) fn opt_const_param_of(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Option<
             // arm would handle this.
             //
             // I believe this match arm is only needed for GAT but I am not 100% sure - BoxyUwU
-            Node::Ty(hir_ty @ Ty { kind: TyKind::Path(QPath::TypeRelative(_, segment)), .. }) => {
+            Node::Ty(
+                hir_ty
+                @
+                Ty {
+                    kind: TyKind::Path(QPath::TypeRelative(_, segment)),
+                    ..
+                },
+            ) => {
                 // Find the Item containing the associated type so we can create an ItemCtxt.
                 // Using the ItemCtxt convert the HIR for the unresolved assoc type into a
                 // ty which is a fully resolved projection.
@@ -102,7 +109,9 @@ pub(super) fn opt_const_param_of(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Option<
                     ExprKind::MethodCall(segment, ..) | ExprKind::Path(QPath::TypeRelative(_, segment)),
                 ..
             }) => {
-                let body_owner = tcx.hir().local_def_id(tcx.hir().enclosing_body_owner(hir_id));
+                let body_owner = tcx
+                    .hir()
+                    .local_def_id(tcx.hir().enclosing_body_owner(hir_id));
                 let tables = tcx.typeck(body_owner);
                 // This may fail in case the method/path does not actually exist.
                 // As there is no relevant param for `def_id`, we simply return
@@ -128,12 +137,21 @@ pub(super) fn opt_const_param_of(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Option<
                     .map(|param| param.def_id)
             }
 
-            Node::Ty(&Ty { kind: TyKind::Path(_), .. })
-            | Node::Expr(&Expr { kind: ExprKind::Path(_) | ExprKind::Struct(..), .. })
+            Node::Ty(&Ty {
+                kind: TyKind::Path(_),
+                ..
+            })
+            | Node::Expr(&Expr {
+                kind: ExprKind::Path(_) | ExprKind::Struct(..),
+                ..
+            })
             | Node::TraitRef(..)
             | Node::Pat(_) => {
                 let path = match parent_node {
-                    Node::Ty(&Ty { kind: TyKind::Path(QPath::Resolved(_, path)), .. })
+                    Node::Ty(&Ty {
+                        kind: TyKind::Path(QPath::Resolved(_, path)),
+                        ..
+                    })
                     | Node::TraitRef(&TraitRef { path, .. }) => &*path,
                     Node::Expr(&Expr {
                         kind:
@@ -141,8 +159,9 @@ pub(super) fn opt_const_param_of(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Option<
                             | ExprKind::Struct(&QPath::Resolved(_, path), ..),
                         ..
                     }) => {
-                        let body_owner =
-                            tcx.hir().local_def_id(tcx.hir().enclosing_body_owner(hir_id));
+                        let body_owner = tcx
+                            .hir()
+                            .local_def_id(tcx.hir().enclosing_body_owner(hir_id));
                         let _tables = tcx.typeck(body_owner);
                         &*path
                     }
@@ -192,7 +211,9 @@ pub(super) fn opt_const_param_of(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Option<
                 use def::CtorOf;
                 let generics = match res {
                     Res::Def(DefKind::Ctor(CtorOf::Variant, _), def_id) => tcx.generics_of(
-                        tcx.parent(def_id).and_then(|def_id| tcx.parent(def_id)).unwrap(),
+                        tcx.parent(def_id)
+                            .and_then(|def_id| tcx.parent(def_id))
+                            .unwrap(),
                     ),
                     Res::Def(DefKind::Variant | DefKind::Ctor(CtorOf::Struct, _), def_id) => {
                         tcx.generics_of(tcx.parent(def_id).unwrap())
@@ -216,7 +237,8 @@ pub(super) fn opt_const_param_of(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Option<
                         def_id,
                     ) => tcx.generics_of(def_id),
                     Res::Err => {
-                        tcx.sess.delay_span_bug(tcx.def_span(def_id), "anon const with Res::Err");
+                        tcx.sess
+                            .delay_span_bug(tcx.def_span(def_id), "anon const with Res::Err");
                         return None;
                     }
                     _ => {
@@ -487,9 +509,9 @@ pub(super) fn type_of(tcx: TyCtxt<'_>, def_id: DefId) -> Ty<'_> {
                 {
                     tcx.types.usize
                 }
-                Node::Ty(&Ty { kind: TyKind::Typeof(ref e), .. }) if e.hir_id == hir_id => {
+                /*Node::Ty(&Ty { kind: TyKind::Typeof(ref e), .. }) if e.hir_id == hir_id => {
                     tcx.typeck(def_id).node_type(e.hir_id)
-                }
+                }*/
 
                 Node::Expr(&Expr { kind: ExprKind::ConstBlock(ref anon_const), .. })
                     if anon_const.hir_id == hir_id =>
@@ -586,7 +608,12 @@ fn find_opaque_ty_constraints(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Ty<'_> {
             }
             // Calling `mir_borrowck` can lead to cycle errors through
             // const-checking, avoid calling it if we don't have to.
-            if !self.tcx.typeck(def_id).concrete_opaque_types.contains(&self.def_id) {
+            if !self
+                .tcx
+                .typeck(def_id)
+                .concrete_opaque_types
+                .contains(&self.def_id)
+            {
                 debug!("no constraints in typeck results");
                 return;
             }
@@ -664,14 +691,21 @@ fn find_opaque_ty_constraints(tcx: TyCtxt<'_>, def_id: LocalDefId) -> Ty<'_> {
 
     let hir_id = tcx.hir().local_def_id_to_hir_id(def_id);
     let scope = tcx.hir().get_defining_scope(hir_id);
-    let mut locator = ConstraintLocator { def_id: def_id.to_def_id(), tcx, found: None };
+    let mut locator = ConstraintLocator {
+        def_id: def_id.to_def_id(),
+        tcx,
+        found: None,
+    };
 
     debug!("find_opaque_ty_constraints: scope={:?}", scope);
 
     if scope == hir::CRATE_HIR_ID {
         tcx.hir().walk_toplevel_module(&mut locator);
     } else {
-        debug!("find_opaque_ty_constraints: scope={:?}", tcx.hir().get(scope));
+        debug!(
+            "find_opaque_ty_constraints: scope={:?}",
+            tcx.hir().get(scope)
+        );
         match tcx.hir().get(scope) {
             // We explicitly call `visit_*` methods, instead of using `intravisit::walk_*` methods
             // This allows our visitor to process the defining item itself, causing
@@ -752,7 +786,11 @@ fn infer_placeholder_type<'a>(
     // then the user may have written e.g. `const A = 42;`.
     // In this case, the parser has stashed a diagnostic for
     // us to improve in typeck so we do that now.
-    match tcx.sess.diagnostic().steal_diagnostic(span, StashKey::ItemNoType) {
+    match tcx
+        .sess
+        .diagnostic()
+        .steal_diagnostic(span, StashKey::ItemNoType)
+    {
         Some(mut err) => {
             if !ty.references_error() {
                 // The parser provided a sub-optimal `HasPlaceholders` suggestion for the type.
