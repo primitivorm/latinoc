@@ -25,17 +25,25 @@ use std::str;
 macro_rules! insert {
     ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr) => {
         if $sub_hashes
-            .insert(stringify!($opt_name), $opt_expr as &dyn dep_tracking::DepTrackingHash)
+            .insert(
+                stringify!($opt_name),
+                $opt_expr as &dyn dep_tracking::DepTrackingHash,
+            )
             .is_some()
         {
-            panic!("duplicate key in CLI DepTrackingHash: {}", stringify!($opt_name))
+            panic!(
+                "duplicate key in CLI DepTrackingHash: {}",
+                stringify!($opt_name)
+            )
         }
     };
 }
 
 macro_rules! hash_opt {
     ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr, $_for_crate_hash: ident, [UNTRACKED]) => {{}};
-    ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr, $_for_crate_hash: ident, [TRACKED]) => {{ insert!($opt_name, $opt_expr, $sub_hashes) }};
+    ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr, $_for_crate_hash: ident, [TRACKED]) => {{
+        insert!($opt_name, $opt_expr, $sub_hashes)
+    }};
     ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr, $for_crate_hash: ident, [TRACKED_NO_CRATE_HASH]) => {{
         if !$for_crate_hash {
             insert!($opt_name, $opt_expr, $sub_hashes)
@@ -50,11 +58,9 @@ macro_rules! hash_substruct {
     ($opt_name:ident, $opt_expr:expr, $error_format:expr, $for_crate_hash:expr, $hasher:expr, [TRACKED_NO_CRATE_HASH]) => {{}};
     ($opt_name:ident, $opt_expr:expr, $error_format:expr, $for_crate_hash:expr, $hasher:expr, [SUBSTRUCT]) => {
         use crate::config::dep_tracking::DepTrackingHash;
-        $opt_expr.dep_tracking_hash($for_crate_hash, $error_format).hash(
-            $hasher,
-            $error_format,
-            $for_crate_hash,
-        );
+        $opt_expr
+            .dep_tracking_hash($for_crate_hash, $error_format)
+            .hash($hasher, $error_format, $for_crate_hash);
     };
 }
 
@@ -331,7 +337,10 @@ fn build_options<O: Default>(
                     }
                 }
             }
-            None => early_error(error_format, &format!("unknown {} option: `{}`", outputname, key)),
+            None => early_error(
+                error_format,
+                &format!("unknown {} option: `{}`", outputname, key),
+            ),
         }
     }
     return op;
@@ -656,7 +665,11 @@ mod parse {
         if v.is_some() {
             let mut bool_arg = None;
             if parse_opt_bool(&mut bool_arg, v) {
-                *slot = if bool_arg.unwrap() { CFGuard::Checks } else { CFGuard::Disabled };
+                *slot = if bool_arg.unwrap() {
+                    CFGuard::Checks
+                } else {
+                    CFGuard::Disabled
+                };
                 return true;
             }
         }
@@ -712,7 +725,11 @@ mod parse {
         if v.is_some() {
             let mut bool_arg = None;
             if parse_opt_bool(&mut bool_arg, v) {
-                *slot = if bool_arg.unwrap() { Some(MirSpanview::Statement) } else { None };
+                *slot = if bool_arg.unwrap() {
+                    Some(MirSpanview::Statement)
+                } else {
+                    None
+                };
                 return true;
             }
         }
@@ -741,7 +758,11 @@ mod parse {
         if v.is_some() {
             let mut bool_arg = None;
             if parse_opt_bool(&mut bool_arg, v) {
-                *slot = if bool_arg.unwrap() { Some(InstrumentCoverage::All) } else { None };
+                *slot = if bool_arg.unwrap() {
+                    Some(InstrumentCoverage::All)
+                } else {
+                    None
+                };
                 return true;
             }
         }
@@ -785,7 +806,11 @@ mod parse {
         if v.is_some() {
             let mut bool_arg = None;
             if parse_opt_bool(&mut bool_arg, v) {
-                *slot = if bool_arg.unwrap() { LtoCli::Yes } else { LtoCli::No };
+                *slot = if bool_arg.unwrap() {
+                    LtoCli::Yes
+                } else {
+                    LtoCli::No
+                };
                 return true;
             }
         }
@@ -937,7 +962,7 @@ options! {
     // This list is in alphabetical order.
     //
     // If you add a new option, please update:
-    // - compiler/rustc_interface/src/tests.rs
+    // - compiler/latinoc_interface/src/tests.rs
     // - src/doc/rustc/src/codegen-options/index.md
 
     ar: String = (String::new(), parse_string, [UNTRACKED],
@@ -1038,7 +1063,7 @@ options! {
     // This list is in alphabetical order.
     //
     // If you add a new option, please update:
-    // - compiler/rustc_interface/src/tests.rs
+    // - compiler/latinoc_interface/src/tests.rs
     // - src/doc/rustc/src/codegen-options/index.md
 }
 
@@ -1048,7 +1073,7 @@ options! {
     // This list is in alphabetical order.
     //
     // If you add a new option, please update:
-    // - compiler/rustc_interface/src/tests.rs
+    // - compiler/latinoc_interface/src/tests.rs
 
     allow_features: Option<Vec<String>> = (None, parse_opt_comma_list, [TRACKED],
         "only allow the listed language features to be enabled in code (space separated)"),
@@ -1418,7 +1443,7 @@ options! {
     // This list is in alphabetical order.
     //
     // If you add a new option, please update:
-    // - compiler/rustc_interface/src/tests.rs
+    // - compiler/latinoc_interface/src/tests.rs
 }
 
 #[derive(Clone, Hash, PartialEq, Eq, Debug)]

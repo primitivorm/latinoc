@@ -1,6 +1,7 @@
 pub use crate::passes::BoxedResolver;
 use crate::util;
 
+use latinoc_parse::new_parser_from_source_str;
 use rustc_ast::token;
 use rustc_ast::{self as ast, MetaItemKind};
 use rustc_codegen_ssa::traits::CodegenBackend;
@@ -11,7 +12,6 @@ use rustc_errors::registry::Registry;
 use rustc_errors::{ErrorReported, Handler};
 use rustc_lint::LintStore;
 use rustc_middle::ty;
-use latinoc_parse::new_parser_from_source_str;
 use rustc_query_impl::QueryCtxt;
 use rustc_session::config::{self, ErrorOutputType, Input, OutputFilenames};
 use rustc_session::early_error;
@@ -27,7 +27,7 @@ pub type Result<T> = result::Result<T, ErrorReported>;
 
 /// Represents a compiler session.
 ///
-/// Can be used to run `rustc_interface` queries.
+/// Can be used to run `latinoc_interface` queries.
 /// Created by passing [`Config`] to [`run_compiler`].
 pub struct Compiler {
     pub(crate) sess: Lrc<Session>,
@@ -127,7 +127,9 @@ pub fn parse_cfgspecs(cfgspecs: Vec<String>) -> FxHashSet<(String, Option<String
                 error!(r#"expected `key` or `key="value"`"#);
             })
             .collect::<CrateConfig>();
-        cfg.into_iter().map(|(a, b)| (a.to_string(), b.map(|b| b.to_string()))).collect()
+        cfg.into_iter()
+            .map(|(a, b)| (a.to_string(), b.map(|b| b.to_string())))
+            .collect()
     })
 }
 
@@ -197,7 +199,12 @@ pub fn create_compiler_and_run<R>(config: Config, f: impl FnOnce(&Compiler) -> R
         );
     }
 
-    let temps_dir = sess.opts.debugging_opts.temps_dir.as_ref().map(|o| PathBuf::from(&o));
+    let temps_dir = sess
+        .opts
+        .debugging_opts
+        .temps_dir
+        .as_ref()
+        .map(|o| PathBuf::from(&o));
 
     let compiler = Compiler {
         sess,
@@ -221,7 +228,8 @@ pub fn create_compiler_and_run<R>(config: Config, f: impl FnOnce(&Compiler) -> R
         };
 
         let prof = compiler.sess.prof.clone();
-        prof.generic_activity("drop_compiler").run(move || drop(compiler));
+        prof.generic_activity("drop_compiler")
+            .run(move || drop(compiler));
         r
     })
 }
