@@ -925,7 +925,7 @@ fn default_configuration(sess: &Session) -> CrateConfig {
 }
 
 /// Converts the crate `cfg!` configuration from `String` to `Symbol`.
-/// `rustc_interface::interface::Config` accepts this in the compiler configuration,
+/// `latinoc_interface::interface::Config` accepts this in the compiler configuration,
 /// but the symbol interner is not yet set up then, so we must convert it later.
 pub fn to_crate_config(cfg: FxHashSet<(String, Option<String>)>) -> CrateConfig {
     cfg.into_iter().map(|(a, b)| (Symbol::intern(&a), b.map(|b| Symbol::intern(&b)))).collect()

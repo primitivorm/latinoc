@@ -1022,7 +1022,7 @@ impl<D: Decoder> Decodable<D> for Span {
 /// any spans that are debug-printed during the closure's execution.
 ///
 /// Normally, the global `TyCtxt` is used to retrieve the `SourceMap`
-/// (see `rustc_interface::callbacks::span_debug1`). However, some parts
+/// (see `latinoc_interface::callbacks::span_debug1`). However, some parts
 /// of the compiler (e.g. `latinoc_parse`) may debug-print `Span`s before
 /// a `TyCtxt` is available. In this case, we fall back to
 /// the `SourceMap` provided to this function. If that is not available,

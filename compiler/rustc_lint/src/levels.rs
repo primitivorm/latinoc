@@ -139,7 +139,7 @@ impl<'s> LintLevelsBuilder<'s> {
                 // warning for this case.
                 let id_name = id.lint.name_lower();
                 let fcw_warning = match old_src {
-                    /*LintLevelSource::Default => false,*/
+                    //LintLevelSource::Default => false,
                     LintLevelSource::Node(symbol, _, _) => self.store.is_lint_group(symbol),
                     LintLevelSource::CommandLine(symbol, _) => self.store.is_lint_group(symbol),
                 };
