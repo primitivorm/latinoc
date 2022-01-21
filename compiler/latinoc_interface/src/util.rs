@@ -1,3 +1,4 @@
+use latinoc_parse::validate_attr;
 use rustc_ast::mut_visit::{visit_clobber, MutVisitor, *};
 use rustc_ast::ptr::P;
 use rustc_ast::{self as ast, AttrVec, BlockCheckMode};
@@ -10,7 +11,6 @@ use rustc_errors::registry::Registry;
 use rustc_metadata::dynamic_lib::DynamicLibrary;
 #[cfg(parallel_compiler)]
 use rustc_middle::ty::tls;
-use latinoc_parse::validate_attr;
 #[cfg(parallel_compiler)]
 use rustc_query_impl::QueryCtxt;
 use rustc_resolve::{self, Resolver};
@@ -78,7 +78,11 @@ pub fn create_session(
     } else {
         get_codegen_backend(
             &sopts.maybe_sysroot,
-            sopts.debugging_opts.codegen_backend.as_ref().map(|name| &name[..]),
+            sopts
+                .debugging_opts
+                .codegen_backend
+                .as_ref()
+                .map(|name| &name[..]),
         )
     };
 
@@ -109,7 +113,9 @@ const STACK_SIZE: usize = 8 * 1024 * 1024;
 fn get_stack_size() -> Option<usize> {
     // FIXME: Hacks on hacks. If the env is trying to override the stack size
     // then *don't* set it explicitly.
-    env::var_os("RUST_MIN_STACK").is_none().then_some(STACK_SIZE)
+    env::var_os("RUST_MIN_STACK")
+        .is_none()
+        .then_some(STACK_SIZE)
 }
 
 /// Like a `thread::Builder::spawn` followed by a `join()`, but avoids the need
@@ -260,7 +266,7 @@ pub fn get_codegen_backend(
     });
 
     // SAFETY: In case of a builtin codegen backend this is safe. In case of an external codegen
-    // backend we hope that the backend links against the same rustc_driver version. If this is not
+    // backend we hope that the backend links against the same latinoc_driver version. If this is not
     // the case, we get UB.
     unsafe { load() }
 }
@@ -273,7 +279,10 @@ pub fn rustc_path<'a>() -> Option<&'a Path> {
 
     const BIN_PATH: &str = env!("RUSTC_INSTALL_BINDIR");
 
-    RUSTC_PATH.get_or_init(|| get_rustc_path_inner(BIN_PATH)).as_ref().map(|v| &**v)
+    RUSTC_PATH
+        .get_or_init(|| get_rustc_path_inner(BIN_PATH))
+        .as_ref()
+        .map(|v| &**v)
 }
 
 fn get_rustc_path_inner(bin_path: &str) -> Option<PathBuf> {
@@ -295,7 +304,7 @@ fn sysroot_candidates() -> Vec<PathBuf> {
         // use `parent` twice to chop off the file name and then also the
         // directory containing the dll which should be either `lib` or `bin`.
         if let Some(path) = dll.parent().and_then(|p| p.parent()) {
-            // The original `path` pointed at the `rustc_driver` crate's dll.
+            // The original `path` pointed at the `latinoc_driver` crate's dll.
             // Now that dll should only be in one of two locations. The first is
             // in the compiler's libdir, for example `$sysroot/lib/*.dll`. The
             // other is the target's libdir, for example
@@ -436,7 +445,11 @@ pub fn get_codegen_sysroot(
     let mut file: Option<PathBuf> = None;
 
     let expected_names = &[
-        format!("rustc_codegen_{}-{}", backend_name, release_str().expect("CFG_RELEASE")),
+        format!(
+            "rustc_codegen_{}-{}",
+            backend_name,
+            release_str().expect("CFG_RELEASE")
+        ),
         format!("rustc_codegen_{}", backend_name),
     ];
     for entry in d.filter_map(|e| e.ok()) {
@@ -634,8 +647,12 @@ pub fn build_output_filenames(
         }
 
         Some(ref out_file) => {
-            let unnamed_output_types =
-                sess.opts.output_types.values().filter(|a| a.is_none()).count();
+            let unnamed_output_types = sess
+                .opts
+                .output_types
+                .values()
+                .filter(|a| a.is_none())
+                .count();
             let ofile = if unnamed_output_types > 1 {
                 sess.warn(
                     "due to multiple output types requested, the explicitly specified \
@@ -653,8 +670,16 @@ pub fn build_output_filenames(
             }
 
             OutputFilenames::new(
-                out_file.parent().unwrap_or_else(|| Path::new("")).to_path_buf(),
-                out_file.file_stem().unwrap_or_default().to_str().unwrap().to_string(),
+                out_file
+                    .parent()
+                    .unwrap_or_else(|| Path::new(""))
+                    .to_path_buf(),
+                out_file
+                    .file_stem()
+                    .unwrap_or_default()
+                    .to_str()
+                    .unwrap()
+                    .to_string(),
                 ofile,
                 temps_dir.clone(),
                 sess.opts.cg.extra_filename.clone(),
@@ -708,7 +733,11 @@ pub struct ReplaceBodyWithLoop<'a, 'b> {
 
 impl<'a, 'b> ReplaceBodyWithLoop<'a, 'b> {
     pub fn new(resolver: &'a mut Resolver<'b>) -> ReplaceBodyWithLoop<'a, 'b> {
-        ReplaceBodyWithLoop { within_static_or_const: false, nested_blocks: None, resolver }
+        ReplaceBodyWithLoop {
+            within_static_or_const: false,
+            nested_blocks: None,
+            resolver,
+        }
     }
 
     fn run<R, F: FnOnce(&mut Self) -> R>(&mut self, is_const: bool, action: F) -> R {
@@ -862,7 +891,11 @@ impl<'a> MutVisitor for ReplaceBodyWithLoop<'a, '_> {
                     // we put a Some in there earlier with that replace(), so this is valid
                     let new_blocks = self.nested_blocks.take().unwrap();
                     self.nested_blocks = old_blocks;
-                    stmts.extend(new_blocks.into_iter().map(|b| block_to_stmt(b, self.resolver)));
+                    stmts.extend(
+                        new_blocks
+                            .into_iter()
+                            .map(|b| block_to_stmt(b, self.resolver)),
+                    );
                 }
 
                 let mut new_block = ast::Block { stmts, ..b };
