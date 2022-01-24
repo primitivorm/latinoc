@@ -1080,7 +1080,7 @@ class RustBuild(object):
         filtered_submodules = []
         submodules_names = []
         for module in submodules:
-            check = self.check_submodule(module, slow_submodules)
+            check = None #self.check_submodule(module, slow_submodules)
             filtered_submodules.append((module, check))
             submodules_names.append(module)
         recorded = subprocess.Popen(["git", "ls-tree", "HEAD"] + submodules_names,
