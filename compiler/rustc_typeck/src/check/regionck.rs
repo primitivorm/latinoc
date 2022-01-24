@@ -175,7 +175,8 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
         debug!("regionck_item(item.id={:?}, wf_tys={:?})", item_id, wf_tys);
         let subject = self.tcx.hir().local_def_id(item_id);
         let mut rcx = RegionCtxt::new(self, item_id, Subject(subject), self.param_env);
-        rcx.outlives_environment.add_implied_bounds(self, wf_tys, item_id, span);
+        rcx.outlives_environment
+            .add_implied_bounds(self, wf_tys, item_id, span);
         rcx.outlives_environment.save_implied_bounds(item_id);
         rcx.visit_region_obligations(item_id);
         rcx.resolve_regions_and_report_errors(RegionckMode::default());
@@ -201,7 +202,8 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
         let hir_id = body.value.hir_id;
         let mut rcx = RegionCtxt::new(self, hir_id, Subject(subject), self.param_env);
         // We need to add the implied bounds from the function signature
-        rcx.outlives_environment.add_implied_bounds(self, wf_tys, fn_id, span);
+        rcx.outlives_environment
+            .add_implied_bounds(self, wf_tys, fn_id, span);
         rcx.outlives_environment.save_implied_bounds(fn_id);
 
         if !self.errors_reported_since_creation() {
@@ -331,11 +333,17 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
         // because it will have no effect.
         //
         // FIXME(#27579) return types should not be implied bounds
-        let fn_sig_tys: FxHashSet<_> =
-            fn_sig.inputs().iter().cloned().chain(Some(fn_sig.output())).collect();
+        let fn_sig_tys: FxHashSet<_> = fn_sig
+            .inputs()
+            .iter()
+            .cloned()
+            .chain(Some(fn_sig.output()))
+            .collect();
 
-        self.outlives_environment.add_implied_bounds(self.fcx, fn_sig_tys, body_id.hir_id, span);
-        self.outlives_environment.save_implied_bounds(body_id.hir_id);
+        self.outlives_environment
+            .add_implied_bounds(self.fcx, fn_sig_tys, body_id.hir_id, span);
+        self.outlives_environment
+            .save_implied_bounds(body_id.hir_id);
         self.link_fn_params(body.params);
         self.visit_body(body);
         self.visit_region_obligations(body_id.hir_id);
@@ -353,13 +361,15 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
         self.body_id = body_id.hir_id;
         self.body_owner = self.tcx.hir().body_owner_def_id(body_id);
 
-        self.outlives_environment.save_implied_bounds(body_id.hir_id);
+        self.outlives_environment
+            .save_implied_bounds(body_id.hir_id);
 
         self.visit_body(body);
         self.visit_region_obligations(body_id.hir_id);
 
         // Restore state from previous function.
-        self.outlives_environment.pop_snapshot_post_typeck_child(env_snapshot);
+        self.outlives_environment
+            .pop_snapshot_post_typeck_child(env_snapshot);
         self.body_id = old_body_id;
         self.body_owner = old_body_owner;
     }
@@ -435,7 +445,8 @@ impl<'a, 'tcx> Visitor<'tcx> for RegionCtxt<'a, 'tcx> {
         self.visit_fn_body(hir_id, body, span);
 
         // Restore state from previous function.
-        self.outlives_environment.pop_snapshot_post_typeck_child(env_snapshot);
+        self.outlives_environment
+            .pop_snapshot_post_typeck_child(env_snapshot);
         self.body_id = old_body_id;
         self.body_owner = old_body_owner;
     }
@@ -530,7 +541,10 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
         self.check_safety_of_rvalue_destructor_if_necessary(&place, expr.span);
 
         for adjustment in adjustments {
-            debug!("constrain_adjustments: adjustment={:?}, place={:?}", adjustment, place);
+            debug!(
+                "constrain_adjustments: adjustment={:?}, place={:?}",
+                adjustment, place
+            );
 
             if let adjustment::Adjust::Deref(Some(deref)) = adjustment.kind {
                 self.link_region(
@@ -580,7 +594,11 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
     ) {
         self.infcx.register_region_obligation(
             self.body_id,
-            RegionObligation { sub_region: region, sup_type: ty, origin },
+            RegionObligation {
+                sub_region: region,
+                sup_type: ty,
+                origin,
+            },
         );
     }
 
@@ -636,7 +654,10 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
             let param_ty = self.node_ty(param.hir_id);
             let param_cmt =
                 self.with_mc(|mc| mc.cat_rvalue(param.hir_id, param.pat.span, param_ty));
-            debug!("param_ty={:?} param_cmt={:?} param={:?}", param_ty, param_cmt, param);
+            debug!(
+                "param_ty={:?} param_cmt={:?} param={:?}",
+                param_ty, param_cmt, param
+            );
             self.link_pattern(param_cmt, param.pat);
         }
     }
@@ -644,18 +665,29 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
     /// Link lifetimes of any ref bindings in `root_pat` to the pointers found
     /// in the discriminant, if needed.
     fn link_pattern(&self, discr_cmt: PlaceWithHirId<'tcx>, root_pat: &hir::Pat<'_>) {
-        debug!("link_pattern(discr_cmt={:?}, root_pat={:?})", discr_cmt, root_pat);
+        debug!(
+            "link_pattern(discr_cmt={:?}, root_pat={:?})",
+            discr_cmt, root_pat
+        );
         ignore_err!(self.with_mc(|mc| {
-            mc.cat_pattern(discr_cmt, root_pat, |sub_cmt, hir::Pat { kind, span, hir_id, .. }| {
-                // `ref x` pattern
-                if let PatKind::Binding(..) = kind {
-                    if let Some(ty::BindByReference(mutbl)) =
-                        mc.typeck_results.extract_binding_mode(self.tcx.sess, *hir_id, *span)
-                    {
-                        self.link_region_from_node_type(*span, *hir_id, mutbl, sub_cmt);
+            mc.cat_pattern(
+                discr_cmt,
+                root_pat,
+                |sub_cmt,
+                 hir::Pat {
+                     kind, span, hir_id, ..
+                 }| {
+                    // `ref x` pattern
+                    if let PatKind::Binding(..) = kind {
+                        if let Some(ty::BindByReference(mutbl)) = mc
+                            .typeck_results
+                            .extract_binding_mode(self.tcx.sess, *hir_id, *span)
+                        {
+                            self.link_region_from_node_type(*span, *hir_id, mutbl, sub_cmt);
+                        }
                     }
-                }
-            })
+                },
+            )
         }));
     }
 
@@ -667,7 +699,10 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
         expr_cmt: &PlaceWithHirId<'tcx>,
         autoref: &adjustment::AutoBorrow<'tcx>,
     ) {
-        debug!("link_autoref(autoref={:?}, expr_cmt={:?})", autoref, expr_cmt);
+        debug!(
+            "link_autoref(autoref={:?}, expr_cmt={:?})",
+            autoref, expr_cmt
+        );
 
         match *autoref {
             adjustment::AutoBorrow::Ref(r, m) => {
@@ -726,7 +761,11 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
                         return;
                     }
                 }
-                _ => assert!(pointer_ty.is_box(), "unexpected built-in deref type {}", pointer_ty),
+                _ => assert!(
+                    pointer_ty.is_box(),
+                    "unexpected built-in deref type {}",
+                    pointer_ty
+                ),
             }
         }
         if let PlaceBase::Upvar(upvar_id) = borrow_place.place.base {
@@ -774,7 +813,10 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
         ref_region: ty::Region<'tcx>,
         ref_mutability: hir::Mutability,
     ) -> bool {
-        debug!("link_reborrowed_region: {:?} <= {:?}", borrow_region, ref_region);
+        debug!(
+            "link_reborrowed_region: {:?} <= {:?}",
+            borrow_region, ref_region
+        );
         self.sub_regions(infer::Reborrow(span), borrow_region, ref_region);
 
         // Decide whether we need to recurse and link any regions within
@@ -840,7 +882,10 @@ impl<'a, 'tcx> RegionCtxt<'a, 'tcx> {
         borrow_region: ty::Region<'tcx>,
         upvar_id: ty::UpvarId,
     ) {
-        debug!("link_upvar_region(borrorw_region={:?}, upvar_id={:?}", borrow_region, upvar_id);
+        debug!(
+            "link_upvar_region(borrorw_region={:?}, upvar_id={:?}",
+            borrow_region, upvar_id
+        );
         // A by-reference upvar can't be borrowed for longer than the
         // upvar is borrowed from the environment.
         let closure_local_def_id = upvar_id.closure_expr_id;

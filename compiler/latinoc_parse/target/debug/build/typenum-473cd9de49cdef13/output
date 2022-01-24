@@ -1,2 +1,0 @@
-cargo:rustc-env=TYPENUM_BUILD_CONSTS=D:\work\lenguaje-latino\latinoc\compiler\latinoc_parse\target\debug\build\typenum-473cd9de49cdef13\out\consts.rs
-cargo:rustc-env=TYPENUM_BUILD_OP=D:\work\lenguaje-latino\latinoc\compiler\latinoc_parse\target\debug\build\typenum-473cd9de49cdef13\out\op.rs
