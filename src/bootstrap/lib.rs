@@ -482,6 +482,7 @@ impl Build {
     /// `relative_path` should be relative to the root of the git repository, not an absolute path.
     pub(crate) fn update_submodule(&self, relative_path: &Path) {
         fn dir_is_empty(dir: &Path) -> bool {
+            print!("{:?}", dir);
             t!(std::fs::read_dir(dir)).next().is_none()
         }
 
