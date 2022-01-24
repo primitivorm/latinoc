@@ -1,4 +1,4 @@
-[submodule "src/rust-installer"]
+[submodule "src/tools/rust-installer"]
 	path = src/tools/rust-installer
 	url = https://github.com/rust-lang/rust-installer.git
 [submodule "src/doc/nomicon"]
