@@ -18,7 +18,7 @@ use rustc_ast::{Block, BlockCheckMode, Expr, ExprKind, Local, Stmt};
 use rustc_ast::{StmtKind, DUMMY_NODE_ID};
 use rustc_errors::{Applicability, DiagnosticBuilder, PResult};
 use rustc_span::source_map::{BytePos, Span};
-use rustc_span::symbol::{kw, sym};
+use rustc_span::symbol::{kw/*, sym*/};
 
 use std::mem;
 
@@ -206,6 +206,7 @@ impl<'a> Parser<'a> {
         }
     }
 
+    /*
     fn recover_stmt_local(
         &mut self,
         lo: Span,
@@ -219,6 +220,7 @@ impl<'a> Parser<'a> {
             .emit();
         Ok(stmt)
     }
+    */
 
     fn parse_local_mk(
         &mut self,
@@ -242,6 +244,7 @@ impl<'a> Parser<'a> {
         })
     }
 
+    /*
     fn recover_local_after_let(&mut self, lo: Span, attrs: AttrWrapper) -> PResult<'a, Stmt> {
         self.collect_tokens_trailing_token(attrs, ForceCollect::No, |this, attrs| {
             let local = this.parse_local(attrs.into())?;
@@ -252,6 +255,7 @@ impl<'a> Parser<'a> {
             ))
         })
     }
+    */
 
     /// Parses a local variable declaration.
     fn parse_local(&mut self, attrs: AttrVec) -> PResult<'a, P<Local>> {

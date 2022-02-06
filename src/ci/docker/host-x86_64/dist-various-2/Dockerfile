@@ -8,7 +8,7 @@ RUN sed -i 's/^# deb-src/deb-src/' /etc/apt/sources.list
 
 RUN apt-get update && apt-get build-dep -y clang llvm && apt-get install -y --no-install-recommends \
   build-essential \
-# gcc-multilib can not be installed together with gcc-arm-linux-gnueabi
+  # gcc-multilib can not be installed together with gcc-arm-linux-gnueabi
   g++-8-multilib \
   libedit-dev \
   libgmp-dev \
@@ -30,41 +30,41 @@ RUN apt-key adv --batch --yes --keyserver keyserver.ubuntu.com --recv-keys 74DA7
 RUN add-apt-repository -y 'deb https://apt.dilos.org/dilos dilos2 main'
 
 ENV \
-    AR_x86_64_fuchsia=x86_64-fuchsia-ar \
-    CC_x86_64_fuchsia=x86_64-fuchsia-clang \
-    CXX_x86_64_fuchsia=x86_64-fuchsia-clang++ \
-    AR_aarch64_fuchsia=aarch64-fuchsia-ar \
-    CC_aarch64_fuchsia=aarch64-fuchsia-clang \
-    CXX_aarch64_fuchsia=aarch64-fuchsia-clang++ \
-    AR_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-ar \
-    CC_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-gcc \
-    CXX_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-g++ \
-    AR_x86_64_pc_solaris=x86_64-pc-solaris2.10-ar \
-    CC_x86_64_pc_solaris=x86_64-pc-solaris2.10-gcc \
-    CXX_x86_64_pc_solaris=x86_64-pc-solaris2.10-g++ \
-    AR_x86_64_sun_solaris=x86_64-sun-solaris2.10-ar \
-    CC_x86_64_sun_solaris=x86_64-sun-solaris2.10-gcc \
-    CXX_x86_64_sun_solaris=x86_64-sun-solaris2.10-g++ \
-    CC_armv7_unknown_linux_gnueabi=arm-linux-gnueabi-gcc-8 \
-    CXX_armv7_unknown_linux_gnueabi=arm-linux-gnueabi-g++-8 \
-    AR_x86_64_fortanix_unknown_sgx=ar \
-    CC_x86_64_fortanix_unknown_sgx=clang-11 \
-    CFLAGS_x86_64_fortanix_unknown_sgx="-D__ELF__ -isystem/usr/include/x86_64-linux-gnu -mlvi-hardening -mllvm -x86-experimental-lvi-inline-asm-hardening" \
-    CXX_x86_64_fortanix_unknown_sgx=clang++-11 \
-    CXXFLAGS_x86_64_fortanix_unknown_sgx="-D__ELF__ -isystem/usr/include/x86_64-linux-gnu -mlvi-hardening -mllvm -x86-experimental-lvi-inline-asm-hardening" \
-    AR_i686_unknown_freebsd=i686-unknown-freebsd11-ar \
-    CC_i686_unknown_freebsd=i686-unknown-freebsd11-clang \
-    CXX_i686_unknown_freebsd=i686-unknown-freebsd11-clang++ \
-    CC=gcc-8 \
-    CXX=g++-8
+  AR_x86_64_fuchsia=x86_64-fuchsia-ar \
+  CC_x86_64_fuchsia=x86_64-fuchsia-clang \
+  CXX_x86_64_fuchsia=x86_64-fuchsia-clang++ \
+  AR_aarch64_fuchsia=aarch64-fuchsia-ar \
+  CC_aarch64_fuchsia=aarch64-fuchsia-clang \
+  CXX_aarch64_fuchsia=aarch64-fuchsia-clang++ \
+  AR_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-ar \
+  CC_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-gcc \
+  CXX_sparcv9_sun_solaris=sparcv9-sun-solaris2.10-g++ \
+  AR_x86_64_pc_solaris=x86_64-pc-solaris2.10-ar \
+  CC_x86_64_pc_solaris=x86_64-pc-solaris2.10-gcc \
+  CXX_x86_64_pc_solaris=x86_64-pc-solaris2.10-g++ \
+  AR_x86_64_sun_solaris=x86_64-sun-solaris2.10-ar \
+  CC_x86_64_sun_solaris=x86_64-sun-solaris2.10-gcc \
+  CXX_x86_64_sun_solaris=x86_64-sun-solaris2.10-g++ \
+  CC_armv7_unknown_linux_gnueabi=arm-linux-gnueabi-gcc-8 \
+  CXX_armv7_unknown_linux_gnueabi=arm-linux-gnueabi-g++-8 \
+  AR_x86_64_fortanix_unknown_sgx=ar \
+  CC_x86_64_fortanix_unknown_sgx=clang-11 \
+  CFLAGS_x86_64_fortanix_unknown_sgx="-D__ELF__ -isystem/usr/include/x86_64-linux-gnu -mlvi-hardening -mllvm -x86-experimental-lvi-inline-asm-hardening" \
+  CXX_x86_64_fortanix_unknown_sgx=clang++-11 \
+  CXXFLAGS_x86_64_fortanix_unknown_sgx="-D__ELF__ -isystem/usr/include/x86_64-linux-gnu -mlvi-hardening -mllvm -x86-experimental-lvi-inline-asm-hardening" \
+  AR_i686_unknown_freebsd=i686-unknown-freebsd11-ar \
+  CC_i686_unknown_freebsd=i686-unknown-freebsd11-clang \
+  CXX_i686_unknown_freebsd=i686-unknown-freebsd11-clang++ \
+  CC=gcc-8 \
+  CXX=g++-8
 
 WORKDIR /build
 COPY scripts/musl.sh /build
 RUN env \
-    CC=arm-linux-gnueabi-gcc-8 CFLAGS="-march=armv7-a" \
-    CXX=arm-linux-gnueabi-g++-8 CXXFLAGS="-march=armv7-a" \
-    bash musl.sh armv7 && \
-    rm -rf /build/*
+  CC=arm-linux-gnueabi-gcc-8 CFLAGS="-march=armv7-a" \
+  CXX=arm-linux-gnueabi-g++-8 CXXFLAGS="-march=armv7-a" \
+  bash musl.sh armv7 && \
+  rm -rf /build/*
 
 WORKDIR /tmp
 COPY host-x86_64/dist-various-2/shared.sh /tmp/
@@ -89,14 +89,14 @@ RUN sh /scripts/sccache.sh
 
 ENV CARGO_TARGET_X86_64_FUCHSIA_AR /usr/local/bin/llvm-ar
 ENV CARGO_TARGET_X86_64_FUCHSIA_RUSTFLAGS \
--C link-arg=--sysroot=/usr/local/x86_64-fuchsia \
--C link-arg=-L/usr/local/x86_64-fuchsia/lib \
--C link-arg=-L/usr/local/lib/x86_64-fuchsia/lib
+  -C link-arg=--sysroot=/usr/local/x86_64-fuchsia \
+  -C link-arg=-L/usr/local/x86_64-fuchsia/lib \
+  -C link-arg=-L/usr/local/lib/x86_64-fuchsia/lib
 ENV CARGO_TARGET_AARCH64_FUCHSIA_AR /usr/local/bin/llvm-ar
 ENV CARGO_TARGET_AARCH64_FUCHSIA_RUSTFLAGS \
--C link-arg=--sysroot=/usr/local/aarch64-fuchsia \
--C link-arg=-L/usr/local/aarch64-fuchsia/lib \
--C link-arg=-L/usr/local/lib/aarch64-fuchsia/lib
+  -C link-arg=--sysroot=/usr/local/aarch64-fuchsia \
+  -C link-arg=-L/usr/local/aarch64-fuchsia/lib \
+  -C link-arg=-L/usr/local/lib/aarch64-fuchsia/lib
 
 ENV TARGETS=x86_64-fuchsia
 ENV TARGETS=$TARGETS,aarch64-fuchsia

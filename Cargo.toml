@@ -1,7 +1,7 @@
 [workspace]
 members = [
   "src/bootstrap",
-  "compiler/latinoc",
+  "compiler/latinoc",  
   "library/std",
   "library/test",
   "src/rustdoc-json-types",

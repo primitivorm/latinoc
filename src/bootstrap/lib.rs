@@ -586,6 +586,7 @@ impl Build {
 
     /// Executes the entire build, as configured by the flags and configuration.
     pub fn build(&mut self) {
+        println!(">>> bootstrap.lib.rs.build");
         unsafe {
             job::setup(self);
         }
@@ -700,7 +701,11 @@ impl Build {
     /// Component directory that Cargo will produce output into (e.g.
     /// release/debug)
     fn cargo_dir(&self) -> &'static str {
-        if self.config.rust_optimize { "release" } else { "debug" }
+        if self.config.rust_optimize {
+            "release"
+        } else {
+            "debug"
+        }
     }
 
     fn tools_dir(&self, compiler: Compiler) -> PathBuf {
@@ -1254,6 +1259,7 @@ impl Build {
     /// including transitive dependencies and the root itself. Only includes
     /// "local" crates (those in the local source tree, not from a registry).
     fn in_tree_crates(&self, root: &str, target: Option<TargetSelection>) -> Vec<&Crate> {
+        println!("bootstrap/lib.rs.in_tree_crates: {:?}", root);
         let mut ret = Vec::new();
         let mut list = vec![INTERNER.intern_str(root)];
         let mut visited = HashSet::new();
@@ -1288,6 +1294,8 @@ impl Build {
     }
 
     fn read_stamp_file(&self, stamp: &Path) -> Vec<(PathBuf, DependencyType)> {
+        println!(">>> read_stamp_file: {:?}", stamp);
+
         if self.config.dry_run {
             return Vec::new();
         }
@@ -1314,6 +1322,7 @@ impl Build {
 
     /// Copies a file from `src` to `dst`
     pub fn copy(&self, src: &Path, dst: &Path) {
+        println!(">>> bootstrap.lib.rs copying {} to {}", src.display(), dst.display());
         if self.config.dry_run {
             return;
         }

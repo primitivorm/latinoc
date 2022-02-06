@@ -45,6 +45,7 @@ impl Step for ToolBuild {
     /// This will build the specified tool with the specified `host` compiler in
     /// `stage` into the normal cargo output directory.
     fn run(self, builder: &Builder<'_>) -> Option<PathBuf> {
+        println!(">>> bootstrap/tool.rs ToolBuild run");
         let compiler = self.compiler;
         let target = self.target;
         let mut tool = self.tool;
@@ -235,6 +236,7 @@ pub fn prepare_tool_cargo(
     source_type: SourceType,
     extra_features: &[String],
 ) -> CargoCommand {
+    println!(">>> bootstrap/tool.rs prepare_tool_cargo");
     let mut cargo = builder.cargo(compiler, mode, source_type, target, command);
     let dir = builder.src.join(path);
     cargo.arg("--manifest-path").arg(dir.join("Cargo.toml"));

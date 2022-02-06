@@ -1,6 +1,6 @@
 use super::{ForceCollect, Parser, PathStyle, TrailingToken};
 use crate::{maybe_recover_from_interpolated_ty_qpath, maybe_whole};
-use rustc_ast::mut_visit::{noop_visit_pat, MutVisitor};
+//use rustc_ast::mut_visit::{noop_visit_pat, MutVisitor};
 use rustc_ast::ptr::P;
 use rustc_ast::token;
 use rustc_ast::{self as ast, AttrVec, Attribute, MacCall, Pat, PatField, PatKind, RangeEnd};
@@ -659,6 +659,7 @@ impl<'a> Parser<'a> {
     }
 
     /// Parse a mutable binding with the `mut` token already eaten.
+    /*
     fn parse_pat_ident_mut(&mut self) -> PResult<'a, PatKind> {
         let mut_span = self.prev_token.span;
 
@@ -691,9 +692,11 @@ impl<'a> Parser<'a> {
 
         Ok(pat.into_inner().kind)
     }
+    */
 
     /// Recover on `mut ref? ident @ pat` and suggest
     /// that the order of `mut` and `ref` is incorrect.
+    /*
     fn recover_mut_ref_ident(&mut self, lo: Span) -> PResult<'a, PatKind> {
         let mutref_span = lo.to(self.prev_token.span);
         self.struct_span_err(mutref_span, "the order of `mut` and `ref` is incorrect")
@@ -707,9 +710,11 @@ impl<'a> Parser<'a> {
 
         self.parse_pat_ident(BindingMode::ByRef(Mutability::Mut))
     }
+    */
 
     /// Turn all by-value immutable bindings in a pattern into mutable bindings.
     /// Returns `true` if any change was made.
+    /*
     fn make_all_value_bindings_mutable(pat: &mut P<Pat>) -> bool {
         struct AddMut(bool);
         impl MutVisitor for AddMut {
@@ -727,8 +732,10 @@ impl<'a> Parser<'a> {
         add_mut.visit_pat(pat);
         add_mut.0
     }
+    */
 
     /// Error on `mut $pat` where `$pat` is not an ident.
+    /*
     fn ban_mut_general_pat(&self, lo: Span, pat: &Pat, changed_any_binding: bool) {
         let span = lo.to(pat.span);
         let fix = pprust::pat_to_string(&pat);
@@ -748,8 +755,10 @@ impl<'a> Parser<'a> {
             .note("`mut` may be followed by `variable` and `variable @ pattern`")
             .emit();
     }
+    */
 
     /// Eat any extraneous `mut`s and error + recover if we ate any.
+    /*
     fn recover_additional_muts(&mut self) {
         let lo = self.token.span;
         /*while self.eat_keyword(kw::Mut) {}*/
@@ -767,6 +776,7 @@ impl<'a> Parser<'a> {
             )
             .emit();
     }
+    */
 
     /// Parse macro invocation
     fn parse_pat_mac_invoc(&mut self, path: Path) -> PResult<'a, PatKind> {

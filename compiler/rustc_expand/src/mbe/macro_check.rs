@@ -426,7 +426,7 @@ fn check_nested_occurrences(
     let mut nested_binders = Binders::default();
     for tt in tts {
         match (state, tt) {
-            /*(
+            (
                 NestedMacroState::Empty,
                 &TokenTree::Token(Token { kind: TokenKind::Ident(name, false), .. }),
             ) => {
@@ -435,7 +435,7 @@ fn check_nested_occurrences(
                 } else if name == kw::Macro {
                     state = NestedMacroState::Macro;
                 }
-            }*/
+            }
             (
                 NestedMacroState::MacroRules,
                 &TokenTree::Token(Token {

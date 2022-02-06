@@ -60,6 +60,7 @@ impl Step for Std {
     /// using the `compiler` targeting the `target` architecture. The artifacts
     /// created will also be linked into the sysroot directory.
     fn run(self, builder: &Builder<'_>) {
+        println!(">>> bootstrap/compile.rs Std run");
         let target = self.target;
         let compiler = self.compiler;
 
@@ -111,6 +112,9 @@ impl Step for Std {
             "Building stage{} std artifacts ({} -> {})",
             compiler.stage, &compiler.host, target
         ));
+
+        // TODO: proman
+        // if compiler.stage == 0 {
         run_cargo(
             builder,
             cargo,
@@ -125,6 +129,7 @@ impl Step for Std {
             target_compiler: compiler,
             target,
         });
+        // }
     }
 }
 
@@ -289,6 +294,7 @@ pub fn std_cargo(builder: &Builder<'_>, target: TargetSelection, stage: u32, car
         ""
     };
 
+    // TODO: proman
     if builder.no_std(target) == Some(true) {
         let mut features = "compiler-builtins-mem".to_string();
         if !target.starts_with("bpf") {
@@ -380,6 +386,7 @@ impl Step for StdLink {
     /// libraries for `target`, and this method will find them in the relevant
     /// output directory.
     fn run(self, builder: &Builder<'_>) {
+        println!(">>> bootstrap/compile.rs StdLink run");
         let compiler = self.compiler;
         let target_compiler = self.target_compiler;
         let target = self.target;
@@ -474,6 +481,7 @@ impl Step for StartupObjects {
     /// files, so we just use the nightly snapshot compiler to always build them (as
     /// no other compilers are guaranteed to be available).
     fn run(self, builder: &Builder<'_>) -> Vec<(PathBuf, DependencyType)> {
+        println!(">>> bootstrap/compile.rs StartupObjects run");
         let for_compiler = self.compiler;
         let target = self.target;
         if !target.contains("windows-gnu") {
@@ -482,6 +490,7 @@ impl Step for StartupObjects {
 
         let mut target_deps = vec![];
 
+        // TODO: proman
         let src_dir = &builder.src.join("library").join("rtstartup");
         let dst_dir = &builder.native_dir(target).join("rtstartup");
         let sysroot_dir = &builder.sysroot_libdir(for_compiler, target);
@@ -544,6 +553,7 @@ impl Step for Rustc {
     /// the `compiler` targeting the `target` architecture. The artifacts
     /// created will also be linked into the sysroot directory.
     fn run(self, builder: &Builder<'_>) {
+        println!(">>> bootstrap/compile.rs Rustc run ");
         let compiler = self.compiler;
         let target = self.target;
 
@@ -626,6 +636,10 @@ impl Step for Rustc {
             "Building stage{} compiler artifacts ({} -> {})",
             compiler.stage, &compiler.host, target
         ));
+
+        // TODO: proman
+        println!(">>> cargo {:?}", cargo);
+        // if compiler.stage == 0 {
         run_cargo(
             builder,
             cargo,
@@ -640,15 +654,18 @@ impl Step for Rustc {
             target_compiler: compiler,
             target,
         });
+        // }
     }
 }
 
 pub fn rustc_cargo(builder: &Builder<'_>, cargo: &mut Cargo, target: TargetSelection) {
+    // TODO: proman
     cargo
         .arg("--features")
         .arg(builder.rustc_features())
         .arg("--manifest-path")
-        .arg(builder.src.join("compiler/rustc/Cargo.toml"));
+        .arg(builder.src.join("compiler/latinoc/Cargo.toml"));
+    // .arg(builder.src.join("compiler/rustc/Cargo.toml"));
     rustc_cargo_env(builder, cargo, target);
 }
 
@@ -745,6 +762,7 @@ impl Step for RustcLink {
 
     /// Same as `std_link`, only for librustc
     fn run(self, builder: &Builder<'_>) {
+        println!(">>> bootstrap/compile.rs RustcLink run");
         let compiler = self.compiler;
         let target_compiler = self.target_compiler;
         let target = self.target;
@@ -793,6 +811,7 @@ impl Step for CodegenBackend {
     }
 
     fn run(self, builder: &Builder<'_>) {
+        println!(">>> bootstrap/compile.rs CodegenBackend run");
         let compiler = self.compiler;
         let target = self.target;
         let backend = self.backend;
@@ -963,6 +982,7 @@ impl Step for Sysroot {
     /// thinks it is by default, but it's the same as the default for stages
     /// 1-3.
     fn run(self, builder: &Builder<'_>) -> Interned<PathBuf> {
+        println!(">>> bootstrap/compile.rs Sysroot run");
         let compiler = self.compiler;
         let sysroot = if compiler.stage == 0 {
             builder.out.join(&compiler.host.triple).join("stage0-sysroot")
@@ -1026,7 +1046,9 @@ impl Step for Assemble {
     const ONLY_HOSTS: bool = true;
 
     fn should_run(run: ShouldRun<'_>) -> ShouldRun<'_> {
-        run.path("compiler/rustc")
+        // TODO: proman
+        run.path("compiler/latinoc")
+        // run.path("compiler/rustc")
     }
 
     fn make_run(run: RunConfig<'_>) {
@@ -1041,6 +1063,7 @@ impl Step for Assemble {
     /// must have been previously produced by the `stage - 1` builder.build
     /// compiler.
     fn run(self, builder: &Builder<'_>) -> Compiler {
+        println!("bootstrap/compile.rs Assemble run");
         let target_compiler = self.target_compiler;
 
         if target_compiler.stage == 0 {
@@ -1174,7 +1197,12 @@ impl Step for Assemble {
 
         // Link the compiler binary itself into place
         let out_dir = builder.cargo_out(build_compiler, Mode::Rustc, host);
-        let rustc = out_dir.join(exe("rustc-main", host));
+        // TODO: proman
+        // let rustc = out_dir.join(exe("rustc-main", host));
+        let mut rustc = out_dir.join(exe("rustc-main", host));
+        if target_compiler.stage > 0 {
+            rustc = out_dir.join(exe("latinoc-main", host));
+        }
         let bindir = sysroot.join("bin");
         t!(fs::create_dir_all(&bindir));
         let compiler = builder.rustc(target_compiler);
@@ -1194,6 +1222,7 @@ pub fn add_to_sysroot(
     sysroot_host_dst: &Path,
     stamp: &Path,
 ) {
+    println!(">>> bootstrap/compile.rs add_to_sysroot");
     let self_contained_dst = &sysroot_dst.join("self-contained");
     t!(fs::create_dir_all(&sysroot_dst));
     t!(fs::create_dir_all(&sysroot_host_dst));
@@ -1216,6 +1245,7 @@ pub fn run_cargo(
     additional_target_deps: Vec<(PathBuf, DependencyType)>,
     is_check: bool,
 ) -> Vec<PathBuf> {
+    println!(">>> bootstrap/compile.rs.run_cargo");
     if builder.config.dry_run {
         return Vec::new();
     }

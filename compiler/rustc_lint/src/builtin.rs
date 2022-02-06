@@ -2043,10 +2043,10 @@ impl KeywordIdents {
     fn check_ident_token(
         &mut self,
         cx: &EarlyContext<'_>,
-        UnderMacro(under_macro): UnderMacro,
-        ident: Ident,
+        UnderMacro(_under_macro): UnderMacro,
+        _ident: Ident,
     ) {
-        let next_edition = match cx.sess.edition() {
+        let _next_edition = match cx.sess.edition() {
             /*Edition::Edition2015 => {
                 match ident.name {
                     kw::Async | kw::Await | kw::Try => Edition::Edition2018,
@@ -2073,6 +2073,7 @@ impl KeywordIdents {
         };
 
         // Don't lint `r#foo`.
+        /*
         if cx
             .sess
             .parse_sess
@@ -2081,7 +2082,7 @@ impl KeywordIdents {
             .contains(&ident.span)
         {
             return;
-        }
+        }        
 
         cx.struct_span_lint(KEYWORD_IDENTS, ident.span, |lint| {
             lint.build(&format!(
@@ -2096,6 +2097,7 @@ impl KeywordIdents {
             )
             .emit()
         });
+        */
     }
 }
 

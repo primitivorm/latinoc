@@ -639,7 +639,9 @@ fn check_code(cx: &LateContext<'_>, text: &str, edition: Edition, span: Span) {
                             | ItemKind::ExternCrate(..)
                             | ItemKind::ForeignMod(..) => return false,
                             // We found a main function ...
-                            ItemKind::Fn(box Fn { sig, body: Some(block), .. }) if item.ident.name == sym::main => {
+                            ItemKind::Fn(box Fn {
+                                sig, body: Some(block), ..
+                            }) if item.ident.name == sym::main => {
                                 let is_async = matches!(sig.header.asyncness, Async::Yes { .. });
                                 let returns_nothing = match &sig.decl.output {
                                     FnRetTy::Default(..) => true,

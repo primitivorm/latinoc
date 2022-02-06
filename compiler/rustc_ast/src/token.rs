@@ -74,11 +74,7 @@ pub struct Lit {
 
 impl fmt::Display for Lit {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        let Lit {
-            kind,
-            symbol,
-            suffix,
-        } = *self;
+        let Lit { kind, symbol, suffix } = *self;
         match kind {
             Byte => write!(f, "b'{}'", symbol)?,
             Char => write!(f, "'{}'", symbol)?,
@@ -136,11 +132,7 @@ impl LitKind {
 
 impl Lit {
     pub fn new(kind: LitKind, symbol: Symbol, suffix: Option<Symbol>) -> Lit {
-        Lit {
-            kind,
-            symbol,
-            suffix,
-        }
+        Lit { kind, symbol, suffix }
     }
 }
 
@@ -166,7 +158,7 @@ pub fn ident_can_begin_expr(name: Symbol, span: Span, is_raw: bool) -> bool {
             kw::Return,
             kw::True,
             //kw::Try,
-            //kw::Unsafe,
+            kw::Unsafe,
             kw::While,
             //kw::Yield,
             kw::Static,
@@ -184,7 +176,8 @@ fn ident_can_begin_type(name: Symbol, span: Span, is_raw: bool) -> bool {
             kw::For,
             kw::Impl,
             kw::Fn,
-            /*kw::Unsafe,*/ kw::Extern,
+            kw::Unsafe,
+            kw::Extern,
             /*kw::Typeof, kw::Dyn,*/
         ]
         .contains(&name)
@@ -604,13 +597,7 @@ impl Token {
     pub fn is_numeric_lit(&self) -> bool {
         matches!(
             self.kind,
-            Literal(Lit {
-                kind: LitKind::Integer,
-                ..
-            }) | Literal(Lit {
-                kind: LitKind::Float,
-                ..
-            })
+            Literal(Lit { kind: LitKind::Integer, .. }) | Literal(Lit { kind: LitKind::Float, .. })
         )
     }
 

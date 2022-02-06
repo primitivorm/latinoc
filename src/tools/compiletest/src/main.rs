@@ -178,7 +178,11 @@ pub fn parse_config(args: Vec<String>) -> Config {
     }
 
     fn make_absolute(path: PathBuf) -> PathBuf {
-        if path.is_relative() { env::current_dir().unwrap().join(path) } else { path }
+        if path.is_relative() {
+            env::current_dir().unwrap().join(path)
+        } else {
+            path
+        }
     }
 
     let target = opt_str2(matches.opt_str("target"));

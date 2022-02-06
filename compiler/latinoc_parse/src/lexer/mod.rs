@@ -1,4 +1,4 @@
-use crate::lexer::unicode_chars::UNICODE_ARRAY;
+// use crate::lexer::unicode_chars::UNICODE_ARRAY;
 use latinoc_lexer::unescape::{self, Mode};
 use latinoc_lexer::{Base, DocStyle, RawStrError};
 use rustc_ast::ast::{self, AttrStyle};
@@ -6,13 +6,11 @@ use rustc_ast::token::{self, CommentKind, Token, TokenKind};
 use rustc_ast::tokenstream::{Spacing, TokenStream};
 use rustc_ast::util::unicode::contains_text_flow_control_chars;
 use rustc_errors::{error_code, Applicability, DiagnosticBuilder, FatalError, PResult};
-use rustc_session::lint::builtin::{
-    RUST_2021_PREFIXES_INCOMPATIBLE_SYNTAX, TEXT_DIRECTION_CODEPOINT_IN_COMMENT,
-};
+use rustc_session::lint::builtin::TEXT_DIRECTION_CODEPOINT_IN_COMMENT;
 use rustc_session::lint::BuiltinLintDiagnostics;
 use rustc_session::parse::ParseSess;
 use rustc_span::symbol::{sym, Symbol};
-use rustc_span::{edition::Edition, BytePos, Pos, Span};
+use rustc_span::{/*edition::Edition,*/ BytePos, Pos, Span};
 
 use tracing::debug;
 
@@ -37,15 +35,8 @@ crate fn parse_token_trees<'a>(
     start_pos: BytePos,
     override_span: Option<Span>,
 ) -> (PResult<'a, TokenStream>, Vec<UnmatchedBrace>) {
-    StringReader {
-        sess,
-        start_pos,
-        pos: start_pos,
-        end_src_index: src.len(),
-        src,
-        override_span,
-    }
-    .into_token_trees()
+    StringReader { sess, start_pos, pos: start_pos, end_src_index: src.len(), src, override_span }
+        .into_token_trees()
 }
 
 struct StringReader<'a> {
@@ -63,8 +54,7 @@ struct StringReader<'a> {
 
 impl<'a> StringReader<'a> {
     fn mk_sp(&self, lo: BytePos, hi: BytePos) -> Span {
-        self.override_span
-            .unwrap_or_else(|| Span::with_root_ctxt(lo, hi))
+        self.override_span.unwrap_or_else(|| Span::with_root_ctxt(lo, hi))
     }
 
     /// Returns the next token, and info about preceding whitespace, if any.
@@ -136,10 +126,9 @@ impl<'a> StringReader<'a> {
         m: &str,
         c: char,
     ) -> DiagnosticBuilder<'a> {
-        self.sess.span_diagnostic.struct_span_fatal(
-            self.mk_sp(from_pos, to_pos),
-            &format!("{}: {}", m, escaped_char(c)),
-        )
+        self.sess
+            .span_diagnostic
+            .struct_span_fatal(self.mk_sp(from_pos, to_pos), &format!("{}: {}", m, escaped_char(c)))
     }
 
     /// Detect usages of Unicode codepoints changing the direction of the text on screen and loudly
@@ -217,7 +206,7 @@ impl<'a> StringReader<'a> {
             }
             latinoc_lexer::TokenKind::Whitespace => return None,
             latinoc_lexer::TokenKind::Ident => {
-                let mut ident_start = start;
+                let /*mut*/ ident_start = start;
                 let sym = nfc_normalize(self.str_from(ident_start));
                 let span = self.mk_sp(start, self.pos);
                 self.sess.symbol_gallery.insert(sym, span);
@@ -407,10 +396,7 @@ impl<'a> StringReader<'a> {
                     (token::Integer, self.symbol_from_to(start, suffix_start))
                 };
             }
-            latinoc_lexer::LiteralKind::Float {
-                base,
-                empty_exponent,
-            } => {
+            latinoc_lexer::LiteralKind::Float { base, empty_exponent } => {
                 if empty_exponent {
                     self.err_span_(start, self.pos, "expected at least one digit in exponent");
                 }
@@ -468,16 +454,8 @@ impl<'a> StringReader<'a> {
             Some(RawStrError::InvalidStarter { bad_char }) => {
                 self.report_non_started_raw_string(start, bad_char)
             }
-            Some(RawStrError::NoTerminator {
-                expected,
-                found,
-                possible_terminator_offset,
-            }) => self.report_unterminated_raw_string(
-                start,
-                expected,
-                possible_terminator_offset,
-                found,
-            ),
+            Some(RawStrError::NoTerminator { expected, found, possible_terminator_offset }) => self
+                .report_unterminated_raw_string(start, expected, possible_terminator_offset, found),
             Some(RawStrError::TooManyDelimiters { found }) => {
                 self.report_too_many_hashes(start, found)
             }
@@ -561,10 +539,8 @@ impl<'a> StringReader<'a> {
         unescape::unescape_literal(lit_content, mode, &mut |range, result| {
             // Here we only check for errors. The actual unescaping is done later.
             if let Err(err) = result {
-                let span_with_quotes = self.mk_sp(
-                    content_start - BytePos(prefix_len),
-                    content_end + BytePos(postfix_len),
-                );
+                let span_with_quotes = self
+                    .mk_sp(content_start - BytePos(prefix_len), content_end + BytePos(postfix_len));
                 let (start, end) = (range.start as u32, range.end as u32);
                 let lo = content_start + BytePos(start);
                 let hi = lo + BytePos(end - start);
@@ -594,11 +570,7 @@ impl<'a> StringReader<'a> {
             if c != '_' && c.to_digit(base).is_none() {
                 let lo = content_start + BytePos(2 + idx);
                 let hi = content_start + BytePos(2 + idx + c.len_utf8() as u32);
-                self.err_span_(
-                    lo,
-                    hi,
-                    &format!("invalid digit for a base {} literal", base),
-                );
+                self.err_span_(lo, hi, &format!("invalid digit for a base {} literal", base));
             }
         }
     }

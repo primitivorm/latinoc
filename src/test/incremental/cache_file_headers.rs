@@ -13,7 +13,7 @@
 // compile-flags: -Z query-dep-graph
 
 #![feature(rustc_attrs)]
-#![rustc_partition_codegened(module="cache_file_headers", cfg="rpass2")]
+#![rustc_partition_codegened(module = "cache_file_headers", cfg = "rpass2")]
 
 fn main() {
     // empty

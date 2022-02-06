@@ -12,7 +12,6 @@ static ALLOC: tikv_jemallocator::Jemalloc = tikv_jemallocator::Jemalloc;
 use tikv_jemalloc_sys as jemalloc_sys;
 
 fn main() {
-    println!("Inicio main");
     // Pull in jemalloc when enabled.
     //
     // Note that we're pulling in a static copy of jemalloc which means that to
@@ -54,11 +53,6 @@ fn main() {
         }
     }
 
-    println!("Inicio set_sigpipe_handler");
     latinoc_driver::set_sigpipe_handler();
-    println!("Fin set_sigpipe_handler");
-
-    println!("Inicio latinoc_driver::main");
-    latinoc_driver::main();
-    println!("Fin latinoc_driver::main");
+    latinoc_driver::main()
 }

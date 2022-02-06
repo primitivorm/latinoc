@@ -25,7 +25,7 @@ use rustc_ast::tokenstream::{TokenStream, TokenTree};
 use rustc_ast::AttrId;
 use rustc_ast::DUMMY_NODE_ID;
 use rustc_ast::{self as ast, AnonConst, AstLike, AttrStyle, AttrVec, Const, CrateSugar, Extern};
-use rustc_ast::{Async, Expr, ExprKind, MacArgs, MacDelimiter, Mutability, StrLit, Unsafe};
+use rustc_ast::{/*Async,*/ Expr, ExprKind, MacArgs, MacDelimiter, Mutability, StrLit, Unsafe,};
 use rustc_ast::{Visibility, VisibilityKind};
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::fx::FxHashMap;
@@ -266,10 +266,7 @@ impl TokenCursor {
                 self.frame = frame;
                 continue;
             } else {
-                (
-                    TokenTree::Token(Token::new(token::Eof, DUMMY_SP)),
-                    Spacing::Alone,
-                )
+                (TokenTree::Token(Token::new(token::Eof, DUMMY_SP)), Spacing::Alone)
             };
 
             match tree {
@@ -286,13 +283,9 @@ impl TokenCursor {
 
     fn next_desugared(&mut self) -> (Token, Spacing) {
         let (data, attr_style, sp) = match self.next() {
-            (
-                Token {
-                    kind: token::DocComment(_, attr_style, data),
-                    span,
-                },
-                _,
-            ) => (data, attr_style, span),
+            (Token { kind: token::DocComment(_, attr_style, data), span }, _) => {
+                (data, attr_style, span)
+            }
             tok => return tok,
         };
 
@@ -329,14 +322,10 @@ impl TokenCursor {
                 delim_span,
                 token::NoDelim,
                 if attr_style == AttrStyle::Inner {
-                    [
-                        TokenTree::token(token::Pound, sp),
-                        TokenTree::token(token::Not, sp),
-                        body,
-                    ]
-                    .iter()
-                    .cloned()
-                    .collect::<TokenStream>()
+                    [TokenTree::token(token::Pound, sp), TokenTree::token(token::Not, sp), body]
+                        .iter()
+                        .cloned()
+                        .collect::<TokenStream>()
                 } else {
                     [TokenTree::token(token::Pound, sp), body]
                         .iter()
@@ -393,17 +382,11 @@ struct SeqSep {
 
 impl SeqSep {
     fn trailing_allowed(t: TokenKind) -> SeqSep {
-        SeqSep {
-            sep: Some(t),
-            trailing_sep_allowed: true,
-        }
+        SeqSep { sep: Some(t), trailing_sep_allowed: true }
     }
 
     fn none() -> SeqSep {
-        SeqSep {
-            sep: None,
-            trailing_sep_allowed: false,
-        }
+        SeqSep { sep: None, trailing_sep_allowed: false }
     }
 }
 
@@ -553,14 +536,12 @@ impl<'a> Parser<'a> {
     }
 
     fn ident_or_err(&mut self) -> PResult<'a, (Ident, /* is_raw */ bool)> {
-        self.token
-            .ident()
-            .ok_or_else(|| match self.prev_token.kind {
-                TokenKind::DocComment(..) => {
-                    self.span_err(self.prev_token.span, Error::UselessDocComment)
-                }
-                _ => self.expected_ident_found(),
-            })
+        self.token.ident().ok_or_else(|| match self.prev_token.kind {
+            TokenKind::DocComment(..) => {
+                self.span_err(self.prev_token.span, Error::UselessDocComment)
+            }
+            _ => self.expected_ident_found(),
+        })
     }
 
     fn parse_ident_common(&mut self, recover: bool) -> PResult<'a, Ident> {
@@ -617,6 +598,7 @@ impl<'a> Parser<'a> {
         }
     }
 
+    /*
     fn eat_keyword_noexpect(&mut self, kw: Symbol) -> bool {
         if self.token.is_keyword(kw) {
             self.bump();
@@ -625,6 +607,7 @@ impl<'a> Parser<'a> {
             false
         }
     }
+    */
 
     /// If the given word is not a keyword, signals an error.
     /// If the next token is not the given word, signals an error.
@@ -749,10 +732,7 @@ impl<'a> Parser<'a> {
             // See doc comment for `unmatched_angle_bracket_count`.
             self.unmatched_angle_bracket_count += 1;
             self.max_angle_bracket_count += 1;
-            debug!(
-                "eat_lt: (increment) count={:?}",
-                self.unmatched_angle_bracket_count
-            );
+            debug!("eat_lt: (increment) count={:?}", self.unmatched_angle_bracket_count);
         }
         ate
     }
@@ -774,10 +754,7 @@ impl<'a> Parser<'a> {
             // See doc comment for `unmatched_angle_bracket_count`.
             if self.unmatched_angle_bracket_count > 0 {
                 self.unmatched_angle_bracket_count -= 1;
-                debug!(
-                    "expect_gt: (decrement) count={:?}",
-                    self.unmatched_angle_bracket_count
-                );
+                debug!("expect_gt: (decrement) count={:?}", self.unmatched_angle_bracket_count);
             }
             Ok(())
         } else {
@@ -1078,10 +1055,7 @@ impl<'a> Parser<'a> {
                             looker(&Token::new(token::OpenDelim(*delim), dspan.open))
                         }
                     },
-                    None => looker(&Token::new(
-                        token::CloseDelim(frame.delim),
-                        frame.span.close,
-                    )),
+                    None => looker(&Token::new(token::CloseDelim(frame.delim), frame.span.close)),
                 };
             }
         }
@@ -1123,11 +1097,11 @@ impl<'a> Parser<'a> {
 
     /// Parses unsafety: `unsafe` or nothing.
     fn parse_unsafety(&mut self) -> Unsafe {
-        /*if self.eat_keyword(kw::Unsafe) {
+        if self.eat_keyword(kw::Unsafe) {
             Unsafe::Yes(self.prev_token.uninterpolated_span())
-        } else {*/
-        Unsafe::No
-        /*}*/
+        } else {
+            Unsafe::No
+        }
     }
 
     /// Parses constness: `const` or nothing.
@@ -1156,11 +1130,7 @@ impl<'a> Parser<'a> {
             value: self.mk_expr(blk.span, ExprKind::Block(blk, None), AttrVec::new()),
         };
         let blk_span = anon_const.value.span;
-        Ok(self.mk_expr(
-            span.to(blk_span),
-            ExprKind::ConstBlock(anon_const),
-            AttrVec::new(),
-        ))
+        Ok(self.mk_expr(span.to(blk_span), ExprKind::ConstBlock(anon_const), AttrVec::new()))
     }
 
     /// Parses mutability (`mut` or nothing).
@@ -1185,11 +1155,7 @@ impl<'a> Parser<'a> {
     }
 
     fn parse_field_name(&mut self) -> PResult<'a, Ident> {
-        if let token::Literal(token::Lit {
-            kind: token::Integer,
-            symbol,
-            suffix,
-        }) = self.token.kind
+        if let token::Literal(token::Lit { kind: token::Integer, symbol, suffix }) = self.token.kind
         {
             self.expect_no_suffix(self.token.span, "a tuple index", suffix);
             self.bump();
@@ -1332,9 +1298,7 @@ impl<'a> Parser<'a> {
         self.expected_tokens.push(TokenType::Keyword(kw::Crate));
         if self.is_crate_vis() {
             self.bump(); // `crate`
-            self.sess
-                .gated_spans
-                .gate(sym::crate_visibility_modifier, self.prev_token.span);
+            self.sess.gated_spans.gate(sym::crate_visibility_modifier, self.prev_token.span);
             return Ok(Visibility {
                 span: self.prev_token.span,
                 kind: VisibilityKind::Crate(CrateSugar::JustCrate),
@@ -1378,10 +1342,7 @@ impl<'a> Parser<'a> {
                 self.bump(); // `in`
                 let path = self.parse_path(PathStyle::Mod)?; // `path`
                 self.expect(&token::CloseDelim(token::Paren))?; // `)`
-                let vis = VisibilityKind::Restricted {
-                    path: P(path),
-                    id: ast::DUMMY_NODE_ID,
-                };
+                let vis = VisibilityKind::Restricted { path: P(path), id: ast::DUMMY_NODE_ID };
                 return Ok(Visibility {
                     span: lo.to(self.prev_token.span),
                     kind: vis,
@@ -1394,10 +1355,7 @@ impl<'a> Parser<'a> {
                 self.bump(); // `(`
                 let path = self.parse_path(PathStyle::Mod)?; // `super`/`self`
                 self.expect(&token::CloseDelim(token::Paren))?; // `)`
-                let vis = VisibilityKind::Restricted {
-                    path: P(path),
-                    id: ast::DUMMY_NODE_ID,
-                };
+                let vis = VisibilityKind::Restricted { path: P(path), id: ast::DUMMY_NODE_ID };
                 return Ok(Visibility {
                     span: lo.to(self.prev_token.span),
                     kind: vis,
@@ -1411,11 +1369,7 @@ impl<'a> Parser<'a> {
             }
         }
 
-        Ok(Visibility {
-            span: lo,
-            kind: VisibilityKind::Public,
-            tokens: None,
-        })
+        Ok(Visibility { span: lo, kind: VisibilityKind::Public, tokens: None })
     }
 
     /// Recovery for e.g. `pub(something) fn ...` or `struct X { pub(something) y: Z }`
@@ -1532,9 +1486,8 @@ crate fn make_unclosed_delims_error(
 }
 
 pub fn emit_unclosed_delims(unclosed_delims: &mut Vec<UnmatchedBrace>, sess: &ParseSess) {
-    *sess.reached_eof.borrow_mut() |= unclosed_delims
-        .iter()
-        .any(|unmatched_delim| unmatched_delim.found_delim.is_none());
+    *sess.reached_eof.borrow_mut() |=
+        unclosed_delims.iter().any(|unmatched_delim| unmatched_delim.found_delim.is_none());
     for unmatched in unclosed_delims.drain(..) {
         if let Some(mut e) = make_unclosed_delims_error(unmatched, sess) {
             e.emit();

@@ -20,7 +20,7 @@ RUN apt-get update -y && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-
       xz-utils
 
 ENV ARCH=arm \
-    CROSS_COMPILE=arm-linux-gnueabihf-
+      CROSS_COMPILE=arm-linux-gnueabihf-
 
 WORKDIR /build
 

@@ -986,7 +986,11 @@ impl Config {
                 // synthesize it manually.
                 let rustfmt = initial_rustc.with_file_name(exe("rustfmt", build));
 
-                if rustfmt.exists() { Some(rustfmt) } else { None }
+                if rustfmt.exists() {
+                    Some(rustfmt)
+                } else {
+                    None
+                }
             }
         });
 

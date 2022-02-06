@@ -14,7 +14,7 @@ use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::str;
 
-use crate::{with_session_globals, Edition, Span, DUMMY_SP};
+use crate::{with_session_globals, /*Edition,*/ Span, DUMMY_SP};
 
 #[cfg(test)]
 mod tests;
@@ -28,18 +28,18 @@ symbols! {
         // unnamed method parameters, crate root module, error recovery etc.
         Empty:              "",
         PathRoot:           "{{root}}",
-        DollarCrate:        "$crate",
+        DollarCrate:        "$crate", // TODO: Cambiar
         Underscore:         "_",
 
         // Keywords that are used in stable Rust.
-        As:                 "como",
+        As:                 "as",
         Break:              "romper",
         Const:              "const",
         Continue:           "continuar",
-        Crate:              "crate",
+        Crate:              "crate", // TODO: Cambiar o quitar
         Else:               "sino",
         Enum:               "enum",
-        Extern:             "externo",
+        Extern:             "extern",  // TODO: Cambiar o quitar
         False:              "falso",
         Fn:                 "fun",
         For:                "desde",
@@ -48,10 +48,10 @@ symbols! {
         In:                 "en",
         Let:                "var",
         Loop:               "ciclo",
-        //Match:              "match",
+        Match:              "match",  // TODO: remove
         Mod:                "mod",
-        //Move:               "move",
-        //Mut:                "mut",
+        Move:               "move",   // TODO: remove
+        Mut:                "mut",    // TODO: remove
         Pub:                "pub",
         Ref:                "ref",
         Return:             "ret",
@@ -60,52 +60,46 @@ symbols! {
         Static:             "estatico",
         Struct:             "estructura",
         Super:              "super",
-        //Trait:              "trait",
+        Trait:              "trait",   // TODO: remove
         True:               "verdadero",
-        //Type:               "type",
-        //Unsafe:             "unsafe",
-        Use:                "incluir",
-        //Where:              "where",
+        Type:               "type",   // TODO: remove
+        Unsafe:             "unsafe",
+        Use:                "use",
+        Where:              "where",   // TODO: remove
         While:              "mientras",
 
         // Keywords that are used in unstable Rust or reserved for future use.
-        /*
-        Abstract:           "abstract",
-        Become:             "become",
-        Box:                "box",
-        Do:                 "do",
-        Final:              "final",
+        Abstract:           "abstract",  // TODO: remove
+        Become:             "become",  // TODO: remove
+        Box:                "box",  // TODO: remove
+        Do:                 "do",  // TODO: remove
+        Final:              "final",  // TODO: remove
         Macro:              "macro",
-        Override:           "override",
+        Override:           "override",  // TODO: remove
         Priv:               "priv",
-        Typeof:             "typeof",
-        Unsized:            "unsized",
-        Virtual:            "virtual",
-        Yield:              "yield",
-        */
+        Typeof:             "typeof",  // TODO: remove
+        Unsized:            "unsized",  // TODO: remove
+        Virtual:            "virtual",  // TODO: remove
+        Yield:              "yield",  // TODO: remove
 
         // Edition-specific keywords that are used in stable Rust.
-        /*
-        Async:              "async", // >= 2018 Edition only
-        Await:              "await", // >= 2018 Edition only
-        Dyn:                "dyn", // >= 2018 Edition only
-        */
+        Async:              "async", // >= 2018 Edition only  // TODO: remove
+        Await:              "await", // >= 2018 Edition only  // TODO: remove
+        Dyn:                "dyn", // >= 2018 Edition only  // TODO: remove
 
         // Edition-specific keywords that are used in unstable Rust or reserved for future use.
-        // Try:                "try", // >= 2018 Edition only
+        Try:                "try", // >= 2018 Edition only  // TODO: remove
 
         // Special lifetime names
         UnderscoreLifetime: "'_",
         StaticLifetime:     "'static",
 
         // Weak keywords, have special meaning only in specific contexts.
-        /*
-        Auto:               "auto",
-        Catch:              "catch",
-        Default:            "default",
-        MacroRules:         "macro_rules",
-        Raw:                "raw",
-        */
+        Auto:               "auto",  // TODO: remove
+        Catch:              "catch",  // TODO: remove
+        Default:            "default",  // TODO: remove
+        MacroRules:         "macro_reglas",
+        Raw:                "raw",  // TODO: remove
         Union:              "union",
     }
 
@@ -1487,10 +1481,7 @@ impl Ident {
     }
 
     pub fn without_first_quote(self) -> Ident {
-        Ident::new(
-            Symbol::intern(self.as_str().trim_start_matches('\'')),
-            self.span,
-        )
+        Ident::new(Symbol::intern(self.as_str().trim_start_matches('\'')), self.span)
     }
 
     /// "Normalize" ident for use in comparisons using "item hygiene".
@@ -1570,11 +1561,7 @@ pub struct IdentPrinter {
 impl IdentPrinter {
     /// The most general `IdentPrinter` constructor. Do not use this.
     pub fn new(symbol: Symbol, is_raw: bool, convert_dollar_crate: Option<Span>) -> IdentPrinter {
-        IdentPrinter {
-            symbol,
-            is_raw,
-            convert_dollar_crate,
-        }
+        IdentPrinter { symbol, is_raw, convert_dollar_crate }
     }
 
     /// This implementation is supposed to be used when printing identifiers
@@ -1658,11 +1645,7 @@ impl Symbol {
     pub fn as_str(self) -> SymbolStr {
         with_session_globals(|session_globals| {
             let symbol_str = session_globals.symbol_interner.get(self);
-            unsafe {
-                SymbolStr {
-                    string: std::mem::transmute::<&str, &str>(symbol_str),
-                }
-            }
+            unsafe { SymbolStr { string: std::mem::transmute::<&str, &str>(symbol_str) } }
         })
     }
 
@@ -1801,7 +1784,7 @@ pub mod sym {
     pub use super::sym_generated::*;
 
     // Used from a macro in `librustc_feature/accepted.rs`
-    // pub use super::kw::MacroRules as macro_rules;
+    pub use super::kw::MacroRules as macro_rules;
 
     /// Get the symbol for an integer.
     ///
@@ -1838,7 +1821,7 @@ impl Symbol {
         self == kw::Try && edition() >= Edition::Edition2018
     }*/
 
-    pub fn is_reserved(self, edition: impl Copy + FnOnce() -> Edition) -> bool {
+    pub fn is_reserved(self /*, edition: impl Copy + FnOnce() -> Edition*/) -> bool {
         self.is_special() || self.is_used_keyword_always()
         //|| self.is_unused_keyword_always()
         //|| self.is_used_keyword_conditional(edition)
@@ -1894,7 +1877,7 @@ impl Ident {
     /// Returns `true` if the token is either a special identifier or a keyword.
     pub fn is_reserved(self) -> bool {
         // Note: `span.edition()` is relatively expensive, don't call it unless necessary.
-        self.name.is_reserved(|| self.span.edition())
+        self.name.is_reserved(/*|| self.span.edition()*/)
     }
 
     /// A keyword or reserved identifier that can be used as a path segment.

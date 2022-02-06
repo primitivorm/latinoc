@@ -203,10 +203,7 @@ fn macro_rules_dummy_expander<'cx>(
 }
 
 fn trace_macros_note(cx_expansions: &mut FxHashMap<Span, Vec<String>>, sp: Span, message: String) {
-    let sp = sp
-        .macro_backtrace()
-        .last()
-        .map_or(sp, |trace| trace.call_site);
+    let sp = sp.macro_backtrace().last().map_or(sp, |trace| trace.call_site);
     cx_expansions.entry(sp).or_default().push(message);
 }
 
@@ -225,11 +222,7 @@ fn generic_extension<'cx>(
     let sess = &cx.sess.parse_sess;
 
     if cx.trace_macros() {
-        let msg = format!(
-            "expanding `{}! {{ {} }}`",
-            name,
-            pprust::tts_to_string(&arg)
-        );
+        let msg = format!("expanding `{}! {{ {} }}`", name, pprust::tts_to_string(&arg));
         trace_macros_note(&mut cx.expansions, sp, msg);
     }
 
@@ -343,10 +336,7 @@ fn generic_extension<'cx>(
 
         // The matcher was not `Success(..)`ful.
         // Restore to the state before snapshotting and maybe try again.
-        mem::swap(
-            &mut gated_spans_snapshot,
-            &mut sess.gated_spans.spans.borrow_mut(),
-        );
+        mem::swap(&mut gated_spans_snapshot, &mut sess.gated_spans.spans.borrow_mut());
     }
     drop(parser);
 
@@ -355,10 +345,7 @@ fn generic_extension<'cx>(
     let mut err = cx.struct_span_err(span, &parse_failure_msg(&token));
     err.span_label(span, label);
     if !def_span.is_dummy() && !cx.source_map().is_imported(def_span) {
-        err.span_label(
-            cx.source_map().guess_head_span(def_span),
-            "when calling this macro",
-        );
+        err.span_label(cx.source_map().guess_head_span(def_span), "when calling this macro");
     }
 
     // Check whether there's a missing comma in this macro call, like `println!("{}" a);`
@@ -369,11 +356,9 @@ fn generic_extension<'cx>(
                 mbe::TokenTree::Delimited(_, ref delim) => &delim.tts[..],
                 _ => continue,
             };
-            if let Success(_) = parse_tt(
-                &mut Cow::Borrowed(&parser_from_cx(sess, arg.clone())),
-                lhs_tt,
-                name,
-            ) {
+            if let Success(_) =
+                parse_tt(&mut Cow::Borrowed(&parser_from_cx(sess, arg.clone())), lhs_tt, name)
+            {
                 if comma_span.is_dummy() {
                     err.note("you might be missing a comma");
                 } else {
@@ -443,11 +428,7 @@ pub fn compile_declarative_macro(
                     mbe::TokenTree::MetaVarDecl(def.span, rhs_nm, tt_spec),
                 ],
                 separator: Some(Token::new(
-                    if macro_rules {
-                        token::Semi
-                    } else {
-                        token::Comma
-                    },
+                    if macro_rules { token::Semi } else { token::Comma },
                     def.span,
                 )),
                 kleene: mbe::KleeneToken::new(mbe::KleeneOp::OneOrMore, def.span),
@@ -459,11 +440,7 @@ pub fn compile_declarative_macro(
             DelimSpan::dummy(),
             Lrc::new(mbe::SequenceRepetition {
                 tts: vec![mbe::TokenTree::token(
-                    if macro_rules {
-                        token::Semi
-                    } else {
-                        token::Comma
-                    },
+                    if macro_rules { token::Semi } else { token::Comma },
                     def.span,
                 )],
                 separator: None,
@@ -479,11 +456,7 @@ pub fn compile_declarative_macro(
         Failure(token, msg) => {
             let s = parse_failure_msg(&token);
             let sp = token.span.substitute_dummy(def.span);
-            sess.parse_sess
-                .span_diagnostic
-                .struct_span_err(sp, &s)
-                .span_label(sp, msg)
-                .emit();
+            sess.parse_sess.span_diagnostic.struct_span_err(sp, &s).span_label(sp, msg).emit();
             return mk_syn_ext(Box::new(macro_rules_dummy_expander));
         }
         Error(sp, msg) => {
@@ -521,15 +494,10 @@ pub fn compile_declarative_macro(
                         return tt;
                     }
                 }
-                sess.parse_sess
-                    .span_diagnostic
-                    .span_bug(def.span, "wrong-structured lhs")
+                sess.parse_sess.span_diagnostic.span_bug(def.span, "wrong-structured lhs")
             })
             .collect::<Vec<mbe::TokenTree>>(),
-        _ => sess
-            .parse_sess
-            .span_diagnostic
-            .span_bug(def.span, "wrong-structured lhs"),
+        _ => sess.parse_sess.span_diagnostic.span_bug(def.span, "wrong-structured lhs"),
     };
 
     let rhses = match argument_map[&MacroRulesNormalizedIdent::new(rhs_nm)] {
@@ -550,15 +518,10 @@ pub fn compile_declarative_macro(
                         .unwrap();
                     }
                 }
-                sess.parse_sess
-                    .span_diagnostic
-                    .span_bug(def.span, "wrong-structured lhs")
+                sess.parse_sess.span_diagnostic.span_bug(def.span, "wrong-structured lhs")
             })
             .collect::<Vec<mbe::TokenTree>>(),
-        _ => sess
-            .parse_sess
-            .span_diagnostic
-            .span_bug(def.span, "wrong-structured rhs"),
+        _ => sess.parse_sess.span_diagnostic.span_bug(def.span, "wrong-structured rhs"),
     };
 
     for rhs in &rhses {
@@ -577,10 +540,9 @@ pub fn compile_declarative_macro(
         Some(TransparencyError::UnknownTransparency(value, span)) => {
             diag.span_err(span, &format!("unknown macro transparency: `{}`", value))
         }
-        Some(TransparencyError::MultipleTransparencyAttrs(old_span, new_span)) => diag.span_err(
-            vec![old_span, new_span],
-            "multiple macro transparency attributes",
-        ),
+        Some(TransparencyError::MultipleTransparencyAttrs(old_span, new_span)) => {
+            diag.span_err(vec![old_span, new_span], "multiple macro transparency attributes")
+        }
         None => {}
     }
 
@@ -640,8 +602,7 @@ fn check_lhs_no_empty_seq(sess: &ParseSess, tts: &[mbe::TokenTree]) -> bool {
                     })
                 {
                     let sp = span.entire();
-                    sess.span_diagnostic
-                        .span_err(sp, "repetition matches empty token tree");
+                    sess.span_diagnostic.span_err(sp, "repetition matches empty token tree");
                     return false;
                 }
                 if !check_lhs_no_empty_seq(sess, &seq.tts) {
@@ -657,9 +618,7 @@ fn check_lhs_no_empty_seq(sess: &ParseSess, tts: &[mbe::TokenTree]) -> bool {
 fn check_rhs(sess: &ParseSess, rhs: &mbe::TokenTree) -> bool {
     match *rhs {
         mbe::TokenTree::Delimited(..) => return true,
-        _ => sess
-            .span_diagnostic
-            .span_err(rhs.span(), "macro rhs must be delimited"),
+        _ => sess.span_diagnostic.span_err(rhs.span(), "macro rhs must be delimited"),
     }
     false
 }
@@ -703,9 +662,7 @@ impl FirstSets {
     fn new(tts: &[mbe::TokenTree]) -> FirstSets {
         use mbe::TokenTree;
 
-        let mut sets = FirstSets {
-            first: FxHashMap::default(),
-        };
+        let mut sets = FirstSets { first: FxHashMap::default() };
         build_recur(&mut sets, tts);
         return sets;
 
@@ -755,10 +712,7 @@ impl FirstSets {
                         {
                             // If sequence is potentially empty, then
                             // union them (preserving first emptiness).
-                            first.add_all(&TokenSet {
-                                maybe_empty: true,
-                                ..subfirst
-                            });
+                            first.add_all(&TokenSet { maybe_empty: true, ..subfirst });
                         } else {
                             // Otherwise, sequence guaranteed
                             // non-empty; replace first.
@@ -852,19 +806,13 @@ struct TokenSet {
 impl TokenSet {
     // Returns a set for the empty sequence.
     fn empty() -> Self {
-        TokenSet {
-            tokens: Vec::new(),
-            maybe_empty: true,
-        }
+        TokenSet { tokens: Vec::new(), maybe_empty: true }
     }
 
     // Returns the set `{ tok }` for the single-token (and thus
     // non-empty) sequence [tok].
     fn singleton(tok: mbe::TokenTree) -> Self {
-        TokenSet {
-            tokens: vec![tok],
-            maybe_empty: false,
-        }
+        TokenSet { tokens: vec![tok], maybe_empty: false }
     }
 
     // Changes self to be the set `{ tok }`.
@@ -1157,11 +1105,7 @@ enum IsInFollow {
 fn is_in_follow(tok: &mbe::TokenTree, kind: NonterminalKind) -> IsInFollow {
     use mbe::TokenTree;
 
-    if let TokenTree::Token(Token {
-        kind: token::CloseDelim(_),
-        ..
-    }) = *tok
-    {
+    if let TokenTree::Token(Token { kind: token::CloseDelim(_), .. }) = *tok {
         // closing a token tree can never be matched by any fragment;
         // iow, we always require that `(` and `)` match, etc.
         IsInFollow::Yes
@@ -1254,7 +1198,7 @@ fn is_in_follow(tok: &mbe::TokenTree, kind: NonterminalKind) -> IsInFollow {
                 match tok {
                     TokenTree::Token(token) => match token.kind {
                         Comma => IsInFollow::Yes,
-                        Ident(name, is_raw) if is_raw /*|| name != kw::Priv*/ => IsInFollow::Yes,
+                        Ident(name, is_raw) if is_raw || name != kw::Priv => IsInFollow::Yes,
                         _ => {
                             if token.can_begin_type() {
                                 IsInFollow::Yes
@@ -1298,9 +1242,6 @@ fn parser_from_cx(sess: &ParseSess, tts: TokenStream) -> Parser<'_> {
 fn parse_failure_msg(tok: &Token) -> String {
     match tok.kind {
         token::Eof => "unexpected end of macro invocation".to_string(),
-        _ => format!(
-            "no rules expected the token `{}`",
-            pprust::token_to_string(tok),
-        ),
+        _ => format!("no rules expected the token `{}`", pprust::token_to_string(tok),),
     }
 }

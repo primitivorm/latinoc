@@ -9,9 +9,9 @@ RUN bash /tmp/cross-apt-packages.sh
 # Required for cross-build gcc
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-      libgmp-dev \
-      libmpfr-dev \
-      libmpc-dev
+    libgmp-dev \
+    libmpfr-dev \
+    libmpc-dev
 
 COPY scripts/illumos-toolchain.sh /tmp/
 

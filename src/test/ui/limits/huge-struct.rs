@@ -42,12 +42,15 @@ struct S32<T> {
     v31: T,
 }
 
-struct S1k<T> { val: S32<S32<T>> }
+struct S1k<T> {
+    val: S32<S32<T>>,
+}
 
-struct S1M<T> { val: S1k<S1k<T>> }
+struct S1M<T> {
+    val: S1k<S1k<T>>,
+}
 
 fn main() {
     let fat: Option<S1M<S1M<S1M<u32>>>> = None;
     //~^ ERROR are too big for the current architecture
-
 }

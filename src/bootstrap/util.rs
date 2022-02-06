@@ -18,13 +18,21 @@ use crate::config::{Config, TargetSelection};
 
 /// Returns the `name` as the filename of a static library for `target`.
 pub fn staticlib(name: &str, target: TargetSelection) -> String {
-    if target.contains("windows") { format!("{}.lib", name) } else { format!("lib{}.a", name) }
+    if target.contains("windows") {
+        format!("{}.lib", name)
+    } else {
+        format!("lib{}.a", name)
+    }
 }
 
 /// Given an executable called `name`, return the filename for the
 /// executable for a particular target.
 pub fn exe(name: &str, target: TargetSelection) -> String {
-    if target.contains("windows") { format!("{}.exe", name) } else { name.to_string() }
+    if target.contains("windows") {
+        format!("{}.exe", name)
+    } else {
+        name.to_string()
+    }
 }
 
 /// Returns `true` if the file name given looks like a dynamic library.
@@ -41,7 +49,11 @@ pub fn is_debug_info(name: &str) -> bool {
 /// Returns the corresponding relative library directory that the compiler's
 /// dylibs will be found in.
 pub fn libdir(target: TargetSelection) -> &'static str {
-    if target.contains("windows") { "bin" } else { "lib" }
+    if target.contains("windows") {
+        "bin"
+    } else {
+        "lib"
+    }
 }
 
 /// Adds a list of lookup paths to `cmd`'s dynamic library lookup path.
@@ -90,7 +102,11 @@ pub fn add_link_lib_path(path: Vec<PathBuf>, cmd: &mut Command) {
 /// Returns the environment variable which the link library lookup path
 /// resides in for this platform.
 fn link_lib_path_var() -> &'static str {
-    if cfg!(target_env = "msvc") { "LIB" } else { "LIBRARY_PATH" }
+    if cfg!(target_env = "msvc") {
+        "LIB"
+    } else {
+        "LIBRARY_PATH"
+    }
 }
 
 /// Parses the `link_lib_path_var()` environment variable, returning a list of

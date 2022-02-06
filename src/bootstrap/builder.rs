@@ -767,7 +767,13 @@ impl<'a> Builder<'a> {
         if compiler.is_snapshot(self) {
             self.initial_rustc.clone()
         } else {
+            // println!(
+            //     ">>> bootstrap/builder.rustc {:?}",
+            //     self.sysroot(compiler).join("bin").join(exe("latinoc", compiler.host))
+            // );
+            // TODO: proman
             self.sysroot(compiler).join("bin").join(exe("rustc", compiler.host))
+            // self.sysroot(compiler).join("bin").join(exe("latinoc", compiler.host))
         }
     }
 
@@ -844,6 +850,8 @@ impl<'a> Builder<'a> {
         target: TargetSelection,
         cmd: &str,
     ) -> Cargo {
+        println!(">>> bootstrap/builder.rs cargo");
+
         let mut cargo = Command::new(&self.initial_cargo);
         let out_dir = self.stage_out(compiler, mode);
 
@@ -926,6 +934,7 @@ impl<'a> Builder<'a> {
         };
 
         let mut rustflags = Rustflags::new(target);
+        // TODO: proman
         if stage != 0 {
             if let Ok(s) = env::var("CARGOFLAGS_NOT_BOOTSTRAP") {
                 cargo.args(s.split_whitespace());
@@ -951,7 +960,10 @@ impl<'a> Builder<'a> {
                 // Only run clippy on a very limited subset of crates (in particular, not build scripts).
                 cargo.arg("-Zunstable-options");
                 // Explicitly does *not* set `--cfg=bootstrap`, since we're using a nightly clippy.
+                // TODO: proman
                 let host_version = Command::new("rustc").arg("--version").output().map_err(|_| ());
+                // let host_version =
+                //     Command::new("latinoc").arg("--version").output().map_err(|_| ());
                 let output = host_version.and_then(|output| {
                     if output.status.success() {
                         Ok(output)
@@ -969,6 +981,7 @@ impl<'a> Builder<'a> {
                     rustflags.arg("--cfg=bootstrap");
                 }
             } else {
+                // TODO: proman
                 rustflags.arg("--cfg=bootstrap");
             }
         }
@@ -1032,9 +1045,14 @@ impl<'a> Builder<'a> {
         // For some additional context, see #63470 (the PR originally adding
         // this), as well as #63012 which is the tracking issue for this
         // feature on the rustc side.
-        cargo.arg("-Zbinary-dep-depinfo");
 
-        cargo.arg("-j").arg(self.jobs().to_string());
+        // TODO: proman
+        // if compiler.stage == 0 {
+        cargo.arg("-Zbinary-dep-depinfo");
+        // }
+        // cargo.arg("-j").arg(self.jobs().to_string());
+        cargo.arg("-j").arg("4");
+
         // Remove make-related flags to ensure Cargo can correctly set things up
         cargo.env_remove("MAKEFLAGS");
         cargo.env_remove("MFLAGS");
@@ -1137,7 +1155,9 @@ impl<'a> Builder<'a> {
         // Clippy support is a hack and uses the default `cargo-clippy` in path.
         // Don't override RUSTC so that the `cargo-clippy` in path will be run.
         if cmd != "clippy" {
+            println!(">>> builder.cargo {:?}", self.out.join("bootstrap/debug/rustc"));
             cargo.env("RUSTC", self.out.join("bootstrap/debug/rustc"));
+            // cargo.env("RUSTC", self.out.join("x86_64-pc-windows-msvc/stage0/bin/rustc"));
         }
 
         // Dealing with rpath here is a little special, so let's go into some
@@ -1204,6 +1224,8 @@ impl<'a> Builder<'a> {
             rustdocflags.arg(&flag);
         });
 
+        // TODO: proman
+        // if !(["build", "check", "clippy", "fix", "latinoc"].contains(&cmd)) && want_rustdoc {
         if !(["build", "check", "clippy", "fix", "rustc"].contains(&cmd)) && want_rustdoc {
             cargo.env("RUSTDOC_LIBDIR", self.rustc_libdir(compiler));
         }
@@ -1278,6 +1300,7 @@ impl<'a> Builder<'a> {
 
         // Enable usage of unstable features
         cargo.env("RUSTC_BOOTSTRAP", "1");
+
         self.add_rust_test_threads(&mut cargo);
 
         // Almost all of the crates that we compile as part of the bootstrap may
@@ -1556,6 +1579,7 @@ impl<'a> Builder<'a> {
             }
         }
 
+        println!(">>> builder.cargo command: {:?}", cargo);
         Cargo { command: cargo, rustflags, rustdocflags }
     }
 
@@ -1628,7 +1652,11 @@ impl<'a> Builder<'a> {
         }
 
         // Only execute if it's supposed to run as default
-        if desc.default && should_run.is_really_default() { self.ensure(step) } else { None }
+        if desc.default && should_run.is_really_default() {
+            self.ensure(step)
+        } else {
+            None
+        }
     }
 
     /// Checks if any of the "should_run" paths is in the `Builder` paths.

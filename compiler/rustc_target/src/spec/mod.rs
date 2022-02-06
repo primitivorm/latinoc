@@ -549,9 +549,9 @@ impl StackProbeType {
                     .and_then(|o| o.as_array())
                     .ok_or_else(|| "expected `min-llvm-version-for-inline` to be an array")?;
                 let mut iter = min_version.into_iter().map(|v| {
-                    let int = v.as_u64().ok_or_else(
-                        || "expected `min-llvm-version-for-inline` values to be integers",
-                    )?;
+                    let int = v.as_u64().ok_or_else(|| {
+                        "expected `min-llvm-version-for-inline` values to be integers"
+                    })?;
                     u32::try_from(int)
                         .map_err(|_| "`min-llvm-version-for-inline` values don't convert to u32")
                 });

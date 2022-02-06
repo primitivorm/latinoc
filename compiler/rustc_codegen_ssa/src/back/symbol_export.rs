@@ -151,8 +151,7 @@ fn is_reachable_non_generic_provider_local(tcx: TyCtxt<'_>, def_id: DefId) -> bo
 }
 
 fn is_reachable_non_generic_provider_extern(tcx: TyCtxt<'_>, def_id: DefId) -> bool {
-    tcx.reachable_non_generics(def_id.krate)
-        .contains_key(&def_id)
+    tcx.reachable_non_generics(def_id.krate).contains_key(&def_id)
 }
 
 fn exported_symbols_provider_local(
@@ -199,13 +198,7 @@ fn exported_symbols_provider_local(
         }));
     }
 
-    if tcx
-        .sess
-        .opts
-        .debugging_opts
-        .sanitizer
-        .contains(SanitizerSet::MEMORY)
-    {
+    if tcx.sess.opts.debugging_opts.sanitizer.contains(SanitizerSet::MEMORY) {
         // Similar to profiling, preserve weak msan symbol during LTO.
         const MSAN_WEAK_SYMBOLS: [&str; 2] = ["__msan_track_origins", "__msan_keep_going"];
 
@@ -249,19 +242,13 @@ fn exported_symbols_provider_local(
             }
 
             match *mono_item {
-                MonoItem::Fn(Instance {
-                    def: InstanceDef::Item(def),
-                    substs,
-                }) => {
+                MonoItem::Fn(Instance { def: InstanceDef::Item(def), substs }) => {
                     if substs.non_erasable_generics().next().is_some() {
                         let symbol = ExportedSymbol::Generic(def.did, substs);
                         symbols.push((symbol, SymbolExportLevel::Rust));
                     }
                 }
-                MonoItem::Fn(Instance {
-                    def: InstanceDef::DropGlue(_, Some(ty)),
-                    substs,
-                }) => {
+                MonoItem::Fn(Instance { def: InstanceDef::DropGlue(_, Some(ty)), substs }) => {
                     // A little sanity-check
                     debug_assert_eq!(
                         substs.non_erasable_generics().next(),
@@ -294,12 +281,8 @@ fn upstream_monomorphizations_provider(
         let mut cnum_stable_ids = IndexVec::from_elem_n(Fingerprint::ZERO, cnums.len() + 1);
 
         for &cnum in cnums.iter() {
-            cnum_stable_ids[cnum] = tcx
-                .def_path_hash(DefId {
-                    krate: cnum,
-                    index: CRATE_DEF_INDEX,
-                })
-                .0;
+            cnum_stable_ids[cnum] =
+                tcx.def_path_hash(DefId { krate: cnum, index: CRATE_DEF_INDEX }).0;
         }
 
         cnum_stable_ids
@@ -360,8 +343,7 @@ fn upstream_drop_glue_for_provider<'tcx>(
     substs: SubstsRef<'tcx>,
 ) -> Option<CrateNum> {
     if let Some(def_id) = tcx.lang_items().drop_in_place_fn() {
-        tcx.upstream_monomorphizations_for(def_id)
-            .and_then(|monos| monos.get(&substs).cloned())
+        tcx.upstream_monomorphizations_for(def_id).and_then(|monos| monos.get(&substs).cloned())
     } else {
         None
     }
@@ -394,18 +376,15 @@ fn symbol_export_level(tcx: TyCtxt<'_>, sym_def_id: DefId) -> SymbolExportLevel 
     // are not considered for export
     let codegen_fn_attrs = tcx.codegen_fn_attrs(sym_def_id);
     let is_extern = codegen_fn_attrs.contains_extern_indicator();
-    let std_internal = codegen_fn_attrs
-        .flags
-        .contains(CodegenFnAttrFlags::RUSTC_STD_INTERNAL_SYMBOL);
+    let std_internal =
+        codegen_fn_attrs.flags.contains(CodegenFnAttrFlags::RUSTC_STD_INTERNAL_SYMBOL);
 
     if is_extern && !std_internal {
         let target = &tcx.sess.target.llvm_target;
         // WebAssembly cannot export data symbols, so reduce their export level
         if target.contains("emscripten") {
-            if let Some(Node::Item(&hir::Item {
-                kind: hir::ItemKind::Static(..),
-                ..
-            })) = tcx.hir().get_if_local(sym_def_id)
+            if let Some(Node::Item(&hir::Item { kind: hir::ItemKind::Static(..), .. })) =
+                tcx.hir().get_if_local(sym_def_id)
             {
                 return SymbolExportLevel::Rust;
             }
@@ -468,9 +447,7 @@ fn wasm_import_module_map(tcx: TyCtxt<'_>, cnum: CrateNum) -> FxHashMap<DefId, S
 
     let mut ret = FxHashMap::default();
     for (def_id, lib) in tcx.foreign_modules(cnum).iter() {
-        let module = def_id_to_native_lib
-            .get(&def_id)
-            .and_then(|s| s.wasm_import_module);
+        let module = def_id_to_native_lib.get(&def_id).and_then(|s| s.wasm_import_module);
         let module = match module {
             Some(s) => s,
             None => continue,

@@ -169,9 +169,11 @@ fn windows_exe_resolver() {
     env::set_var("PATH", "");
 
     assert_eq!(resolve_exe(OsStr::new("rustc"), None).unwrap_err().kind(), io::ErrorKind::NotFound);
+    // assert_eq!(resolve_exe(OsStr::new("latinoc"), None).unwrap_err().kind(), io::ErrorKind::NotFound);
 
     let child_paths = Some(paths.as_os_str());
     assert!(resolve_exe(OsStr::new("rustc"), child_paths).is_ok());
+    // assert!(resolve_exe(OsStr::new("latinoc"), child_paths).is_ok());
 
     // The resolver looks in system directories even when `PATH` is empty.
     assert!(resolve_exe(OsStr::new("cmd.exe"), None).is_ok());

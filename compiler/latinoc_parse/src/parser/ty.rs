@@ -3,7 +3,7 @@ use super::{Parser, PathStyle, TokenType};
 use crate::{maybe_recover_from_interpolated_ty_qpath, maybe_whole};
 
 use rustc_ast::ptr::P;
-use rustc_ast::token::{self, Token, TokenKind};
+use rustc_ast::token::{self, /*Token,*/ TokenKind};
 use rustc_ast::{
     self as ast, BareFnTy, FnRetTy, GenericBound, GenericBounds, GenericParam, Generics, Lifetime,
     MacCall, MutTy, Mutability, PolyTraitRef, TraitBoundModifier, TraitObjectSyntax, Ty, TyKind,
@@ -87,9 +87,11 @@ enum AllowCVariadic {
 ///
 /// Types can also be of the form `IDENT(u8, u8) -> u8`, however this assumes
 /// that `IDENT` is not the ident of a fn trait.
+/*
 fn can_continue_type_after_non_fn_ident(t: &Token) -> bool {
     t == &token::ModSep || t == &token::Lt || t == &token::BinOp(token::Shl)
 }
+*/
 
 impl<'a> Parser<'a> {
     /// Parses a type.
@@ -412,7 +414,7 @@ impl<'a> Parser<'a> {
         } else {
             None
         };
-        let mut mutbl = self.parse_mutability();
+        let /*mut*/ mutbl = self.parse_mutability();
         if self.token.is_lifetime() && mutbl == Mutability::Mut && opt_lifetime.is_none() {
             // A lifetime is invalid here: it would be part of a bare trait bound, which requires
             // it to be followed by a plus, but we disallow plus in the pointee type.

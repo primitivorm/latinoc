@@ -9,7 +9,7 @@ use crate::bounds::Bounds;
 use crate::collect::PlaceholderHirTyCollector;
 use crate::errors::{
     AmbiguousLifetimeBound, MultipleRelaxedDefaultBounds, TraitObjectDeclaredWithNoTraits,
-    TypeofReservedKeywordUsed, ValueOfAssociatedStructAlreadySpecified,
+    /*TypeofReservedKeywordUsed,*/ ValueOfAssociatedStructAlreadySpecified,
 };
 use crate::middle::resolve_lifetime as rl;
 use crate::require_c_abi_if_c_variadic;

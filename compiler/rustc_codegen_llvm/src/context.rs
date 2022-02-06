@@ -97,7 +97,7 @@ pub struct CodegenCx<'ll, 'tcx> {
     pub dbg_cx: Option<debuginfo::CrateDebugContext<'ll, 'tcx>>,
 
     eh_personality: Cell<Option<&'ll Value>>,
-    eh_catch_typeinfo: Cell<Option<&'ll Value>>,
+    // eh_catch_typeinfo: Cell<Option<&'ll Value>>,
     pub rust_try_fn: Cell<Option<(&'ll Type, &'ll Value)>>,
 
     intrinsics: RefCell<FxHashMap<&'static str, (&'ll Type, &'ll Value)>>,
@@ -351,7 +351,7 @@ impl<'ll, 'tcx> CodegenCx<'ll, 'tcx> {
             coverage_cx,
             dbg_cx,
             eh_personality: Cell::new(None),
-            eh_catch_typeinfo: Cell::new(None),
+            /*eh_catch_typeinfo: Cell::new(None),*/
             rust_try_fn: Cell::new(None),
             intrinsics: Default::default(),
             local_gen_sym_counter: Cell::new(0),
@@ -793,6 +793,7 @@ impl CodegenCx<'b, 'tcx> {
         None
     }
 
+    /*
     crate fn eh_catch_typeinfo(&self) -> &'b Value {
         if let Some(eh_catch_typeinfo) = self.eh_catch_typeinfo.get() {
             return eh_catch_typeinfo;
@@ -811,6 +812,7 @@ impl CodegenCx<'b, 'tcx> {
         self.eh_catch_typeinfo.set(Some(eh_catch_typeinfo));
         eh_catch_typeinfo
     }
+    */
 }
 
 impl<'b, 'tcx> CodegenCx<'b, 'tcx> {

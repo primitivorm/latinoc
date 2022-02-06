@@ -39,7 +39,7 @@ RUN apt-get update && DEBIAN_FRONTEND=noninteractive apt-get install -y --no-ins
   pkg-config \
   libnewlib-arm-none-eabi \
   qemu-system-arm \
-# software-properties-common for the add-apt-repository command
+  # software-properties-common for the add-apt-repository command
   software-properties-common
 
 WORKDIR /build
@@ -61,38 +61,38 @@ ENV STAGING_DIR=/tmp
 
 COPY scripts/musl.sh /build
 RUN env \
-    CC=arm-linux-gnueabi-gcc CFLAGS="-march=armv5te -marm -mfloat-abi=soft" \
-    CXX=arm-linux-gnueabi-g++ CXXFLAGS="-march=armv5te -marm -mfloat-abi=soft" \
-    bash musl.sh armv5te && \
-    env \
-    CC=arm-linux-gnueabi-gcc CFLAGS="-march=armv6 -marm" \
-    CXX=arm-linux-gnueabi-g++ CXXFLAGS="-march=armv6 -marm" \
-    bash musl.sh arm && \
-    env \
-    CC=arm-linux-gnueabihf-gcc CFLAGS="-march=armv6 -marm -mfpu=vfp" \
-    CXX=arm-linux-gnueabihf-g++ CXXFLAGS="-march=armv6 -marm -mfpu=vfp" \
-    bash musl.sh armhf && \
-    env \
-    CC=arm-linux-gnueabihf-gcc CFLAGS="-march=armv7-a" \
-    CXX=arm-linux-gnueabihf-g++ CXXFLAGS="-march=armv7-a" \
-    bash musl.sh armv7hf && \
-    env \
-    CC=mips-openwrt-linux-gcc \
-    CXX=mips-openwrt-linux-g++ \
-    bash musl.sh mips && \
-    env \
-    CC=mipsel-openwrt-linux-gcc \
-    CXX=mipsel-openwrt-linux-g++ \
-    bash musl.sh mipsel && \
-    env \
-    CC=mips64-linux-gnuabi64-gcc \
-    CXX=mips64-linux-gnuabi64-g++ \
-    bash musl.sh mips64 && \
-    env \
-    CC=mips64el-linux-gnuabi64-gcc \
-    CXX=mips64el-linux-gnuabi64-g++ \
-    bash musl.sh mips64el && \
-    rm -rf /build/*
+  CC=arm-linux-gnueabi-gcc CFLAGS="-march=armv5te -marm -mfloat-abi=soft" \
+  CXX=arm-linux-gnueabi-g++ CXXFLAGS="-march=armv5te -marm -mfloat-abi=soft" \
+  bash musl.sh armv5te && \
+  env \
+  CC=arm-linux-gnueabi-gcc CFLAGS="-march=armv6 -marm" \
+  CXX=arm-linux-gnueabi-g++ CXXFLAGS="-march=armv6 -marm" \
+  bash musl.sh arm && \
+  env \
+  CC=arm-linux-gnueabihf-gcc CFLAGS="-march=armv6 -marm -mfpu=vfp" \
+  CXX=arm-linux-gnueabihf-g++ CXXFLAGS="-march=armv6 -marm -mfpu=vfp" \
+  bash musl.sh armhf && \
+  env \
+  CC=arm-linux-gnueabihf-gcc CFLAGS="-march=armv7-a" \
+  CXX=arm-linux-gnueabihf-g++ CXXFLAGS="-march=armv7-a" \
+  bash musl.sh armv7hf && \
+  env \
+  CC=mips-openwrt-linux-gcc \
+  CXX=mips-openwrt-linux-g++ \
+  bash musl.sh mips && \
+  env \
+  CC=mipsel-openwrt-linux-gcc \
+  CXX=mipsel-openwrt-linux-g++ \
+  bash musl.sh mipsel && \
+  env \
+  CC=mips64-linux-gnuabi64-gcc \
+  CXX=mips64-linux-gnuabi64-g++ \
+  bash musl.sh mips64 && \
+  env \
+  CC=mips64el-linux-gnuabi64-gcc \
+  CXX=mips64el-linux-gnuabi64-g++ \
+  bash musl.sh mips64el && \
+  rm -rf /build/*
 
 # FIXME(mozilla/sccache#235) this shouldn't be necessary but is currently
 # necessary to disambiguate the mips compiler with the mipsel compiler. We want
@@ -145,46 +145,46 @@ ENV TARGETS=$TARGETS,armv7a-none-eabi
 # doesn't currently have it enabled, and the riscv gcc compiler is not
 # installed.
 ENV CFLAGS_armv5te_unknown_linux_musleabi="-march=armv5te -marm -mfloat-abi=soft" \
-    CFLAGS_arm_unknown_linux_musleabi="-march=armv6 -marm" \
-    CFLAGS_arm_unknown_linux_musleabihf="-march=armv6 -marm -mfpu=vfp" \
-    CFLAGS_armv7_unknown_linux_musleabihf="-march=armv7-a" \
-    CC_mipsel_unknown_linux_musl=mipsel-openwrt-linux-gcc \
-    CC_mips_unknown_linux_musl=mips-openwrt-linux-gcc \
-    CC_mips64el_unknown_linux_muslabi64=mips64el-linux-gnuabi64-gcc \
-    CC_mips64_unknown_linux_muslabi64=mips64-linux-gnuabi64-gcc \
-    CC_sparc64_unknown_linux_gnu=sparc64-linux-gnu-gcc \
-    CC_x86_64_unknown_redox=x86_64-unknown-redox-gcc \
-    CC_thumbv7neon_unknown_linux_gnueabihf=arm-linux-gnueabihf-gcc \
-    AR_thumbv7neon_unknown_linux_gnueabihf=arm-linux-gnueabihf-ar \
-    CXX_thumbv7neon_unknown_linux_gnueabihf=arm-linux-gnueabihf-g++ \
-    CC_armv7a_none_eabi=arm-none-eabi-gcc \
-    CC_armv7a_none_eabihf=arm-none-eabi-gcc \
-    CFLAGS_armv7a_none_eabi=-march=armv7-a \
-    CFLAGS_armv7a_none_eabihf=-march=armv7-a+vfpv3 \
-    CC_aarch64_unknown_none_softfloat=aarch64-none-elf-gcc \
-    CFLAGS_aarch64_unknown_none_softfloat=-mstrict-align -march=armv8-a+nofp+nosimd \
-    CC_aarch64_unknown_none=aarch64-none-elf-gcc \
-    CFLAGS_aarch64_unknown_none=-mstrict-align -march=armv8-a+fp+simd \
-    CC_riscv32i_unknown_none_elf=false \
-    CC_riscv32imc_unknown_none_elf=false \
-    CC_riscv32imac_unknown_none_elf=false \
-    CC_riscv64imac_unknown_none_elf=false \
-    CC_riscv64gc_unknown_none_elf=false
+  CFLAGS_arm_unknown_linux_musleabi="-march=armv6 -marm" \
+  CFLAGS_arm_unknown_linux_musleabihf="-march=armv6 -marm -mfpu=vfp" \
+  CFLAGS_armv7_unknown_linux_musleabihf="-march=armv7-a" \
+  CC_mipsel_unknown_linux_musl=mipsel-openwrt-linux-gcc \
+  CC_mips_unknown_linux_musl=mips-openwrt-linux-gcc \
+  CC_mips64el_unknown_linux_muslabi64=mips64el-linux-gnuabi64-gcc \
+  CC_mips64_unknown_linux_muslabi64=mips64-linux-gnuabi64-gcc \
+  CC_sparc64_unknown_linux_gnu=sparc64-linux-gnu-gcc \
+  CC_x86_64_unknown_redox=x86_64-unknown-redox-gcc \
+  CC_thumbv7neon_unknown_linux_gnueabihf=arm-linux-gnueabihf-gcc \
+  AR_thumbv7neon_unknown_linux_gnueabihf=arm-linux-gnueabihf-ar \
+  CXX_thumbv7neon_unknown_linux_gnueabihf=arm-linux-gnueabihf-g++ \
+  CC_armv7a_none_eabi=arm-none-eabi-gcc \
+  CC_armv7a_none_eabihf=arm-none-eabi-gcc \
+  CFLAGS_armv7a_none_eabi=-march=armv7-a \
+  CFLAGS_armv7a_none_eabihf=-march=armv7-a+vfpv3 \
+  CC_aarch64_unknown_none_softfloat=aarch64-none-elf-gcc \
+  CFLAGS_aarch64_unknown_none_softfloat=-mstrict-align -march=armv8-a+nofp+nosimd \
+  CC_aarch64_unknown_none=aarch64-none-elf-gcc \
+  CFLAGS_aarch64_unknown_none=-mstrict-align -march=armv8-a+fp+simd \
+  CC_riscv32i_unknown_none_elf=false \
+  CC_riscv32imc_unknown_none_elf=false \
+  CC_riscv32imac_unknown_none_elf=false \
+  CC_riscv64imac_unknown_none_elf=false \
+  CC_riscv64gc_unknown_none_elf=false
 
 ENV RUST_CONFIGURE_ARGS \
-      --musl-root-armv5te=/musl-armv5te \
-      --musl-root-arm=/musl-arm \
-      --musl-root-armhf=/musl-armhf \
-      --musl-root-armv7hf=/musl-armv7hf \
-      --musl-root-mips=/musl-mips \
-      --musl-root-mipsel=/musl-mipsel \
-      --musl-root-mips64=/musl-mips64 \
-      --musl-root-mips64el=/musl-mips64el \
-      --disable-docs
+  --musl-root-armv5te=/musl-armv5te \
+  --musl-root-arm=/musl-arm \
+  --musl-root-armhf=/musl-armhf \
+  --musl-root-armv7hf=/musl-armv7hf \
+  --musl-root-mips=/musl-mips \
+  --musl-root-mipsel=/musl-mipsel \
+  --musl-root-mips64=/musl-mips64 \
+  --musl-root-mips64el=/musl-mips64el \
+  --disable-docs
 
 ENV SCRIPT \
-      python3 ../x.py --stage 2 test --host='' --target $RUN_MAKE_TARGETS src/test/run-make && \
-      python3 ../x.py dist --host='' --target $TARGETS
+  python3 ../x.py --stage 2 test --host='' --target $RUN_MAKE_TARGETS src/test/run-make && \
+  python3 ../x.py dist --host='' --target $TARGETS
 
 # sccache
 COPY scripts/sccache.sh /scripts/

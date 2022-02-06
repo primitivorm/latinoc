@@ -13,7 +13,7 @@ use rustc_session::lint::{
 use rustc_session::{DiagnosticMessageId, Session};
 use rustc_span::hygiene::MacroKind;
 use rustc_span::source_map::{DesugaringKind, ExpnKind, MultiSpan};
-use rustc_span::{symbol, Span, Symbol, DUMMY_SP};
+use rustc_span::{/*symbol,*/ Span, Symbol, DUMMY_SP};
 
 /// How a lint level was set.
 #[derive(Clone, Copy, PartialEq, Eq, HashStable, Debug)]

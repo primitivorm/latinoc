@@ -143,13 +143,7 @@ pub struct RunCompiler<'a, 'b> {
 
 impl<'a, 'b> RunCompiler<'a, 'b> {
     pub fn new(at_args: &'a [String], callbacks: &'b mut (dyn Callbacks + Send)) -> Self {
-        Self {
-            at_args,
-            callbacks,
-            file_loader: None,
-            emitter: None,
-            make_codegen_backend: None,
-        }
+        Self { at_args, callbacks, file_loader: None, emitter: None, make_codegen_backend: None }
     }
 
     /// Set a custom codegen backend.
@@ -488,27 +482,12 @@ fn make_input(
                 let line = isize::from_str_radix(&line, 10)
                     .expect("UNSTABLE_RUSTDOC_TEST_LINE needs to be an number");
                 let file_name = FileName::doc_test_source_code(PathBuf::from(path), line);
-                Ok(Some((
-                    Input::Str {
-                        name: file_name,
-                        input: src,
-                    },
-                    None,
-                )))
+                Ok(Some((Input::Str { name: file_name, input: src }, None)))
             } else {
-                Ok(Some((
-                    Input::Str {
-                        name: FileName::anon_source_code(&src),
-                        input: src,
-                    },
-                    None,
-                )))
+                Ok(Some((Input::Str { name: FileName::anon_source_code(&src), input: src }, None)))
             }
         } else {
-            Ok(Some((
-                Input::File(PathBuf::from(ifile)),
-                Some(PathBuf::from(ifile)),
-            )))
+            Ok(Some((Input::File(PathBuf::from(ifile)), Some(PathBuf::from(ifile)))))
         }
     } else {
         Ok(None)
@@ -556,9 +535,8 @@ fn handle_explain(registry: Registry, code: &str, output: ErrorOutputType) {
             let mut text = String::new();
             // Slice off the leading newline and print.
             for line in description.lines() {
-                let indent_level = line
-                    .find(|c: char| !c.is_whitespace())
-                    .unwrap_or_else(|| line.len());
+                let indent_level =
+                    line.find(|c: char| !c.is_whitespace()).unwrap_or_else(|| line.len());
                 let dedented_line = &line[indent_level..];
                 if dedented_line.starts_with("```") {
                     is_in_code_block = !is_in_code_block;
@@ -634,9 +612,7 @@ impl RustcDefaultCalls {
                     json::decode(&rlink_data).unwrap_or_else(|err| {
                         sess.fatal(&format!("failed to decode rlink: {}", err));
                     });
-                let result = compiler
-                    .codegen_backend()
-                    .link(sess, codegen_results, &outputs);
+                let result = compiler.codegen_backend().link(sess, codegen_results, &outputs);
                 abort_on_err(result, sess);
             } else {
                 sess.fatal("rlink must be a file")
@@ -682,12 +658,7 @@ impl RustcDefaultCalls {
         use rustc_session::config::PrintRequest::*;
         // PrintRequest::NativeStaticLibs is special - printed during linking
         // (empty iterator returns true)
-        if sess
-            .opts
-            .prints
-            .iter()
-            .all(|&p| p == PrintRequest::NativeStaticLibs)
-        {
+        if sess.opts.prints.iter().all(|&p| p == PrintRequest::NativeStaticLibs) {
             return Compilation::Continue;
         }
 
@@ -707,10 +678,8 @@ impl RustcDefaultCalls {
         for req in &sess.opts.prints {
             match *req {
                 TargetList => {
-                    let mut targets = rustc_target::spec::TARGETS
-                        .iter()
-                        .copied()
-                        .collect::<Vec<_>>();
+                    let mut targets =
+                        rustc_target::spec::TARGETS.iter().copied().collect::<Vec<_>>();
                     targets.sort_unstable();
                     println!("{}", targets.join("\n"));
                 }
@@ -791,11 +760,7 @@ impl RustcDefaultCalls {
 pub fn version(binary: &str, matches: &getopts::Matches) {
     let verbose = matches.opt_present("verbose");
 
-    println!(
-        "{} {}",
-        binary,
-        util::version_str().unwrap_or("unknown version")
-    );
+    println!("{} {}", binary, util::version_str().unwrap_or("unknown version"));
 
     if verbose {
         fn unw(x: Option<&str>) -> &str {
@@ -808,27 +773,18 @@ pub fn version(binary: &str, matches: &getopts::Matches) {
         println!("release: {}", unw(util::release_str()));
 
         let debug_flags = matches.opt_strs("Z");
-        let backend_name = debug_flags
-            .iter()
-            .find_map(|x| x.strip_prefix("codegen-backend="));
+        let backend_name = debug_flags.iter().find_map(|x| x.strip_prefix("codegen-backend="));
         get_codegen_backend(&None, backend_name).print_version();
     }
 }
 
 fn usage(verbose: bool, include_unstable_options: bool, nightly_build: bool) {
-    let groups = if verbose {
-        config::rustc_optgroups()
-    } else {
-        config::rustc_short_optgroups()
-    };
+    let groups = if verbose { config::rustc_optgroups() } else { config::rustc_short_optgroups() };
     let mut options = getopts::Options::new();
-    for option in groups
-        .iter()
-        .filter(|x| include_unstable_options || x.is_stable())
-    {
+    for option in groups.iter().filter(|x| include_unstable_options || x.is_stable()) {
         (option.apply)(&mut options);
     }
-    let message = "Usage: rustc [OPTIONS] INPUT";
+    let message = "Usage: latinoc [OPTIONS] INPUT";
     let nightly_help = if nightly_build {
         "\n    -Z help             Print unstable compiler options"
     } else {
@@ -837,7 +793,7 @@ fn usage(verbose: bool, include_unstable_options: bool, nightly_build: bool) {
     let verbose_help = if verbose {
         ""
     } else {
-        "\n    --help -v           Print the full set of options rustc accepts"
+        "\n    --help -v           Print the full set of options latinoc accepts"
     };
     let at_path = if verbose {
         "    @path               Read newline separated options from `path`\n"
@@ -859,8 +815,8 @@ fn usage(verbose: bool, include_unstable_options: bool, nightly_build: bool) {
 fn print_wall_help() {
     println!(
         "
-The flag `-Wall` does not exist in `rustc`. Most useful lints are enabled by
-default. Use `rustc -W help` to see all available lints. It's more common to put
+The flag `-Wall` does not exist in `latinoc`. Most useful lints are enabled by
+default. Use `latinoc -W help` to see all available lints. It's more common to put
 warning settings in the crate root using `#![warn(LINT_NAME)]` instead of using
 the command line flag directly.
 "
@@ -896,28 +852,18 @@ Available lint options:
         lints
     }
 
-    let (plugin, builtin): (Vec<_>, _) = lint_store
-        .get_lints()
-        .iter()
-        .cloned()
-        .partition(|&lint| lint.is_plugin);
+    let (plugin, builtin): (Vec<_>, _) =
+        lint_store.get_lints().iter().cloned().partition(|&lint| lint.is_plugin);
     let plugin = sort_lints(sess, plugin);
     let builtin = sort_lints(sess, builtin);
 
-    let (plugin_groups, builtin_groups): (Vec<_>, _) = lint_store
-        .get_lint_groups()
-        .iter()
-        .cloned()
-        .partition(|&(.., p)| p);
+    let (plugin_groups, builtin_groups): (Vec<_>, _) =
+        lint_store.get_lint_groups().iter().cloned().partition(|&(.., p)| p);
     let plugin_groups = sort_lint_groups(plugin_groups);
     let builtin_groups = sort_lint_groups(builtin_groups);
 
-    let max_name_len = plugin
-        .iter()
-        .chain(&builtin)
-        .map(|&s| s.name.chars().count())
-        .max()
-        .unwrap_or(0);
+    let max_name_len =
+        plugin.iter().chain(&builtin).map(|&s| s.name.chars().count()).max().unwrap_or(0);
     let padded = |x: &str| {
         let mut s = " ".repeat(max_name_len - x.chars().count());
         s.push_str(x);
@@ -962,10 +908,7 @@ Available lint options:
     println!("Lint groups provided by rustc:\n");
     println!("    {}  sub-lints", padded("name"));
     println!("    {}  ---------", padded("----"));
-    println!(
-        "    {}  all lints that are set to issue warnings",
-        padded("warnings")
-    );
+    println!("    {}  all lints that are set to issue warnings", padded("warnings"));
 
     let print_lint_groups = |lints: Vec<(&'static str, Vec<LintId>)>| {
         for (name, to) in lints {
@@ -1015,11 +958,7 @@ fn print_flag_list<T>(
     cmdline_opt: &str,
     flag_list: &[(&'static str, T, &'static str, &'static str)],
 ) {
-    let max_len = flag_list
-        .iter()
-        .map(|&(name, _, _, _)| name.chars().count())
-        .max()
-        .unwrap_or(0);
+    let max_len = flag_list.iter().map(|&(name, _, _, _)| name.chars().count()).max().unwrap_or(0);
 
     for &(name, _, _, desc) in flag_list {
         println!(
@@ -1084,10 +1023,7 @@ pub fn handle_options(args: &[String]) -> Option<getopts::Matches> {
                 .map(|(flag, _)| format!("{}. Did you mean `-{} {}`?", e, flag, opt)),
             _ => None,
         };
-        early_error(
-            ErrorOutputType::default(),
-            &msg.unwrap_or_else(|| e.to_string()),
-        );
+        early_error(ErrorOutputType::default(), &msg.unwrap_or_else(|| e.to_string()));
     });
 
     // For all options we just parsed, we check a few aspects:
@@ -1107,11 +1043,7 @@ pub fn handle_options(args: &[String]) -> Option<getopts::Matches> {
         // Only show unstable options in --help if we accept unstable options.
         let unstable_enabled = nightly_options::is_unstable_enabled(&matches);
         let nightly_build = nightly_options::match_is_nightly_build(&matches);
-        usage(
-            matches.opt_present("verbose"),
-            unstable_enabled,
-            nightly_build,
-        );
+        usage(matches.opt_present("verbose"), unstable_enabled, nightly_build);
         return None;
     }
 
@@ -1156,7 +1088,7 @@ pub fn handle_options(args: &[String]) -> Option<getopts::Matches> {
     }
 
     if matches.opt_present("version") {
-        version("rustc", &matches);
+        version("latinoc", &matches);
         return None;
     }
 
@@ -1180,9 +1112,7 @@ fn parse_crate_attrs<'a>(sess: &'a Session, input: &Input) -> PResult<'a, Vec<as
 /// debugging, since some ICEs only happens with non-default compiler flags
 /// (and the users don't always report them).
 fn extra_compiler_flags() -> Option<(Vec<String>, bool)> {
-    let args = env::args_os()
-        .map(|arg| arg.to_string_lossy().to_string())
-        .collect::<Vec<_>>();
+    let args = env::args_os().map(|arg| arg.to_string_lossy().to_string()).collect::<Vec<_>>();
 
     // Avoid printing help because of empty args. This can suggest the compiler
     // itself is not the program root (consider RLS).
@@ -1198,17 +1128,10 @@ fn extra_compiler_flags() -> Option<(Vec<String>, bool)> {
 
         for content in &matches.opt_strs(flag) {
             // Split always returns the first element
-            let name = if let Some(first) = content.split('=').next() {
-                first
-            } else {
-                &content
-            };
+            let name = if let Some(first) = content.split('=').next() { first } else { &content };
 
-            let content = if ICE_REPORT_COMPILER_FLAGS_STRIP_VALUE.contains(&name) {
-                name
-            } else {
-                content
-            };
+            let content =
+                if ICE_REPORT_COMPILER_FLAGS_STRIP_VALUE.contains(&name) { name } else { content };
 
             if !ICE_REPORT_COMPILER_FLAGS_EXCLUDE.contains(&name) {
                 result.push(format!("{}{} {}", prefix, flag, content));
@@ -1385,9 +1308,7 @@ pub fn init_env_logger(env: &str) {
     #[cfg(parallel_compiler)]
     let layer = layer.with_thread_ids(true).with_thread_names(true);
 
-    let subscriber = tracing_subscriber::Registry::default()
-        .with(filter)
-        .with(layer);
+    let subscriber = tracing_subscriber::Registry::default().with(filter).with(layer);
     tracing::subscriber::set_global_default(subscriber).unwrap();
 }
 

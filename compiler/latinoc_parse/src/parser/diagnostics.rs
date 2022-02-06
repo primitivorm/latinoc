@@ -1269,6 +1269,7 @@ impl<'a> Parser<'a> {
 
     /// Consumes alternative await syntaxes like `await!(<expr>)`, `await <expr>`,
     /// `await? <expr>`, `await(<expr>)`, and `await { <expr> }`.
+    /*
     pub(super) fn recover_incorrect_await_syntax(
         &mut self,
         lo: Span,
@@ -1290,8 +1291,9 @@ impl<'a> Parser<'a> {
         };
         let expr = self.mk_expr(lo.to(sp), kind, attrs);
         self.maybe_recover_from_bad_qpath(expr, true)
-    }
+    }*/
 
+    /*
     fn recover_await_macro(&mut self) -> PResult<'a, (Span, P<Expr>, bool)> {
         self.expect(&token::Not)?;
         self.expect(&token::OpenDelim(token::Paren))?;
@@ -1299,7 +1301,9 @@ impl<'a> Parser<'a> {
         self.expect(&token::CloseDelim(token::Paren))?;
         Ok((self.prev_token.span, expr, false))
     }
+    */
 
+    /*
     fn recover_await_prefix(&mut self, await_sp: Span) -> PResult<'a, (Span, P<Expr>, bool)> {
         let is_question = self.eat(&token::Question); // Handle `await? <expr>`.
         let expr = if self.token == token::OpenDelim(token::Brace) {
@@ -1321,7 +1325,9 @@ impl<'a> Parser<'a> {
         })?;
         Ok((expr.span, expr, is_question))
     }
+    */
 
+    /*
     fn error_on_incorrect_await(&self, lo: Span, hi: Span, expr: &Expr, is_question: bool) -> Span {
         let expr_str = self
             .span_to_snippet(expr.span)
@@ -1337,6 +1343,7 @@ impl<'a> Parser<'a> {
             .emit();
         sp
     }
+    */
 
     /// If encountering `future.await()`, consumes and emits an error.
     pub(super) fn recover_from_await_method_call(&mut self) {
@@ -2168,9 +2175,10 @@ impl<'a> Parser<'a> {
         Err(err)
     }
 
+    /*
     /// Get the diagnostics for the cases where `move async` is found.
     ///
-    /// `move_async_span` starts at the 'm' of the move keyword and ends with the 'c' of the async keyword
+    /// `move_async_span` starts at the 'm' of the move keyword and ends with the 'c' of the async keyword    
     pub(super) fn incorrect_move_async_order_found(
         &self,
         move_async_span: Span,
@@ -2187,4 +2195,5 @@ impl<'a> Parser<'a> {
         );
         err
     }
+    */
 }

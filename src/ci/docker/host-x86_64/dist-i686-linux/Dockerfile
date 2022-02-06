@@ -4,8 +4,8 @@
 FROM ubuntu:20.04
 RUN apt-get update && \
     apt-get install -y --no-install-recommends \
-        curl \
-        ca-certificates
+    curl \
+    ca-certificates
 WORKDIR /tmp
 COPY host-x86_64/dist-x86_64-linux/download-openssl-curl.sh /tmp/
 RUN ./download-openssl-curl.sh
@@ -24,25 +24,25 @@ RUN sed -i '/updates/d' /etc/apt/sources.list && \
 
 RUN apt-get update && \
     apt-get install --allow-unauthenticated -y --no-install-recommends \
-      automake \
-      bzip2 \
-      file \
-      g++ \
-      g++-multilib \
-      gcc \
-      gcc-multilib \
-      git \
-      lib32z1-dev \
-      libedit-dev \
-      libncurses-dev \
-      make \
-      patch \
-      perl \
-      pkg-config \
-      unzip \
-      wget \
-      xz-utils \
-      zlib1g-dev
+    automake \
+    bzip2 \
+    file \
+    g++ \
+    g++-multilib \
+    gcc \
+    gcc-multilib \
+    git \
+    lib32z1-dev \
+    libedit-dev \
+    libncurses-dev \
+    make \
+    patch \
+    perl \
+    pkg-config \
+    unzip \
+    wget \
+    xz-utils \
+    zlib1g-dev
 
 ENV PATH=/rustroot/bin:$PATH
 ENV LD_LIBRARY_PATH=/rustroot/lib64:/rustroot/lib32:/rustroot/lib
@@ -104,13 +104,13 @@ RUN sh /scripts/sccache.sh
 ENV HOSTS=i686-unknown-linux-gnu
 
 ENV RUST_CONFIGURE_ARGS \
-      --enable-full-tools \
-      --enable-sanitizers \
-      --enable-profiler \
-      --set target.i686-unknown-linux-gnu.linker=clang \
-      --build=i686-unknown-linux-gnu \
-      --set llvm.ninja=false \
-      --set rust.jemalloc
+    --enable-full-tools \
+    --enable-sanitizers \
+    --enable-profiler \
+    --set target.i686-unknown-linux-gnu.linker=clang \
+    --build=i686-unknown-linux-gnu \
+    --set llvm.ninja=false \
+    --set rust.jemalloc
 ENV SCRIPT python3 ../x.py dist --build $HOSTS --host $HOSTS --target $HOSTS
 ENV CARGO_TARGET_I686_UNKNOWN_LINUX_GNU_LINKER=clang
 

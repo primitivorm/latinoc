@@ -82,8 +82,10 @@ pub fn link_binary<'a, B: ArchiveBuilder<'a>>(
         });
 
         if outputs.outputs.should_link() {
+            // TODO: proman
             let tmpdir = TempFileBuilder::new()
                 .prefix("rustc")
+                // .prefix("latinoc")
                 .tempdir()
                 .unwrap_or_else(|err| sess.fatal(&format!("couldn't create a temp dir: {}", err)));
             let path = MaybeTempDir::new(tmpdir, sess.opts.cg.save_temps);
@@ -1626,7 +1628,9 @@ fn add_link_script(cmd: &mut dyn Linker, sess: &Session, tmpdir: &Path, crate_ty
                 sess.fatal("can only use link script when linking with GNU-like linker");
             }
 
+            // TODO: proman
             let file_name = ["rustc", &sess.target.llvm_target, "linkfile.ld"].join("-");
+            // let file_name = ["latinoc", &sess.target.llvm_target, "linkfile.ld"].join("-");
 
             let path = tmpdir.join(file_name);
             if let Err(e) = fs::write(&path, script) {
@@ -2277,7 +2281,11 @@ fn add_upstream_rust_crates<'a, B: ArchiveBuilder<'a>>(
 
     // Converts a library file-stem into a cc -l argument
     fn unlib<'a>(target: &Target, stem: &'a str) -> &'a str {
-        if stem.starts_with("lib") && !target.is_like_windows { &stem[3..] } else { stem }
+        if stem.starts_with("lib") && !target.is_like_windows {
+            &stem[3..]
+        } else {
+            stem
+        }
     }
 
     // Adds the static "rlib" versions of all crates to the command line.
