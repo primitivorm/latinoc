@@ -12,18 +12,18 @@
 //! from the thread local storage.
 
 extern crate rustc_borrowck;
-extern crate rustc_driver;
+extern crate latinoc_driver;
 extern crate rustc_hir;
-extern crate rustc_interface;
+extern crate latinoc_interface;
 extern crate rustc_middle;
 extern crate rustc_session;
 
 use rustc_borrowck::consumers::BodyWithBorrowckFacts;
-use rustc_driver::Compilation;
+use latinoc_driver::Compilation;
 use rustc_hir::def_id::LocalDefId;
 use rustc_hir::itemlikevisit::ItemLikeVisitor;
-use rustc_interface::interface::Compiler;
-use rustc_interface::{Config, Queries};
+use latinoc_interface::interface::Compiler;
+use latinoc_interface::{Config, Queries};
 use rustc_middle::ty::query::query_values::mir_borrowck;
 use rustc_middle::ty::query::{ExternProviders, Providers};
 use rustc_middle::ty::{self, TyCtxt};
@@ -33,13 +33,13 @@ use std::collections::HashMap;
 use std::thread_local;
 
 fn main() {
-    let exit_code = rustc_driver::catch_with_exit_code(move || {
+    let exit_code = latinoc_driver::catch_with_exit_code(move || {
         let mut rustc_args: Vec<_> = std::env::args().collect();
         // We must pass -Zpolonius so that the borrowck information is computed.
         rustc_args.push("-Zpolonius".to_owned());
         let mut callbacks = CompilerCalls::default();
         // Call the Rust compiler with our callbacks.
-        rustc_driver::RunCompiler::new(&rustc_args, &mut callbacks).run()
+        latinoc_driver::RunCompiler::new(&rustc_args, &mut callbacks).run()
     });
     std::process::exit(exit_code);
 }
@@ -47,7 +47,7 @@ fn main() {
 #[derive(Default)]
 pub struct CompilerCalls;
 
-impl rustc_driver::Callbacks for CompilerCalls {
+impl latinoc_driver::Callbacks for CompilerCalls {
     // In this callback we override the mir_borrowck query.
     fn config(&mut self, config: &mut Config) {
         assert!(config.override_queries.is_none());

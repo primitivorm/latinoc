@@ -1,13 +1,13 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::path::{Path, PathBuf};
 
-use rustc_ast::token::{DelimToken, TokenKind};
-use rustc_ast::{ast, ptr};
-use rustc_errors::Diagnostic;
-use rustc_parse::{
+use latinoc_parse::{
     new_parser_from_file,
     parser::{ForceCollect, Parser as RawParser},
 };
+use rustc_ast::token::{DelimToken, TokenKind};
+use rustc_ast::{ast, ptr};
+use rustc_errors::Diagnostic;
 use rustc_span::{sym, symbol::kw, Span};
 
 use crate::attr::first_attr_value_str_by_name;
@@ -68,13 +68,13 @@ impl<'a> ParserBuilder<'a> {
     fn parser(
         sess: &'a rustc_session::parse::ParseSess,
         input: Input,
-    ) -> Result<rustc_parse::parser::Parser<'a>, Option<Vec<Diagnostic>>> {
+    ) -> Result<latinoc_parse::parser::Parser<'a>, Option<Vec<Diagnostic>>> {
         match input {
             Input::File(ref file) => catch_unwind(AssertUnwindSafe(move || {
                 new_parser_from_file(sess, file, None)
             }))
             .map_err(|_| None),
-            Input::Text(text) => rustc_parse::maybe_new_parser_from_source_str(
+            Input::Text(text) => latinoc_parse::maybe_new_parser_from_source_str(
                 sess,
                 rustc_span::FileName::Custom("stdin".to_owned()),
                 text,
@@ -190,7 +190,7 @@ impl<'a> Parser<'a> {
         mac: &'a ast::MacCall,
     ) -> Result<Vec<ast::Item>, &'static str> {
         let token_stream = mac.args.inner_tokens();
-        let mut parser = rustc_parse::stream_to_parser(sess.inner(), token_stream, Some(""));
+        let mut parser = latinoc_parse::stream_to_parser(sess.inner(), token_stream, Some(""));
 
         let mut items = vec![];
         let mut process_if_cfg = true;
@@ -209,7 +209,7 @@ impl<'a> Parser<'a> {
                 // to the opening brace.
                 // See also https://github.com/rust-lang/rust/pull/79433
                 parser
-                    .parse_attribute(rustc_parse::parser::attr::InnerAttrPolicy::Permitted)
+                    .parse_attribute(latinoc_parse::parser::attr::InnerAttrPolicy::Permitted)
                     .map_err(|_| "Failed to parse attributes")?;
             }
 

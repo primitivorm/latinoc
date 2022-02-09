@@ -2,7 +2,7 @@ use ast::visit;
 use rustc_ast as ast;
 use rustc_hir::def::Namespace::TypeNS;
 use rustc_hir::def_id::{LocalDefId, CRATE_DEF_ID};
-use rustc_interface::interface;
+use latinoc_interface::interface;
 use rustc_span::Span;
 
 use std::cell::RefCell;

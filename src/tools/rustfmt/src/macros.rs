@@ -12,12 +12,12 @@
 use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
+use latinoc_parse::parser::{ForceCollect, Parser};
+use latinoc_parse::{stream_to_parser, MACRO_ARGUMENTS};
 use rustc_ast::token::{BinOpToken, DelimToken, Token, TokenKind};
 use rustc_ast::tokenstream::{Cursor, Spacing, TokenStream, TokenTree};
 use rustc_ast::{ast, ptr};
 use rustc_ast_pretty::pprust;
-use rustc_parse::parser::{ForceCollect, Parser};
-use rustc_parse::{stream_to_parser, MACRO_ARGUMENTS};
 use rustc_span::{
     symbol::{self, kw},
     BytePos, Span, Symbol, DUMMY_SP,
@@ -122,23 +122,23 @@ fn parse_macro_arg<'a, 'b: 'a>(parser: &'a mut Parser<'b>) -> Option<MacroArg> {
 
     parse_macro_arg!(
         Expr,
-        |parser: &mut rustc_parse::parser::Parser<'b>| parser.parse_expr(),
+        |parser: &mut latinoc_parse::parser::Parser<'b>| parser.parse_expr(),
         |x: ptr::P<ast::Expr>| Some(x)
     );
     parse_macro_arg!(
         Ty,
-        |parser: &mut rustc_parse::parser::Parser<'b>| parser.parse_ty(),
+        |parser: &mut latinoc_parse::parser::Parser<'b>| parser.parse_ty(),
         |x: ptr::P<ast::Ty>| Some(x)
     );
     parse_macro_arg!(
         Pat,
-        |parser: &mut rustc_parse::parser::Parser<'b>| parser.parse_pat_no_top_alt(None),
+        |parser: &mut latinoc_parse::parser::Parser<'b>| parser.parse_pat_no_top_alt(None),
         |x: ptr::P<ast::Pat>| Some(x)
     );
     // `parse_item` returns `Option<ptr::P<ast::Item>>`.
     parse_macro_arg!(
         Item,
-        |parser: &mut rustc_parse::parser::Parser<'b>| parser.parse_item(ForceCollect::No),
+        |parser: &mut latinoc_parse::parser::Parser<'b>| parser.parse_item(ForceCollect::No),
         |x: Option<ptr::P<ast::Item>>| x
     );
 
@@ -1449,7 +1449,7 @@ fn format_lazy_static(
         // Parse a `lazy_static!` item.
         let vis = crate::utils::format_visibility(
             context,
-            &parse_or!(parse_visibility, rustc_parse::parser::FollowedByType::No),
+            &parse_or!(parse_visibility, latinoc_parse::parser::FollowedByType::No),
         );
         parser.eat_keyword(kw::Static);
         parser.eat_keyword(kw::Ref);

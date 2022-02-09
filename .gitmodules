@@ -1,46 +1,46 @@
 [submodule "src/tools/rust-installer"]
 	path = src/tools/rust-installer
-	url = https://github.com/rust-lang/rust-installer.git
+	url = https://github.com/primitivorm/rust-installer.git
 [submodule "src/doc/nomicon"]
 	path = src/doc/nomicon
-	url = https://github.com/rust-lang/nomicon.git
+	url = https://github.com/primitivorm/nomicon.git
 [submodule "src/tools/cargo"]
 	path = src/tools/cargo
-	url = https://github.com/rust-lang/cargo.git
+	url = https://github.com/primitivorm/cargo.git
 [submodule "src/doc/reference"]
 	path = src/doc/reference
-	url = https://github.com/rust-lang/reference.git
+	url = https://github.com/primitivorm/reference.git
 [submodule "src/doc/book"]
 	path = src/doc/book
-	url = https://github.com/rust-lang/book.git
+	url = https://github.com/primitivorm/book.git
 [submodule "src/tools/rls"]
 	path = src/tools/rls
-	url = https://github.com/rust-lang/rls.git
+	url = https://github.com/primitivorm/rls.git
 [submodule "src/tools/miri"]
 	path = src/tools/miri
-	url = https://github.com/rust-lang/miri.git
+	url = https://github.com/primitivorm/miri.git
 [submodule "src/doc/rust-by-example"]
 	path = src/doc/rust-by-example
-	url = https://github.com/rust-lang/rust-by-example.git
+	url = https://github.com/primitivorm/rust-by-example.git
 [submodule "library/stdarch"]
 	path = library/stdarch
-	url = https://github.com/rust-lang/stdarch.git
+	url = https://github.com/primitivorm/stdarch.git
 [submodule "src/doc/rustc-dev-guide"]
 	path = src/doc/rustc-dev-guide
-	url = https://github.com/rust-lang/rustc-dev-guide.git
+	url = https://github.com/primitivorm/rustc-dev-guide.git
 [submodule "src/doc/edition-guide"]
 	path = src/doc/edition-guide
-	url = https://github.com/rust-lang/edition-guide.git
+	url = https://github.com/primitivorm/edition-guide.git
 [submodule "src/llvm-project"]
 	path = src/llvm-project
-	url = https://github.com/rust-lang/llvm-project.git
+	url = https://github.com/primitivorm/llvm-project.git
 	branch = rustc/13.0-2021-09-30
 [submodule "src/doc/embedded-book"]
 	path = src/doc/embedded-book
-	url = https://github.com/rust-embedded/book.git
+	url = https://github.com/primitivorm/book.git
 [submodule "src/tools/rust-analyzer"]
 	path = src/tools/rust-analyzer
-	url = https://github.com/rust-analyzer/rust-analyzer.git
+	url = https://github.com/primitivorm/rust-analyzer.git
 [submodule "library/backtrace"]
 	path = library/backtrace
-	url = https://github.com/rust-lang/backtrace-rs.git
+	url = https://github.com/primitivorm/backtrace-rs.git

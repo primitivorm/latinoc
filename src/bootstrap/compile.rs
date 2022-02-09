@@ -114,22 +114,22 @@ impl Step for Std {
         ));
 
         // TODO: proman
-        // if compiler.stage == 0 {
-        run_cargo(
-            builder,
-            cargo,
-            vec![],
-            &libstd_stamp(builder, compiler, target),
-            target_deps,
-            false,
-        );
+        if compiler.stage == 0 {
+            run_cargo(
+                builder,
+                cargo,
+                vec![],
+                &libstd_stamp(builder, compiler, target),
+                target_deps,
+                false,
+            );
 
-        builder.ensure(StdLink {
-            compiler: builder.compiler(compiler.stage, builder.config.build),
-            target_compiler: compiler,
-            target,
-        });
-        // }
+            builder.ensure(StdLink {
+                compiler: builder.compiler(compiler.stage, builder.config.build),
+                target_compiler: compiler,
+                target,
+            });
+        }
     }
 }
 

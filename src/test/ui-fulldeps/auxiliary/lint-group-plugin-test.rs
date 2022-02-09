@@ -3,14 +3,14 @@
 #![feature(rustc_private)]
 
 // Load rustc as a plugin to get macros.
-extern crate rustc_driver;
+extern crate latinoc_driver;
 extern crate rustc_hir;
 #[macro_use]
 extern crate rustc_lint;
 #[macro_use]
 extern crate rustc_session;
 
-use rustc_driver::plugin::Registry;
+use latinoc_driver::plugin::Registry;
 use rustc_lint::{LateContext, LateLintPass, LintArray, LintContext, LintId, LintPass};
 
 declare_lint!(TEST_LINT, Warn, "Warn about items named 'lintme'");

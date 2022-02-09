@@ -19,19 +19,19 @@
 
 #![feature(rustc_private)]
 
+extern crate latinoc_parse;
 extern crate rustc_ast;
 extern crate rustc_ast_pretty;
 extern crate rustc_data_structures;
-extern crate rustc_parse;
 extern crate rustc_session;
 extern crate rustc_span;
 
+use latinoc_parse::new_parser_from_source_str;
 use rustc_ast::mut_visit::{self, visit_clobber, MutVisitor};
 use rustc_ast::ptr::P;
 use rustc_ast::*;
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::thin_vec::ThinVec;
-use rustc_parse::new_parser_from_source_str;
 use rustc_session::parse::ParseSess;
 use rustc_span::source_map::FilePathMapping;
 use rustc_span::source_map::{FileName, Spanned, DUMMY_SP};

@@ -4,7 +4,7 @@ use clippy_utils::{in_macro, is_lint_allowed};
 use rustc_errors::Applicability;
 use rustc_hir::intravisit::{walk_expr, NestedVisitorMap, Visitor};
 use rustc_hir::{Block, BlockCheckMode, Expr, ExprKind, HirId, Local, UnsafeSource};
-use rustc_lexer::TokenKind;
+use latinoc_lexer::TokenKind;
 use rustc_lint::{LateContext, LateLintPass};
 use rustc_middle::hir::map::Map;
 use rustc_middle::lint::in_external_macro;
@@ -152,7 +152,7 @@ impl UndocumentedUnsafeBlocks {
         let mut pos = 0;
         let mut comment = false;
 
-        for token in rustc_lexer::tokenize(&src_str) {
+        for token in latinoc_lexer::tokenize(&src_str) {
             match token.kind {
                 TokenKind::LineComment { doc_style: None }
                 | TokenKind::BlockComment {

@@ -1,11 +1,11 @@
 #![feature(rustc_private)]
 
-extern crate rustc_driver;
-extern crate rustc_interface;
+extern crate latinoc_driver;
+extern crate latinoc_interface;
 extern crate rustc_session;
 extern crate rustc_span;
 
-use rustc_interface::interface;
+use latinoc_interface::interface;
 use rustc_session::config::{Input, Options, OutputType, OutputTypes};
 use rustc_session::DiagnosticOutput;
 use rustc_span::source_map::FileName;
@@ -61,7 +61,7 @@ fn compile(code: String, output: PathBuf, sysroot: PathBuf) {
         register_lints: None,
         override_queries: None,
         make_codegen_backend: None,
-        registry: rustc_driver::diagnostics_registry(),
+        registry: latinoc_driver::diagnostics_registry(),
     };
 
     interface::run_compiler(config, |compiler| {

@@ -2,7 +2,7 @@
 #![crate_type = "dylib"]
 
 extern crate rustc_ast_pretty;
-extern crate rustc_driver;
+extern crate latinoc_driver;
 extern crate rustc_hir;
 extern crate rustc_lint;
 #[macro_use]
@@ -11,7 +11,7 @@ extern crate rustc_ast;
 extern crate rustc_span;
 
 use rustc_ast_pretty::pprust;
-use rustc_driver::plugin::Registry;
+use latinoc_driver::plugin::Registry;
 use rustc_hir as hir;
 use rustc_hir::intravisit;
 use rustc_hir::Node;

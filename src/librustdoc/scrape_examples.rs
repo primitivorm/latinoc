@@ -11,7 +11,7 @@ use rustc_hir::{
     self as hir,
     intravisit::{self, Visitor},
 };
-use rustc_interface::interface;
+use latinoc_interface::interface;
 use rustc_macros::{Decodable, Encodable};
 use rustc_middle::hir::map::Map;
 use rustc_middle::ty::{self, TyCtxt};

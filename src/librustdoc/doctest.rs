@@ -6,7 +6,7 @@ use rustc_hir as hir;
 use rustc_hir::def_id::LOCAL_CRATE;
 use rustc_hir::intravisit;
 use rustc_hir::{HirId, CRATE_HIR_ID};
-use rustc_interface::interface;
+use latinoc_interface::interface;
 use rustc_middle::hir::map::Map;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{self, CrateType, ErrorOutputType};
@@ -101,7 +101,7 @@ crate fn run(options: Options) -> Result<(), ErrorReported> {
         register_lints: Some(box crate::lint::register_lints),
         override_queries: None,
         make_codegen_backend: None,
-        registry: rustc_driver::diagnostics_registry(),
+        registry: latinoc_driver::diagnostics_registry(),
     };
 
     let test_args = options.test_args.clone();
@@ -316,7 +316,7 @@ fn run_test(
     let rustc_binary = options
         .test_builder
         .as_deref()
-        .unwrap_or_else(|| rustc_interface::util::rustc_path().expect("found rustc"));
+        .unwrap_or_else(|| latinoc_interface::util::rustc_path().expect("found rustc"));
     let mut compiler = Command::new(&rustc_binary);
     compiler.arg("--crate-type").arg("bin");
     for cfg in &options.cfgs {
@@ -519,12 +519,12 @@ crate fn make_test(
 
     // Uses librustc_ast to parse the doctest and find if there's a main fn and the extern
     // crate already is included.
-    let result = rustc_driver::catch_fatal_errors(|| {
+    let result = latinoc_driver::catch_fatal_errors(|| {
         rustc_span::create_session_if_not_set_then(edition, |_| {
             use rustc_errors::emitter::{Emitter, EmitterWriter};
             use rustc_errors::Handler;
-            use rustc_parse::maybe_new_parser_from_source_str;
-            use rustc_parse::parser::ForceCollect;
+            use latinoc_parse::maybe_new_parser_from_source_str;
+            use latinoc_parse::parser::ForceCollect;
             use rustc_session::parse::ParseSess;
             use rustc_span::source_map::FilePathMapping;
 
@@ -1069,8 +1069,8 @@ impl Tester for Collector {
                 .chars()
                 .enumerate()
                 .map(|(i, c)| {
-                    if (i == 0 && rustc_lexer::is_id_start(c))
-                        || (i != 0 && rustc_lexer::is_id_continue(c))
+                    if (i == 0 && latinoc_lexer::is_id_start(c))
+                        || (i != 0 && latinoc_lexer::is_id_continue(c))
                     {
                         c
                     } else {

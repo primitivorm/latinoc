@@ -48,10 +48,10 @@ symbols! {
         In:                 "en",
         Let:                "var",
         Loop:               "ciclo",
-        Match:              "match",  // TODO: remove
+        // Match:              "match",  // TODO: remove
         Mod:                "mod",
-        Move:               "move",   // TODO: remove
-        Mut:                "mut",    // TODO: remove
+        // Move:               "move",   // TODO: remove
+        // Mut:                "mut",    // TODO: remove
         Pub:                "pub",
         Ref:                "ref",
         Return:             "ret",
@@ -60,46 +60,46 @@ symbols! {
         Static:             "estatico",
         Struct:             "estructura",
         Super:              "super",
-        Trait:              "trait",   // TODO: remove
+        // Trait:              "trait",   // TODO: remove
         True:               "verdadero",
-        Type:               "type",   // TODO: remove
+        // Type:               "type",   // TODO: remove
         Unsafe:             "unsafe",
         Use:                "use",
-        Where:              "where",   // TODO: remove
+        // Where:              "where",   // TODO: remove
         While:              "mientras",
 
         // Keywords that are used in unstable Rust or reserved for future use.
-        Abstract:           "abstract",  // TODO: remove
-        Become:             "become",  // TODO: remove
-        Box:                "box",  // TODO: remove
-        Do:                 "do",  // TODO: remove
-        Final:              "final",  // TODO: remove
+        // Abstract:           "abstract",  // TODO: remove
+        // Become:             "become",  // TODO: remove
+        // Box:                "box",  // TODO: remove
+        // Do:                 "do",  // TODO: remove
+        // Final:              "final",  // TODO: remove
         Macro:              "macro",
-        Override:           "override",  // TODO: remove
+        // Override:           "override",  // TODO: remove
         Priv:               "priv",
-        Typeof:             "typeof",  // TODO: remove
-        Unsized:            "unsized",  // TODO: remove
-        Virtual:            "virtual",  // TODO: remove
-        Yield:              "yield",  // TODO: remove
+        // Typeof:             "typeof",  // TODO: remove
+        // Unsized:            "unsized",  // TODO: remove
+        // Virtual:            "virtual",  // TODO: remove
+        // Yield:              "yield",  // TODO: remove
 
         // Edition-specific keywords that are used in stable Rust.
-        Async:              "async", // >= 2018 Edition only  // TODO: remove
-        Await:              "await", // >= 2018 Edition only  // TODO: remove
-        Dyn:                "dyn", // >= 2018 Edition only  // TODO: remove
+        // Async:              "async", // >= 2018 Edition only  // TODO: remove
+        // Await:              "await", // >= 2018 Edition only  // TODO: remove
+        // Dyn:                "dyn", // >= 2018 Edition only  // TODO: remove
 
         // Edition-specific keywords that are used in unstable Rust or reserved for future use.
-        Try:                "try", // >= 2018 Edition only  // TODO: remove
+        // Try:                "try", // >= 2018 Edition only  // TODO: remove
 
         // Special lifetime names
         UnderscoreLifetime: "'_",
         StaticLifetime:     "'static",
 
         // Weak keywords, have special meaning only in specific contexts.
-        Auto:               "auto",  // TODO: remove
-        Catch:              "catch",  // TODO: remove
-        Default:            "default",  // TODO: remove
+        // Auto:               "auto",  // TODO: remove
+        // Catch:              "catch",  // TODO: remove
+        // Default:            "default",  // TODO: remove
         MacroRules:         "macro_reglas",
-        Raw:                "raw",  // TODO: remove
+        // Raw:                "raw",  // TODO: remove
         Union:              "union",
     }
 

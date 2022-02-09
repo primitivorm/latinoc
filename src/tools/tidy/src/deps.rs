@@ -36,7 +36,7 @@ const EXCEPTIONS: &[(&str, &str)] = &[
     ("sized-chunks", "MPL-2.0+"),                           // cargo via im-rc
     ("bitmaps", "MPL-2.0+"),                                // cargo via im-rc
     ("crossbeam-queue", "MIT/Apache-2.0 AND BSD-2-Clause"), // rls via rayon
-    ("instant", "BSD-3-Clause"), // rustc_driver/tracing-subscriber/parking_lot
+    ("instant", "BSD-3-Clause"), // latinoc_driver/tracing-subscriber/parking_lot
     ("snap", "BSD-3-Clause"),    // rustc
     // FIXME: this dependency violates the documentation comment above:
     ("fortanix-sgx-abi", "MPL-2.0"), // libstd but only for `sgx` target

@@ -13,7 +13,7 @@ use std::collections::VecDeque;
 use std::fmt::{Display, Write};
 
 use rustc_data_structures::fx::FxHashMap;
-use rustc_lexer::{LiteralKind, TokenKind};
+use latinoc_lexer::{LiteralKind, TokenKind};
 use rustc_span::edition::Edition;
 use rustc_span::symbol::Symbol;
 use rustc_span::{BytePos, Span, DUMMY_SP};
@@ -193,7 +193,7 @@ impl Iterator for TokenIter<'a> {
         if self.src.is_empty() {
             return None;
         }
-        let token = rustc_lexer::first_token(self.src);
+        let token = latinoc_lexer::first_token(self.src);
         let (text, rest) = self.src.split_at(token.len);
         self.src = rest;
         Some((token.kind, text))

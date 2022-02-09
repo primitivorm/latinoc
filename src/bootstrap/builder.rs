@@ -388,7 +388,7 @@ impl<'a> Builder<'a> {
                 tool::Rls,
                 tool::RustAnalyzer,
                 tool::RustDemangler,
-                tool::Rustdoc,
+                // tool::Rustdoc, // TODO: proman
                 tool::Clippy,
                 tool::CargoClippy,
                 native::Llvm,
@@ -402,7 +402,7 @@ impl<'a> Builder<'a> {
             Kind::Check | Kind::Clippy { .. } | Kind::Fix | Kind::Format => describe!(
                 check::Std,
                 check::Rustc,
-                check::Rustdoc,
+                // check::Rustdoc, // TODO: proman
                 check::CodegenBackend,
                 check::Clippy,
                 check::Miri,
@@ -423,7 +423,7 @@ impl<'a> Builder<'a> {
                 test::Incremental,
                 test::Debuginfo,
                 test::UiFullDeps,
-                test::Rustdoc,
+                // test::Rustdoc, // TODO: proman
                 test::Pretty,
                 test::Crate,
                 test::CrateLibrustc,
@@ -473,7 +473,7 @@ impl<'a> Builder<'a> {
                 doc::Standalone,
                 doc::Std,
                 doc::Rustc,
-                doc::Rustdoc,
+                // doc::Rustdoc, // TODO: proman
                 doc::Rustfmt,
                 doc::ErrorIndex,
                 doc::Nomicon,
@@ -1050,8 +1050,8 @@ impl<'a> Builder<'a> {
         // if compiler.stage == 0 {
         cargo.arg("-Zbinary-dep-depinfo");
         // }
-        // cargo.arg("-j").arg(self.jobs().to_string());
-        cargo.arg("-j").arg("4");
+        cargo.arg("-j").arg(self.jobs().to_string());
+        // cargo.arg("-j").arg("4");
 
         // Remove make-related flags to ensure Cargo can correctly set things up
         cargo.env_remove("MAKEFLAGS");
@@ -1652,11 +1652,7 @@ impl<'a> Builder<'a> {
         }
 
         // Only execute if it's supposed to run as default
-        if desc.default && should_run.is_really_default() {
-            self.ensure(step)
-        } else {
-            None
-        }
+        if desc.default && should_run.is_really_default() { self.ensure(step) } else { None }
     }
 
     /// Checks if any of the "should_run" paths is in the `Builder` paths.

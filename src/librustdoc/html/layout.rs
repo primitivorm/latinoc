@@ -73,7 +73,7 @@ crate fn render<T: Print, S: Print>(
         .collect::<Result<_, Error>>()
         .unwrap_or_default();
     themes.sort();
-    let rustdoc_version = rustc_interface::util::version_str().unwrap_or("unknown version");
+    let rustdoc_version = latinoc_interface::util::version_str().unwrap_or("unknown version");
     let content = Buffer::html().to_display(t); // Note: This must happen before making the sidebar.
     let sidebar = Buffer::html().to_display(sidebar);
     let teractx = tera::Context::from_serialize(PageLayout {

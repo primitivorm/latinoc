@@ -38,7 +38,7 @@ extern crate rustc_ast_pretty;
 extern crate rustc_attr;
 extern crate rustc_const_eval;
 extern crate rustc_data_structures;
-extern crate rustc_driver;
+extern crate latinoc_driver;
 extern crate rustc_errors;
 extern crate rustc_expand;
 extern crate rustc_feature;
@@ -46,14 +46,14 @@ extern crate rustc_hir;
 extern crate rustc_hir_pretty;
 extern crate rustc_index;
 extern crate rustc_infer;
-extern crate rustc_interface;
-extern crate rustc_lexer;
+extern crate latinoc_interface;
+extern crate latinoc_lexer;
 extern crate rustc_lint;
 extern crate rustc_lint_defs;
 extern crate rustc_macros;
 extern crate rustc_metadata;
 extern crate rustc_middle;
-extern crate rustc_parse;
+extern crate latinoc_parse;
 extern crate rustc_passes;
 extern crate rustc_resolve;
 extern crate rustc_serialize;
@@ -77,9 +77,9 @@ use std::default::Default;
 use std::env;
 use std::process;
 
-use rustc_driver::{abort_on_err, describe_lints};
+use latinoc_driver::{abort_on_err, describe_lints};
 use rustc_errors::ErrorReported;
-use rustc_interface::interface;
+use latinoc_interface::interface;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{make_crate_type_option, ErrorOutputType, RustcOptGroup};
 use rustc_session::getopts;
@@ -168,8 +168,8 @@ pub fn main() {
         }
     }
 
-    rustc_driver::set_sigpipe_handler();
-    rustc_driver::install_ice_hook();
+    latinoc_driver::set_sigpipe_handler();
+    latinoc_driver::install_ice_hook();
 
     // When using CI artifacts (with `download_stage1 = true`), tracing is unconditionally built
     // with `--features=static_max_level_info`, which disables almost all rustdoc logging. To avoid
@@ -181,9 +181,9 @@ pub fn main() {
     // `debug_logging = true` is because all rustc logging goes to its version of tracing (the one
     // in the sysroot), and all of rustdoc's logging goes to its version (the one in Cargo.toml).
     init_logging();
-    rustc_driver::init_env_logger("RUSTDOC_LOG");
+    latinoc_driver::init_env_logger("RUSTDOC_LOG");
 
-    let exit_code = rustc_driver::catch_with_exit_code(|| match get_args() {
+    let exit_code = latinoc_driver::catch_with_exit_code(|| match get_args() {
         Some(args) => main_args(&args),
         _ => Err(ErrorReported),
     });
@@ -194,7 +194,7 @@ fn init_logging() {
     use std::io;
 
     // FIXME remove these and use winapi 0.3 instead
-    // Duplicates: bootstrap/compile.rs, librustc_errors/emitter.rs, rustc_driver/lib.rs
+    // Duplicates: bootstrap/compile.rs, librustc_errors/emitter.rs, latinoc_driver/lib.rs
     #[cfg(unix)]
     fn stdout_isatty() -> bool {
         extern crate libc;
@@ -665,7 +665,7 @@ fn usage(argv0: &str) {
 type MainResult = Result<(), ErrorReported>;
 
 fn main_args(at_args: &[String]) -> MainResult {
-    let args = rustc_driver::args::arg_expand_all(at_args);
+    let args = latinoc_driver::args::arg_expand_all(at_args);
 
     let mut options = getopts::Options::new();
     for option in opts() {
@@ -684,7 +684,7 @@ fn main_args(at_args: &[String]) -> MainResult {
         Ok(opts) => opts,
         Err(code) => return if code == 0 { Ok(()) } else { Err(ErrorReported) },
     };
-    rustc_interface::util::setup_callbacks_and_run_in_thread_pool_with_globals(
+    latinoc_interface::util::setup_callbacks_and_run_in_thread_pool_with_globals(
         options.edition,
         1, // this runs single-threaded, even in a parallel compiler
         &None,

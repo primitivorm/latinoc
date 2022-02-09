@@ -954,6 +954,7 @@ class RustBuild(object):
         """Build bootstrap"""
         print(">>> build_bootstrap")
         build_dir = os.path.join(self.build_dir, "bootstrap")
+        print(">>> build_dir: %s", build_dir)
         if self.clean and os.path.exists(build_dir):
             shutil.rmtree(build_dir)
         env = os.environ.copy()
@@ -1051,7 +1052,7 @@ class RustBuild(object):
             if recorded_submodules[module] == checked_out:
                 return
 
-        print("Updating submodule", module)
+        print(">>> Updating submodule", module)
 
         run(["git", "submodule", "-q", "sync", module],
             cwd=self.rust_root, verbose=self.verbose)
@@ -1294,9 +1295,9 @@ def bootstrap(help_triggered):
     if build.rustc_commit is not None:
         env["BOOTSTRAP_DOWNLOAD_RUSTC"] = '1'
 
-    print("bootstrap.rs args: %s" % args)
-    print("bootstrap.rs env: %s" % env)
-    print("bootstrap.rs verbose: %s" % build.verbose)
+    print(">>> bootstrap.rs args: %s" % args)
+    print(">>> bootstrap.rs env: %s" % env)
+    print(">>> bootstrap.rs verbose: %s" % build.verbose)
 
     run(args, env=env, verbose=build.verbose, is_bootstrap=True)
 

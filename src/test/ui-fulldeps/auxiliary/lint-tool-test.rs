@@ -3,14 +3,14 @@
 extern crate rustc_ast;
 
 // Load rustc as a plugin to get macros
-extern crate rustc_driver;
+extern crate latinoc_driver;
 #[macro_use]
 extern crate rustc_lint;
 #[macro_use]
 extern crate rustc_session;
 
 use rustc_ast as ast;
-use rustc_driver::plugin::Registry;
+use latinoc_driver::plugin::Registry;
 use rustc_lint::{EarlyContext, EarlyLintPass, LintArray, LintContext, LintId, LintPass};
 declare_tool_lint!(pub clippy::TEST_LINT, Warn, "Warn about stuff");
 declare_tool_lint!(

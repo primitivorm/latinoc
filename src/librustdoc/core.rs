@@ -1,6 +1,6 @@
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::sync::{self, Lrc};
-use rustc_driver::abort_on_err;
+use latinoc_driver::abort_on_err;
 use rustc_errors::emitter::{Emitter, EmitterWriter};
 use rustc_errors::json::JsonEmitter;
 use rustc_feature::UnstableFeatures;
@@ -11,7 +11,7 @@ use rustc_hir::{
     intravisit::{self, NestedVisitorMap, Visitor},
     Path,
 };
-use rustc_interface::{interface, Queries};
+use latinoc_interface::{interface, Queries};
 use rustc_middle::hir::map::Map;
 use rustc_middle::middle::privacy::AccessLevels;
 use rustc_middle::ty::{ParamEnv, Ty, TyCtxt};
@@ -193,7 +193,7 @@ crate fn create_config(
         lint_cap,
         ..
     }: RustdocOptions,
-) -> rustc_interface::Config {
+) -> latinoc_interface::Config {
     // Add the doc cfg into the doc build.
     cfgs.push("doc".to_string());
 
@@ -276,11 +276,11 @@ crate fn create_config(
                 let body = hir.body(hir.body_owned_by(hir.local_def_id_to_hir_id(def_id)));
                 debug!("visiting body for {:?}", def_id);
                 EmitIgnoredResolutionErrors::new(tcx).visit_body(body);
-                (rustc_interface::DEFAULT_QUERY_PROVIDERS.typeck)(tcx, def_id)
+                (latinoc_interface::DEFAULT_QUERY_PROVIDERS.typeck)(tcx, def_id)
             };
         }),
         make_codegen_backend: None,
-        registry: rustc_driver::diagnostics_registry(),
+        registry: latinoc_driver::diagnostics_registry(),
     }
 }
 

@@ -38,10 +38,8 @@ fn parse_args<'a>(
 
     // Detect use of the legacy llvm_asm! syntax (which used to be called asm!)
     if !is_global_asm && p.look_ahead(1, |t| *t == token::Colon || *t == token::ModSep) {
-        let mut err = ecx.struct_span_err(
-            sp,
-            "the legacy LLVM-style asm! syntax is no longer supported",
-        );
+        let mut err =
+            ecx.struct_span_err(sp, "the legacy LLVM-style asm! syntax is no longer supported");
         err.note("consider migrating to the new asm! syntax specified in RFC 2873");
         err.note("alternatively, switch to llvm_asm! to keep your code working as it is");
 
@@ -127,28 +125,12 @@ fn parse_args<'a>(
             ast::InlineAsmOperand::In { reg, expr }
         } else if !is_global_asm && p.eat_keyword(sym::out) {
             let reg = parse_reg(&mut p, &mut explicit_reg)?;
-            let expr = if p.eat_keyword(kw::Underscore) {
-                None
-            } else {
-                Some(p.parse_expr()?)
-            };
-            ast::InlineAsmOperand::Out {
-                reg,
-                expr,
-                late: false,
-            }
+            let expr = if p.eat_keyword(kw::Underscore) { None } else { Some(p.parse_expr()?) };
+            ast::InlineAsmOperand::Out { reg, expr, late: false }
         } else if !is_global_asm && p.eat_keyword(sym::lateout) {
             let reg = parse_reg(&mut p, &mut explicit_reg)?;
-            let expr = if p.eat_keyword(kw::Underscore) {
-                None
-            } else {
-                Some(p.parse_expr()?)
-            };
-            ast::InlineAsmOperand::Out {
-                reg,
-                expr,
-                late: true,
-            }
+            let expr = if p.eat_keyword(kw::Underscore) { None } else { Some(p.parse_expr()?) };
+            ast::InlineAsmOperand::Out { reg, expr, late: true }
         } else if !is_global_asm && p.eat_keyword(sym::inout) {
             let reg = parse_reg(&mut p, &mut explicit_reg)?;
             if p.eat_keyword(kw::Underscore) {
@@ -157,23 +139,11 @@ fn parse_args<'a>(
             }
             let expr = p.parse_expr()?;
             if p.eat(&token::FatArrow) {
-                let out_expr = if p.eat_keyword(kw::Underscore) {
-                    None
-                } else {
-                    Some(p.parse_expr()?)
-                };
-                ast::InlineAsmOperand::SplitInOut {
-                    reg,
-                    in_expr: expr,
-                    out_expr,
-                    late: false,
-                }
+                let out_expr =
+                    if p.eat_keyword(kw::Underscore) { None } else { Some(p.parse_expr()?) };
+                ast::InlineAsmOperand::SplitInOut { reg, in_expr: expr, out_expr, late: false }
             } else {
-                ast::InlineAsmOperand::InOut {
-                    reg,
-                    expr,
-                    late: false,
-                }
+                ast::InlineAsmOperand::InOut { reg, expr, late: false }
             }
         } else if !is_global_asm && p.eat_keyword(sym::inlateout) {
             let reg = parse_reg(&mut p, &mut explicit_reg)?;
@@ -183,23 +153,11 @@ fn parse_args<'a>(
             }
             let expr = p.parse_expr()?;
             if p.eat(&token::FatArrow) {
-                let out_expr = if p.eat_keyword(kw::Underscore) {
-                    None
-                } else {
-                    Some(p.parse_expr()?)
-                };
-                ast::InlineAsmOperand::SplitInOut {
-                    reg,
-                    in_expr: expr,
-                    out_expr,
-                    late: true,
-                }
+                let out_expr =
+                    if p.eat_keyword(kw::Underscore) { None } else { Some(p.parse_expr()?) };
+                ast::InlineAsmOperand::SplitInOut { reg, in_expr: expr, out_expr, late: true }
             } else {
-                ast::InlineAsmOperand::InOut {
-                    reg,
-                    expr,
-                    late: true,
-                }
+                ast::InlineAsmOperand::InOut { reg, expr, late: true }
             }
         } else if p.eat_keyword(kw::Const) {
             let anon_const = p.parse_anon_const_expr()?;
@@ -220,10 +178,7 @@ fn parse_args<'a>(
             // If it can't possibly expand to a string, provide diagnostics here to include other
             // things it could have been.
             match template.kind {
-                ast::ExprKind::Lit(ast::Lit {
-                    kind: ast::LitKind::Str(..),
-                    ..
-                }) => {}
+                ast::ExprKind::Lit(ast::Lit { kind: ast::LitKind::Str(..), .. }) => {}
                 ast::ExprKind::MacCall(..) => {}
                 _ => {
                     let errstr = if is_global_asm {
@@ -263,8 +218,7 @@ fn parse_args<'a>(
         }
         if explicit_reg {
             if name.is_some() {
-                ecx.struct_span_err(span, "explicit register arguments cannot have names")
-                    .emit();
+                ecx.struct_span_err(span, "explicit register arguments cannot have names").emit();
             }
             args.reg_args.insert(slot);
         } else if let Some(name) = name {
@@ -310,26 +264,18 @@ fn parse_args<'a>(
         && args.options.contains(ast::InlineAsmOptions::READONLY)
     {
         let spans = args.options_spans.clone();
-        ecx.struct_span_err(
-            spans,
-            "the `nomem` and `readonly` options are mutually exclusive",
-        )
-        .emit();
+        ecx.struct_span_err(spans, "the `nomem` and `readonly` options are mutually exclusive")
+            .emit();
     }
     if args.options.contains(ast::InlineAsmOptions::PURE)
         && args.options.contains(ast::InlineAsmOptions::NORETURN)
     {
         let spans = args.options_spans.clone();
-        ecx.struct_span_err(
-            spans,
-            "the `pure` and `noreturn` options are mutually exclusive",
-        )
-        .emit();
+        ecx.struct_span_err(spans, "the `pure` and `noreturn` options are mutually exclusive")
+            .emit();
     }
     if args.options.contains(ast::InlineAsmOptions::PURE)
-        && !args
-            .options
-            .intersects(ast::InlineAsmOptions::NOMEM | ast::InlineAsmOptions::READONLY)
+        && !args.options.intersects(ast::InlineAsmOptions::NOMEM | ast::InlineAsmOptions::READONLY)
     {
         let spans = args.options_spans.clone();
         ecx.struct_span_err(
@@ -345,11 +291,7 @@ fn parse_args<'a>(
     for (op, op_sp) in &args.operands {
         match op {
             ast::InlineAsmOperand::Out { reg, expr, .. }
-            | ast::InlineAsmOperand::SplitInOut {
-                reg,
-                out_expr: expr,
-                ..
-            } => {
+            | ast::InlineAsmOperand::SplitInOut { reg, out_expr: expr, .. } => {
                 outputs_sp.push(*op_sp);
                 have_real_output |= expr.is_some();
                 if let ast::InlineAsmRegOrRegClass::RegClass(_) = reg {
@@ -374,10 +316,8 @@ fn parse_args<'a>(
         .emit();
     }
     if args.options.contains(ast::InlineAsmOptions::NORETURN) && !outputs_sp.is_empty() {
-        let err = ecx.struct_span_err(
-            outputs_sp,
-            "asm outputs are not allowed with the `noreturn` option",
-        );
+        let err = ecx
+            .struct_span_err(outputs_sp, "asm outputs are not allowed with the `noreturn` option");
 
         // Bail out now since this is likely to confuse MIR
         return Err(err);
@@ -386,10 +326,7 @@ fn parse_args<'a>(
     if args.clobber_abis.len() > 0 {
         if is_global_asm {
             let err = ecx.struct_span_err(
-                args.clobber_abis
-                    .iter()
-                    .map(|(_, span)| *span)
-                    .collect::<Vec<Span>>(),
+                args.clobber_abis.iter().map(|(_, span)| *span).collect::<Vec<Span>>(),
                 "`clobber_abi` cannot be used with `global_asm!`",
             );
 
@@ -402,10 +339,7 @@ fn parse_args<'a>(
                 "asm with `clobber_abi` must specify explicit registers for outputs",
             )
             .span_labels(
-                args.clobber_abis
-                    .iter()
-                    .map(|(_, span)| *span)
-                    .collect::<Vec<Span>>(),
+                args.clobber_abis.iter().map(|(_, span)| *span).collect::<Vec<Span>>(),
                 "clobber_abi",
             )
             .span_labels(regclass_outputs, "generic outputs")
@@ -421,10 +355,10 @@ fn parse_args<'a>(
 /// This function must be called immediately after the option token is parsed.
 /// Otherwise, the suggestion will be incorrect.
 fn err_duplicate_option<'a>(p: &mut Parser<'a>, symbol: Symbol, span: Span) {
-    let mut err = p.sess.span_diagnostic.struct_span_err(
-        span,
-        &format!("the `{}` option was already provided", symbol),
-    );
+    let mut err = p
+        .sess
+        .span_diagnostic
+        .struct_span_err(span, &format!("the `{}` option was already provided", symbol));
     err.span_label(span, "this option was already provided");
 
     // Tool-only output
@@ -477,12 +411,7 @@ fn parse_options<'a>(
         } else if !is_global_asm && p.eat_keyword(sym::readonly) {
             try_set_option(p, args, sym::readonly, ast::InlineAsmOptions::READONLY);
         } else if !is_global_asm && p.eat_keyword(sym::preserves_flags) {
-            try_set_option(
-                p,
-                args,
-                sym::preserves_flags,
-                ast::InlineAsmOptions::PRESERVES_FLAGS,
-            );
+            try_set_option(p, args, sym::preserves_flags, ast::InlineAsmOptions::PRESERVES_FLAGS);
         } else if !is_global_asm && p.eat_keyword(sym::noreturn) {
             try_set_option(p, args, sym::noreturn, ast::InlineAsmOptions::NORETURN);
         } else if !is_global_asm && p.eat_keyword(sym::nostack) {
@@ -538,10 +467,8 @@ fn parse_clobber_abi<'a>(
                     break;
                 }
                 let span = opt_lit.map_or(p.token.span, |lit| lit.span);
-                let mut err = p
-                    .sess
-                    .span_diagnostic
-                    .struct_span_err(span, "expected string literal");
+                let mut err =
+                    p.sess.span_diagnostic.struct_span_err(span, "expected string literal");
                 err.span_label(span, "not a string literal");
                 return Err(err);
             }
@@ -586,11 +513,7 @@ fn parse_reg<'a>(
     p.expect(&token::OpenDelim(token::DelimToken::Paren))?;
     let result = match p.token.uninterpolate().kind {
         token::Ident(name, false) => ast::InlineAsmRegOrRegClass::RegClass(name),
-        token::Literal(token::Lit {
-            kind: token::LitKind::Str,
-            symbol,
-            suffix: _,
-        }) => {
+        token::Literal(token::Lit { kind: token::LitKind::Str, symbol, suffix: _ }) => {
             *explicit_reg = true;
             ast::InlineAsmRegOrRegClass::Reg(symbol)
         }
@@ -613,11 +536,8 @@ fn expand_preparsed_asm(ecx: &mut ExtCtxt<'_>, args: AsmArgs) -> Option<ast::Inl
     for pos in &args.reg_args {
         used[*pos] = true;
     }
-    let named_pos: FxHashMap<usize, Symbol> = args
-        .named_args
-        .iter()
-        .map(|(&sym, &idx)| (idx, sym))
-        .collect();
+    let named_pos: FxHashMap<usize, Symbol> =
+        args.named_args.iter().map(|(&sym, &idx)| (idx, sym)).collect();
     let mut line_spans = Vec::with_capacity(args.templates.len());
     let mut curarg = 0;
 
@@ -689,9 +609,7 @@ fn expand_preparsed_asm(ecx: &mut ExtCtxt<'_>, args: AsmArgs) -> Option<ast::Inl
 
         // Don't treat raw asm as a format string.
         if args.options.contains(ast::InlineAsmOptions::RAW) {
-            template.push(ast::InlineAsmTemplatePiece::String(
-                template_str.to_string(),
-            ));
+            template.push(ast::InlineAsmTemplatePiece::String(template_str.to_string()));
             let template_num_lines = 1 + template_str.matches('\n').count();
             line_spans.extend(std::iter::repeat(template_sp).take(template_num_lines));
             continue;
@@ -734,10 +652,7 @@ fn expand_preparsed_asm(ecx: &mut ExtCtxt<'_>, args: AsmArgs) -> Option<ast::Inl
 
         curarg = parser.curarg;
 
-        let mut arg_spans = parser
-            .arg_places
-            .iter()
-            .map(|span| template_span.from_inner(*span));
+        let mut arg_spans = parser.arg_places.iter().map(|span| template_span.from_inner(*span));
         for piece in unverified_pieces {
             match piece {
                 parse::Piece::String(s) => {
@@ -835,12 +750,7 @@ fn expand_preparsed_asm(ecx: &mut ExtCtxt<'_>, args: AsmArgs) -> Option<ast::Inl
             let template_num_lines = 1 + template_str.matches('\n').count();
             line_spans.extend(std::iter::repeat(template_sp).take(template_num_lines));
         } else {
-            line_spans.extend(
-                parser
-                    .line_spans
-                    .iter()
-                    .map(|span| template_span.from_inner(*span)),
-            );
+            line_spans.extend(parser.line_spans.iter().map(|span| template_span.from_inner(*span)));
         };
     }
 
@@ -873,10 +783,7 @@ fn expand_preparsed_asm(ecx: &mut ExtCtxt<'_>, args: AsmArgs) -> Option<ast::Inl
         }
         _ => {
             let mut err = ecx.struct_span_err(
-                unused_operands
-                    .iter()
-                    .map(|&(sp, _)| sp)
-                    .collect::<Vec<Span>>(),
+                unused_operands.iter().map(|&(sp, _)| sp).collect::<Vec<Span>>(),
                 "multiple unused asm arguments",
             );
             for (sp, msg) in unused_operands {

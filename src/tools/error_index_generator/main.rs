@@ -1,6 +1,6 @@
 #![feature(rustc_private)]
 
-extern crate rustc_driver;
+extern crate latinoc_driver;
 extern crate rustc_span;
 
 use std::cell::RefCell;
@@ -268,7 +268,7 @@ fn parse_args() -> (OutputFormat, PathBuf) {
 }
 
 fn main() {
-    rustc_driver::init_env_logger("RUST_LOG");
+    latinoc_driver::init_env_logger("RUST_LOG");
     let (format, dst) = parse_args();
     let result =
         rustc_span::create_default_session_globals_then(move || main_with_result(format, &dst));

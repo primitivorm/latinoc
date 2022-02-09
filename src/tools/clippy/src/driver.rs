@@ -8,13 +8,13 @@
 
 // FIXME: switch to something more ergonomic here, once available.
 // (Currently there is no way to opt into sysroot crates without `extern crate`.)
-extern crate rustc_driver;
+extern crate latinoc_driver;
+extern crate latinoc_interface;
 extern crate rustc_errors;
-extern crate rustc_interface;
 extern crate rustc_session;
 extern crate rustc_span;
 
-use rustc_interface::interface;
+use latinoc_interface::interface;
 use rustc_session::parse::ParseSess;
 use rustc_span::symbol::Symbol;
 use rustc_tools_util::VersionInfo;
@@ -71,7 +71,7 @@ fn track_clippy_args(parse_sess: &mut ParseSess, args_env_var: &Option<String>) 
 }
 
 struct DefaultCallbacks;
-impl rustc_driver::Callbacks for DefaultCallbacks {}
+impl latinoc_driver::Callbacks for DefaultCallbacks {}
 
 /// This is different from `DefaultCallbacks` that it will inform Cargo to track the value of
 /// `CLIPPY_ARGS` environment variable.
@@ -79,7 +79,7 @@ struct RustcCallbacks {
     clippy_args_var: Option<String>,
 }
 
-impl rustc_driver::Callbacks for RustcCallbacks {
+impl latinoc_driver::Callbacks for RustcCallbacks {
     fn config(&mut self, config: &mut interface::Config) {
         let clippy_args_var = self.clippy_args_var.take();
         config.parse_sess_created = Some(Box::new(move |parse_sess| {
@@ -92,7 +92,7 @@ struct ClippyCallbacks {
     clippy_args_var: Option<String>,
 }
 
-impl rustc_driver::Callbacks for ClippyCallbacks {
+impl latinoc_driver::Callbacks for ClippyCallbacks {
     fn config(&mut self, config: &mut interface::Config) {
         let previous = config.register_lints.take();
         let clippy_args_var = self.clippy_args_var.take();
@@ -215,9 +215,9 @@ fn toolchain_path(home: Option<String>, toolchain: Option<String>) -> Option<Pat
 
 #[allow(clippy::too_many_lines)]
 pub fn main() {
-    rustc_driver::init_rustc_env_logger();
+    latinoc_driver::init_rustc_env_logger();
     SyncLazy::force(&ICE_HOOK);
-    exit(rustc_driver::catch_with_exit_code(move || {
+    exit(latinoc_driver::catch_with_exit_code(move || {
         let mut orig_args: Vec<String> = env::args().collect();
 
         // Get the sysroot, looking from most specific to this invocation to the least:
@@ -278,7 +278,7 @@ pub fn main() {
                 args.extend(vec!["--sysroot".into(), sys_root]);
             };
 
-            return rustc_driver::RunCompiler::new(&args, &mut DefaultCallbacks).run();
+            return latinoc_driver::RunCompiler::new(&args, &mut DefaultCallbacks).run();
         }
 
         if orig_args.iter().any(|a| a == "--version" || a == "-V") {
@@ -341,9 +341,9 @@ pub fn main() {
         }
 
         if clippy_enabled {
-            rustc_driver::RunCompiler::new(&args, &mut ClippyCallbacks { clippy_args_var }).run()
+            latinoc_driver::RunCompiler::new(&args, &mut ClippyCallbacks { clippy_args_var }).run()
         } else {
-            rustc_driver::RunCompiler::new(&args, &mut RustcCallbacks { clippy_args_var }).run()
+            latinoc_driver::RunCompiler::new(&args, &mut RustcCallbacks { clippy_args_var }).run()
         }
     }))
 }

@@ -609,7 +609,7 @@ impl Step for Rustc {
 
         if paths.is_empty() {
             // Find dependencies for top level crates.
-            for root_crate in &["rustc_driver", "rustc_codegen_llvm", "rustc_codegen_ssa"] {
+            for root_crate in &["latinoc_driver", "rustc_codegen_llvm", "rustc_codegen_ssa"] {
                 compiler_crates.extend(
                     builder
                         .in_tree_crates(root_crate, Some(target))
@@ -741,6 +741,7 @@ macro_rules! tool_doc {
 }
 
 tool_doc!(Rustdoc, "rustdoc-tool", "src/tools/rustdoc", ["rustdoc", "rustdoc-json-types"]);
+
 tool_doc!(
     Rustfmt,
     "rustfmt-nightly",

@@ -2,7 +2,7 @@
 
 #![feature(rustc_private)]
 
-extern crate rustc_driver;
+extern crate latinoc_driver;
 extern crate rustc_hir;
 extern crate rustc_lint;
 extern crate rustc_span;
@@ -11,7 +11,7 @@ extern crate rustc_session;
 extern crate rustc_ast;
 
 use rustc_ast::attr;
-use rustc_driver::plugin::Registry;
+use latinoc_driver::plugin::Registry;
 use rustc_lint::{LateContext, LateLintPass, LintContext, LintPass};
 use rustc_span::def_id::CRATE_DEF_ID;
 use rustc_span::symbol::Symbol;

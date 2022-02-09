@@ -3,11 +3,11 @@
 #![feature(rustc_private)]
 
 extern crate rustc_middle;
-extern crate rustc_driver;
+extern crate latinoc_driver;
 
 use std::any::Any;
 use std::cell::RefCell;
-use rustc_driver::plugin::Registry;
+use latinoc_driver::plugin::Registry;
 
 struct Foo {
     foo: isize

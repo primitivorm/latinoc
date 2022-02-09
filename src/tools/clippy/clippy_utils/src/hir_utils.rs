@@ -10,7 +10,7 @@ use rustc_hir::{
     InlineAsmOperand, Lifetime, LifetimeName, ParamName, Pat, PatField, PatKind, Path, PathSegment, QPath, Stmt,
     StmtKind, Ty, TyKind, TypeBinding,
 };
-use rustc_lexer::{tokenize, TokenKind};
+use latinoc_lexer::{tokenize, TokenKind};
 use rustc_lint::LateContext;
 use rustc_middle::ty::TypeckResults;
 use rustc_span::Symbol;

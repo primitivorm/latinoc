@@ -1,7 +1,7 @@
 use rustc_data_structures::sync::{Lock, Lrc};
 use rustc_errors::{emitter::Emitter, Applicability, Diagnostic, Handler};
 use rustc_middle::lint::LintDiagnosticBuilder;
-use rustc_parse::parse_stream_from_source_str;
+use latinoc_parse::parse_stream_from_source_str;
 use rustc_session::parse::ParseSess;
 use rustc_span::source_map::{FilePathMapping, SourceMap};
 use rustc_span::{hygiene::AstPass, ExpnData, ExpnKind, FileName, InnerSpan, DUMMY_SP};
@@ -47,7 +47,7 @@ impl<'a, 'tcx> SyntaxChecker<'a, 'tcx> {
         );
         let span = DUMMY_SP.fresh_expansion(expn_data, self.cx.tcx.create_stable_hashing_context());
 
-        let is_empty = rustc_driver::catch_fatal_errors(|| {
+        let is_empty = latinoc_driver::catch_fatal_errors(|| {
             parse_stream_from_source_str(
                 FileName::Custom(String::from("doctest")),
                 source,

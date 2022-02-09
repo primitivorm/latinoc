@@ -8,9 +8,9 @@ use rustc_ast::ast::{Expr, ExprKind, Impl, Item, ItemKind, MacCall, Path, StrLit
 use rustc_ast::token::{self, LitKind};
 use rustc_ast::tokenstream::TokenStream;
 use rustc_errors::Applicability;
-use rustc_lexer::unescape::{self, EscapeError};
+use latinoc_lexer::unescape::{self, EscapeError};
 use rustc_lint::{EarlyContext, EarlyLintPass};
-use rustc_parse::parser;
+use latinoc_parse::parser;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
 use rustc_span::symbol::{kw, Symbol};
 use rustc_span::{sym, BytePos, Span, DUMMY_SP};

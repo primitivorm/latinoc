@@ -18,8 +18,8 @@ use rustc_lint::{LateContext, LateLintPass};
 use rustc_middle::hir::map::Map;
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty;
-use rustc_parse::maybe_new_parser_from_source_str;
-use rustc_parse::parser::ForceCollect;
+use latinoc_parse::maybe_new_parser_from_source_str;
+use latinoc_parse::parser::ForceCollect;
 use rustc_session::parse::ParseSess;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
 use rustc_span::def_id::LocalDefId;
@@ -610,7 +610,7 @@ fn get_current_span(spans: &[(usize, Span)], idx: usize) -> (usize, Span) {
 
 fn check_code(cx: &LateContext<'_>, text: &str, edition: Edition, span: Span) {
     fn has_needless_main(code: String, edition: Edition) -> bool {
-        rustc_driver::catch_fatal_errors(|| {
+        latinoc_driver::catch_fatal_errors(|| {
             rustc_span::create_session_globals_then(edition, || {
                 let filename = FileName::anon_source_code(&code);
 
