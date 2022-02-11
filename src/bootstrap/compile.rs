@@ -84,23 +84,24 @@ impl Step for Std {
 
         let mut target_deps = builder.ensure(StartupObjects { compiler, target });
 
-        let compiler_to_use = builder.compiler_for(compiler.stage, compiler.host, target);
-        if compiler_to_use != compiler {
-            builder.ensure(Std { compiler: compiler_to_use, target });
-            builder.info(&format!("Uplifting stage1 std ({} -> {})", compiler_to_use.host, target));
+        // let compiler_to_use = builder.compiler_for(compiler.stage, compiler.host, target);
+        // TODO: proman. if compiler_to_use != compiler
+        // if compiler_to_use != compiler {
+        //     builder.ensure(Std { compiler: compiler_to_use, target });
+        //     builder.info(&format!("Uplifting stage1 std ({} -> {})", compiler_to_use.host, target));
 
-            // Even if we're not building std this stage, the new sysroot must
-            // still contain the third party objects needed by various targets.
-            copy_third_party_objects(builder, &compiler, target);
-            copy_self_contained_objects(builder, &compiler, target);
+        //     // Even if we're not building std this stage, the new sysroot must
+        //     // still contain the third party objects needed by various targets.
+        //     copy_third_party_objects(builder, &compiler, target);
+        //     copy_self_contained_objects(builder, &compiler, target);
 
-            builder.ensure(StdLink {
-                compiler: compiler_to_use,
-                target_compiler: compiler,
-                target,
-            });
-            return;
-        }
+        //     builder.ensure(StdLink {
+        //         compiler: compiler_to_use,
+        //         target_compiler: compiler,
+        //         target,
+        //     });
+        //     return;
+        // }
 
         target_deps.extend(copy_third_party_objects(builder, &compiler, target));
         target_deps.extend(copy_self_contained_objects(builder, &compiler, target));
@@ -114,22 +115,22 @@ impl Step for Std {
         ));
 
         // TODO: proman
-        if compiler.stage == 0 {
-            run_cargo(
-                builder,
-                cargo,
-                vec![],
-                &libstd_stamp(builder, compiler, target),
-                target_deps,
-                false,
-            );
+        // if compiler.stage == 0 {
+        run_cargo(
+            builder,
+            cargo,
+            vec![],
+            &libstd_stamp(builder, compiler, target),
+            target_deps,
+            false,
+        );
 
-            builder.ensure(StdLink {
-                compiler: builder.compiler(compiler.stage, builder.config.build),
-                target_compiler: compiler,
-                target,
-            });
-        }
+        builder.ensure(StdLink {
+            compiler: builder.compiler(compiler.stage, builder.config.build),
+            target_compiler: compiler,
+            target,
+        });
+        // }
     }
 }
 
@@ -575,18 +576,19 @@ impl Step for Rustc {
             return;
         }
 
-        let compiler_to_use = builder.compiler_for(compiler.stage, compiler.host, target);
-        if compiler_to_use != compiler {
-            builder.ensure(Rustc { compiler: compiler_to_use, target });
-            builder
-                .info(&format!("Uplifting stage1 rustc ({} -> {})", builder.config.build, target));
-            builder.ensure(RustcLink {
-                compiler: compiler_to_use,
-                target_compiler: compiler,
-                target,
-            });
-            return;
-        }
+        // let compiler_to_use = builder.compiler_for(compiler.stage, compiler.host, target);
+        // TODO: proman. if compiler_to_use != compiler
+        // if compiler_to_use != compiler {
+        //     builder.ensure(Rustc { compiler: compiler_to_use, target });
+        //     builder
+        //         .info(&format!("Uplifting stage1 rustc ({} -> {})", builder.config.build, target));
+        //     builder.ensure(RustcLink {
+        //         compiler: compiler_to_use,
+        //         target_compiler: compiler,
+        //         target,
+        //     });
+        //     return;
+        // }
 
         // Ensure that build scripts and proc macros have a std / libproc_macro to link against.
         builder.ensure(Std {
@@ -828,11 +830,12 @@ impl Step for CodegenBackend {
             return;
         }
 
-        let compiler_to_use = builder.compiler_for(compiler.stage, compiler.host, target);
-        if compiler_to_use != compiler {
-            builder.ensure(CodegenBackend { compiler: compiler_to_use, target, backend });
-            return;
-        }
+        // let compiler_to_use = builder.compiler_for(compiler.stage, compiler.host, target);
+        // TODO: proman. if compiler_to_use != compiler
+        // if compiler_to_use != compiler {
+        //     builder.ensure(CodegenBackend { compiler: compiler_to_use, target, backend });
+        //     return;
+        // }
 
         let out_dir = builder.cargo_out(compiler, Mode::Codegen, target);
 

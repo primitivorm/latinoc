@@ -648,6 +648,9 @@ impl<'a> Builder<'a> {
         if self.build.force_use_stage1(Compiler { stage, host }, target) {
             self.compiler(1, self.config.build)
         } else {
+            // TODO: proman. self.compiler(0, host)
+            // self.compiler(stage, host)
+            println!(">>> builder.compiler_for stage: {:?}", stage);
             self.compiler(stage, host)
         }
     }
@@ -1138,6 +1141,7 @@ impl<'a> Builder<'a> {
         cargo
             .env("RUSTBUILD_NATIVE_DIR", self.native_dir(target))
             .env("RUSTC_REAL", self.rustc(compiler))
+            // TODO: proman. .env("RUSTC_STAGE", stage.to_string())
             .env("RUSTC_STAGE", stage.to_string())
             .env("RUSTC_SYSROOT", &sysroot)
             .env("RUSTC_LIBDIR", &libdir)
@@ -1152,6 +1156,10 @@ impl<'a> Builder<'a> {
             )
             .env("RUSTC_ERROR_METADATA_DST", self.extended_error_dir())
             .env("RUSTC_BREAK_ON_ICE", "1");
+
+        // TODO: proman
+        println!(">>> RUSTC_REAL: {:?}", self.rustc(compiler));
+        println!(">>> RUSTC_LIBDIR: {:?}", &libdir);
         // Clippy support is a hack and uses the default `cargo-clippy` in path.
         // Don't override RUSTC so that the `cargo-clippy` in path will be run.
         if cmd != "clippy" {
@@ -1316,6 +1324,7 @@ impl<'a> Builder<'a> {
         // For other crates, however, we know that we've already got a standard
         // library up and running, so we can use the normal compiler to compile
         // build scripts in that situation.
+        // TODO: proman. if mode == Mode::Std
         if mode == Mode::Std {
             cargo
                 .env("RUSTC_SNAPSHOT", &self.initial_rustc)

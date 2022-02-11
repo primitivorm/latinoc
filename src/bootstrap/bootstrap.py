@@ -1033,6 +1033,7 @@ class RustBuild(object):
         return default_build_triple(self.verbose)
 
     def check_submodule(self, module, slow_submodules):
+        print("check_submodule: %s" % module)
         if not slow_submodules:
             checked_out = subprocess.Popen(["git", "rev-parse", "HEAD"],
                                            cwd=os.path.join(

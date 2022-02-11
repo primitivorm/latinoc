@@ -547,9 +547,10 @@ struct TomlTarget {
 
 impl Config {
     fn path_from_python(var_key: &str) -> PathBuf {
+        // TODO: proman
         match env::var_os(var_key) {
             Some(var_val) => Self::normalize_python_path(var_val),
-            _ => panic!("expected '{}' to be set", var_key),
+            _ => Path::new("D:\\LATINO\\latinoc\\build").to_path_buf(), // panic!("expected '{}' to be set", var_key),
         }
     }
 
@@ -986,11 +987,7 @@ impl Config {
                 // synthesize it manually.
                 let rustfmt = initial_rustc.with_file_name(exe("rustfmt", build));
 
-                if rustfmt.exists() {
-                    Some(rustfmt)
-                } else {
-                    None
-                }
+                if rustfmt.exists() { Some(rustfmt) } else { None }
             }
         });
 

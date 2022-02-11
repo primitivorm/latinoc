@@ -701,11 +701,7 @@ impl Build {
     /// Component directory that Cargo will produce output into (e.g.
     /// release/debug)
     fn cargo_dir(&self) -> &'static str {
-        if self.config.rust_optimize {
-            "release"
-        } else {
-            "debug"
-        }
+        if self.config.rust_optimize { "release" } else { "debug" }
     }
 
     fn tools_dir(&self, compiler: Compiler) -> PathBuf {
@@ -1294,7 +1290,8 @@ impl Build {
     }
 
     fn read_stamp_file(&self, stamp: &Path) -> Vec<(PathBuf, DependencyType)> {
-        println!(">>> read_stamp_file: {:?}", stamp);
+        // TODO: proman. bootstrap.lib.read_stamp_file
+        // println!(">>> read_stamp_file: {:?}", stamp);
 
         if self.config.dry_run {
             return Vec::new();
@@ -1322,7 +1319,8 @@ impl Build {
 
     /// Copies a file from `src` to `dst`
     pub fn copy(&self, src: &Path, dst: &Path) {
-        println!(">>> bootstrap.lib.rs copying {} to {}", src.display(), dst.display());
+        // TODO: proman. bootstrap.lib.copy
+        //  println!(">>> bootstrap.lib.rs copying {} to {}", src.display(), dst.display());
         if self.config.dry_run {
             return;
         }
