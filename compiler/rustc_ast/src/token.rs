@@ -23,7 +23,8 @@ pub enum CommentKind {
     Block,
 }
 
-#[derive(Clone, PartialEq, Encodable, Decodable, Hash, Debug, Copy, HashStable_Generic)]
+#[derive(Clone, PartialEq, Encodable, Decodable, Hash, Debug, Copy)]
+#[derive(HashStable_Generic)]
 pub enum BinOpToken {
     Plus,
     Minus,
@@ -38,7 +39,8 @@ pub enum BinOpToken {
 }
 
 /// A delimiter token.
-#[derive(Clone, PartialEq, Eq, Encodable, Decodable, Hash, Debug, Copy, HashStable_Generic)]
+#[derive(Clone, PartialEq, Eq, Encodable, Decodable, Hash, Debug, Copy)]
+#[derive(HashStable_Generic)]
 pub enum DelimToken {
     /// A round parenthesis (i.e., `(` or `)`).
     Paren,
@@ -142,9 +144,9 @@ pub fn ident_can_begin_expr(name: Symbol, span: Span, is_raw: bool) -> bool {
     !ident_token.is_reserved_ident()
         || ident_token.is_path_segment_keyword()
         || [
-            //kw::Async,
-            //kw::Do,
-            //kw::Box,
+            kw::Async,
+            kw::Do,
+            kw::Box,
             kw::Break,
             kw::Const,
             kw::Continue,
@@ -153,14 +155,14 @@ pub fn ident_can_begin_expr(name: Symbol, span: Span, is_raw: bool) -> bool {
             kw::If,
             kw::Let,
             kw::Loop,
-            //kw::Match,
-            //kw::Move,
+            kw::Match,
+            kw::Move,
             kw::Return,
             kw::True,
-            //kw::Try,
+            kw::Try,
             kw::Unsafe,
             kw::While,
-            //kw::Yield,
+            kw::Yield,
             kw::Static,
         ]
         .contains(&name)
@@ -171,16 +173,8 @@ fn ident_can_begin_type(name: Symbol, span: Span, is_raw: bool) -> bool {
 
     !ident_token.is_reserved_ident()
         || ident_token.is_path_segment_keyword()
-        || [
-            kw::Underscore,
-            kw::For,
-            kw::Impl,
-            kw::Fn,
-            kw::Unsafe,
-            kw::Extern,
-            /*kw::Typeof, kw::Dyn,*/
-        ]
-        .contains(&name)
+        || [kw::Underscore, kw::For, kw::Impl, kw::Fn, kw::Unsafe, kw::Extern, kw::Typeof, kw::Dyn]
+            .contains(&name)
 }
 
 #[derive(Clone, PartialEq, Encodable, Decodable, Debug, HashStable_Generic)]
@@ -543,8 +537,7 @@ impl Token {
 
     /// Returns `true` if the token is either the `mut` or `const` keyword.
     pub fn is_mutability(&self) -> bool {
-        /*self.is_keyword(kw::Mut) || */
-        self.is_keyword(kw::Const)
+        self.is_keyword(kw::Mut) || self.is_keyword(kw::Const)
     }
 
     pub fn is_qpath_start(&self) -> bool {
@@ -580,9 +573,9 @@ impl Token {
     }
 
     /// Returns `true` if the token is a keyword reserved for possible future use.
-    /*pub fn is_unused_keyword(&self) -> bool {
+    pub fn is_unused_keyword(&self) -> bool {
         self.is_non_raw_ident_where(Ident::is_unused_keyword)
-    }*/
+    }
 
     /// Returns `true` if the token is either a special identifier or a keyword.
     pub fn is_reserved_ident(&self) -> bool {

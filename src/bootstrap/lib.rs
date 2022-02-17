@@ -482,7 +482,6 @@ impl Build {
     /// `relative_path` should be relative to the root of the git repository, not an absolute path.
     pub(crate) fn update_submodule(&self, relative_path: &Path) {
         fn dir_is_empty(dir: &Path) -> bool {
-            print!("{:?}", dir);
             t!(std::fs::read_dir(dir)).next().is_none()
         }
 
@@ -586,7 +585,6 @@ impl Build {
 
     /// Executes the entire build, as configured by the flags and configuration.
     pub fn build(&mut self) {
-        println!(">>> bootstrap.lib.rs.build");
         unsafe {
             job::setup(self);
         }
@@ -1255,7 +1253,6 @@ impl Build {
     /// including transitive dependencies and the root itself. Only includes
     /// "local" crates (those in the local source tree, not from a registry).
     fn in_tree_crates(&self, root: &str, target: Option<TargetSelection>) -> Vec<&Crate> {
-        println!("bootstrap/lib.rs.in_tree_crates: {:?}", root);
         let mut ret = Vec::new();
         let mut list = vec![INTERNER.intern_str(root)];
         let mut visited = HashSet::new();
@@ -1290,9 +1287,6 @@ impl Build {
     }
 
     fn read_stamp_file(&self, stamp: &Path) -> Vec<(PathBuf, DependencyType)> {
-        // TODO: proman. bootstrap.lib.read_stamp_file
-        // println!(">>> read_stamp_file: {:?}", stamp);
-
         if self.config.dry_run {
             return Vec::new();
         }
@@ -1319,8 +1313,6 @@ impl Build {
 
     /// Copies a file from `src` to `dst`
     pub fn copy(&self, src: &Path, dst: &Path) {
-        // TODO: proman. bootstrap.lib.copy
-        //  println!(">>> bootstrap.lib.rs copying {} to {}", src.display(), dst.display());
         if self.config.dry_run {
             return;
         }

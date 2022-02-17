@@ -101,7 +101,7 @@ pub fn register_builtin_macros(resolver: &mut dyn ResolverExpand) {
         Clone: clone::expand_deriving_clone,
         Copy: bounds::expand_deriving_copy,
         Debug: debug::expand_deriving_debug,
-        //Default: default::expand_deriving_default,
+        Default: default::expand_deriving_default,
         Eq: eq::expand_deriving_eq,
         Hash: hash::expand_deriving_hash,
         Ord: ord::expand_deriving_ord,
@@ -112,8 +112,5 @@ pub fn register_builtin_macros(resolver: &mut dyn ResolverExpand) {
     }
 
     let client = proc_macro::bridge::client::Client::expand1(proc_macro::quote);
-    register(
-        sym::quote,
-        SyntaxExtensionKind::Bang(Box::new(BangProcMacro { client })),
-    );
+    register(sym::quote, SyntaxExtensionKind::Bang(Box::new(BangProcMacro { client })));
 }

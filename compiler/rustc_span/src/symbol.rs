@@ -14,7 +14,7 @@ use std::fmt;
 use std::hash::{Hash, Hasher};
 use std::str;
 
-use crate::{with_session_globals, /*Edition,*/ Span, DUMMY_SP};
+use crate::{with_session_globals, Edition, Span, DUMMY_SP};
 
 #[cfg(test)]
 mod tests;
@@ -28,78 +28,78 @@ symbols! {
         // unnamed method parameters, crate root module, error recovery etc.
         Empty:              "",
         PathRoot:           "{{root}}",
-        DollarCrate:        "$crate", // TODO: Cambiar
+        DollarCrate:        "$crate",
         Underscore:         "_",
 
         // Keywords that are used in stable Rust.
         As:                 "as",
-        Break:              "romper",
+        Break:              "break",
         Const:              "const",
-        Continue:           "continuar",
-        Crate:              "crate", // TODO: Cambiar o quitar
-        Else:               "sino",
+        Continue:           "continue",
+        Crate:              "crate",
+        Else:               "else",
         Enum:               "enum",
-        Extern:             "extern",  // TODO: Cambiar o quitar
-        False:              "falso",
-        Fn:                 "fun",
-        For:                "desde",
-        If:                 "si",
+        Extern:             "extern",
+        False:              "false",
+        Fn:                 "fn",
+        For:                "for",
+        If:                 "if",
         Impl:               "impl",
-        In:                 "en",
-        Let:                "var",
-        Loop:               "ciclo",
-        // Match:              "match",  // TODO: remove
+        In:                 "in",
+        Let:                "let",
+        Loop:               "loop",
+        Match:              "match",
         Mod:                "mod",
-        // Move:               "move",   // TODO: remove
-        // Mut:                "mut",    // TODO: remove
+        Move:               "move",
+        Mut:                "mut",
         Pub:                "pub",
         Ref:                "ref",
-        Return:             "ret",
-        SelfLower:          "esto",
-        SelfUpper:          "Esto",
-        Static:             "estatico",
-        Struct:             "estructura",
+        Return:             "return",
+        SelfLower:          "self",
+        SelfUpper:          "Self",
+        Static:             "static",
+        Struct:             "struct",
         Super:              "super",
-        // Trait:              "trait",   // TODO: remove
-        True:               "verdadero",
-        // Type:               "type",   // TODO: remove
+        Trait:              "trait",
+        True:               "true",
+        Type:               "type",
         Unsafe:             "unsafe",
         Use:                "use",
-        // Where:              "where",   // TODO: remove
-        While:              "mientras",
+        Where:              "where",
+        While:              "while",
 
         // Keywords that are used in unstable Rust or reserved for future use.
-        // Abstract:           "abstract",  // TODO: remove
-        // Become:             "become",  // TODO: remove
-        // Box:                "box",  // TODO: remove
-        // Do:                 "do",  // TODO: remove
-        // Final:              "final",  // TODO: remove
+        Abstract:           "abstract",
+        Become:             "become",
+        Box:                "box",
+        Do:                 "do",
+        Final:              "final",
         Macro:              "macro",
-        // Override:           "override",  // TODO: remove
+        Override:           "override",
         Priv:               "priv",
-        // Typeof:             "typeof",  // TODO: remove
-        // Unsized:            "unsized",  // TODO: remove
-        // Virtual:            "virtual",  // TODO: remove
-        // Yield:              "yield",  // TODO: remove
+        Typeof:             "typeof",
+        Unsized:            "unsized",
+        Virtual:            "virtual",
+        Yield:              "yield",
 
         // Edition-specific keywords that are used in stable Rust.
-        // Async:              "async", // >= 2018 Edition only  // TODO: remove
-        // Await:              "await", // >= 2018 Edition only  // TODO: remove
-        // Dyn:                "dyn", // >= 2018 Edition only  // TODO: remove
+        Async:              "async", // >= 2018 Edition only
+        Await:              "await", // >= 2018 Edition only
+        Dyn:                "dyn", // >= 2018 Edition only
 
         // Edition-specific keywords that are used in unstable Rust or reserved for future use.
-        // Try:                "try", // >= 2018 Edition only  // TODO: remove
+        Try:                "try", // >= 2018 Edition only
 
         // Special lifetime names
         UnderscoreLifetime: "'_",
         StaticLifetime:     "'static",
 
         // Weak keywords, have special meaning only in specific contexts.
-        // Auto:               "auto",  // TODO: remove
-        // Catch:              "catch",  // TODO: remove
-        // Default:            "default",  // TODO: remove
-        MacroRules:         "macro_reglas",
-        // Raw:                "raw",  // TODO: remove
+        Auto:               "auto",
+        Catch:              "catch",
+        Default:            "default",
+        MacroRules:         "macro_rules",
+        Raw:                "raw",
         Union:              "union",
     }
 
@@ -1405,7 +1405,7 @@ symbols! {
         va_list,
         va_start,
         val,
-        // var,
+        var,
         variant_count,
         vec,
         version,
@@ -1809,23 +1809,24 @@ impl Symbol {
         self >= kw::As && self <= kw::While
     }
 
-    /*fn is_used_keyword_conditional(self, edition: impl FnOnce() -> Edition) -> bool {
+    fn is_used_keyword_conditional(self, edition: impl FnOnce() -> Edition) -> bool {
         (self >= kw::Async && self <= kw::Dyn) && edition() >= Edition::Edition2018
-    }*/
+    }
 
-    /*fn is_unused_keyword_always(self) -> bool {
+    fn is_unused_keyword_always(self) -> bool {
         self >= kw::Abstract && self <= kw::Yield
-    }*/
+    }
 
-    /*fn is_unused_keyword_conditional(self, edition: impl FnOnce() -> Edition) -> bool {
+    fn is_unused_keyword_conditional(self, edition: impl FnOnce() -> Edition) -> bool {
         self == kw::Try && edition() >= Edition::Edition2018
-    }*/
+    }
 
-    pub fn is_reserved(self /*, edition: impl Copy + FnOnce() -> Edition*/) -> bool {
-        self.is_special() || self.is_used_keyword_always()
-        //|| self.is_unused_keyword_always()
-        //|| self.is_used_keyword_conditional(edition)
-        //|| self.is_unused_keyword_conditional(edition)
+    pub fn is_reserved(self, edition: impl Copy + FnOnce() -> Edition) -> bool {
+        self.is_special()
+            || self.is_used_keyword_always()
+            || self.is_unused_keyword_always()
+            || self.is_used_keyword_conditional(edition)
+            || self.is_unused_keyword_conditional(edition)
     }
 
     /// A keyword or reserved identifier that can be used as a path segment.
@@ -1860,24 +1861,20 @@ impl Ident {
     pub fn is_used_keyword(self) -> bool {
         // Note: `span.edition()` is relatively expensive, don't call it unless necessary.
         self.name.is_used_keyword_always()
-        /*|| self
-        .name
-        .is_used_keyword_conditional(|| self.span.edition())*/
+            || self.name.is_used_keyword_conditional(|| self.span.edition())
     }
 
     /// Returns `true` if the token is a keyword reserved for possible future use.
-    /*pub fn is_unused_keyword(self) -> bool {
+    pub fn is_unused_keyword(self) -> bool {
         // Note: `span.edition()` is relatively expensive, don't call it unless necessary.
         self.name.is_unused_keyword_always()
-        || self
-        .name
-        .is_unused_keyword_conditional(|| self.span.edition())
-    }*/
+            || self.name.is_unused_keyword_conditional(|| self.span.edition())
+    }
 
     /// Returns `true` if the token is either a special identifier or a keyword.
     pub fn is_reserved(self) -> bool {
         // Note: `span.edition()` is relatively expensive, don't call it unless necessary.
-        self.name.is_reserved(/*|| self.span.edition()*/)
+        self.name.is_reserved(|| self.span.edition())
     }
 
     /// A keyword or reserved identifier that can be used as a path segment.

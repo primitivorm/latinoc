@@ -12,8 +12,8 @@
 
 #![cfg(test)]
 
-use std::env;
 use std::io::Write;
+use std::env;
 
 #[test]
 fn it_works() {

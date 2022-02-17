@@ -133,30 +133,18 @@ fn replace_text(mut sig: Signature, text: String) -> Signature {
 }
 
 fn merge_sigs(text: String, sigs: Vec<Signature>) -> Signature {
-    let mut result = Signature {
-        text,
-        defs: vec![],
-        refs: vec![],
-    };
+    let mut result = Signature { text, defs: vec![], refs: vec![] };
 
     let (defs, refs): (Vec<_>, Vec<_>) = sigs.into_iter().map(|s| (s.defs, s.refs)).unzip();
 
-    result
-        .defs
-        .extend(defs.into_iter().flat_map(|ds| ds.into_iter()));
-    result
-        .refs
-        .extend(refs.into_iter().flat_map(|rs| rs.into_iter()));
+    result.defs.extend(defs.into_iter().flat_map(|ds| ds.into_iter()));
+    result.refs.extend(refs.into_iter().flat_map(|rs| rs.into_iter()));
 
     result
 }
 
 fn text_sig(text: String) -> Signature {
-    Signature {
-        text,
-        defs: vec![],
-        refs: vec![],
-    }
+    Signature { text, defs: vec![], refs: vec![] }
 }
 
 impl<'hir> Sig for hir::Ty<'hir> {
@@ -305,25 +293,19 @@ impl<'hir> Sig for hir::Ty<'hir> {
                 // FIXME recurse into bounds
                 let bounds: Vec<hir::GenericBound<'_>> = bounds
                     .iter()
-                    .map(
-                        |hir::PolyTraitRef {
-                             bound_generic_params,
-                             trait_ref,
-                             span,
-                         }| {
-                            hir::GenericBound::Trait(
-                                hir::PolyTraitRef {
-                                    bound_generic_params,
-                                    trait_ref: hir::TraitRef {
-                                        path: trait_ref.path,
-                                        hir_ref_id: trait_ref.hir_ref_id,
-                                    },
-                                    span: *span,
+                    .map(|hir::PolyTraitRef { bound_generic_params, trait_ref, span }| {
+                        hir::GenericBound::Trait(
+                            hir::PolyTraitRef {
+                                bound_generic_params,
+                                trait_ref: hir::TraitRef {
+                                    path: trait_ref.path,
+                                    hir_ref_id: trait_ref.hir_ref_id,
                                 },
-                                hir::TraitBoundModifier::None,
-                            )
-                        },
-                    )
+                                span: *span,
+                            },
+                            hir::TraitBoundModifier::None,
+                        )
+                    })
                     .collect();
                 let nested = bounds_to_string(&bounds);
                 Ok(text_sig(nested))
@@ -338,7 +320,7 @@ impl<'hir> Sig for hir::Ty<'hir> {
                 let item = scx.tcx.hir().item(item_id);
                 item.make(offset, Some(item_id.hir_id()), scx)
             }
-            /*hir::TyKind::Typeof(_) |*/ hir::TyKind::Infer | hir::TyKind::Err => Err("Ty"),
+            hir::TyKind::Typeof(_) | hir::TyKind::Infer | hir::TyKind::Err => Err("Ty"),
         }
     }
 }
@@ -395,15 +377,7 @@ impl<'hir> Sig for hir::Item<'hir> {
 
                 Ok(extend_sig(ty, text, defs, vec![]))
             }
-            hir::ItemKind::Fn(
-                hir::FnSig {
-                    ref decl,
-                    header,
-                    span: _,
-                },
-                ref generics,
-                _,
-            ) => {
+            hir::ItemKind::Fn(hir::FnSig { ref decl, header, span: _ }, ref generics, _) => {
                 let mut text = String::new();
                 if let hir::Constness::Const = header.constness {
                     text.push_str("const ");
@@ -462,11 +436,7 @@ impl<'hir> Sig for hir::Item<'hir> {
                 // Could be either `mod foo;` or `mod foo { ... }`, but we'll just pick one.
                 text.push(';');
 
-                Ok(Signature {
-                    text,
-                    defs,
-                    refs: vec![],
-                })
+                Ok(Signature { text, defs, refs: vec![] })
             }
             hir::ItemKind::TyAlias(ref ty, ref generics) => {
                 let text = "type ".to_owned();
@@ -604,11 +574,7 @@ impl<'hir> Sig for hir::Path<'hir> {
 
         let (name, start, end) = match res {
             Res::PrimTy(..) | Res::SelfTy(..) | Res::Err => {
-                return Ok(Signature {
-                    text: path_to_string(self),
-                    defs: vec![],
-                    refs: vec![],
-                });
+                return Ok(Signature { text: path_to_string(self), defs: vec![], refs: vec![] });
             }
             Res::Def(DefKind::AssocConst | DefKind::Variant | DefKind::Ctor(..), _) => {
                 let len = self.segments.len();
@@ -631,11 +597,7 @@ impl<'hir> Sig for hir::Path<'hir> {
         };
 
         let id = id_from_def_id(res.def_id());
-        Ok(Signature {
-            text: name,
-            defs: vec![],
-            refs: vec![SigElement { id, start, end }],
-        })
+        Ok(Signature { text: name, defs: vec![], refs: vec![SigElement { id, start, end }] })
     }
 }
 
@@ -698,11 +660,7 @@ impl<'hir> Sig for hir::Generics<'hir> {
         }
 
         text.push('>');
-        Ok(Signature {
-            text,
-            defs,
-            refs: vec![],
-        })
+        Ok(Signature { text, defs, refs: vec![] })
     }
 }
 
@@ -779,11 +737,7 @@ impl<'hir> Sig for hir::Variant<'hir> {
                     start: offset,
                     end: offset + text.len(),
                 };
-                Ok(Signature {
-                    text,
-                    defs: vec![name_def],
-                    refs: vec![],
-                })
+                Ok(Signature { text, defs: vec![name_def], refs: vec![] })
             }
         }
     }
@@ -852,11 +806,7 @@ impl<'hir> Sig for hir::ForeignItem<'hir> {
                 text.push_str(&name);
                 text.push(';');
 
-                Ok(Signature {
-                    text,
-                    defs,
-                    refs: vec![],
-                })
+                Ok(Signature { text, defs, refs: vec![] })
             }
         }
     }

@@ -178,11 +178,7 @@ pub struct UnsafetyState {
 
 impl UnsafetyState {
     pub fn function(unsafety: hir::Unsafety, def: hir::HirId) -> UnsafetyState {
-        UnsafetyState {
-            def,
-            unsafety,
-            from_fn: true,
-        }
+        UnsafetyState { def, unsafety, from_fn: true }
     }
 
     pub fn recurse(self, blk: &hir::Block<'_>) -> UnsafetyState {
@@ -199,11 +195,7 @@ impl UnsafetyState {
                     BlockCheckMode::UnsafeBlock(..) => (hir::Unsafety::Unsafe, blk.hir_id),
                     BlockCheckMode::DefaultBlock => (unsafety, self.def),
                 };
-                UnsafetyState {
-                    def,
-                    unsafety,
-                    from_fn: false,
-                }
+                UnsafetyState { def, unsafety, from_fn: false }
             }
         }
     }
@@ -425,23 +417,20 @@ fn typeck_with_fallback<'tcx>(
                             kind: TypeVariableOriginKind::TypeInference,
                             span,
                         }),
-                        /*Node::Ty(&hir::Ty {
+                        Node::Ty(&hir::Ty {
                             kind: hir::TyKind::Typeof(ref anon_const), ..
                         }) if anon_const.hir_id == id => fcx.next_ty_var(TypeVariableOrigin {
                             kind: TypeVariableOriginKind::TypeInference,
                             span,
-                        }),*/
-                        Node::Expr(&hir::Expr {
-                            kind: hir::ExprKind::InlineAsm(asm),
-                            ..
-                        })
-                        | Node::Item(&hir::Item {
-                            kind: hir::ItemKind::GlobalAsm(asm),
-                            ..
-                        }) if asm.operands.iter().any(|(op, _op_sp)| match op {
-                            hir::InlineAsmOperand::Const { anon_const } => anon_const.hir_id == id,
-                            _ => false,
-                        }) =>
+                        }),
+                        Node::Expr(&hir::Expr { kind: hir::ExprKind::InlineAsm(asm), .. })
+                        | Node::Item(&hir::Item { kind: hir::ItemKind::GlobalAsm(asm), .. })
+                            if asm.operands.iter().any(|(op, _op_sp)| match op {
+                                hir::InlineAsmOperand::Const { anon_const } => {
+                                    anon_const.hir_id == id
+                                }
+                                _ => false,
+                            }) =>
                         {
                             // Inline assembly constants must be integers.
                             fcx.next_int_var()
@@ -541,10 +530,7 @@ fn get_owner_return_paths(
 // as they must always be defined by the compiler.
 fn fn_maybe_err(tcx: TyCtxt<'_>, sp: Span, abi: Abi) {
     if let Abi::RustIntrinsic | Abi::PlatformIntrinsic = abi {
-        tcx.sess.span_err(
-            sp,
-            "intrinsic must be in `extern \"rust-intrinsic\" { ... }` block",
-        );
+        tcx.sess.span_err(sp, "intrinsic must be in `extern \"rust-intrinsic\" { ... }` block");
     }
 }
 
@@ -591,10 +577,7 @@ fn report_forbidden_specialization(
          that item is not marked `default`",
         impl_item.ident
     );
-    err.span_label(
-        impl_item.span,
-        format!("cannot specialize default item `{}`", impl_item.ident),
-    );
+    err.span_label(impl_item.span, format!("cannot specialize default item `{}`", impl_item.ident));
 
     match tcx.span_of_impl(parent_impl) {
         Ok(span) => {
@@ -631,10 +614,7 @@ fn missing_items_err(
         "not all trait items implemented, missing: `{}`",
         missing_items_msg
     );
-    err.span_label(
-        impl_span,
-        format!("missing `{}` in implementation", missing_items_msg),
-    );
+    err.span_label(impl_span, format!("missing `{}` in implementation", missing_items_msg));
 
     // `Span` before impl block closing brace.
     let hi = full_impl_span.hi() - BytePos(1);
@@ -716,11 +696,7 @@ fn bounds_from_generic_predicates<'tcx>(
         // insert the associated types where they correspond, but for now let's be "lazy" and
         // propose this instead of the following valid resugaring:
         // `T: Trait, Trait::Assoc = K` → `T: Trait<Assoc = K>`
-        where_clauses.push(format!(
-            "{} = {}",
-            tcx.def_path_str(p.projection_ty.item_def_id),
-            p.ty
-        ));
+        where_clauses.push(format!("{} = {}", tcx.def_path_str(p.projection_ty.item_def_id), p.ty));
     }
     let where_clauses = if where_clauses.is_empty() {
         String::new()
@@ -771,20 +747,12 @@ fn fn_sig_suggestion<'tcx>(
                 }
             })
         })
-        .chain(std::iter::once(if sig.c_variadic {
-            Some("...".to_string())
-        } else {
-            None
-        }))
+        .chain(std::iter::once(if sig.c_variadic { Some("...".to_string()) } else { None }))
         .flatten()
         .collect::<Vec<String>>()
         .join(", ");
     let output = sig.output();
-    let output = if !output.is_unit() {
-        format!(" -> {}", output)
-    } else {
-        String::new()
-    };
+    let output = if !output.is_unit() { format!(" -> {}", output) } else { String::new() };
 
     let unsafety = sig.unsafety.prefix_str();
     let (generics, where_clauses) = bounds_from_generic_predicates(tcx, predicates);
@@ -841,10 +809,7 @@ fn bad_variant_count<'tcx>(tcx: TyCtxt<'tcx>, adt: &'tcx ty::AdtDef, sp: Span, d
         for variant_span in start {
             err.span_label(*variant_span, "");
         }
-        err.span_label(
-            *end,
-            &format!("too many variants in `{}`", tcx.def_path_str(did)),
-        );
+        err.span_label(*end, &format!("too many variants in `{}`", tcx.def_path_str(did)));
     }
     err.emit();
 }
@@ -858,20 +823,13 @@ fn bad_non_zero_sized_fields<'tcx>(
     field_spans: impl Iterator<Item = Span>,
     sp: Span,
 ) {
-    let msg = format!(
-        "needs at most one non-zero-sized field, but has {}",
-        field_count
-    );
+    let msg = format!("needs at most one non-zero-sized field, but has {}", field_count);
     let mut err = struct_span_err!(
         tcx.sess,
         sp,
         E0690,
         "{}transparent {} {}",
-        if adt.is_enum() {
-            "the variant of a "
-        } else {
-            ""
-        },
+        if adt.is_enum() { "the variant of a " } else { "" },
         adt.descr(),
         msg,
     );
@@ -959,8 +917,7 @@ impl ItemLikeVisitor<'tcx> for CheckItemTypesVisitor<'tcx> {
 }
 
 fn typeck_item_bodies(tcx: TyCtxt<'_>, (): ()) {
-    tcx.hir()
-        .par_body_owners(|body_owner_def_id| tcx.ensure().typeck(body_owner_def_id));
+    tcx.hir().par_body_owners(|body_owner_def_id| tcx.ensure().typeck(body_owner_def_id));
 }
 
 fn fatally_break_rust(sess: &Session) {

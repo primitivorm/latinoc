@@ -188,11 +188,7 @@ pub fn target_features(sess: &Session) -> Vec<Symbol> {
         .iter()
         .filter_map(
             |&(feature, gate)| {
-                if sess.is_nightly_build() || gate.is_none() {
-                    Some(feature)
-                } else {
-                    None
-                }
+                if sess.is_nightly_build() || gate.is_none() { Some(feature) } else { None }
             },
         )
         .filter(|feature| {

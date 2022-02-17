@@ -160,7 +160,8 @@ scoped_tls::scoped_thread_local!(static SESSION_GLOBALS: SessionGlobals);
 
 // FIXME: We should use this enum or something like it to get rid of the
 // use of magic `/rust/1.x/...` paths across the board.
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Decodable)]
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd)]
+#[derive(Decodable)]
 pub enum RealFileName {
     LocalPath(PathBuf),
     /// For remapped paths (namely paths into libstd that have been mapped
@@ -198,17 +199,15 @@ impl<S: Encoder> Encodable<S> for RealFileName {
                 })
             }
 
-            RealFileName::Remapped {
-                ref local_path,
-                ref virtual_name,
-            } => encoder.emit_enum_variant("Remapped", 1, 2, |encoder| {
-                // For privacy and build reproducibility, we must not embed host-dependant path in artifacts
-                // if they have been remapped by --remap-path-prefix
-                assert!(local_path.is_none());
-                encoder.emit_enum_variant_arg(true, |encoder| local_path.encode(encoder))?;
-                encoder.emit_enum_variant_arg(false, |encoder| virtual_name.encode(encoder))?;
-                Ok(())
-            }),
+            RealFileName::Remapped { ref local_path, ref virtual_name } => encoder
+                .emit_enum_variant("Remapped", 1, 2, |encoder| {
+                    // For privacy and build reproducibility, we must not embed host-dependant path in artifacts
+                    // if they have been remapped by --remap-path-prefix
+                    assert!(local_path.is_none());
+                    encoder.emit_enum_variant_arg(true, |encoder| local_path.encode(encoder))?;
+                    encoder.emit_enum_variant_arg(false, |encoder| virtual_name.encode(encoder))?;
+                    Ok(())
+                }),
         })
     }
 }
@@ -220,10 +219,9 @@ impl RealFileName {
     pub fn local_path(&self) -> Option<&Path> {
         match self {
             RealFileName::LocalPath(p) => Some(p),
-            RealFileName::Remapped {
-                local_path: p,
-                virtual_name: _,
-            } => p.as_ref().map(PathBuf::as_path),
+            RealFileName::Remapped { local_path: p, virtual_name: _ } => {
+                p.as_ref().map(PathBuf::as_path)
+            }
         }
     }
 
@@ -233,10 +231,7 @@ impl RealFileName {
     pub fn into_local_path(self) -> Option<PathBuf> {
         match self {
             RealFileName::LocalPath(p) => Some(p),
-            RealFileName::Remapped {
-                local_path: p,
-                virtual_name: _,
-            } => p,
+            RealFileName::Remapped { local_path: p, virtual_name: _ } => p,
         }
     }
 
@@ -247,10 +242,7 @@ impl RealFileName {
     pub fn remapped_path_if_available(&self) -> &Path {
         match self {
             RealFileName::LocalPath(p)
-            | RealFileName::Remapped {
-                local_path: _,
-                virtual_name: p,
-            } => &p,
+            | RealFileName::Remapped { local_path: _, virtual_name: p } => &p,
         }
     }
 
@@ -260,14 +252,8 @@ impl RealFileName {
     pub fn local_path_if_available(&self) -> &Path {
         match self {
             RealFileName::LocalPath(path)
-            | RealFileName::Remapped {
-                local_path: None,
-                virtual_name: path,
-            }
-            | RealFileName::Remapped {
-                local_path: Some(path),
-                virtual_name: _,
-            } => path,
+            | RealFileName::Remapped { local_path: None, virtual_name: path }
+            | RealFileName::Remapped { local_path: Some(path), virtual_name: _ } => path,
         }
     }
 
@@ -282,7 +268,8 @@ impl RealFileName {
 }
 
 /// Differentiates between real files and common virtual files.
-#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash, Decodable, Encodable)]
+#[derive(Debug, Eq, PartialEq, Clone, Ord, PartialOrd, Hash)]
+#[derive(Decodable, Encodable)]
 pub enum FileName {
     Real(RealFileName),
     /// Call to `quote!`.
@@ -369,26 +356,17 @@ impl FileName {
     }
 
     pub fn prefer_remapped(&self) -> FileNameDisplay<'_> {
-        FileNameDisplay {
-            inner: self,
-            display_pref: FileNameDisplayPreference::Remapped,
-        }
+        FileNameDisplay { inner: self, display_pref: FileNameDisplayPreference::Remapped }
     }
 
     // This may include transient local filesystem information.
     // Must not be embedded in build outputs.
     pub fn prefer_local(&self) -> FileNameDisplay<'_> {
-        FileNameDisplay {
-            inner: self,
-            display_pref: FileNameDisplayPreference::Local,
-        }
+        FileNameDisplay { inner: self, display_pref: FileNameDisplayPreference::Local }
     }
 
     pub fn display(&self, display_pref: FileNameDisplayPreference) -> FileNameDisplay<'_> {
-        FileNameDisplay {
-            inner: self,
-            display_pref,
-        }
+        FileNameDisplay { inner: self, display_pref }
     }
 
     pub fn macro_expansion_source_code(src: &str) -> FileName {
@@ -570,10 +548,7 @@ impl Span {
 
     /// Returns `true` if `span` originates in a derive-macro's expansion.
     pub fn in_derive_expansion(self) -> bool {
-        matches!(
-            self.ctxt().outer_expn_data().kind,
-            ExpnKind::Macro(MacroKind::Derive, _)
-        )
+        matches!(self.ctxt().outer_expn_data().kind, ExpnKind::Macro(MacroKind::Derive, _))
     }
 
     #[inline]
@@ -603,11 +578,7 @@ impl Span {
 
     /// Returns `self` if `self` is not the dummy span, and `other` otherwise.
     pub fn substitute_dummy(self, other: Span) -> Span {
-        if self.is_dummy() {
-            other
-        } else {
-            self
-        }
+        if self.is_dummy() { other } else { self }
     }
 
     /// Returns `true` if `self` fully encloses `other`.
@@ -638,33 +609,21 @@ impl Span {
     pub fn trim_start(self, other: Span) -> Option<Span> {
         let span = self.data();
         let other = other.data();
-        if span.hi > other.hi {
-            Some(span.with_lo(cmp::max(span.lo, other.hi)))
-        } else {
-            None
-        }
+        if span.hi > other.hi { Some(span.with_lo(cmp::max(span.lo, other.hi))) } else { None }
     }
 
     /// Returns the source span -- this is either the supplied span, or the span for
     /// the macro callsite that expanded to it.
     pub fn source_callsite(self) -> Span {
         let expn_data = self.ctxt().outer_expn_data();
-        if !expn_data.is_root() {
-            expn_data.call_site.source_callsite()
-        } else {
-            self
-        }
+        if !expn_data.is_root() { expn_data.call_site.source_callsite() } else { self }
     }
 
     /// The `Span` for the tokens in the previous macro expansion from which `self` was generated,
     /// if any.
     pub fn parent_callsite(self) -> Option<Span> {
         let expn_data = self.ctxt().outer_expn_data();
-        if !expn_data.is_root() {
-            Some(expn_data.call_site)
-        } else {
-            None
-        }
+        if !expn_data.is_root() { Some(expn_data.call_site) } else { None }
     }
 
     /// Walk down the expansion ancestors to find a span that's contained within `outer`.
@@ -703,18 +662,10 @@ impl Span {
     pub fn source_callee(self) -> Option<ExpnData> {
         fn source_callee(expn_data: ExpnData) -> ExpnData {
             let next_expn_data = expn_data.call_site.ctxt().outer_expn_data();
-            if !next_expn_data.is_root() {
-                source_callee(next_expn_data)
-            } else {
-                expn_data
-            }
+            if !next_expn_data.is_root() { source_callee(next_expn_data) } else { expn_data }
         }
         let expn_data = self.ctxt().outer_expn_data();
-        if !expn_data.is_root() {
-            Some(source_callee(expn_data))
-        } else {
-            None
-        }
+        if !expn_data.is_root() { Some(source_callee(expn_data)) } else { None }
     }
 
     /// Checks if a span is "internal" to a macro in which `#[unstable]`
@@ -798,16 +749,8 @@ impl Span {
         Span::new(
             cmp::min(span_data.lo, end_data.lo),
             cmp::max(span_data.hi, end_data.hi),
-            if span_data.ctxt == SyntaxContext::root() {
-                end_data.ctxt
-            } else {
-                span_data.ctxt
-            },
-            if span_data.parent == end_data.parent {
-                span_data.parent
-            } else {
-                None
-            },
+            if span_data.ctxt == SyntaxContext::root() { end_data.ctxt } else { span_data.ctxt },
+            if span_data.parent == end_data.parent { span_data.parent } else { None },
         )
     }
 
@@ -824,16 +767,8 @@ impl Span {
         Span::new(
             span.hi,
             end.lo,
-            if end.ctxt == SyntaxContext::root() {
-                end.ctxt
-            } else {
-                span.ctxt
-            },
-            if span.parent == end.parent {
-                span.parent
-            } else {
-                None
-            },
+            if end.ctxt == SyntaxContext::root() { end.ctxt } else { span.ctxt },
+            if span.parent == end.parent { span.parent } else { None },
         )
     }
 
@@ -867,16 +802,8 @@ impl Span {
         Span::new(
             span_data.lo,
             end_data.lo,
-            if end_data.ctxt == SyntaxContext::root() {
-                end_data.ctxt
-            } else {
-                span_data.ctxt
-            },
-            if span_data.parent == end_data.parent {
-                span_data.parent
-            } else {
-                None
-            },
+            if end_data.ctxt == SyntaxContext::root() { end_data.ctxt } else { span_data.ctxt },
+            if span_data.parent == end_data.parent { span_data.parent } else { None },
         )
     }
 
@@ -1049,12 +976,7 @@ pub fn debug_with_source_map(
     f: &mut fmt::Formatter<'_>,
     source_map: &SourceMap,
 ) -> fmt::Result {
-    write!(
-        f,
-        "{} ({:?})",
-        source_map.span_to_diagnostic_string(span),
-        span.ctxt()
-    )
+    write!(f, "{} ({:?})", source_map.span_to_diagnostic_string(span), span.ctxt())
 }
 
 pub fn default_span_debug(span: Span, f: &mut fmt::Formatter<'_>) -> fmt::Result {
@@ -1086,25 +1008,16 @@ impl fmt::Debug for SpanData {
 impl MultiSpan {
     #[inline]
     pub fn new() -> MultiSpan {
-        MultiSpan {
-            primary_spans: vec![],
-            span_labels: vec![],
-        }
+        MultiSpan { primary_spans: vec![], span_labels: vec![] }
     }
 
     pub fn from_span(primary_span: Span) -> MultiSpan {
-        MultiSpan {
-            primary_spans: vec![primary_span],
-            span_labels: vec![],
-        }
+        MultiSpan { primary_spans: vec![primary_span], span_labels: vec![] }
     }
 
     pub fn from_spans(mut vec: Vec<Span>) -> MultiSpan {
         vec.sort();
-        MultiSpan {
-            primary_spans: vec,
-            span_labels: vec![],
-        }
+        MultiSpan { primary_spans: vec, span_labels: vec![] }
     }
 
     pub fn push_span_label(&mut self, span: Span, label: String) {
@@ -1176,11 +1089,7 @@ impl MultiSpan {
 
         for &span in &self.primary_spans {
             if !span_labels.iter().any(|sl| sl.span == span) {
-                span_labels.push(SpanLabel {
-                    span,
-                    is_primary: true,
-                    label: None,
-                });
+                span_labels.push(SpanLabel { span, is_primary: true, label: None });
             }
         }
 
@@ -1313,10 +1222,7 @@ pub enum ExternalSourceKind {
 impl ExternalSource {
     pub fn get_source(&self) -> Option<&Lrc<String>> {
         match self {
-            ExternalSource::Foreign {
-                kind: ExternalSourceKind::Present(ref src),
-                ..
-            } => Some(src),
+            ExternalSource::Foreign { kind: ExternalSourceKind::Present(ref src), .. } => Some(src),
             _ => None,
         }
     }
@@ -1348,7 +1254,8 @@ impl FromStr for SourceFileHashAlgorithm {
 rustc_data_structures::impl_stable_hash_via_hash!(SourceFileHashAlgorithm);
 
 /// The hash of the on-disk source file used for debug info.
-#[derive(Copy, Clone, PartialEq, Eq, Debug, HashStable_Generic, Encodable, Decodable)]
+#[derive(Copy, Clone, PartialEq, Eq, Debug)]
+#[derive(HashStable_Generic, Encodable, Decodable)]
 pub struct SourceFileHash {
     pub kind: SourceFileHashAlgorithm,
     value: [u8; 32],
@@ -1356,10 +1263,7 @@ pub struct SourceFileHash {
 
 impl SourceFileHash {
     pub fn new(kind: SourceFileHashAlgorithm, src: &str) -> SourceFileHash {
-        let mut hash = SourceFileHash {
-            kind,
-            value: Default::default(),
-        };
+        let mut hash = SourceFileHash { kind, value: Default::default() };
         let len = hash.hash_len();
         let value = &mut hash.value[..len];
         let data = src.as_bytes();
@@ -1495,9 +1399,7 @@ impl<S: Encoder> Encodable<S> for SourceFile {
                 Ok(())
             })?;
             s.emit_struct_field("multibyte_chars", false, |s| self.multibyte_chars.encode(s))?;
-            s.emit_struct_field("non_narrow_chars", false, |s| {
-                self.non_narrow_chars.encode(s)
-            })?;
+            s.emit_struct_field("non_narrow_chars", false, |s| self.non_narrow_chars.encode(s))?;
             s.emit_struct_field("name_hash", false, |s| self.name_hash.encode(s))?;
             s.emit_struct_field("normalized_pos", false, |s| self.normalized_pos.encode(s))?;
             s.emit_struct_field("cnum", false, |s| self.cnum.encode(s))
@@ -1629,17 +1531,13 @@ impl SourceFile {
     {
         if matches!(
             *self.external_src.borrow(),
-            ExternalSource::Foreign {
-                kind: ExternalSourceKind::AbsentOk,
-                ..
-            }
+            ExternalSource::Foreign { kind: ExternalSourceKind::AbsentOk, .. }
         ) {
             let src = get_src();
             let mut external_src = self.external_src.borrow_mut();
             // Check that no-one else have provided the source while we were getting it
             if let ExternalSource::Foreign {
-                kind: src_kind @ ExternalSourceKind::AbsentOk,
-                ..
+                kind: src_kind @ ExternalSourceKind::AbsentOk, ..
             } = &mut *external_src
             {
                 if let Some(mut src) = src {
@@ -1790,14 +1688,8 @@ impl SourceFile {
                 let linebpos = self.lines[a];
                 let linechpos = self.bytepos_to_file_charpos(linebpos);
                 let col = chpos - linechpos;
-                debug!(
-                    "byte pos {:?} is on the line at byte pos {:?}",
-                    pos, linebpos
-                );
-                debug!(
-                    "char pos {:?} is on the line at char pos {:?}",
-                    chpos, linechpos
-                );
+                debug!("byte pos {:?} is on the line at byte pos {:?}", pos, linebpos);
+                debug!("char pos {:?} is on the line at char pos {:?}", chpos, linechpos);
                 debug!("byte is on line: {}", line);
                 assert!(chpos >= linechpos);
                 (line, col)
@@ -1837,10 +1729,8 @@ impl SourceFile {
                     .non_narrow_chars
                     .binary_search_by_key(&pos, |x| x.pos())
                     .unwrap_or_else(|x| x);
-                let non_narrow: usize = self.non_narrow_chars[0..end_width_idx]
-                    .iter()
-                    .map(|x| x.width())
-                    .sum();
+                let non_narrow: usize =
+                    self.non_narrow_chars[0..end_width_idx].iter().map(|x| x.width()).sum();
                 chpos.0 - end_width_idx + non_narrow
             };
             (0, chpos, col_display)
@@ -1866,10 +1756,7 @@ fn normalize_src(src: &mut String, start_pos: BytePos) -> Vec<NormalizedPos> {
 fn remove_bom(src: &mut String, normalized_pos: &mut Vec<NormalizedPos>) {
     if src.starts_with('\u{feff}') {
         src.drain(..3);
-        normalized_pos.push(NormalizedPos {
-            pos: BytePos(0),
-            diff: 3,
-        });
+        normalized_pos.push(NormalizedPos { pos: BytePos(0), diff: 3 });
     }
 }
 

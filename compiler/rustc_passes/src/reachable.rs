@@ -173,7 +173,8 @@ impl<'tcx> ReachableContext<'tcx> {
                             // Check the impl. If the generics on the self
                             // type of the impl require inlining, this method
                             // does too.
-                            match self.tcx.hir().expect_item(impl_did).kind {
+                            let impl_hir_id = self.tcx.hir().local_def_id_to_hir_id(impl_did);
+                            match self.tcx.hir().expect_item(impl_hir_id).kind {
                                 hir::ItemKind::Impl { .. } => {
                                     let generics = self.tcx.generics_of(impl_did);
                                     generics.requires_monomorphization(self.tcx)

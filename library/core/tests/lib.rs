@@ -10,7 +10,6 @@
 #![feature(const_assume)]
 #![feature(const_cell_into_inner)]
 #![feature(const_convert)]
-#![feature(const_maybe_uninit_as_mut_ptr)]
 #![feature(const_maybe_uninit_assume_init)]
 #![feature(const_ptr_read)]
 #![feature(const_ptr_write)]
@@ -62,7 +61,6 @@
 #![feature(never_type)]
 #![feature(unwrap_infallible)]
 #![feature(result_into_ok_or_err)]
-#![cfg_attr(not(bootstrap), feature(portable_simd))]
 #![feature(ptr_metadata)]
 #![feature(once_cell)]
 #![feature(unsized_tuple_coercion)]
@@ -108,8 +106,6 @@ mod pattern;
 mod pin;
 mod ptr;
 mod result;
-#[cfg(not(bootstrap))]
-mod simd;
 mod slice;
 mod str;
 mod str_lossy;

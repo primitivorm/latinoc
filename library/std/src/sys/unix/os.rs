@@ -2,7 +2,7 @@
 
 #![allow(unused_imports)] // lots of cfg code here
 
-#[cfg(test)]
+#[cfg(all(test, target_env = "gnu"))]
 mod tests;
 
 use crate::os::unix::prelude::*;
@@ -636,14 +636,22 @@ pub fn getppid() -> u32 {
     unsafe { libc::getppid() as u32 }
 }
 
-#[cfg(all(target_os = "linux", target_env = "gnu"))]
+#[cfg(all(target_env = "gnu", not(target_os = "vxworks")))]
 pub fn glibc_version() -> Option<(usize, usize)> {
-    extern "C" {
-        fn gnu_get_libc_version() -> *const libc::c_char;
-    }
-    let version_cstr = unsafe { CStr::from_ptr(gnu_get_libc_version()) };
-    if let Ok(version_str) = version_cstr.to_str() {
+    if let Some(Ok(version_str)) = glibc_version_cstr().map(CStr::to_str) {
         parse_glibc_version(version_str)
+    } else {
+        None
+    }
+}
+
+#[cfg(all(target_env = "gnu", not(target_os = "vxworks")))]
+fn glibc_version_cstr() -> Option<&'static CStr> {
+    weak! {
+        fn gnu_get_libc_version() -> *const libc::c_char
+    }
+    if let Some(f) = gnu_get_libc_version.get() {
+        unsafe { Some(CStr::from_ptr(f())) }
     } else {
         None
     }
@@ -651,7 +659,7 @@ pub fn glibc_version() -> Option<(usize, usize)> {
 
 // Returns Some((major, minor)) if the string is a valid "x.y" version,
 // ignoring any extra dot-separated parts. Otherwise return None.
-#[cfg(all(target_os = "linux", target_env = "gnu"))]
+#[cfg(all(target_env = "gnu", not(target_os = "vxworks")))]
 fn parse_glibc_version(version: &str) -> Option<(usize, usize)> {
     let mut parsed_ints = version.split('.').map(str::parse::<usize>).fuse();
     match (parsed_ints.next(), parsed_ints.next()) {

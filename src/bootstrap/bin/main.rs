@@ -11,7 +11,6 @@ use bootstrap::{Build, Config, Subcommand, VERSION};
 
 fn main() {
     let args = env::args().skip(1).collect::<Vec<_>>();
-    println!("args: {:?}", args);
     let config = Config::parse(&args);
 
     // check_version warnings are not printed during setup

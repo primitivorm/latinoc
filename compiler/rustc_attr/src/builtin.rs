@@ -12,11 +12,7 @@ use rustc_span::{symbol::sym, symbol::Symbol, Span};
 use std::num::NonZeroU32;
 
 pub fn is_builtin_attr(attr: &Attribute) -> bool {
-    attr.is_doc_comment()
-        || attr
-            .ident()
-            .filter(|ident| is_builtin_attr_name(ident.name))
-            .is_some()
+    attr.is_doc_comment() || attr.ident().filter(|ident| is_builtin_attr_name(ident.name)).is_some()
 }
 
 enum AttrError {
@@ -36,10 +32,7 @@ fn handle_errors(sess: &ParseSess, span: Span, error: AttrError) {
             struct_span_err!(diag, span, E0538, "multiple '{}' items", item).emit();
         }
         AttrError::UnknownMetaItem(item, expected) => {
-            let expected = expected
-                .iter()
-                .map(|name| format!("`{}`", name))
-                .collect::<Vec<_>>();
+            let expected = expected.iter().map(|name| format!("`{}`", name)).collect::<Vec<_>>();
             struct_span_err!(diag, span, E0541, "unknown meta item '{}'", item)
                 .span_label(span, format!("expected one of {}", expected.join(", ")))
                 .emit();
@@ -98,14 +91,16 @@ pub enum OptimizeAttr {
 ///
 /// - `#[stable]`
 /// - `#[unstable]`
-#[derive(Encodable, Decodable, Copy, Clone, Debug, PartialEq, Eq, Hash, HashStable_Generic)]
+#[derive(Encodable, Decodable, Copy, Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(HashStable_Generic)]
 pub struct Stability {
     pub level: StabilityLevel,
     pub feature: Symbol,
 }
 
 /// Represents the `#[rustc_const_unstable]` and `#[rustc_const_stable]` attributes.
-#[derive(Encodable, Decodable, Copy, Clone, Debug, PartialEq, Eq, Hash, HashStable_Generic)]
+#[derive(Encodable, Decodable, Copy, Clone, Debug, PartialEq, Eq, Hash)]
+#[derive(HashStable_Generic)]
 pub struct ConstStability {
     pub level: StabilityLevel,
     pub feature: Symbol,
@@ -114,17 +109,12 @@ pub struct ConstStability {
 }
 
 /// The available stability levels.
-#[derive(Encodable, Decodable, PartialEq, Copy, Clone, Debug, Eq, Hash, HashStable_Generic)]
+#[derive(Encodable, Decodable, PartialEq, Copy, Clone, Debug, Eq, Hash)]
+#[derive(HashStable_Generic)]
 pub enum StabilityLevel {
     // Reason for the current stability level and the relevant rust-lang issue
-    Unstable {
-        reason: Option<Symbol>,
-        issue: Option<NonZeroU32>,
-        is_soft: bool,
-    },
-    Stable {
-        since: Symbol,
-    },
+    Unstable { reason: Option<Symbol>, issue: Option<NonZeroU32>, is_soft: bool },
+    Stable { since: Symbol },
 }
 
 impl StabilityLevel {
@@ -182,11 +172,7 @@ where
             promotable = true;
         }
         // attributes with data
-        else if let Some(MetaItem {
-            kind: MetaItemKind::List(ref metas),
-            ..
-        }) = meta
-        {
+        else if let Some(MetaItem { kind: MetaItemKind::List(ref metas), .. }) = meta {
             let meta = meta.as_ref().unwrap();
             let get = |meta: &MetaItem, item: &mut Option<Symbol>| {
                 if item.is_some() {
@@ -323,20 +309,12 @@ where
                                 );
                                 continue;
                             }
-                            let level = Unstable {
-                                reason,
-                                issue: issue_num,
-                                is_soft,
-                            };
+                            let level = Unstable { reason, issue: issue_num, is_soft };
                             if sym::unstable == meta_name {
                                 stab = Some((Stability { level, feature }, attr.span));
                             } else {
                                 const_stab = Some((
-                                    ConstStability {
-                                        level,
-                                        feature,
-                                        promotable: false,
-                                    },
+                                    ConstStability { level, feature, promotable: false },
                                     attr.span,
                                 ));
                             }
@@ -414,11 +392,7 @@ where
                                 stab = Some((Stability { level, feature }, attr.span));
                             } else {
                                 const_stab = Some((
-                                    ConstStability {
-                                        level,
-                                        feature,
-                                        promotable: false,
-                                    },
+                                    ConstStability { level, feature, promotable: false },
                                     attr.span,
                                 ));
                             }
@@ -527,11 +501,7 @@ fn parse_version(s: &str, allow_appendix: bool) -> Option<Version> {
     let major = digits.next()?.parse().ok()?;
     let minor = digits.next()?.parse().ok()?;
     let patch = digits.next().unwrap_or("0").parse().ok()?;
-    Some(Version {
-        major,
-        minor,
-        patch,
-    })
+    Some(Version { major, minor, patch })
 }
 
 /// Evaluate a cfg-like condition (with `any` and `all`), using `eval` to
@@ -546,11 +516,9 @@ pub fn eval_condition(
         ast::MetaItemKind::List(ref mis) if cfg.name_or_empty() == sym::version => {
             try_gate_cfg(cfg, sess, features);
             let (min_version, span) = match &mis[..] {
-                [NestedMetaItem::Literal(Lit {
-                    kind: LitKind::Str(sym, ..),
-                    span,
-                    ..
-                })] => (sym, span),
+                [NestedMetaItem::Literal(Lit { kind: LitKind::Str(sym, ..), span, .. })] => {
+                    (sym, span)
+                }
                 [NestedMetaItem::Literal(Lit { span, .. })
                 | NestedMetaItem::MetaItem(MetaItem { span, .. })] => {
                     sess.span_diagnostic
@@ -671,15 +639,10 @@ where
         }
 
         if let Some((_, span)) = &depr {
-            struct_span_err!(
-                diagnostic,
-                attr.span,
-                E0550,
-                "multiple deprecated attributes"
-            )
-            .span_label(attr.span, "repeated deprecation attribute")
-            .span_label(*span, "first deprecation attribute")
-            .emit();
+            struct_span_err!(diagnostic, attr.span, E0550, "multiple deprecated attributes")
+                .span_label(attr.span, "repeated deprecation attribute")
+                .span_label(*span, "first deprecation attribute")
+                .emit();
             break;
         }
 
@@ -798,15 +761,7 @@ where
         }
 
         let is_since_rustc_version = attr.has_name(sym::rustc_deprecated);
-        depr = Some((
-            Deprecation {
-                since,
-                note,
-                suggestion,
-                is_since_rustc_version,
-            },
-            attr.span,
-        ));
+        depr = Some((Deprecation { since, note, suggestion, is_since_rustc_version }, attr.span));
     }
 
     depr
@@ -823,7 +778,8 @@ pub enum ReprAttr {
     ReprNoNiche,
 }
 
-#[derive(Eq, PartialEq, Debug, Copy, Clone, Encodable, Decodable, HashStable_Generic)]
+#[derive(Eq, PartialEq, Debug, Copy, Clone)]
+#[derive(Encodable, Decodable, HashStable_Generic)]
 pub enum IntType {
     SignedInt(ast::IntTy),
     UnsignedInt(ast::UintTy),
@@ -1061,9 +1017,7 @@ pub fn find_transparency(
     for attr in attrs {
         if attr.has_name(sym::rustc_macro_transparency) {
             if let Some((_, old_span)) = transparency {
-                error = Some(TransparencyError::MultipleTransparencyAttrs(
-                    old_span, attr.span,
-                ));
+                error = Some(TransparencyError::MultipleTransparencyAttrs(old_span, attr.span));
                 break;
             } else if let Some(value) = attr.value_str() {
                 transparency = Some((
@@ -1081,11 +1035,7 @@ pub fn find_transparency(
             }
         }
     }
-    let fallback = if macro_rules {
-        Transparency::SemiTransparent
-    } else {
-        Transparency::Opaque
-    };
+    let fallback = if macro_rules { Transparency::SemiTransparent } else { Transparency::Opaque };
     (transparency.map_or(fallback, |t| t.0), error)
 }
 
@@ -1114,10 +1064,7 @@ fn allow_unstable<'a>(
             attr.meta_item_list().or_else(|| {
                 sess.diagnostic().span_err(
                     attr.span,
-                    &format!(
-                        "`{}` expects a list of feature names",
-                        symbol.to_ident_string()
-                    ),
+                    &format!("`{}` expects a list of feature names", symbol.to_ident_string()),
                 );
                 None
             })
@@ -1140,11 +1087,7 @@ pub fn parse_alignment(node: &ast::LitKind) -> Result<u32, &'static str> {
     if let ast::LitKind::Int(literal, ast::LitIntType::Unsuffixed) = node {
         if literal.is_power_of_two() {
             // rustc_middle::ty::layout::Align restricts align to <= 2^29
-            if *literal <= 1 << 29 {
-                Ok(*literal as u32)
-            } else {
-                Err("larger than 2^29")
-            }
+            if *literal <= 1 << 29 { Ok(*literal as u32) } else { Err("larger than 2^29") }
         } else {
             Err("not a power of two")
         }

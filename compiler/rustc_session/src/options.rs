@@ -35,9 +35,7 @@ macro_rules! insert {
 
 macro_rules! hash_opt {
     ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr, $_for_crate_hash: ident, [UNTRACKED]) => {{}};
-    ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr, $_for_crate_hash: ident, [TRACKED]) => {{
-        insert!($opt_name, $opt_expr, $sub_hashes)
-    }};
+    ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr, $_for_crate_hash: ident, [TRACKED]) => {{ insert!($opt_name, $opt_expr, $sub_hashes) }};
     ($opt_name:ident, $opt_expr:expr, $sub_hashes:expr, $for_crate_hash: ident, [TRACKED_NO_CRATE_HASH]) => {{
         if !$for_crate_hash {
             insert!($opt_name, $opt_expr, $sub_hashes)
@@ -569,7 +567,7 @@ mod parse {
             v => {
                 let mut passes = vec![];
                 if parse_list(&mut passes, v) {
-                    slot.extend(passes);
+                    *slot = Passes::Some(passes);
                     true
                 } else {
                     false

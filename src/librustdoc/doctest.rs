@@ -632,11 +632,7 @@ crate fn make_test(
         s.lines()
             .map(|line| {
                 let comment = line.find("//");
-                if let Some(comment_begins) = comment {
-                    &line[0..comment_begins]
-                } else {
-                    line
-                }
+                if let Some(comment_begins) = comment { &line[0..comment_begins] } else { line }
             })
             .any(|code| code.contains("fn main"))
     } else {
@@ -1051,11 +1047,7 @@ impl Tester for Collector {
         if let Some(ref source_map) = self.source_map {
             let line = self.position.lo().to_usize();
             let line = source_map.lookup_char_pos(BytePos(line as u32)).line;
-            if line > 0 {
-                line - 1
-            } else {
-                line
-            }
+            if line > 0 { line - 1 } else { line }
         } else {
             0
         }

@@ -1,5 +1,4 @@
 use crate::panic::use_panic_2021;
-use latinoc_parse::parser::Parser;
 use rustc_ast::ptr::P;
 use rustc_ast::token;
 use rustc_ast::tokenstream::{DelimSpan, TokenStream};
@@ -7,6 +6,7 @@ use rustc_ast::{self as ast, *};
 use rustc_ast_pretty::pprust;
 use rustc_errors::{Applicability, DiagnosticBuilder};
 use rustc_expand::base::*;
+use latinoc_parse::parser::Parser;
 use rustc_span::symbol::{sym, Ident, Symbol};
 use rustc_span::{Span, DUMMY_SP};
 
@@ -15,10 +15,7 @@ pub fn expand_assert<'cx>(
     span: Span,
     tts: TokenStream,
 ) -> Box<dyn MacResult + 'cx> {
-    let Assert {
-        cond_expr,
-        custom_message,
-    } = match parse_assert(cx, span, tts) {
+    let Assert { cond_expr, custom_message } = match parse_assert(cx, span, tts) {
         Ok(assert) => assert,
         Err(mut err) => {
             err.emit();
@@ -76,12 +73,8 @@ pub fn expand_assert<'cx>(
             )],
         )
     };
-    let if_expr = cx.expr_if(
-        sp,
-        cx.expr(sp, ExprKind::Unary(UnOp::Not, cond_expr)),
-        panic_call,
-        None,
-    );
+    let if_expr =
+        cx.expr_if(sp, cx.expr(sp, ExprKind::Unary(UnOp::Not, cond_expr)), panic_call, None);
     MacEager::expr(if_expr)
 }
 
@@ -131,42 +124,33 @@ fn parse_assert<'a>(
     // assert!(true "error message");
     //
     // Emit an error and suggest inserting a comma.
-    let custom_message = if let token::Literal(token::Lit {
-        kind: token::Str, ..
-    }) = parser.token.kind
-    {
-        let mut err = cx.struct_span_err(parser.token.span, "unexpected string literal");
-        let comma_span = parser.prev_token.span.shrink_to_hi();
-        err.span_suggestion_short(
-            comma_span,
-            "try adding a comma",
-            ", ".to_string(),
-            Applicability::MaybeIncorrect,
-        );
-        err.emit();
+    let custom_message =
+        if let token::Literal(token::Lit { kind: token::Str, .. }) = parser.token.kind {
+            let mut err = cx.struct_span_err(parser.token.span, "unexpected string literal");
+            let comma_span = parser.prev_token.span.shrink_to_hi();
+            err.span_suggestion_short(
+                comma_span,
+                "try adding a comma",
+                ", ".to_string(),
+                Applicability::MaybeIncorrect,
+            );
+            err.emit();
 
-        parse_custom_message(&mut parser)
-    } else if parser.eat(&token::Comma) {
-        parse_custom_message(&mut parser)
-    } else {
-        None
-    };
+            parse_custom_message(&mut parser)
+        } else if parser.eat(&token::Comma) {
+            parse_custom_message(&mut parser)
+        } else {
+            None
+        };
 
     if parser.token != token::Eof {
         return parser.unexpected();
     }
 
-    Ok(Assert {
-        cond_expr,
-        custom_message,
-    })
+    Ok(Assert { cond_expr, custom_message })
 }
 
 fn parse_custom_message(parser: &mut Parser<'_>) -> Option<TokenStream> {
     let ts = parser.parse_tokens();
-    if !ts.is_empty() {
-        Some(ts)
-    } else {
-        None
-    }
+    if !ts.is_empty() { Some(ts) } else { None }
 }

@@ -160,6 +160,8 @@ fn windows_exe_resolver() {
         io::ErrorKind::InvalidInput
     );
 
+    /* FIXME: fix and re-enable these tests before making changes to the resolver.
+
     /*
     Some of the following tests may need to be changed if you are deliberately
     changing the behaviour of `resolve_exe`.
@@ -169,11 +171,9 @@ fn windows_exe_resolver() {
     env::set_var("PATH", "");
 
     assert_eq!(resolve_exe(OsStr::new("rustc"), None).unwrap_err().kind(), io::ErrorKind::NotFound);
-    // assert_eq!(resolve_exe(OsStr::new("latinoc"), None).unwrap_err().kind(), io::ErrorKind::NotFound);
 
     let child_paths = Some(paths.as_os_str());
     assert!(resolve_exe(OsStr::new("rustc"), child_paths).is_ok());
-    // assert!(resolve_exe(OsStr::new("latinoc"), child_paths).is_ok());
 
     // The resolver looks in system directories even when `PATH` is empty.
     assert!(resolve_exe(OsStr::new("cmd.exe"), None).is_ok());
@@ -181,4 +181,6 @@ fn windows_exe_resolver() {
     // The application's directory is also searched.
     let current_exe = env::current_exe().unwrap();
     assert!(resolve_exe(current_exe.file_name().unwrap().as_ref(), None).is_ok());
+
+    */
 }

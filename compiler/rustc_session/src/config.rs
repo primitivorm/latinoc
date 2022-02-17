@@ -833,13 +833,6 @@ impl Passes {
             Passes::All => false,
         }
     }
-
-    pub fn extend(&mut self, passes: impl IntoIterator<Item = String>) {
-        match *self {
-            Passes::Some(ref mut v) => v.extend(passes),
-            Passes::All => {}
-        }
-    }
 }
 
 pub const fn default_lib_output() -> CrateType {
@@ -863,7 +856,7 @@ fn default_configuration(sess: &Session) -> CrateConfig {
 
     let mut ret = FxHashSet::default();
     ret.reserve(7); // the minimum number of insertions
-                    // Target bindings.
+    // Target bindings.
     ret.insert((sym::target_os, Some(Symbol::intern(os))));
     for fam in &sess.target.families {
         ret.insert((sym::target_family, Some(Symbol::intern(fam))));
@@ -1043,11 +1036,7 @@ mod opt {
     }
 
     fn longer(a: S, b: S) -> S {
-        if a.len() > b.len() {
-            a
-        } else {
-            b
-        }
+        if a.len() > b.len() { a } else { b }
     }
 
     pub fn opt_s(a: S, b: S, c: S, d: S) -> R {
@@ -1585,11 +1574,7 @@ fn parse_opt_level(
         .into_iter()
         .flat_map(|(i, s)| {
             // NB: This can match a string without `=`.
-            if let Some("opt-level") = s.splitn(2, '=').next() {
-                Some(i)
-            } else {
-                None
-            }
+            if let Some("opt-level") = s.splitn(2, '=').next() { Some(i) } else { None }
         })
         .max();
     if max_o > max_c {
@@ -1627,11 +1612,7 @@ fn select_debuginfo(
         .into_iter()
         .flat_map(|(i, s)| {
             // NB: This can match a string without `=`.
-            if let Some("debuginfo") = s.splitn(2, '=').next() {
-                Some(i)
-            } else {
-                None
-            }
+            if let Some("debuginfo") = s.splitn(2, '=').next() { Some(i) } else { None }
         })
         .max();
     if max_g > max_c {
@@ -2210,11 +2191,7 @@ pub fn build_session_options(matches: &getopts::Matches) -> Options {
         }
 
         // Only use this directory if it has a file we can expect to always find.
-        if candidate.join("library/std/src/lib.rs").is_file() {
-            Some(candidate)
-        } else {
-            None
-        }
+        if candidate.join("library/std/src/lib.rs").is_file() { Some(candidate) } else { None }
     };
 
     let working_dir = std::env::current_dir().unwrap_or_else(|e| {

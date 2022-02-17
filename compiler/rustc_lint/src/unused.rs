@@ -169,9 +169,7 @@ impl<'tcx> LateLintPass<'tcx> for UnusedResults {
         }
 
         if !(type_permits_lack_of_use || fn_warned || op_warned) {
-            cx.struct_span_lint(UNUSED_RESULTS, s.span, |lint| {
-                lint.build("unused result").emit()
-            });
+            cx.struct_span_lint(UNUSED_RESULTS, s.span, |lint| lint.build("unused result").emit());
         }
 
         // Returns whether an error has been emitted (and thus another does not need to be later).
@@ -512,10 +510,7 @@ trait UnusedDelimLint {
                         value.span.with_lo(value.span.hi() - BytePos(1)),
                     )
                 } else {
-                    (
-                        value.span.with_hi(expr.span.lo()),
-                        value.span.with_lo(expr.span.hi()),
-                    )
+                    (value.span.with_hi(expr.span.lo()), value.span.with_lo(expr.span.hi()))
                 }
             }
             _ => return,
@@ -540,25 +535,17 @@ trait UnusedDelimLint {
             return;
         }
 
-        cx.struct_span_lint(
-            self.lint(),
-            MultiSpan::from(vec![spans.0, spans.1]),
-            |lint| {
-                let span_msg = format!("unnecessary {} around {}", Self::DELIM_STR, msg);
-                let mut err = lint.build(&span_msg);
-                let replacement = vec![
-                    (spans.0, if keep_space.0 { " ".into() } else { "".into() }),
-                    (spans.1, if keep_space.1 { " ".into() } else { "".into() }),
-                ];
-                let suggestion = format!("remove these {}", Self::DELIM_STR);
-                err.multipart_suggestion(
-                    &suggestion,
-                    replacement,
-                    Applicability::MachineApplicable,
-                );
-                err.emit();
-            },
-        );
+        cx.struct_span_lint(self.lint(), MultiSpan::from(vec![spans.0, spans.1]), |lint| {
+            let span_msg = format!("unnecessary {} around {}", Self::DELIM_STR, msg);
+            let mut err = lint.build(&span_msg);
+            let replacement = vec![
+                (spans.0, if keep_space.0 { " ".into() } else { "".into() }),
+                (spans.1, if keep_space.1 { " ".into() } else { "".into() }),
+            ];
+            let suggestion = format!("remove these {}", Self::DELIM_STR);
+            err.multipart_suggestion(&suggestion, replacement, Applicability::MachineApplicable);
+            err.emit();
+        });
     }
 
     fn check_expr(&mut self, cx: &EarlyContext<'_>, e: &ast::Expr) {
@@ -581,32 +568,16 @@ trait UnusedDelimLint {
             {
                 let left = e.span.lo() + rustc_span::BytePos(5);
                 let right = block.span.lo();
-                (
-                    cond,
-                    UnusedDelimsCtx::WhileCond,
-                    true,
-                    Some(left),
-                    Some(right),
-                )
+                (cond, UnusedDelimsCtx::WhileCond, true, Some(left), Some(right))
             }
 
-            ForLoop(_, ref cond, ref block, ..) => (
-                cond,
-                UnusedDelimsCtx::ForIterExpr,
-                true,
-                None,
-                Some(block.span.lo()),
-            ),
+            ForLoop(_, ref cond, ref block, ..) => {
+                (cond, UnusedDelimsCtx::ForIterExpr, true, None, Some(block.span.lo()))
+            }
 
             Match(ref head, _) if Self::LINT_EXPR_IN_PATTERN_MATCHING_CTX => {
                 let left = e.span.lo() + rustc_span::BytePos(5);
-                (
-                    head,
-                    UnusedDelimsCtx::MatchScrutineeExpr,
-                    true,
-                    Some(left),
-                    None,
-                )
+                (head, UnusedDelimsCtx::MatchScrutineeExpr, true, Some(left), None)
             }
 
             Ret(Some(ref value)) => {
@@ -787,10 +758,7 @@ impl UnusedParens {
                     value.span.with_lo(value.span.hi() - BytePos(1)),
                 )
             } else {
-                (
-                    value.span.with_hi(inner.span.lo()),
-                    value.span.with_lo(inner.span.hi()),
-                )
+                (value.span.with_hi(inner.span.lo()), value.span.with_lo(inner.span.hi()))
             };
             self.emit_unused_delims(cx, spans, "pattern", (false, false));
         }
@@ -1059,7 +1027,7 @@ impl EarlyLintPass for UnusedBraces {
                 );
             }
 
-            /*ast::TyKind::Typeof(ref anon_const) => {
+            ast::TyKind::Typeof(ref anon_const) => {
                 self.check_unused_delims_expr(
                     cx,
                     &anon_const.value,
@@ -1068,7 +1036,8 @@ impl EarlyLintPass for UnusedBraces {
                     None,
                     None,
                 );
-            }*/
+            }
+
             _ => {}
         }
     }
@@ -1137,8 +1106,7 @@ impl UnusedImportBraces {
             };
 
             cx.struct_span_lint(UNUSED_IMPORT_BRACES, item.span, |lint| {
-                lint.build(&format!("braces around {} is unnecessary", node_name))
-                    .emit()
+                lint.build(&format!("braces around {} is unnecessary", node_name)).emit()
             });
         }
     }

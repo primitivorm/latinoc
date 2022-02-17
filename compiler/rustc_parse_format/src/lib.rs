@@ -482,10 +482,7 @@ impl<'a> Parser<'a> {
             }
         };
 
-        Argument {
-            position: pos,
-            format,
-        }
+        Argument { position: pos, format }
     }
 
     /// Parses a positional argument for a format. This could either be an
@@ -568,11 +565,7 @@ impl<'a> Parser<'a> {
             }
         }
         if !havewidth {
-            let width_span_start = if let Some((pos, _)) = self.cur.peek() {
-                *pos
-            } else {
-                0
-            };
+            let width_span_start = if let Some((pos, _)) = self.cur.peek() { *pos } else { 0 };
             let (w, sp) = self.count(width_span_start);
             spec.width = w;
             spec.width_span = sp;

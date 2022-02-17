@@ -263,11 +263,7 @@ pub fn walk_poly_trait_ref<'a, V>(
 ) where
     V: Visitor<'a>,
 {
-    walk_list!(
-        visitor,
-        visit_generic_param,
-        &trait_ref.bound_generic_params
-    );
+    walk_list!(visitor, visit_generic_param, &trait_ref.bound_generic_params);
     visitor.visit_trait_ref(&trait_ref.trait_ref);
 }
 
@@ -289,12 +285,7 @@ pub fn walk_item<'a, V: Visitor<'a>>(visitor: &mut V, item: &'a Item) {
             visitor.visit_ty(typ);
             walk_list!(visitor, visit_expr, expr);
         }
-        ItemKind::Fn(box Fn {
-            defaultness: _,
-            ref generics,
-            ref sig,
-            ref body,
-        }) => {
+        ItemKind::Fn(box Fn { defaultness: _, ref generics, ref sig, ref body }) => {
             visitor.visit_generics(generics);
             let kind = FnKind::Fn(FnCtxt::Free, item.ident, sig, &item.vis, body.as_deref());
             visitor.visit_fn(kind, item.span, item.id)
@@ -309,12 +300,7 @@ pub fn walk_item<'a, V: Visitor<'a>>(visitor: &mut V, item: &'a Item) {
             walk_list!(visitor, visit_foreign_item, &foreign_module.items);
         }
         ItemKind::GlobalAsm(ref asm) => walk_inline_asm(visitor, asm),
-        ItemKind::TyAlias(box TyAlias {
-            defaultness: _,
-            ref generics,
-            ref bounds,
-            ref ty,
-        }) => {
+        ItemKind::TyAlias(box TyAlias { defaultness: _, ref generics, ref bounds, ref ty }) => {
             visitor.visit_generics(generics);
             walk_list!(visitor, visit_param_bound, bounds);
             walk_list!(visitor, visit_ty, ty);
@@ -408,11 +394,7 @@ pub fn walk_ty<'a, V: Visitor<'a>>(visitor: &mut V, typ: &'a Ty) {
             walk_list!(visitor, visit_ty, tuple_element_types);
         }
         TyKind::BareFn(ref function_declaration) => {
-            walk_list!(
-                visitor,
-                visit_generic_param,
-                &function_declaration.generic_params
-            );
+            walk_list!(visitor, visit_generic_param, &function_declaration.generic_params);
             walk_fn_decl(visitor, &function_declaration.decl);
         }
         TyKind::Path(ref maybe_qself, ref path) => {
@@ -428,7 +410,7 @@ pub fn walk_ty<'a, V: Visitor<'a>>(visitor: &mut V, typ: &'a Ty) {
         TyKind::TraitObject(ref bounds, ..) | TyKind::ImplTrait(_, ref bounds) => {
             walk_list!(visitor, visit_param_bound, bounds);
         }
-        //TyKind::Typeof(ref expression) => visitor.visit_anon_const(expression),
+        TyKind::Typeof(ref expression) => visitor.visit_anon_const(expression),
         TyKind::Infer | TyKind::ImplicitSelf | TyKind::Err => {}
         TyKind::MacCall(ref mac) => visitor.visit_mac_call(mac),
         TyKind::Never | TyKind::CVarArgs => {}
@@ -562,15 +544,7 @@ pub fn walk_pat<'a, V: Visitor<'a>>(visitor: &mut V, pattern: &'a Pat) {
 }
 
 pub fn walk_foreign_item<'a, V: Visitor<'a>>(visitor: &mut V, item: &'a ForeignItem) {
-    let Item {
-        id,
-        span,
-        ident,
-        ref vis,
-        ref attrs,
-        ref kind,
-        tokens: _,
-    } = *item;
+    let Item { id, span, ident, ref vis, ref attrs, ref kind, tokens: _ } = *item;
     visitor.visit_vis(vis);
     visitor.visit_ident(ident);
     walk_list!(visitor, visit_attribute, attrs);
@@ -579,22 +553,12 @@ pub fn walk_foreign_item<'a, V: Visitor<'a>>(visitor: &mut V, item: &'a ForeignI
             visitor.visit_ty(ty);
             walk_list!(visitor, visit_expr, expr);
         }
-        ForeignItemKind::Fn(box Fn {
-            defaultness: _,
-            ref generics,
-            ref sig,
-            ref body,
-        }) => {
+        ForeignItemKind::Fn(box Fn { defaultness: _, ref generics, ref sig, ref body }) => {
             visitor.visit_generics(generics);
             let kind = FnKind::Fn(FnCtxt::Foreign, ident, sig, vis, body.as_deref());
             visitor.visit_fn(kind, span, id);
         }
-        ForeignItemKind::TyAlias(box TyAlias {
-            defaultness: _,
-            generics,
-            bounds,
-            ty,
-        }) => {
+        ForeignItemKind::TyAlias(box TyAlias { defaultness: _, generics, bounds, ty }) => {
             visitor.visit_generics(generics);
             walk_list!(visitor, visit_param_bound, bounds);
             walk_list!(visitor, visit_ty, ty);
@@ -619,11 +583,7 @@ pub fn walk_generic_param<'a, V: Visitor<'a>>(visitor: &mut V, param: &'a Generi
     match param.kind {
         GenericParamKind::Lifetime => (),
         GenericParamKind::Type { ref default } => walk_list!(visitor, visit_ty, default),
-        GenericParamKind::Const {
-            ref ty,
-            ref default,
-            ..
-        } => {
+        GenericParamKind::Const { ref ty, ref default, .. } => {
             visitor.visit_ty(ty);
             if let Some(default) = default {
                 visitor.visit_anon_const(default);
@@ -634,11 +594,7 @@ pub fn walk_generic_param<'a, V: Visitor<'a>>(visitor: &mut V, param: &'a Generi
 
 pub fn walk_generics<'a, V: Visitor<'a>>(visitor: &mut V, generics: &'a Generics) {
     walk_list!(visitor, visit_generic_param, &generics.params);
-    walk_list!(
-        visitor,
-        visit_where_predicate,
-        &generics.where_clause.predicates
-    );
+    walk_list!(visitor, visit_where_predicate, &generics.where_clause.predicates);
 }
 
 pub fn walk_where_predicate<'a, V: Visitor<'a>>(visitor: &mut V, predicate: &'a WherePredicate) {
@@ -654,18 +610,12 @@ pub fn walk_where_predicate<'a, V: Visitor<'a>>(visitor: &mut V, predicate: &'a 
             walk_list!(visitor, visit_generic_param, bound_generic_params);
         }
         WherePredicate::RegionPredicate(WhereRegionPredicate {
-            ref lifetime,
-            ref bounds,
-            ..
+            ref lifetime, ref bounds, ..
         }) => {
             visitor.visit_lifetime(lifetime);
             walk_list!(visitor, visit_param_bound, bounds);
         }
-        WherePredicate::EqPredicate(WhereEqPredicate {
-            ref lhs_ty,
-            ref rhs_ty,
-            ..
-        }) => {
+        WherePredicate::EqPredicate(WhereEqPredicate { ref lhs_ty, ref rhs_ty, .. }) => {
             visitor.visit_ty(lhs_ty);
             visitor.visit_ty(rhs_ty);
         }
@@ -700,15 +650,7 @@ pub fn walk_fn<'a, V: Visitor<'a>>(visitor: &mut V, kind: FnKind<'a>, _span: Spa
 }
 
 pub fn walk_assoc_item<'a, V: Visitor<'a>>(visitor: &mut V, item: &'a AssocItem, ctxt: AssocCtxt) {
-    let Item {
-        id,
-        span,
-        ident,
-        ref vis,
-        ref attrs,
-        ref kind,
-        tokens: _,
-    } = *item;
+    let Item { id, span, ident, ref vis, ref attrs, ref kind, tokens: _ } = *item;
     visitor.visit_vis(vis);
     visitor.visit_ident(ident);
     walk_list!(visitor, visit_attribute, attrs);
@@ -717,22 +659,12 @@ pub fn walk_assoc_item<'a, V: Visitor<'a>>(visitor: &mut V, item: &'a AssocItem,
             visitor.visit_ty(ty);
             walk_list!(visitor, visit_expr, expr);
         }
-        AssocItemKind::Fn(box Fn {
-            defaultness: _,
-            ref generics,
-            ref sig,
-            ref body,
-        }) => {
+        AssocItemKind::Fn(box Fn { defaultness: _, ref generics, ref sig, ref body }) => {
             visitor.visit_generics(generics);
             let kind = FnKind::Fn(FnCtxt::Assoc(ctxt), ident, sig, vis, body.as_deref());
             visitor.visit_fn(kind, span, id);
         }
-        AssocItemKind::TyAlias(box TyAlias {
-            defaultness: _,
-            generics,
-            bounds,
-            ty,
-        }) => {
+        AssocItemKind::TyAlias(box TyAlias { defaultness: _, generics, bounds, ty }) => {
             visitor.visit_generics(generics);
             walk_list!(visitor, visit_param_bound, bounds);
             walk_list!(visitor, visit_ty, ty);
@@ -767,12 +699,7 @@ pub fn walk_stmt<'a, V: Visitor<'a>>(visitor: &mut V, statement: &'a Stmt) {
         StmtKind::Expr(ref expr) | StmtKind::Semi(ref expr) => visitor.visit_expr(expr),
         StmtKind::Empty => {}
         StmtKind::MacCall(ref mac) => {
-            let MacCallStmt {
-                ref mac,
-                style: _,
-                ref attrs,
-                tokens: _,
-            } = **mac;
+            let MacCallStmt { ref mac, style: _, ref attrs, tokens: _ } = **mac;
             visitor.visit_mac_call(mac);
             for attr in attrs.iter() {
                 visitor.visit_attribute(attr);
@@ -793,15 +720,11 @@ fn walk_inline_asm<'a, V: Visitor<'a>>(visitor: &mut V, asm: &'a InlineAsm) {
     for (op, _) in &asm.operands {
         match op {
             InlineAsmOperand::In { expr, .. }
-            | InlineAsmOperand::Out {
-                expr: Some(expr), ..
-            }
+            | InlineAsmOperand::Out { expr: Some(expr), .. }
             | InlineAsmOperand::InOut { expr, .. }
             | InlineAsmOperand::Sym { expr, .. } => visitor.visit_expr(expr),
             InlineAsmOperand::Out { expr: None, .. } => {}
-            InlineAsmOperand::SplitInOut {
-                in_expr, out_expr, ..
-            } => {
+            InlineAsmOperand::SplitInOut { in_expr, out_expr, .. } => {
                 visitor.visit_expr(in_expr);
                 if let Some(out_expr) = out_expr {
                     visitor.visit_expr(out_expr);

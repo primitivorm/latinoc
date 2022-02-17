@@ -177,7 +177,7 @@ declare_features! (
     /// Allows use of the `:literal` macro fragment specifier (RFC 1576).
     (accepted, macro_literal_matcher, "1.32.0", Some(35625), None),
     /// Allows `macro_rules!` items.
-    //(accepted, macro_rules, "1.0.0", None, None),
+    (accepted, macro_rules, "1.0.0", None, None),
     /// Allows use of the `:vis` macro fragment specifier
     (accepted, macro_vis_matcher, "1.30.0", Some(41022), None),
     /// Allows macro invocations in `extern {}` blocks.

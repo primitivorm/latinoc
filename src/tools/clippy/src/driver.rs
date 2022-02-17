@@ -9,8 +9,8 @@
 // FIXME: switch to something more ergonomic here, once available.
 // (Currently there is no way to opt into sysroot crates without `extern crate`.)
 extern crate latinoc_driver;
-extern crate latinoc_interface;
 extern crate rustc_errors;
+extern crate latinoc_interface;
 extern crate rustc_session;
 extern crate rustc_span;
 

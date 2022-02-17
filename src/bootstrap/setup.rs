@@ -13,7 +13,6 @@ use std::{
 pub enum Profile {
     Compiler,
     Codegen,
-    // TODO: proman
     Library,
     Tools,
     User,
@@ -56,7 +55,6 @@ impl FromStr for Profile {
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
-            // TODO: proman
             "lib" | "library" => Ok(Profile::Library),
             "compiler" => Ok(Profile::Compiler),
             "llvm" | "codegen" => Ok(Profile::Codegen),
@@ -74,7 +72,6 @@ impl fmt::Display for Profile {
         match self {
             Profile::Compiler => write!(f, "compiler"),
             Profile::Codegen => write!(f, "codegen"),
-            // TODO: proman
             Profile::Library => write!(f, "library"),
             Profile::User => write!(f, "user"),
             Profile::Tools => write!(f, "tools"),
@@ -132,7 +129,7 @@ pub fn setup(src_path: &Path, profile: Profile) {
             "test src/tools/miri",
             "test src/tools/rustfmt",
         ],
-        Profile::Library => &["check", "build", "test library/std", "doc"], // TODO: proman
+        Profile::Library => &["check", "build", "test library/std", "doc"],
         Profile::User => &["dist", "build"],
     };
 

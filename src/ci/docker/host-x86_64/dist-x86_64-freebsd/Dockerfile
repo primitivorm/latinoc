@@ -27,16 +27,16 @@ COPY scripts/cmake.sh /scripts/
 RUN /scripts/cmake.sh
 
 ENV \
-  AR_x86_64_unknown_freebsd=x86_64-unknown-freebsd11-ar \
-  CC_x86_64_unknown_freebsd=x86_64-unknown-freebsd11-clang \
-  CXX_x86_64_unknown_freebsd=x86_64-unknown-freebsd11-clang++
+    AR_x86_64_unknown_freebsd=x86_64-unknown-freebsd11-ar \
+    CC_x86_64_unknown_freebsd=x86_64-unknown-freebsd11-clang \
+    CXX_x86_64_unknown_freebsd=x86_64-unknown-freebsd11-clang++
 
 ENV HOSTS=x86_64-unknown-freebsd
 
 ENV RUST_CONFIGURE_ARGS \
-  --enable-full-tools \
-  --enable-extended \
-  --enable-profiler \
-  --enable-sanitizers \
-  --disable-docs
+    --enable-full-tools \
+    --enable-extended \
+    --enable-profiler \
+    --enable-sanitizers \
+    --disable-docs
 ENV SCRIPT python3 ../x.py dist --host $HOSTS --target $HOSTS

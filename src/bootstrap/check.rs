@@ -72,8 +72,6 @@ impl Step for Std {
     }
 
     fn run(self, builder: &Builder<'_>) {
-        println!(">>> bootstrap/check.rs.run");
-
         builder.update_submodule(&Path::new("library").join("stdarch"));
 
         let target = self.target;
@@ -92,7 +90,6 @@ impl Step for Std {
             "Checking stage{} std artifacts ({} -> {})",
             builder.top_stage, &compiler.host, target
         ));
-
         run_cargo(
             builder,
             cargo,
@@ -143,7 +140,6 @@ impl Step for Std {
             "Checking stage{} std test/bench/example targets ({} -> {})",
             builder.top_stage, &compiler.host, target
         ));
-
         run_cargo(
             builder,
             cargo,
@@ -220,7 +216,6 @@ impl Step for Rustc {
             "Checking stage{} compiler artifacts ({} -> {})",
             builder.top_stage, &compiler.host, target
         ));
-
         run_cargo(
             builder,
             cargo,
@@ -353,7 +348,6 @@ macro_rules! tool_check_step {
                     &compiler.host.triple,
                     target.triple
                 ));
-
                 run_cargo(
                     builder,
                     cargo,
@@ -380,7 +374,6 @@ macro_rules! tool_check_step {
 }
 
 tool_check_step!(Rustdoc, "src/tools/rustdoc", "src/librustdoc", SourceType::InTree);
-
 // Clippy and Rustfmt are hybrids. They are external tools, but use a git subtree instead
 // of a submodule. Since the SourceType only drives the deny-warnings
 // behavior, treat it as in-tree so that any new warnings in clippy will be

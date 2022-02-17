@@ -57,6 +57,7 @@
 // gdb-check:$15 = -10
 // gdb-command:continue
 
+
 // === LLDB TESTS ==================================================================================
 
 // lldb-command:run
@@ -112,10 +113,11 @@
 #[derive(Copy, Clone)]
 enum Enum {
     Variant1 { x: u16, y: u16 },
-    Variant2(u32),
+    Variant2 (u32)
 }
 
 impl Enum {
+
     fn self_by_ref(&self, arg1: isize, arg2: isize) -> isize {
         zzz(); // #break
         arg1 + arg2
@@ -137,12 +139,10 @@ fn main() {
     let _ = stack.self_by_ref(-1, -2);
     let _ = stack.self_by_val(-3, -4);
 
-    let owned: Box<_> = Box::new(Enum::Variant1 { x: 1799, y: 1799 });
+    let owned: Box<_> = Box::new(Enum::Variant1{ x: 1799, y: 1799 });
     let _ = owned.self_by_ref(-5, -6);
     let _ = owned.self_by_val(-7, -8);
     let _ = owned.self_owned(-9, -10);
 }
 
-fn zzz() {
-    ()
-}
+fn zzz() {()}

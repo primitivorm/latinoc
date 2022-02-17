@@ -1,31 +1,31 @@
 FROM ubuntu:16.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-      g++-multilib \
-      make \
-      ninja-build \
-      file \
-      curl \
-      ca-certificates \
-      python3 \
-      git \
-      cmake \
-      xz-utils \
-      sudo \
-      gdb \
-      patch \
-      libssl-dev \
-      pkg-config
+  g++-multilib \
+  make \
+  ninja-build \
+  file \
+  curl \
+  ca-certificates \
+  python3 \
+  git \
+  cmake \
+  xz-utils \
+  sudo \
+  gdb \
+  patch \
+  libssl-dev \
+  pkg-config
 
 WORKDIR /build/
 COPY scripts/musl.sh /build/
 RUN CC=gcc CFLAGS="-m32 -Wa,-mrelax-relocations=no" \
-      CXX=g++ CXXFLAGS="-m32 -Wa,-mrelax-relocations=no" \
-      bash musl.sh i686 --target=i686 && \
-      CC=gcc CFLAGS="-march=pentium -m32 -Wa,-mrelax-relocations=no" \
-      CXX=g++ CXXFLAGS="-march=pentium -m32 -Wa,-mrelax-relocations=no" \
-      bash musl.sh i586 --target=i586 && \
-      rm -rf /build
+    CXX=g++ CXXFLAGS="-m32 -Wa,-mrelax-relocations=no" \
+    bash musl.sh i686 --target=i686 && \
+    CC=gcc CFLAGS="-march=pentium -m32 -Wa,-mrelax-relocations=no" \
+    CXX=g++ CXXFLAGS="-march=pentium -m32 -Wa,-mrelax-relocations=no" \
+    bash musl.sh i586 --target=i586 && \
+    rm -rf /build
 
 COPY scripts/sccache.sh /scripts/
 RUN sh /scripts/sccache.sh

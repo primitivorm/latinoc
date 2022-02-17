@@ -1,11 +1,11 @@
 use crate::cfg_eval::cfg_eval;
 
-use latinoc_parse::validate_attr;
 use rustc_ast as ast;
 use rustc_ast::{attr, token, GenericParamKind, ItemKind, MetaItemKind, NestedMetaItem, StmtKind};
 use rustc_errors::{struct_span_err, Applicability};
 use rustc_expand::base::{Annotatable, ExpandResult, ExtCtxt, Indeterminate, MultiItemModifier};
 use rustc_feature::AttributeTemplate;
+use latinoc_parse::validate_attr;
 use rustc_session::Session;
 use rustc_span::symbol::{sym, Ident};
 use rustc_span::Span;
@@ -29,53 +29,50 @@ impl MultiItemModifier for Expander {
 
         let (sess, features) = (ecx.sess, ecx.ecfg.features);
         let result =
-            ecx.resolver
-                .resolve_derives(ecx.current_expansion.id, ecx.force_mode, &|| {
-                    let template = AttributeTemplate {
-                        list: Some("Trait1, Trait2, ..."),
-                        ..Default::default()
-                    };
-                    let attr = attr::mk_attr_outer(meta_item.clone());
-                    validate_attr::check_builtin_attribute(
-                        &sess.parse_sess,
-                        &attr,
-                        sym::derive,
-                        template,
-                    );
+            ecx.resolver.resolve_derives(ecx.current_expansion.id, ecx.force_mode, &|| {
+                let template =
+                    AttributeTemplate { list: Some("Trait1, Trait2, ..."), ..Default::default() };
+                let attr = attr::mk_attr_outer(meta_item.clone());
+                validate_attr::check_builtin_attribute(
+                    &sess.parse_sess,
+                    &attr,
+                    sym::derive,
+                    template,
+                );
 
-                    let mut resolutions: Vec<_> = attr
-                        .meta_item_list()
-                        .unwrap_or_default()
-                        .into_iter()
-                        .filter_map(|nested_meta| match nested_meta {
-                            NestedMetaItem::MetaItem(meta) => Some(meta),
-                            NestedMetaItem::Literal(lit) => {
-                                // Reject `#[derive("Debug")]`.
-                                report_unexpected_literal(sess, &lit);
-                                None
-                            }
-                        })
-                        .map(|meta| {
-                            // Reject `#[derive(Debug = "value", Debug(abc))]`, but recover the paths.
-                            report_path_args(sess, &meta);
-                            meta.path
-                        })
-                        .map(|path| (path, dummy_annotatable(), None))
-                        .collect();
+                let mut resolutions: Vec<_> = attr
+                    .meta_item_list()
+                    .unwrap_or_default()
+                    .into_iter()
+                    .filter_map(|nested_meta| match nested_meta {
+                        NestedMetaItem::MetaItem(meta) => Some(meta),
+                        NestedMetaItem::Literal(lit) => {
+                            // Reject `#[derive("Debug")]`.
+                            report_unexpected_literal(sess, &lit);
+                            None
+                        }
+                    })
+                    .map(|meta| {
+                        // Reject `#[derive(Debug = "value", Debug(abc))]`, but recover the paths.
+                        report_path_args(sess, &meta);
+                        meta.path
+                    })
+                    .map(|path| (path, dummy_annotatable(), None))
+                    .collect();
 
-                    // Do not configure or clone items unless necessary.
-                    match &mut resolutions[..] {
-                        [] => {}
-                        [(_, first_item, _), others @ ..] => {
-                            *first_item = cfg_eval(sess, features, item.clone());
-                            for (_, item, _) in others {
-                                *item = first_item.clone();
-                            }
+                // Do not configure or clone items unless necessary.
+                match &mut resolutions[..] {
+                    [] => {}
+                    [(_, first_item, _), others @ ..] => {
+                        *first_item = cfg_eval(sess, features, item.clone());
+                        for (_, item, _) in others {
+                            *item = first_item.clone();
                         }
                     }
+                }
 
-                    resolutions
-                });
+                resolutions
+            });
 
         match result {
             Ok(()) => ExpandResult::Ready(vec![item]),
@@ -106,10 +103,8 @@ fn report_bad_target(sess: &Session, item: &Annotatable, span: Span) -> bool {
         _ => None,
     };
 
-    let bad_target = !matches!(
-        item_kind,
-        Some(ItemKind::Struct(..) | ItemKind::Enum(..) | ItemKind::Union(..))
-    );
+    let bad_target =
+        !matches!(item_kind, Some(ItemKind::Struct(..) | ItemKind::Enum(..) | ItemKind::Union(..)));
     if bad_target {
         struct_span_err!(
             sess,
@@ -131,27 +126,17 @@ fn report_unexpected_literal(sess: &Session, lit: &ast::Lit) {
         }
         _ => "for example, write `#[derive(Debug)]` for `Debug`".to_string(),
     };
-    struct_span_err!(
-        sess,
-        lit.span,
-        E0777,
-        "expected path to a trait, found literal",
-    )
-    .span_label(lit.span, "not a trait")
-    .help(&help_msg)
-    .emit();
+    struct_span_err!(sess, lit.span, E0777, "expected path to a trait, found literal",)
+        .span_label(lit.span, "not a trait")
+        .help(&help_msg)
+        .emit();
 }
 
 fn report_path_args(sess: &Session, meta: &ast::MetaItem) {
     let report_error = |title, action| {
         let span = meta.span.with_lo(meta.path.span.hi());
         sess.struct_span_err(span, title)
-            .span_suggestion(
-                span,
-                action,
-                String::new(),
-                Applicability::MachineApplicable,
-            )
+            .span_suggestion(span, action, String::new(), Applicability::MachineApplicable)
             .emit();
     };
     match meta.kind {
@@ -160,9 +145,8 @@ fn report_path_args(sess: &Session, meta: &ast::MetaItem) {
             "traits in `#[derive(...)]` don't accept arguments",
             "remove the arguments",
         ),
-        MetaItemKind::NameValue(..) => report_error(
-            "traits in `#[derive(...)]` don't accept values",
-            "remove the value",
-        ),
+        MetaItemKind::NameValue(..) => {
+            report_error("traits in `#[derive(...)]` don't accept values", "remove the value")
+        }
     }
 }

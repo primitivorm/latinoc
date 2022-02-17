@@ -6,7 +6,7 @@
 //! detection.
 //!
 //! One option to use here is weak linkage, but that is unfortunately only
-//! really workable with ELF. Otherwise, use dlsym to get the symbol value at
+//! really workable on Linux. Hence, use dlsym to get the symbol value at
 //! runtime. This is also done for compatibility with older versions of glibc,
 //! and to avoid creating dependencies on GLIBC_PRIVATE symbols. It assumes that
 //! we've been dynamically linked to the library the symbol comes from, but that
@@ -14,8 +14,7 @@
 //!
 //! A long time ago this used weak linkage for the __pthread_get_minstack
 //! symbol, but that caused Debian to detect an unnecessarily strict versioned
-//! dependency on libc6 (#23628) because it is GLIBC_PRIVATE. We now use `dlsym`
-//! for a runtime lookup of that symbol to avoid the ELF versioned dependency.
+//! dependency on libc6 (#23628).
 
 // There are a variety of `#[cfg]`s controlling which targets are involved in
 // each instance of `weak!` and `syscall!`. Rather than trying to unify all of
@@ -23,75 +22,34 @@
 #![allow(dead_code, unused_macros)]
 
 use crate::ffi::CStr;
-use crate::marker::PhantomData;
+use crate::marker;
 use crate::mem;
 use crate::sync::atomic::{self, AtomicUsize, Ordering};
 
-// We can use true weak linkage on ELF targets.
-#[cfg(not(any(target_os = "macos", target_os = "ios")))]
 pub(crate) macro weak {
     (fn $name:ident($($t:ty),*) -> $ret:ty) => (
-        let ref $name: ExternWeak<unsafe extern "C" fn($($t),*) -> $ret> = {
-            extern "C" {
-                #[linkage = "extern_weak"]
-                static $name: *const libc::c_void;
-            }
-            #[allow(unused_unsafe)]
-            ExternWeak::new(unsafe { $name })
-        };
+        weak!(fn $name($($t),*) -> $ret, stringify!($name));
+    ),
+    (fn $name:ident($($t:ty),*) -> $ret:ty, $sym:expr) => (
+        #[allow(non_upper_case_globals)]
+        static $name: crate::sys::weak::Weak<unsafe extern "C" fn($($t),*) -> $ret> =
+            crate::sys::weak::Weak::new(concat!($sym, '\0'));
     )
 }
 
-// On non-ELF targets, use the dlsym approximation of weak linkage.
-#[cfg(any(target_os = "macos", target_os = "ios"))]
-pub(crate) use self::dlsym as weak;
-
-pub(crate) struct ExternWeak<F> {
-    weak_ptr: *const libc::c_void,
-    _marker: PhantomData<F>,
-}
-
-impl<F> ExternWeak<F> {
-    #[inline]
-    pub(crate) fn new(weak_ptr: *const libc::c_void) -> Self {
-        ExternWeak { weak_ptr, _marker: PhantomData }
-    }
-}
-
-impl<F> ExternWeak<F> {
-    #[inline]
-    pub(crate) fn get(&self) -> Option<F> {
-        unsafe {
-            if self.weak_ptr.is_null() {
-                None
-            } else {
-                Some(mem::transmute_copy::<*const libc::c_void, F>(&self.weak_ptr))
-            }
-        }
-    }
-}
-
-pub(crate) macro dlsym {
-    (fn $name:ident($($t:ty),*) -> $ret:ty) => (
-        static DLSYM: DlsymWeak<unsafe extern "C" fn($($t),*) -> $ret> =
-            DlsymWeak::new(concat!(stringify!($name), '\0'));
-        let $name = &DLSYM;
-    )
-}
-
-pub(crate) struct DlsymWeak<F> {
+pub struct Weak<F> {
     name: &'static str,
     addr: AtomicUsize,
-    _marker: PhantomData<F>,
+    _marker: marker::PhantomData<F>,
 }
 
-impl<F> DlsymWeak<F> {
-    pub(crate) const fn new(name: &'static str) -> Self {
-        DlsymWeak { name, addr: AtomicUsize::new(1), _marker: PhantomData }
+impl<F> Weak<F> {
+    pub const fn new(name: &'static str) -> Weak<F> {
+        Weak { name, addr: AtomicUsize::new(1), _marker: marker::PhantomData }
     }
 
-    #[inline]
-    pub(crate) fn get(&self) -> Option<F> {
+    pub fn get(&self) -> Option<F> {
+        assert_eq!(mem::size_of::<F>(), mem::size_of::<usize>());
         unsafe {
             // Relaxed is fine here because we fence before reading through the
             // pointer (see the comment below).
@@ -127,8 +85,6 @@ impl<F> DlsymWeak<F> {
     // Cold because it should only happen during first-time initalization.
     #[cold]
     unsafe fn initialize(&self) -> Option<F> {
-        assert_eq!(mem::size_of::<F>(), mem::size_of::<usize>());
-
         let val = fetch(self.name);
         // This synchronizes with the acquire fence in `get`.
         self.addr.store(val, Ordering::Release);
@@ -152,12 +108,14 @@ unsafe fn fetch(name: &str) -> usize {
 pub(crate) macro syscall {
     (fn $name:ident($($arg_name:ident: $t:ty),*) -> $ret:ty) => (
         unsafe fn $name($($arg_name: $t),*) -> $ret {
+            use super::os;
+
             weak! { fn $name($($t),*) -> $ret }
 
             if let Some(fun) = $name.get() {
                 fun($($arg_name),*)
             } else {
-                super::os::set_errno(libc::ENOSYS);
+                os::set_errno(libc::ENOSYS);
                 -1
             }
         }
@@ -168,6 +126,11 @@ pub(crate) macro syscall {
 pub(crate) macro syscall {
     (fn $name:ident($($arg_name:ident: $t:ty),*) -> $ret:ty) => (
         unsafe fn $name($($arg_name:$t),*) -> $ret {
+            use weak;
+            // This looks like a hack, but concat_idents only accepts idents
+            // (not paths).
+            use libc::*;
+
             weak! { fn $name($($t),*) -> $ret }
 
             // Use a weak symbol from libc when possible, allowing `LD_PRELOAD`
@@ -175,31 +138,11 @@ pub(crate) macro syscall {
             if let Some(fun) = $name.get() {
                 fun($($arg_name),*)
             } else {
-                // This looks like a hack, but concat_idents only accepts idents
-                // (not paths).
-                use libc::*;
-
                 syscall(
                     concat_idents!(SYS_, $name),
                     $($arg_name),*
                 ) as $ret
             }
-        }
-    )
-}
-
-#[cfg(any(target_os = "linux", target_os = "android"))]
-pub(crate) macro raw_syscall {
-    (fn $name:ident($($arg_name:ident: $t:ty),*) -> $ret:ty) => (
-        unsafe fn $name($($arg_name:$t),*) -> $ret {
-            // This looks like a hack, but concat_idents only accepts idents
-            // (not paths).
-            use libc::*;
-
-            syscall(
-                concat_idents!(SYS_, $name),
-                $($arg_name),*
-            ) as $ret
         }
     )
 }

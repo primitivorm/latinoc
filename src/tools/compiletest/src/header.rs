@@ -706,11 +706,7 @@ impl Config {
                 None => false,
             };
 
-        if is_match {
-            ParsedNameDirective::Match
-        } else {
-            ParsedNameDirective::NoMatch
-        }
+        if is_match { ParsedNameDirective::Match } else { ParsedNameDirective::NoMatch }
     }
 
     fn has_cfg_prefix(&self, line: &str, prefix: &str) -> bool {

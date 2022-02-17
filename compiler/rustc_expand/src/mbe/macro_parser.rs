@@ -76,8 +76,8 @@ use TokenTreeOrTokenTreeSlice::*;
 
 use crate::mbe::{self, TokenTree};
 
-use latinoc_parse::parser::Parser;
 use rustc_ast::token::{self, DocComment, Nonterminal, Token};
+use latinoc_parse::parser::Parser;
 use rustc_session::parse::ParseSess;
 use rustc_span::symbol::MacroRulesNormalizedIdent;
 
@@ -380,12 +380,7 @@ fn nameize<I: Iterator<Item = NamedMatch>>(
                 }
             }
             TokenTree::MetaVarDecl(span, _, None) => {
-                if sess
-                    .missing_fragment_specifiers
-                    .borrow_mut()
-                    .remove(&span)
-                    .is_some()
-                {
+                if sess.missing_fragment_specifiers.borrow_mut().remove(&span).is_some() {
                     return Err((span, "missing fragment specifier".to_string()));
                 }
             }
@@ -506,11 +501,7 @@ fn inner_parse_loop<'root, 'tt>(
                 if idx == len && item.sep.is_some() {
                     // We have a separator, and it is the current token. We can advance past the
                     // separator token.
-                    if item
-                        .sep
-                        .as_ref()
-                        .map_or(false, |sep| token_name_eq(token, sep))
-                    {
+                    if item.sep.as_ref().map_or(false, |sep| token_name_eq(token, sep)) {
                         item.idx += 1;
                         next_items.push(item);
                     }
@@ -569,12 +560,7 @@ fn inner_parse_loop<'root, 'tt>(
 
                 // We need to match a metavar (but the identifier is invalid)... this is an error
                 TokenTree::MetaVarDecl(span, _, None) => {
-                    if sess
-                        .missing_fragment_specifiers
-                        .borrow_mut()
-                        .remove(&span)
-                        .is_some()
-                    {
+                    if sess.missing_fragment_specifiers.borrow_mut().remove(&span).is_some() {
                         return Error(span, "missing fragment specifier".to_string());
                     }
                 }
@@ -601,16 +587,10 @@ fn inner_parse_loop<'root, 'tt>(
                 seq
                 @
                 (TokenTree::Delimited(..)
-                | TokenTree::Token(Token {
-                    kind: DocComment(..),
-                    ..
-                })) => {
+                | TokenTree::Token(Token { kind: DocComment(..), .. })) => {
                     let lower_elts = mem::replace(&mut item.top_elts, Tt(seq));
                     let idx = item.idx;
-                    item.stack.push(MatcherTtFrame {
-                        elts: lower_elts,
-                        idx,
-                    });
+                    item.stack.push(MatcherTtFrame { elts: lower_elts, idx });
                     item.idx = 0;
                     cur_items.push(item);
                 }
@@ -689,10 +669,8 @@ pub(super) fn parse_tt(
         // either the parse is ambiguous (which should never happen) or there is a syntax error.
         if parser.token == token::Eof {
             if eof_items.len() == 1 {
-                let matches = eof_items[0]
-                    .matches
-                    .iter_mut()
-                    .map(|dv| Lrc::make_mut(dv).pop().unwrap());
+                let matches =
+                    eof_items[0].matches.iter_mut().map(|dv| Lrc::make_mut(dv).pop().unwrap());
                 return nameize(parser.sess, ms, matches);
             } else if eof_items.len() > 1 {
                 return Error(
@@ -721,10 +699,7 @@ pub(super) fn parse_tt(
         // If there are no possible next positions AND we aren't waiting for the black-box parser,
         // then there is a syntax error.
         if bb_items.is_empty() && next_items.is_empty() {
-            return Failure(
-                parser.token.clone(),
-                "no rules expected this token in macro call",
-            );
+            return Failure(parser.token.clone(), "no rules expected this token in macro call");
         }
         // Another possibility is that we need to call out to parse some rust nonterminal
         // (black-box) parser. However, if there is not EXACTLY ONE of these, something is wrong.

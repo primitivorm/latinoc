@@ -1,7 +1,5 @@
 use crate::tests::{matches_codepattern, string_to_stream, with_error_checking_parse};
 
-use latinoc_parse::new_parser_from_source_str;
-use latinoc_parse::parser::ForceCollect;
 use rustc_ast::ptr::P;
 use rustc_ast::token::{self, Token};
 use rustc_ast::tokenstream::{DelimSpan, TokenStream, TokenTree};
@@ -9,6 +7,8 @@ use rustc_ast::visit;
 use rustc_ast::{self as ast, PatKind};
 use rustc_ast_pretty::pprust::item_to_string;
 use rustc_errors::PResult;
+use latinoc_parse::new_parser_from_source_str;
+use latinoc_parse::parser::ForceCollect;
 use rustc_session::parse::ParseSess;
 use rustc_span::create_default_session_globals_then;
 use rustc_span::source_map::FilePathMapping;
@@ -60,51 +60,29 @@ fn bad_path_expr_1() {
 #[test]
 fn string_to_tts_macro() {
     create_default_session_globals_then(|| {
-        let tts: Vec<_> = string_to_stream("macro_rules! zip (($a)=>($a))".to_string())
-            .trees()
-            .collect();
+        let tts: Vec<_> =
+            string_to_stream("macro_rules! zip (($a)=>($a))".to_string()).trees().collect();
         let tts: &[TokenTree] = &tts[..];
 
         match tts {
-            [TokenTree::Token(Token {
-                kind: token::Ident(name_macro_rules, false),
-                ..
-            }), TokenTree::Token(Token {
-                kind: token::Not, ..
-            }), TokenTree::Token(Token {
-                kind: token::Ident(name_zip, false),
-                ..
-            }), TokenTree::Delimited(_, macro_delim, macro_tts)]
+            [TokenTree::Token(Token { kind: token::Ident(name_macro_rules, false), .. }), TokenTree::Token(Token { kind: token::Not, .. }), TokenTree::Token(Token { kind: token::Ident(name_zip, false), .. }), TokenTree::Delimited(_, macro_delim, macro_tts)]
                 if name_macro_rules == &kw::MacroRules && name_zip.as_str() == "zip" =>
             {
                 let tts = &macro_tts.trees().collect::<Vec<_>>();
                 match &tts[..] {
-                    [TokenTree::Delimited(_, first_delim, first_tts), TokenTree::Token(Token {
-                        kind: token::FatArrow,
-                        ..
-                    }), TokenTree::Delimited(_, second_delim, second_tts)]
+                    [TokenTree::Delimited(_, first_delim, first_tts), TokenTree::Token(Token { kind: token::FatArrow, .. }), TokenTree::Delimited(_, second_delim, second_tts)]
                         if macro_delim == &token::Paren =>
                     {
                         let tts = &first_tts.trees().collect::<Vec<_>>();
                         match &tts[..] {
-                            [TokenTree::Token(Token {
-                                kind: token::Dollar,
-                                ..
-                            }), TokenTree::Token(Token {
-                                kind: token::Ident(name, false),
-                                ..
-                            })] if first_delim == &token::Paren && name.as_str() == "a" => {}
+                            [TokenTree::Token(Token { kind: token::Dollar, .. }), TokenTree::Token(Token { kind: token::Ident(name, false), .. })]
+                                if first_delim == &token::Paren && name.as_str() == "a" => {}
                             _ => panic!("value 3: {:?} {:?}", first_delim, first_tts),
                         }
                         let tts = &second_tts.trees().collect::<Vec<_>>();
                         match &tts[..] {
-                            [TokenTree::Token(Token {
-                                kind: token::Dollar,
-                                ..
-                            }), TokenTree::Token(Token {
-                                kind: token::Ident(name, false),
-                                ..
-                            })] if second_delim == &token::Paren && name.as_str() == "a" => {}
+                            [TokenTree::Token(Token { kind: token::Dollar, .. }), TokenTree::Token(Token { kind: token::Ident(name, false), .. })]
+                                if second_delim == &token::Paren && name.as_str() == "a" => {}
                             _ => panic!("value 4: {:?} {:?}", second_delim, second_tts),
                         }
                     }
@@ -265,41 +243,21 @@ fn crlf_doc_comments() {
 
         let name_1 = FileName::Custom("crlf_source_1".to_string());
         let source = "/// doc comment\r\nfn foo() {}".to_string();
-        let item = parse_item_from_source_str(name_1, source, &sess)
-            .unwrap()
-            .unwrap();
-        let doc = item
-            .attrs
-            .iter()
-            .filter_map(|at| at.doc_str())
-            .next()
-            .unwrap();
+        let item = parse_item_from_source_str(name_1, source, &sess).unwrap().unwrap();
+        let doc = item.attrs.iter().filter_map(|at| at.doc_str()).next().unwrap();
         assert_eq!(doc.as_str(), " doc comment");
 
         let name_2 = FileName::Custom("crlf_source_2".to_string());
         let source = "/// doc comment\r\n/// line 2\r\nfn foo() {}".to_string();
-        let item = parse_item_from_source_str(name_2, source, &sess)
-            .unwrap()
-            .unwrap();
-        let docs = item
-            .attrs
-            .iter()
-            .filter_map(|at| at.doc_str())
-            .collect::<Vec<_>>();
+        let item = parse_item_from_source_str(name_2, source, &sess).unwrap().unwrap();
+        let docs = item.attrs.iter().filter_map(|at| at.doc_str()).collect::<Vec<_>>();
         let b: &[_] = &[Symbol::intern(" doc comment"), Symbol::intern(" line 2")];
         assert_eq!(&docs[..], b);
 
         let name_3 = FileName::Custom("clrf_source_3".to_string());
         let source = "/** doc comment\r\n *  with CRLF */\r\nfn foo() {}".to_string();
-        let item = parse_item_from_source_str(name_3, source, &sess)
-            .unwrap()
-            .unwrap();
-        let doc = item
-            .attrs
-            .iter()
-            .filter_map(|at| at.doc_str())
-            .next()
-            .unwrap();
+        let item = parse_item_from_source_str(name_3, source, &sess).unwrap().unwrap();
+        let doc = item.attrs.iter().filter_map(|at| at.doc_str()).next().unwrap();
         assert_eq!(doc.as_str(), " doc comment\n *  with CRLF ");
     });
 }

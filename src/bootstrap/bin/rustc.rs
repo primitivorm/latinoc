@@ -27,9 +27,7 @@ fn main() {
     // Detect whether or not we're a build script depending on whether --target
     // is passed (a bit janky...)
     let target = args.windows(2).find(|w| &*w[0] == "--target").and_then(|w| w[1].to_str());
-    // TODO: proman.
     let version = args.iter().find(|w| &**w == "-vV");
-    println!(">>> version: {}", version);
 
     let verbose = match env::var("RUSTC_VERBOSE") {
         Ok(s) => usize::from_str(&s).expect("RUSTC_VERBOSE should be an integer"),
@@ -41,27 +39,17 @@ fn main() {
     // determine the version of the compiler, the real compiler needs to be
     // used. Currently, these two states are differentiated based on whether
     // --target and -vV is/isn't passed.
-    // TODO: proman.
     let (rustc, libdir) = if target.is_none() && version.is_none() {
         ("RUSTC_SNAPSHOT", "RUSTC_SNAPSHOT_LIBDIR")
     } else {
         ("RUSTC_REAL", "RUSTC_LIBDIR")
     };
-    // TODO: proman. let stage = env::var("RUSTC_STAGE").expect("RUSTC_STAGE was not set");
     let stage = env::var("RUSTC_STAGE").expect("RUSTC_STAGE was not set");
-    // let stage = "1";
-    // TODO: proman. let sysroot = env::var_os("RUSTC_SYSROOT").expect("RUSTC_SYSROOT was not set");
     let sysroot = env::var_os("RUSTC_SYSROOT").expect("RUSTC_SYSROOT was not set");
-    // let sysroot = "D:\\RUST\\rust\\build\\x86_64-pc-windows-msvc\\stage1";
     let on_fail = env::var_os("RUSTC_ON_FAIL").map(Command::new);
 
-    // TODO: proman. let rustc = env::var_os(rustc).unwrap_or_else(|| panic!("{:?} was not set", rustc));
     let rustc = env::var_os(rustc).unwrap_or_else(|| panic!("{:?} was not set", rustc));
-    // let rustc = "D:\\RUST\\rust\\build\\x86_64-pc-windows-msvc\\stage1\\bin\\rustc.exe";
-
-    // TODO: proman. let libdir = env::var_os(libdir).unwrap_or_else(|| panic!("{:?} was not set", libdir));
     let libdir = env::var_os(libdir).unwrap_or_else(|| panic!("{:?} was not set", libdir));
-    // let libdir = "D:\\RUST\\rust\\build\\x86_64-pc-windows-msvc\\stage1\\bin";
     let mut dylib_path = bootstrap::util::dylib_path();
     dylib_path.insert(0, PathBuf::from(&libdir));
 

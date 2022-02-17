@@ -130,8 +130,7 @@ impl<'a> PrintState<'a> for State<'a> {
     }
 
     fn print_ident(&mut self, ident: Ident) {
-        self.s
-            .word(IdentPrinter::for_ast_ident(ident, ident.is_raw_guess()).to_string());
+        self.s.word(IdentPrinter::for_ast_ident(ident, ident.is_raw_guess()).to_string());
         self.ann.post(self, AnnNode::Name(&ident.name))
     }
 
@@ -187,12 +186,7 @@ pub fn to_string<F>(ann: &dyn PpAnn, f: F) -> String
 where
     F: FnOnce(&mut State<'_>),
 {
-    let mut printer = State {
-        s: pp::mk_printer(),
-        comments: None,
-        attrs: &|_| &[],
-        ann,
-    };
+    let mut printer = State { s: pp::mk_printer(), comments: None, attrs: &|_| &[], ann };
     f(&mut printer);
     printer.s.eof()
 }
@@ -233,9 +227,7 @@ pub fn fn_to_string(
     arg_names: &[Ident],
     body_id: Option<hir::BodyId>,
 ) -> String {
-    to_string(NO_ANN, |s| {
-        s.print_fn(decl, header, name, generics, vis, arg_names, body_id)
-    })
+    to_string(NO_ANN, |s| s.print_fn(decl, header, name, generics, vis, arg_names, body_id))
 }
 
 pub fn enum_def_to_string(
@@ -245,9 +237,7 @@ pub fn enum_def_to_string(
     span: rustc_span::Span,
     visibility: &hir::Visibility<'_>,
 ) -> String {
-    to_string(NO_ANN, |s| {
-        s.print_enum_def(enum_definition, generics, name, span, visibility)
-    })
+    to_string(NO_ANN, |s| s.print_enum_def(enum_definition, generics, name, span, visibility))
 }
 
 impl<'a> State<'a> {
@@ -307,8 +297,7 @@ impl<'a> State<'a> {
             // We do something pretty sketchy here: tuck the nonzero
             // offset-adjustment we were going to deposit along with the
             // break into the previous hardbreak.
-            self.s
-                .replace_last_token(pp::Printer::hardbreak_tok_offset(off));
+            self.s.replace_last_token(pp::Printer::hardbreak_tok_offset(off));
         }
     }
 
@@ -429,11 +418,11 @@ impl<'a> State<'a> {
                 self.print_anon_const(length);
                 self.s.word("]");
             }
-            /*hir::TyKind::Typeof(ref e) => {
+            hir::TyKind::Typeof(ref e) => {
                 self.s.word("typeof(");
                 self.print_anon_const(e);
                 self.s.word(")");
-            }*/
+            }
             hir::TyKind::Err => {
                 self.popen();
                 self.s.word("/*ERROR*/");
@@ -688,13 +677,7 @@ impl<'a> State<'a> {
                 });
             }
             hir::ItemKind::Enum(ref enum_definition, ref params) => {
-                self.print_enum_def(
-                    enum_definition,
-                    params,
-                    item.ident.name,
-                    item.span,
-                    &item.vis,
-                );
+                self.print_enum_def(enum_definition, params, item.ident.name, item.span, &item.vis);
             }
             hir::ItemKind::Struct(ref struct_def, ref generics) => {
                 self.head(visibility_qualified(&item.vis, "struct"));
@@ -950,15 +933,7 @@ impl<'a> State<'a> {
         arg_names: &[Ident],
         body_id: Option<hir::BodyId>,
     ) {
-        self.print_fn(
-            &m.decl,
-            m.header,
-            Some(ident.name),
-            generics,
-            vis,
-            arg_names,
-            body_id,
-        )
+        self.print_fn(&m.decl, m.header, Some(ident.name), generics, vis, arg_names, body_id)
     }
 
     pub fn print_trait_item(&mut self, ti: &hir::TraitItem<'_>) {
@@ -968,25 +943,19 @@ impl<'a> State<'a> {
         self.print_outer_attributes(self.attrs(ti.hir_id()));
         match ti.kind {
             hir::TraitItemKind::Const(ref ty, default) => {
-                let vis = Spanned {
-                    span: rustc_span::DUMMY_SP,
-                    node: hir::VisibilityKind::Inherited,
-                };
+                let vis =
+                    Spanned { span: rustc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
                 self.print_associated_const(ti.ident, &ty, default, &vis);
             }
             hir::TraitItemKind::Fn(ref sig, hir::TraitFn::Required(ref arg_names)) => {
-                let vis = Spanned {
-                    span: rustc_span::DUMMY_SP,
-                    node: hir::VisibilityKind::Inherited,
-                };
+                let vis =
+                    Spanned { span: rustc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
                 self.print_method_sig(ti.ident, sig, &ti.generics, &vis, arg_names, None);
                 self.s.word(";");
             }
             hir::TraitItemKind::Fn(ref sig, hir::TraitFn::Provided(body)) => {
-                let vis = Spanned {
-                    span: rustc_span::DUMMY_SP,
-                    node: hir::VisibilityKind::Inherited,
-                };
+                let vis =
+                    Spanned { span: rustc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
                 self.head("");
                 self.print_method_sig(ti.ident, sig, &ti.generics, &vis, &[], Some(body));
                 self.nbsp();
@@ -1373,9 +1342,8 @@ impl<'a> State<'a> {
             Options(ast::InlineAsmOptions),
         }
 
-        let mut args = vec![AsmArg::Template(ast::InlineAsmTemplatePiece::to_string(
-            &asm.template,
-        ))];
+        let mut args =
+            vec![AsmArg::Template(ast::InlineAsmTemplatePiece::to_string(&asm.template))];
         args.extend(asm.operands.iter().map(|(o, _)| AsmArg::Operand(o)));
         if !asm.options.is_empty() {
             args.push(AsmArg::Options(asm.options));
@@ -1412,12 +1380,7 @@ impl<'a> State<'a> {
                     s.space();
                     s.print_expr(expr);
                 }
-                hir::InlineAsmOperand::SplitInOut {
-                    reg,
-                    late,
-                    in_expr,
-                    out_expr,
-                } => {
+                hir::InlineAsmOperand::SplitInOut { reg, late, in_expr, out_expr } => {
                     s.word(if *late { "inlateout" } else { "inout" });
                     s.popen();
                     s.word(format!("{}", reg));
@@ -1840,9 +1803,7 @@ impl<'a> State<'a> {
     ) {
         if generic_args.parenthesized {
             self.s.word("(");
-            self.commasep(Inconsistent, generic_args.inputs(), |s, ty| {
-                s.print_type(&ty)
-            });
+            self.commasep(Inconsistent, generic_args.inputs(), |s, ty| s.print_type(&ty));
             self.s.word(")");
 
             self.space_if_not_bol();
@@ -2265,9 +2226,7 @@ impl<'a> State<'a> {
         if !generic_params.is_empty() {
             self.s.word("<");
 
-            self.commasep(Inconsistent, generic_params, |s, param| {
-                s.print_generic_param(param)
-            });
+            self.commasep(Inconsistent, generic_params, |s, param| s.print_generic_param(param));
 
             self.s.word(">");
         }
@@ -2302,10 +2261,7 @@ impl<'a> State<'a> {
                     self.print_type(&default)
                 }
             }
-            GenericParamKind::Const {
-                ref ty,
-                ref default,
-            } => {
+            GenericParamKind::Const { ref ty, ref default } => {
                 self.word_space(":");
                 self.print_type(ty);
                 if let Some(ref default) = default {
@@ -2429,10 +2385,7 @@ impl<'a> State<'a> {
         }
         let generics = hir::Generics {
             params: &[],
-            where_clause: hir::WhereClause {
-                predicates: &[],
-                span: rustc_span::DUMMY_SP,
-            },
+            where_clause: hir::WhereClause { predicates: &[], span: rustc_span::DUMMY_SP },
             span: rustc_span::DUMMY_SP,
         };
         self.print_fn(
@@ -2445,10 +2398,7 @@ impl<'a> State<'a> {
             },
             name,
             &generics,
-            &Spanned {
-                span: rustc_span::DUMMY_SP,
-                node: hir::VisibilityKind::Inherited,
-            },
+            &Spanned { span: rustc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited },
             arg_names,
             None,
         );

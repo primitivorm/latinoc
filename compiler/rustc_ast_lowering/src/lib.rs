@@ -273,15 +273,12 @@ impl<'a> ImplTraitContext<'_, 'a> {
         use self::ImplTraitContext::*;
         match self {
             Universal(params, parent) => Universal(params, *parent),
-            ReturnPositionOpaqueTy { fn_def_id, origin } => ReturnPositionOpaqueTy {
-                fn_def_id: *fn_def_id,
-                origin: *origin,
-            },
-            TypeAliasesOpaqueTy {
-                capturable_lifetimes,
-            } => TypeAliasesOpaqueTy {
-                capturable_lifetimes,
-            },
+            ReturnPositionOpaqueTy { fn_def_id, origin } => {
+                ReturnPositionOpaqueTy { fn_def_id: *fn_def_id, origin: *origin }
+            }
+            TypeAliasesOpaqueTy { capturable_lifetimes } => {
+                TypeAliasesOpaqueTy { capturable_lifetimes }
+            }
             Disallowed(pos) => Disallowed(*pos),
         }
     }
@@ -417,14 +414,9 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             }
         }
 
-        self.resolver
-            .definitions()
-            .init_def_id_to_hir_id_mapping(def_id_to_hir_id);
+        self.resolver.definitions().init_def_id_to_hir_id_mapping(def_id_to_hir_id);
 
-        let krate = hir::Crate {
-            owners: self.owners,
-            hir_hash,
-        };
+        let krate = hir::Crate { owners: self.owners, hir_hash };
         self.arena.alloc(krate)
     }
 
@@ -464,9 +456,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             std::mem::replace(&mut self.item_local_id_counter, hir::ItemLocalId::new(1));
 
         // Always allocate the first `HirId` for the owner itself.
-        let _old = self
-            .node_id_to_hir_id
-            .insert(owner, hir::HirId::make_owner(def_id));
+        let _old = self.node_id_to_hir_id.insert(owner, hir::HirId::make_owner(def_id));
         debug_assert_eq!(_old, None);
         self.local_node_ids.push(owner);
 
@@ -512,12 +502,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         let (hash_including_bodies, hash_without_bodies) = self.hash_owner(node, &bodies);
         let (nodes, parenting) =
             index::index_hir(self.sess, self.resolver.definitions(), node, &bodies);
-        let nodes = hir::OwnerNodes {
-            hash_including_bodies,
-            hash_without_bodies,
-            nodes,
-            bodies,
-        };
+        let nodes = hir::OwnerNodes { hash_including_bodies, hash_without_bodies, nodes, bodies };
         let attrs = {
             let mut hcx = self.resolver.create_stable_hashing_context();
             let mut stable_hasher = StableHasher::new();
@@ -526,12 +511,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             hir::AttributeMap { map: attrs, hash }
         };
 
-        hir::OwnerInfo {
-            nodes,
-            parenting,
-            attrs,
-            trait_map,
-        }
+        hir::OwnerInfo { nodes, parenting, attrs, trait_map }
     }
 
     /// Hash the HIR node twice, one deep and one shallow hash.  This allows to differentiate
@@ -581,13 +561,9 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
 
     fn lower_res(&mut self, res: Res<NodeId>) -> Res {
         res.map_id(|id| {
-            self.node_id_to_hir_id
-                .get(id)
-                .copied()
-                .flatten()
-                .unwrap_or_else(|| {
-                    panic!("expected `NodeId` to be lowered already for res {:#?}", res);
-                })
+            self.node_id_to_hir_id.get(id).copied().flatten().unwrap_or_else(|| {
+                panic!("expected `NodeId` to be lowered already for res {:#?}", res);
+            })
         })
     }
 
@@ -746,10 +722,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             return;
         }
 
-        if self
-            .in_scope_lifetimes
-            .contains(&ParamName::Plain(ident.normalize_to_macros_2_0()))
-        {
+        if self.in_scope_lifetimes.contains(&ParamName::Plain(ident.normalize_to_macros_2_0())) {
             return;
         }
 
@@ -868,9 +841,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             None
         } else {
             debug_assert_eq!(id.owner, self.current_hir_id_owner);
-            let ret = self
-                .arena
-                .alloc_from_iter(attrs.iter().map(|a| self.lower_attr(a)));
+            let ret = self.arena.alloc_from_iter(attrs.iter().map(|a| self.lower_attr(a)));
             debug_assert!(!ret.is_empty());
             self.attrs.insert(id.local_id, ret);
             Some(ret)
@@ -894,12 +865,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             AttrKind::DocComment(comment_kind, data) => AttrKind::DocComment(comment_kind, data),
         };
 
-        Attribute {
-            kind,
-            id: attr.id,
-            style: attr.style,
-            span: self.lower_span(attr.span),
-        }
+        Attribute { kind, id: attr.id, style: attr.style, span: self.lower_span(attr.span) }
     }
 
     fn alias_attrs(&mut self, id: hir::HirId, target_id: hir::HirId) {
@@ -1001,10 +967,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         constraint: &AssocTyConstraint,
         mut itctx: ImplTraitContext<'_, 'hir>,
     ) -> hir::TypeBinding<'hir> {
-        debug!(
-            "lower_assoc_ty_constraint(constraint={:?}, itctx={:?})",
-            constraint, itctx
-        );
+        debug!("lower_assoc_ty_constraint(constraint={:?}, itctx={:?})", constraint, itctx);
 
         // lower generic arguments of identifier in constraint
         let gen_args = if let Some(ref gen_args) = constraint.gen_args {
@@ -1038,9 +1001,9 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         };
 
         let kind = match constraint.kind {
-            AssocTyConstraintKind::Equality { ref ty } => hir::TypeBindingKind::Equality {
-                ty: self.lower_ty(ty, itctx),
-            },
+            AssocTyConstraintKind::Equality { ref ty } => {
+                hir::TypeBindingKind::Equality { ty: self.lower_ty(ty, itctx) }
+            }
             AssocTyConstraintKind::Bound { ref bounds } => {
                 let mut capturable_lifetimes;
                 let mut parent_def_id = self.current_hir_id_owner;
@@ -1233,11 +1196,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
     }
 
     fn ty(&mut self, span: Span, kind: hir::TyKind<'hir>) -> hir::Ty<'hir> {
-        hir::Ty {
-            hir_id: self.next_id(),
-            kind,
-            span: self.lower_span(span),
-        }
+        hir::Ty { hir_id: self.next_id(), kind, span: self.lower_span(span) }
     }
 
     fn ty_tup(&mut self, span: Span, tys: &'hir [hir::Ty<'hir>]) -> hir::Ty<'hir> {
@@ -1273,12 +1232,11 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                 })
             }),
             TyKind::Never => hir::TyKind::Never,
-            TyKind::Tup(ref tys) => hir::TyKind::Tup(
-                self.arena.alloc_from_iter(
-                    tys.iter()
-                        .map(|ty| self.lower_ty_direct(ty, itctx.reborrow())),
-                ),
-            ),
+            TyKind::Tup(ref tys) => {
+                hir::TyKind::Tup(self.arena.alloc_from_iter(
+                    tys.iter().map(|ty| self.lower_ty_direct(ty, itctx.reborrow())),
+                ))
+            }
             TyKind::Paren(ref ty) => {
                 return self.lower_ty_direct(ty, itctx);
             }
@@ -1302,30 +1260,31 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             TyKind::Array(ref ty, ref length) => {
                 hir::TyKind::Array(self.lower_ty(ty, itctx), self.lower_anon_const(length))
             }
-            /*TyKind::Typeof(ref expr) => hir::TyKind::Typeof(self.lower_anon_const(expr)),*/
+            TyKind::Typeof(ref expr) => hir::TyKind::Typeof(self.lower_anon_const(expr)),
             TyKind::TraitObject(ref bounds, kind) => {
                 let mut lifetime_bound = None;
                 let (bounds, lifetime_bound) = self.with_dyn_type_scope(true, |this| {
-                    let bounds = this
-                        .arena
-                        .alloc_from_iter(bounds.iter().filter_map(|bound| match *bound {
-                            GenericBound::Trait(
-                                ref ty,
-                                TraitBoundModifier::None | TraitBoundModifier::MaybeConst,
-                            ) => Some(this.lower_poly_trait_ref(ty, itctx.reborrow())),
-                            // `~const ?Bound` will cause an error during AST validation
-                            // anyways, so treat it like `?Bound` as compilation proceeds.
-                            GenericBound::Trait(
-                                _,
-                                TraitBoundModifier::Maybe | TraitBoundModifier::MaybeConstMaybe,
-                            ) => None,
-                            GenericBound::Outlives(ref lifetime) => {
-                                if lifetime_bound.is_none() {
-                                    lifetime_bound = Some(this.lower_lifetime(lifetime));
+                    let bounds =
+                        this.arena.alloc_from_iter(bounds.iter().filter_map(
+                            |bound| match *bound {
+                                GenericBound::Trait(
+                                    ref ty,
+                                    TraitBoundModifier::None | TraitBoundModifier::MaybeConst,
+                                ) => Some(this.lower_poly_trait_ref(ty, itctx.reborrow())),
+                                // `~const ?Bound` will cause an error during AST validation
+                                // anyways, so treat it like `?Bound` as compilation proceeds.
+                                GenericBound::Trait(
+                                    _,
+                                    TraitBoundModifier::Maybe | TraitBoundModifier::MaybeConstMaybe,
+                                ) => None,
+                                GenericBound::Outlives(ref lifetime) => {
+                                    if lifetime_bound.is_none() {
+                                        lifetime_bound = Some(this.lower_lifetime(lifetime));
+                                    }
+                                    None
                                 }
-                                None
-                            }
-                        }));
+                            },
+                        ));
                     let lifetime_bound =
                         lifetime_bound.unwrap_or_else(|| this.elided_dyn_bound(t.span));
                     (bounds, lifetime_bound)
@@ -1347,9 +1306,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                             None,
                             |this| this.lower_param_bounds(bounds, itctx),
                         ),
-                    ImplTraitContext::TypeAliasesOpaqueTy {
-                        ref capturable_lifetimes,
-                    } => {
+                    ImplTraitContext::TypeAliasesOpaqueTy { ref capturable_lifetimes } => {
                         // Reset capturable lifetimes, any nested impl trait
                         // types will inherit lifetimes from this opaque type,
                         // so don't need to capture them again.
@@ -1381,10 +1338,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                             pure_wrt_drop: false,
                             bounds: hir_bounds,
                             span: self.lower_span(span),
-                            kind: hir::GenericParamKind::Type {
-                                default: None,
-                                synthetic: true,
-                            },
+                            kind: hir::GenericParamKind::Type { default: None, synthetic: true },
                         });
 
                         hir::TyKind::Path(hir::QPath::Resolved(
@@ -1419,11 +1373,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             }
         };
 
-        hir::Ty {
-            kind,
-            span: self.lower_span(t.span),
-            hir_id: self.lower_node_id(t.id),
-        }
+        hir::Ty { kind, span: self.lower_span(t.span), hir_id: self.lower_node_id(t.id) }
     }
 
     fn lower_opaque_impl_trait(
@@ -1460,53 +1410,44 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             );
 
             let lifetime_defs =
-                lctx.arena
-                    .alloc_from_iter(collected_lifetimes.iter().map(|&(name, span)| {
-                        let def_node_id = lctx.resolver.next_node_id();
-                        let hir_id = lctx.lower_node_id(def_node_id);
-                        lctx.resolver.create_def(
-                            opaque_ty_def_id,
-                            def_node_id,
-                            DefPathData::LifetimeNs(name.ident().name),
-                            ExpnId::root(),
-                            span.with_parent(None),
-                        );
+                lctx.arena.alloc_from_iter(collected_lifetimes.iter().map(|&(name, span)| {
+                    let def_node_id = lctx.resolver.next_node_id();
+                    let hir_id = lctx.lower_node_id(def_node_id);
+                    lctx.resolver.create_def(
+                        opaque_ty_def_id,
+                        def_node_id,
+                        DefPathData::LifetimeNs(name.ident().name),
+                        ExpnId::root(),
+                        span.with_parent(None),
+                    );
 
-                        let (name, kind) = match name {
-                            hir::LifetimeName::Underscore => (
-                                hir::ParamName::Plain(Ident::with_dummy_span(
-                                    kw::UnderscoreLifetime,
-                                )),
-                                hir::LifetimeParamKind::Elided,
-                            ),
-                            hir::LifetimeName::Param(param_name) => {
-                                (param_name, hir::LifetimeParamKind::Explicit)
-                            }
-                            _ => panic!("expected `LifetimeName::Param` or `ParamName::Plain`"),
-                        };
-
-                        hir::GenericParam {
-                            hir_id,
-                            name,
-                            span,
-                            pure_wrt_drop: false,
-                            bounds: &[],
-                            kind: hir::GenericParamKind::Lifetime { kind },
+                    let (name, kind) = match name {
+                        hir::LifetimeName::Underscore => (
+                            hir::ParamName::Plain(Ident::with_dummy_span(kw::UnderscoreLifetime)),
+                            hir::LifetimeParamKind::Elided,
+                        ),
+                        hir::LifetimeName::Param(param_name) => {
+                            (param_name, hir::LifetimeParamKind::Explicit)
                         }
-                    }));
+                        _ => panic!("expected `LifetimeName::Param` or `ParamName::Plain`"),
+                    };
 
-            debug!(
-                "lower_opaque_impl_trait: lifetime_defs={:#?}",
-                lifetime_defs
-            );
+                    hir::GenericParam {
+                        hir_id,
+                        name,
+                        span,
+                        pure_wrt_drop: false,
+                        bounds: &[],
+                        kind: hir::GenericParamKind::Lifetime { kind },
+                    }
+                }));
+
+            debug!("lower_opaque_impl_trait: lifetime_defs={:#?}", lifetime_defs);
 
             let opaque_ty_item = hir::OpaqueTy {
                 generics: hir::Generics {
                     params: lifetime_defs,
-                    where_clause: hir::WhereClause {
-                        predicates: &[],
-                        span: lctx.lower_span(span),
-                    },
+                    where_clause: hir::WhereClause { predicates: &[], span: lctx.lower_span(span) },
                     span: lctx.lower_span(span),
                 },
                 bounds: hir_bounds,
@@ -1518,25 +1459,15 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             lctx.generate_opaque_type(opaque_ty_def_id, opaque_ty_item, span, opaque_ty_span)
         });
 
-        let lifetimes = self
-            .arena
-            .alloc_from_iter(collected_lifetimes.into_iter().map(|(name, span)| {
-                hir::GenericArg::Lifetime(hir::Lifetime {
-                    hir_id: self.next_id(),
-                    span,
-                    name,
-                })
+        let lifetimes =
+            self.arena.alloc_from_iter(collected_lifetimes.into_iter().map(|(name, span)| {
+                hir::GenericArg::Lifetime(hir::Lifetime { hir_id: self.next_id(), span, name })
             }));
 
         debug!("lower_opaque_impl_trait: lifetimes={:#?}", lifetimes);
 
         // `impl Trait` now just becomes `Foo<'a, 'b, ..>`.
-        hir::TyKind::OpaqueDef(
-            hir::ItemId {
-                def_id: opaque_ty_def_id,
-            },
-            lifetimes,
-        )
+        hir::TyKind::OpaqueDef(hir::ItemId { def_id: opaque_ty_def_id }, lifetimes)
     }
 
     /// Registers a new opaque type with the proper `NodeId`s and
@@ -1555,10 +1486,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             def_id: opaque_ty_id,
             ident: Ident::empty(),
             kind: opaque_ty_item_kind,
-            vis: respan(
-                self.lower_span(span.shrink_to_lo()),
-                hir::VisibilityKind::Inherited,
-            ),
+            vis: respan(self.lower_span(span.shrink_to_lo()), hir::VisibilityKind::Inherited),
             span: self.lower_span(opaque_ty_span),
         };
         hir::OwnerNode::Item(self.arena.alloc(opaque_ty_item))
@@ -1572,11 +1500,10 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         if decl.c_variadic() {
             inputs = &inputs[..inputs.len() - 1];
         }
-        self.arena
-            .alloc_from_iter(inputs.iter().map(|param| match param.pat.kind {
-                PatKind::Ident(_, ident, _) => self.lower_ident(ident),
-                _ => Ident::new(kw::Empty, self.lower_span(param.pat.span)),
-            }))
+        self.arena.alloc_from_iter(inputs.iter().map(|param| match param.pat.kind {
+            PatKind::Ident(_, ident, _) => self.lower_ident(ident),
+            _ => Ident::new(kw::Empty, self.lower_span(param.pat.span)),
+        }))
     }
 
     // Lowers a function declaration.
@@ -1642,9 +1569,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         let output = if let Some(ret_id) = make_ret_async {
             self.lower_async_fn_ret_ty(
                 &decl.output,
-                in_band_ty_params
-                    .expect("`make_ret_async` but no `fn_def_id`")
-                    .0,
+                in_band_ty_params.expect("`make_ret_async` but no `fn_def_id`").0,
                 ret_id,
             )
         } else {
@@ -1669,34 +1594,30 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             inputs,
             output,
             c_variadic,
-            implicit_self: decl
-                .inputs
-                .get(0)
-                .map_or(hir::ImplicitSelfKind::None, |arg| {
-                    use BindingMode::{ByRef, ByValue};
-                    let is_mutable_pat = matches!(
-                        arg.pat.kind,
-                        PatKind::Ident(ByValue(Mutability::Mut) | ByRef(Mutability::Mut), ..)
-                    );
+            implicit_self: decl.inputs.get(0).map_or(hir::ImplicitSelfKind::None, |arg| {
+                use BindingMode::{ByRef, ByValue};
+                let is_mutable_pat = matches!(
+                    arg.pat.kind,
+                    PatKind::Ident(ByValue(Mutability::Mut) | ByRef(Mutability::Mut), ..)
+                );
 
-                    match arg.ty.kind {
-                        TyKind::ImplicitSelf if is_mutable_pat => hir::ImplicitSelfKind::Mut,
-                        TyKind::ImplicitSelf => hir::ImplicitSelfKind::Imm,
-                        // Given we are only considering `ImplicitSelf` types, we needn't consider
-                        // the case where we have a mutable pattern to a reference as that would
-                        // no longer be an `ImplicitSelf`.
-                        TyKind::Rptr(_, ref mt)
-                            if mt.ty.kind.is_implicit_self()
-                                && mt.mutbl == ast::Mutability::Mut =>
-                        {
-                            hir::ImplicitSelfKind::MutRef
-                        }
-                        TyKind::Rptr(_, ref mt) if mt.ty.kind.is_implicit_self() => {
-                            hir::ImplicitSelfKind::ImmRef
-                        }
-                        _ => hir::ImplicitSelfKind::None,
+                match arg.ty.kind {
+                    TyKind::ImplicitSelf if is_mutable_pat => hir::ImplicitSelfKind::Mut,
+                    TyKind::ImplicitSelf => hir::ImplicitSelfKind::Imm,
+                    // Given we are only considering `ImplicitSelf` types, we needn't consider
+                    // the case where we have a mutable pattern to a reference as that would
+                    // no longer be an `ImplicitSelf`.
+                    TyKind::Rptr(_, ref mt)
+                        if mt.ty.kind.is_implicit_self() && mt.mutbl == ast::Mutability::Mut =>
+                    {
+                        hir::ImplicitSelfKind::MutRef
                     }
-                }),
+                    TyKind::Rptr(_, ref mt) if mt.ty.kind.is_implicit_self() => {
+                        hir::ImplicitSelfKind::ImmRef
+                    }
+                    _ => hir::ImplicitSelfKind::None,
+                }
+            }),
         })
     }
 
@@ -1809,32 +1730,19 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                 .chain(this.lifetimes_to_define.iter().cloned())
                 .collect();
 
-            debug!(
-                "lower_async_fn_ret_ty: in_scope_lifetimes={:#?}",
-                this.in_scope_lifetimes
-            );
-            debug!(
-                "lower_async_fn_ret_ty: lifetimes_to_define={:#?}",
-                this.lifetimes_to_define
-            );
-            debug!(
-                "lower_async_fn_ret_ty: lifetime_params={:#?}",
-                lifetime_params
-            );
+            debug!("lower_async_fn_ret_ty: in_scope_lifetimes={:#?}", this.in_scope_lifetimes);
+            debug!("lower_async_fn_ret_ty: lifetimes_to_define={:#?}", this.lifetimes_to_define);
+            debug!("lower_async_fn_ret_ty: lifetime_params={:#?}", lifetime_params);
 
             let generic_params =
-                this.arena
-                    .alloc_from_iter(lifetime_params.iter().map(|(span, hir_name)| {
-                        this.lifetime_to_generic_param(*span, *hir_name, opaque_ty_def_id)
-                    }));
+                this.arena.alloc_from_iter(lifetime_params.iter().map(|(span, hir_name)| {
+                    this.lifetime_to_generic_param(*span, *hir_name, opaque_ty_def_id)
+                }));
 
             let opaque_ty_item = hir::OpaqueTy {
                 generics: hir::Generics {
                     params: generic_params,
-                    where_clause: hir::WhereClause {
-                        predicates: &[],
-                        span: this.lower_span(span),
-                    },
+                    where_clause: hir::WhereClause { predicates: &[], span: this.lower_span(span) },
                     span: this.lower_span(span),
                 },
                 bounds: arena_vec![this; future_bound],
@@ -1873,29 +1781,21 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                 })
             },
         ));
-        generic_args.extend(
-            lifetime_params[input_lifetimes_count..]
-                .iter()
-                .map(|&(span, _)|
+        generic_args.extend(lifetime_params[input_lifetimes_count..].iter().map(|&(span, _)|
             // Output lifetime like `'_`.
             GenericArg::Lifetime(hir::Lifetime {
                 hir_id: self.next_id(),
                 span: self.lower_span(span),
                 name: hir::LifetimeName::Implicit,
-            })),
-        );
+            })));
         let generic_args = self.arena.alloc_from_iter(generic_args);
 
         // Create the `Foo<...>` reference itself. Note that the `type
         // Foo = impl Trait` is, internally, created as a child of the
         // async fn, so the *type parameters* are inherited.  It's
         // only the lifetime parameters that we must supply.
-        let opaque_ty_ref = hir::TyKind::OpaqueDef(
-            hir::ItemId {
-                def_id: opaque_ty_def_id,
-            },
-            generic_args,
-        );
+        let opaque_ty_ref =
+            hir::TyKind::OpaqueDef(hir::ItemId { def_id: opaque_ty_def_id }, generic_args);
         let opaque_ty = self.ty(opaque_ty_span, opaque_ty_ref);
         hir::FnRetTy::Return(self.arena.alloc(opaque_ty))
     }
@@ -1987,11 +1887,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         span: Span,
         name: hir::LifetimeName,
     ) -> hir::Lifetime {
-        hir::Lifetime {
-            hir_id: self.lower_node_id(id),
-            span: self.lower_span(span),
-            name,
-        }
+        hir::Lifetime { hir_id: self.lower_node_id(id), span: self.lower_span(span), name }
     }
 
     fn lower_generic_params_mut<'s>(
@@ -1999,9 +1895,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         params: &'s [GenericParam],
         mut itctx: ImplTraitContext<'s, 'hir>,
     ) -> impl Iterator<Item = hir::GenericParam<'hir>> + Captures<'a> + Captures<'s> {
-        params
-            .iter()
-            .map(move |param| self.lower_generic_param(param, itctx.reborrow()))
+        params.iter().map(move |param| self.lower_generic_param(param, itctx.reborrow()))
     }
 
     fn lower_generic_params(
@@ -2009,8 +1903,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         params: &[GenericParam],
         itctx: ImplTraitContext<'_, 'hir>,
     ) -> &'hir [hir::GenericParam<'hir>] {
-        self.arena
-            .alloc_from_iter(self.lower_generic_params_mut(params, itctx))
+        self.arena.alloc_from_iter(self.lower_generic_params_mut(params, itctx))
     }
 
     fn lower_generic_param(
@@ -2018,10 +1911,9 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         param: &GenericParam,
         mut itctx: ImplTraitContext<'_, 'hir>,
     ) -> hir::GenericParam<'hir> {
-        let bounds: Vec<_> =
-            self.with_anonymous_lifetime_mode(AnonymousLifetimeMode::ReportError, |this| {
-                this.lower_param_bounds_mut(&param.bounds, itctx.reborrow())
-                    .collect()
+        let bounds: Vec<_> = self
+            .with_anonymous_lifetime_mode(AnonymousLifetimeMode::ReportError, |this| {
+                this.lower_param_bounds_mut(&param.bounds, itctx.reborrow()).collect()
             });
 
         let (name, kind) = match param.kind {
@@ -2029,12 +1921,9 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                 let was_collecting_in_band = self.is_collecting_in_band_lifetimes;
                 self.is_collecting_in_band_lifetimes = false;
 
-                let lt =
-                    self.with_anonymous_lifetime_mode(AnonymousLifetimeMode::ReportError, |this| {
-                        this.lower_lifetime(&Lifetime {
-                            id: param.id,
-                            ident: param.ident,
-                        })
+                let lt = self
+                    .with_anonymous_lifetime_mode(AnonymousLifetimeMode::ReportError, |this| {
+                        this.lower_lifetime(&Lifetime { id: param.id, ident: param.ident })
                     });
                 let param_name = match lt.name {
                     hir::LifetimeName::Param(param_name) => param_name,
@@ -2050,9 +1939,8 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                     hir::LifetimeName::Error => ParamName::Error,
                 };
 
-                let kind = hir::GenericParamKind::Lifetime {
-                    kind: hir::LifetimeParamKind::Explicit,
-                };
+                let kind =
+                    hir::GenericParamKind::Lifetime { kind: hir::LifetimeParamKind::Explicit };
 
                 self.is_collecting_in_band_lifetimes = was_collecting_in_band;
 
@@ -2068,11 +1956,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
 
                 (hir::ParamName::Plain(self.lower_ident(param.ident)), kind)
             }
-            GenericParamKind::Const {
-                ref ty,
-                kw_span: _,
-                ref default,
-            } => {
+            GenericParamKind::Const { ref ty, kw_span: _, ref default } => {
                 let ty = self
                     .with_anonymous_lifetime_mode(AnonymousLifetimeMode::ReportError, |this| {
                         this.lower_ty(&ty, ImplTraitContext::disallowed())
@@ -2110,10 +1994,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             hir::QPath::Resolved(None, path) => path,
             qpath => panic!("lower_trait_ref: unexpected QPath `{:?}`", qpath),
         };
-        hir::TraitRef {
-            path,
-            hir_ref_id: self.lower_node_id(p.ref_id),
-        }
+        hir::TraitRef { path, hir_ref_id: self.lower_node_id(p.ref_id) }
     }
 
     fn lower_poly_trait_ref(
@@ -2127,29 +2008,22 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         let trait_ref = self.with_in_scope_lifetime_defs(&p.bound_generic_params, |this| {
             // Any impl Trait types defined within this scope can capture
             // lifetimes bound on this predicate.
-            let lt_def_names = p
-                .bound_generic_params
-                .iter()
-                .filter_map(|param| match param.kind {
-                    GenericParamKind::Lifetime { .. } => Some(hir::LifetimeName::Param(
-                        ParamName::Plain(param.ident.normalize_to_macros_2_0()),
-                    )),
-                    _ => None,
-                });
-            if let ImplTraitContext::TypeAliasesOpaqueTy {
-                ref mut capturable_lifetimes,
-                ..
-            } = itctx
+            let lt_def_names = p.bound_generic_params.iter().filter_map(|param| match param.kind {
+                GenericParamKind::Lifetime { .. } => Some(hir::LifetimeName::Param(
+                    ParamName::Plain(param.ident.normalize_to_macros_2_0()),
+                )),
+                _ => None,
+            });
+            if let ImplTraitContext::TypeAliasesOpaqueTy { ref mut capturable_lifetimes, .. } =
+                itctx
             {
                 capturable_lifetimes.extend(lt_def_names.clone());
             }
 
             let res = this.lower_trait_ref(&p.trait_ref, itctx.reborrow());
 
-            if let ImplTraitContext::TypeAliasesOpaqueTy {
-                ref mut capturable_lifetimes,
-                ..
-            } = itctx
+            if let ImplTraitContext::TypeAliasesOpaqueTy { ref mut capturable_lifetimes, .. } =
+                itctx
             {
                 for param in lt_def_names {
                     capturable_lifetimes.remove(&param);
@@ -2158,18 +2032,11 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             res
         });
 
-        hir::PolyTraitRef {
-            bound_generic_params,
-            trait_ref,
-            span: self.lower_span(p.span),
-        }
+        hir::PolyTraitRef { bound_generic_params, trait_ref, span: self.lower_span(p.span) }
     }
 
     fn lower_mt(&mut self, mt: &MutTy, itctx: ImplTraitContext<'_, 'hir>) -> hir::MutTy<'hir> {
-        hir::MutTy {
-            ty: self.lower_ty(&mt.ty, itctx),
-            mutbl: mt.mutbl,
-        }
+        hir::MutTy { ty: self.lower_ty(&mt.ty, itctx), mutbl: mt.mutbl }
     }
 
     fn lower_param_bounds(
@@ -2177,8 +2044,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         bounds: &[GenericBound],
         itctx: ImplTraitContext<'_, 'hir>,
     ) -> hir::GenericBounds<'hir> {
-        self.arena
-            .alloc_from_iter(self.lower_param_bounds_mut(bounds, itctx))
+        self.arena.alloc_from_iter(self.lower_param_bounds_mut(bounds, itctx))
     }
 
     fn lower_param_bounds_mut<'s>(
@@ -2186,9 +2052,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         bounds: &'s [GenericBound],
         mut itctx: ImplTraitContext<'s, 'hir>,
     ) -> impl Iterator<Item = hir::GenericBound<'hir>> + Captures<'s> + Captures<'a> {
-        bounds
-            .iter()
-            .map(move |bound| self.lower_param_bound(bound, itctx.reborrow()))
+        bounds.iter().map(move |bound| self.lower_param_bound(bound, itctx.reborrow()))
     }
 
     /// Lowers a block directly to an expression, presuming that it
@@ -2228,11 +2092,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
     // Helper methods for building HIR.
 
     fn stmt(&mut self, span: Span, kind: hir::StmtKind<'hir>) -> hir::Stmt<'hir> {
-        hir::Stmt {
-            span: self.lower_span(span),
-            kind,
-            hir_id: self.next_id(),
-        }
+        hir::Stmt { span: self.lower_span(span), kind, hir_id: self.next_id() }
     }
 
     fn stmt_expr(&mut self, span: Span, expr: hir::Expr<'hir>) -> hir::Stmt<'hir> {
@@ -2252,14 +2112,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             debug_assert!(!a.is_empty());
             self.attrs.insert(hir_id.local_id, a);
         }
-        let local = hir::Local {
-            hir_id,
-            init,
-            pat,
-            source,
-            span: self.lower_span(span),
-            ty: None,
-        };
+        let local = hir::Local { hir_id, init, pat, source, span: self.lower_span(span), ty: None };
         self.stmt(span, hir::StmtKind::Local(self.arena.alloc(local)))
     }
 
@@ -2396,10 +2249,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
                     Res::Def(DefKind::Trait | DefKind::TraitAlias, _) => {
                         let principal = hir::PolyTraitRef {
                             bound_generic_params: &[],
-                            trait_ref: hir::TraitRef {
-                                path,
-                                hir_ref_id: hir_id,
-                            },
+                            trait_ref: hir::TraitRef { path, hir_ref_id: hir_id },
                             span: self.lower_span(span),
                         };
 
@@ -2418,11 +2268,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
             _ => hir::TyKind::Path(qpath),
         };
 
-        hir::Ty {
-            hir_id,
-            kind,
-            span: self.lower_span(span),
-        }
+        hir::Ty { hir_id, kind, span: self.lower_span(span) }
     }
 
     /// Invoked to create the lifetime argument for a type `&T`
@@ -2452,11 +2298,7 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
     /// return an "error lifetime".
     fn new_error_lifetime(&mut self, id: Option<NodeId>, span: Span) -> hir::Lifetime {
         let (id, msg, label) = match id {
-            Some(id) => (
-                id,
-                "`'_` cannot be used here",
-                "`'_` is a reserved lifetime name",
-            ),
+            Some(id) => (id, "`'_` cannot be used here", "`'_` is a reserved lifetime name"),
 
             None => (
                 self.resolver.next_node_id(),
@@ -2488,10 +2330,8 @@ impl<'a, 'hir> LoweringContext<'a, 'hir> {
         match self.anonymous_lifetime_mode {
             AnonymousLifetimeMode::CreateParameter => {
                 // We should have emitted E0726 when processing this path above
-                self.sess.delay_span_bug(
-                    span,
-                    "expected 'implicit elided lifetime not allowed' error",
-                );
+                self.sess
+                    .delay_span_bug(span, "expected 'implicit elided lifetime not allowed' error");
                 let id = self.resolver.next_node_id();
                 self.new_named_lifetime(id, span, hir::LifetimeName::Error)
             }
@@ -2716,9 +2556,7 @@ fn lifetimes_from_impl_trait_bounds(
 
             if !self.currently_bound_lifetimes.contains(&name)
                 && !self.already_defined_lifetimes.contains(&name)
-                && self
-                    .lifetimes_to_include
-                    .map_or(true, |lifetimes| lifetimes.contains(&name))
+                && self.lifetimes_to_include.map_or(true, |lifetimes| lifetimes.contains(&name))
             {
                 self.already_defined_lifetimes.insert(name);
 

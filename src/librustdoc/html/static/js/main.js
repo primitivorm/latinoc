@@ -37,29 +37,14 @@ if (!DOMTokenList.prototype.remove) {
     };
 }
 
-// Get a value from the rustdoc-vars div, which is used to convey data from
-// Rust to the JS. If there is no such element, return null.
-function getVar(name) {
-    var el = document.getElementById("rustdoc-vars");
-    if (el) {
-        return el.attributes["data-" + name].value;
-    } else {
-        return null;
-    }
-}
-
-// Given a basename (e.g. "storage") and an extension (e.g. ".js"), return a URL
-// for a resource under the root-path, with the resource-suffix.
-function resourcePath(basename, extension) {
-    return getVar("root-path") + basename + getVar("resource-suffix") + extension;
-}
-
-
 (function () {
-    window.rootPath = getVar("root-path");
-    window.currentCrate = getVar("current-crate");
-    window.searchJS =  resourcePath("search", ".js");
-    window.searchIndexJS = resourcePath("search-index", ".js");
+    var rustdocVars = document.getElementById("rustdoc-vars");
+    if (rustdocVars) {
+        window.rootPath = rustdocVars.attributes["data-root-path"].value;
+        window.currentCrate = rustdocVars.attributes["data-current-crate"].value;
+        window.searchJS = rustdocVars.attributes["data-search-js"].value;
+        window.searchIndexJS = rustdocVars.attributes["data-search-index-js"].value;
+    }
     var sidebarVars = document.getElementById("sidebar-vars");
     if (sidebarVars) {
         window.sidebarCurrent = {
@@ -130,7 +115,7 @@ function hideThemeButtonState() {
 (function () {
     var themeChoices = getThemesElement();
     var themePicker = getThemePickerElement();
-    var availableThemes = getVar("themes").split(",");
+    var availableThemes/* INSERT THEMES HERE */;
 
     function switchThemeButtonState() {
         if (themeChoices.style.display === "block") {
@@ -995,7 +980,7 @@ function hideThemeButtonState() {
         var rustdoc_version = document.createElement("span");
         rustdoc_version.className = "bottom";
         var rustdoc_version_code = document.createElement("code");
-        rustdoc_version_code.innerText = "rustdoc " + getVar("rustdoc-version");
+        rustdoc_version_code.innerText = "/* INSERT RUSTDOC_VERSION HERE */";
         rustdoc_version.appendChild(rustdoc_version_code);
 
         container.appendChild(rustdoc_version);

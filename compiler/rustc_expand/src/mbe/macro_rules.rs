@@ -8,7 +8,6 @@ use crate::mbe::macro_parser::{Error, ErrorReported, Failure, Success};
 use crate::mbe::macro_parser::{MatchedNonterminal, MatchedSeq};
 use crate::mbe::transcribe::transcribe;
 
-use latinoc_parse::parser::Parser;
 use rustc_ast as ast;
 use rustc_ast::token::{self, NonterminalKind, NtTT, Token, TokenKind::*};
 use rustc_ast::tokenstream::{DelimSpan, TokenStream};
@@ -23,6 +22,7 @@ use rustc_lint_defs::builtin::{
     RUST_2021_INCOMPATIBLE_OR_PATTERNS, SEMICOLON_IN_EXPRESSIONS_FROM_MACROS,
 };
 use rustc_lint_defs::BuiltinLintDiagnostics;
+use latinoc_parse::parser::Parser;
 use rustc_session::parse::ParseSess;
 use rustc_session::Session;
 use rustc_span::edition::Edition;
@@ -1170,7 +1170,7 @@ fn is_in_follow(tok: &mbe::TokenTree, kind: NonterminalKind) -> IsInFollow {
                         | BinOp(token::Shr)
                         | Semi
                         | BinOp(token::Or) => IsInFollow::Yes,
-                        Ident(name, false) if name == kw::As /*|| name == kw::Where*/ => {
+                        Ident(name, false) if name == kw::As || name == kw::Where => {
                             IsInFollow::Yes
                         }
                         _ => IsInFollow::No(TOKENS),

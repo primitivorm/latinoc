@@ -5,8 +5,8 @@ use std::env;
 use std::fs::File;
 use std::io;
 use std::io::{Read, Write};
-use std::path::PathBuf;
 use std::process::{Command, Stdio};
+use std::path::PathBuf;
 
 fn main() {
     if env::args().len() > 1 {

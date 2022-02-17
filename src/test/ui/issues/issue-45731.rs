@@ -6,7 +6,7 @@
 #[cfg(target_os = "macos")]
 #[test]
 fn simple_test() {
-    use std::{env, fs, panic};
+    use std::{env, panic, fs};
 
     // Find our dSYM and replace the DWARF binary with an empty file
     let mut dsym_path = env::current_exe().unwrap();
@@ -14,13 +14,8 @@ fn simple_test() {
     assert!(dsym_path.pop()); // Pop executable
     dsym_path.push(format!("{}.dSYM/Contents/Resources/DWARF/{0}", executable_name));
     {
-        let file = fs::OpenOptions::new()
-            .read(false)
-            .write(true)
-            .truncate(true)
-            .create(false)
-            .open(&dsym_path)
-            .unwrap();
+        let file = fs::OpenOptions::new().read(false).write(true).truncate(true).create(false)
+            .open(&dsym_path).unwrap();
     }
 
     env::set_var("RUST_BACKTRACE", "1");

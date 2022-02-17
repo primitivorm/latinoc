@@ -797,11 +797,7 @@ fn traits_implemented_by(cx: &mut DocContext<'_>, type_: DefId, module: DefId) -
                     _ => false,
                 };
 
-            if saw_impl {
-                Some(trait_)
-            } else {
-                None
-            }
+            if saw_impl { Some(trait_) } else { None }
         })
     });
     iter.collect()

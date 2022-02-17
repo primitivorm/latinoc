@@ -82,9 +82,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
             MoveError::UnionMove { .. } => {
                 unimplemented!("don't know how to report union move errors yet.")
             }
-            MoveError::IllegalMove {
-                cannot_move_out_of: IllegalMoveOrigin { location, kind },
-            } => {
+            MoveError::IllegalMove { cannot_move_out_of: IllegalMoveOrigin { location, kind } } => {
                 // Note: that the only time we assign a place isn't a temporary
                 // to a user variable is when initializing it.
                 // If that ever stops being the case, then the ever initialized
@@ -152,10 +150,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
         match_span: Span,
         statement_span: Span,
     ) {
-        debug!(
-            "append_binding_error(match_place={:?}, match_span={:?})",
-            match_place, match_span
-        );
+        debug!("append_binding_error(match_place={:?}, match_span={:?})", match_place, match_span);
 
         let from_simple_let = match_place.is_none();
         let match_place = match_place.unwrap_or(move_from);
@@ -232,28 +227,13 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
                 Place<'tcx>,
                 &IllegalMoveOriginKind<'_>,
             ) = match error {
-                GroupedMoveError::MovesFromPlace {
-                    span,
-                    original_path,
-                    ref kind,
-                    ..
+                GroupedMoveError::MovesFromPlace { span, original_path, ref kind, .. }
+                | GroupedMoveError::MovesFromValue { span, original_path, ref kind, .. } => {
+                    (span, None, original_path, kind)
                 }
-                | GroupedMoveError::MovesFromValue {
-                    span,
-                    original_path,
-                    ref kind,
-                    ..
-                } => (span, None, original_path, kind),
-                GroupedMoveError::OtherIllegalMove {
-                    use_spans,
-                    original_path,
-                    ref kind,
-                } => (
-                    use_spans.args_or_use(),
-                    Some(use_spans),
-                    original_path,
-                    kind,
-                ),
+                GroupedMoveError::OtherIllegalMove { use_spans, original_path, ref kind } => {
+                    (use_spans.args_or_use(), Some(use_spans), original_path, kind)
+                }
             };
             debug!(
                 "report: original_path={:?} span={:?}, kind={:?} \
@@ -295,10 +275,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
         let description = if place.projection.len() == 1 {
             format!("static item {}", self.describe_any_place(place.as_ref()))
         } else {
-            let base_static = PlaceRef {
-                local: place.local,
-                projection: &[ProjectionElem::Deref],
-            };
+            let base_static = PlaceRef { local: place.local, projection: &[ProjectionElem::Deref] };
 
             format!(
                 "{} as {} is a static item",
@@ -326,18 +303,13 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
             .find_map(|p| self.is_upvar_field_projection(p));
 
         let deref_base = match deref_target_place.projection.as_ref() {
-            [proj_base @ .., ProjectionElem::Deref] => PlaceRef {
-                local: deref_target_place.local,
-                projection: &proj_base,
-            },
+            [proj_base @ .., ProjectionElem::Deref] => {
+                PlaceRef { local: deref_target_place.local, projection: &proj_base }
+            }
             _ => bug!("deref_target_place is not a deref projection"),
         };
 
-        if let PlaceRef {
-            local,
-            projection: [],
-        } = deref_base
-        {
+        if let PlaceRef { local, projection: [] } = deref_base {
             let decl = &self.body.local_decls[local];
             if decl.is_ref_for_guard() {
                 let mut err = self.cannot_move_out_of(
@@ -380,17 +352,12 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
 
                 let place_name = self.describe_any_place(move_place.as_ref());
 
-                let place_description = if self
-                    .is_upvar_field_projection(move_place.as_ref())
-                    .is_some()
-                {
-                    format!("{}, a {}", place_name, capture_description)
-                } else {
-                    format!(
-                        "{}, as `{}` is a {}",
-                        place_name, upvar_name, capture_description
-                    )
-                };
+                let place_description =
+                    if self.is_upvar_field_projection(move_place.as_ref()).is_some() {
+                        format!("{}, a {}", place_name, capture_description)
+                    } else {
+                        format!("{}, as `{}` is a {}", place_name, upvar_name, capture_description)
+                    };
 
                 debug!(
                     "report: closure_kind_ty={:?} closure_kind={:?} place_description={:?}",
@@ -409,10 +376,8 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
             }
             _ => {
                 let source = self.borrowed_content_source(deref_base);
-                match (
-                    self.describe_place(move_place.as_ref()),
-                    source.describe_for_named_place(),
-                ) {
+                match (self.describe_place(move_place.as_ref()), source.describe_for_named_place())
+                {
                     (Some(place_desc), Some(source_desc)) => self.cannot_move_out_of(
                         span,
                         &format!("`{}` which is behind a {}", place_desc, source_desc),
@@ -445,11 +410,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
                 Applicability::MaybeIncorrect,
             );
         } else if let Some(UseSpans::FnSelfUse {
-            kind:
-                FnSelfUseKind::Normal {
-                    implicit_into_iter: true,
-                    ..
-                },
+            kind: FnSelfUseKind::Normal { implicit_into_iter: true, .. },
             ..
         }) = use_spans
         {
@@ -486,11 +447,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
         span: Span,
     ) {
         match error {
-            GroupedMoveError::MovesFromPlace {
-                mut binds_to,
-                move_from,
-                ..
-            } => {
+            GroupedMoveError::MovesFromPlace { mut binds_to, move_from, .. } => {
                 if let Ok(snippet) = self.infcx.tcx.sess.source_map().span_to_snippet(span) {
                     err.span_suggestion(
                         span,
@@ -528,11 +485,7 @@ impl<'a, 'tcx> MirBorrowckCtxt<'a, 'tcx> {
                 self.add_move_error_details(err, &binds_to);
             }
             // No binding. Nothing to suggest.
-            GroupedMoveError::OtherIllegalMove {
-                ref original_path,
-                use_spans,
-                ..
-            } => {
+            GroupedMoveError::OtherIllegalMove { ref original_path, use_spans, .. } => {
                 let span = use_spans.var_or_use();
                 let place_ty = original_path.ty(self.body, self.infcx.tcx).ty;
                 let place_desc = match self.describe_place(original_path.as_ref()) {

@@ -27,9 +27,9 @@ COPY scripts/sccache.sh /scripts/
 RUN sh /scripts/sccache.sh
 
 ENV \
-  AR_x86_64_unknown_dragonfly=x86_64-unknown-dragonfly-ar \
-  CC_x86_64_unknown_dragonfly=x86_64-unknown-dragonfly-gcc \
-  CXX_x86_64_unknown_dragonfly=x86_64-unknown-dragonfly-g++
+    AR_x86_64_unknown_dragonfly=x86_64-unknown-dragonfly-ar \
+    CC_x86_64_unknown_dragonfly=x86_64-unknown-dragonfly-gcc \
+    CXX_x86_64_unknown_dragonfly=x86_64-unknown-dragonfly-g++
 
 ENV HOSTS=x86_64-unknown-dragonfly
 

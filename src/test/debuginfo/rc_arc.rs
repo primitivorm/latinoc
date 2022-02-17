@@ -1,4 +1,4 @@
-// ignore-windows-gnu: pretty-printers are not loaded
+// pretty-printers are not loaded
 // compile-flags:-g
 
 // min-gdb-version: 8.1

@@ -86,14 +86,10 @@ impl<'a, 'tcx> NiceRegionError<'a, 'tcx> {
         let (ty_sup, ty_fndecl_sup) = ty_sup;
         let (ty_sub, ty_fndecl_sub) = ty_sub;
 
-        let AnonymousParamInfo {
-            param: anon_param_sup,
-            ..
-        } = self.find_param_with_region(sup, sup)?;
-        let AnonymousParamInfo {
-            param: anon_param_sub,
-            ..
-        } = self.find_param_with_region(sub, sub)?;
+        let AnonymousParamInfo { param: anon_param_sup, .. } =
+            self.find_param_with_region(sup, sup)?;
+        let AnonymousParamInfo { param: anon_param_sub, .. } =
+            self.find_param_with_region(sub, sub)?;
 
         let sup_is_ret_type =
             self.is_return_type_anon(scope_def_id_sup, bregion_sup, ty_fndecl_sup);
@@ -121,10 +117,7 @@ impl<'a, 'tcx> NiceRegionError<'a, 'tcx> {
                     } else {
                         (
                             "these two types are declared with different lifetimes...".to_owned(),
-                            format!(
-                                "...but data{} flows{} here",
-                                span_label_var1, span_label_var2
-                            ),
+                            format!("...but data{} flows{} here", span_label_var1, span_label_var2),
                         )
                     };
                     (ty_sup.span, ty_sub.span, main_label_1, span_label_1, None)
@@ -185,19 +178,16 @@ impl<'a, 'tcx> NiceRegionError<'a, 'tcx> {
                 .source_map()
                 .span_to_snippet(t.span)
                 .ok()
-                /*.and_then(|s| match (&t.kind, s.as_str()) {
+                .and_then(|s| match (&t.kind, s.as_str()) {
                     (rustc_hir::TyKind::Tup(&[]), "") => Some("()".to_string()),
                     (_, "") => None,
                     _ => Some(s),
-                })*/
+                })
                 .unwrap_or_else(|| "{unnamed_type}".to_string());
 
             err.span_label(
                 t.span,
-                &format!(
-                    "this `async fn` implicitly returns an `impl Future<Output = {}>`",
-                    snip
-                ),
+                &format!("this `async fn` implicitly returns an `impl Future<Output = {}>`", snip),
             );
         }
         err.emit();
@@ -212,14 +202,8 @@ impl<'a, 'tcx> NiceRegionError<'a, 'tcx> {
         err: &mut DiagnosticBuilder<'_>,
     ) {
         if let (
-            hir::Ty {
-                kind: hir::TyKind::Rptr(lifetime_sub, _),
-                ..
-            },
-            hir::Ty {
-                kind: hir::TyKind::Rptr(lifetime_sup, _),
-                ..
-            },
+            hir::Ty { kind: hir::TyKind::Rptr(lifetime_sub, _), .. },
+            hir::Ty { kind: hir::TyKind::Rptr(lifetime_sup, _), .. },
         ) = (ty_sub, ty_sup)
         {
             if lifetime_sub.name.is_elided() && lifetime_sup.name.is_elided() {

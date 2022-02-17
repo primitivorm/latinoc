@@ -1,7 +1,6 @@
 // revisions: mir thir
 // [thir]compile-flags: -Z thir-unsafeck
 
-#![feature(const_raw_ptr_deref)]
 mod Y {
     pub type X = usize;
     extern "C" {
@@ -12,8 +11,8 @@ mod Y {
     }
 }
 
-static foo: &Y::X = &*Y::foo(Y::x as *const Y::X);
-//~^ ERROR dereference of raw pointer
+static foo: *const Y::X = Y::foo(Y::x as *const Y::X);
+//~^ ERROR `*const usize` cannot be shared between threads safely [E0277]
 //~| ERROR E0015
 //~| ERROR use of extern static is unsafe and requires
 

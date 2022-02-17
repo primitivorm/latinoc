@@ -474,7 +474,7 @@ pub fn noop_visit_ty<T: MutVisitor>(ty: &mut P<Ty>, vis: &mut T) {
             vis.visit_ty(ty);
             vis.visit_anon_const(length);
         }
-        //TyKind::Typeof(expr) => vis.visit_anon_const(expr),
+        TyKind::Typeof(expr) => vis.visit_anon_const(expr),
         TyKind::TraitObject(bounds, _syntax) => {
             visit_vec(bounds, |bound| vis.visit_param_bound(bound))
         }

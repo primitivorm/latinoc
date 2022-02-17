@@ -14,13 +14,10 @@
 
 use std::env;
 
-#[path = "backtrace-debuginfo-aux.rs"]
-mod aux;
+#[path = "backtrace-debuginfo-aux.rs"] mod aux;
 
 macro_rules! pos {
-    () => {
-        (file!(), line!())
-    };
+    () => ((file!(), line!()))
 }
 
 macro_rules! dump_and_die {
@@ -82,12 +79,10 @@ fn dump_filelines(filelines: &[Pos]) {
 fn inner(counter: &mut i32, main_pos: Pos, outer_pos: Pos) {
     check!(counter; main_pos, outer_pos);
     check!(counter; main_pos, outer_pos);
-    let inner_pos = pos!();
-    aux::callback(|aux_pos| {
+    let inner_pos = pos!(); aux::callback(|aux_pos| {
         check!(counter; main_pos, outer_pos, inner_pos, aux_pos);
     });
-    let inner_pos = pos!();
-    aux::callback_inlined(|aux_pos| {
+    let inner_pos = pos!(); aux::callback_inlined(|aux_pos| {
         check!(counter; main_pos, outer_pos, inner_pos, aux_pos);
     });
 }
@@ -107,12 +102,10 @@ fn inner_inlined(counter: &mut i32, main_pos: Pos, outer_pos: Pos) {
     }
     inner_further_inlined(counter, main_pos, outer_pos, pos!());
 
-    let inner_pos = pos!();
-    aux::callback(|aux_pos| {
+    let inner_pos = pos!(); aux::callback(|aux_pos| {
         check!(counter; main_pos, outer_pos, inner_pos, aux_pos);
     });
-    let inner_pos = pos!();
-    aux::callback_inlined(|aux_pos| {
+    let inner_pos = pos!(); aux::callback_inlined(|aux_pos| {
         check!(counter; main_pos, outer_pos, inner_pos, aux_pos);
     });
 
@@ -132,7 +125,7 @@ fn check_trace(output: &str, error: &str) -> Result<(), String> {
     let mut remaining: Vec<&str> = output.lines().map(|s| s.trim()).rev().collect();
 
     if !error.contains("stack backtrace") {
-        return Err(format!("no backtrace found in stderr:\n{}", error));
+        return Err(format!("no backtrace found in stderr:\n{}", error))
     }
     for line in error.lines() {
         if !remaining.is_empty() && line.contains(remaining.last().unwrap()) {
@@ -140,26 +133,25 @@ fn check_trace(output: &str, error: &str) -> Result<(), String> {
         }
     }
     if !remaining.is_empty() {
-        return Err(format!(
-            "trace does not match position list\n\
+        return Err(format!("trace does not match position list\n\
             still need to find {:?}\n\n\
             --- stdout\n{}\n\
             --- stderr\n{}",
-            remaining, output, error
-        ));
+            remaining, output, error))
     }
     Ok(())
 }
 
 fn run_test(me: &str) {
-    use std::process::Command;
     use std::str;
+    use std::process::Command;
 
     let mut i = 0;
     let mut errors = Vec::new();
     loop {
-        let out =
-            Command::new(me).env("RUST_BACKTRACE", "full").arg(i.to_string()).output().unwrap();
+        let out = Command::new(me)
+                          .env("RUST_BACKTRACE", "full")
+                          .arg(i.to_string()).output().unwrap();
         let output = str::from_utf8(&out.stdout).unwrap();
         let error = str::from_utf8(&out.stderr).unwrap();
         if out.status.success() {

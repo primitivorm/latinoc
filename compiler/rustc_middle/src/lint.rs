@@ -13,14 +13,14 @@ use rustc_session::lint::{
 use rustc_session::{DiagnosticMessageId, Session};
 use rustc_span::hygiene::MacroKind;
 use rustc_span::source_map::{DesugaringKind, ExpnKind, MultiSpan};
-use rustc_span::{/*symbol,*/ Span, Symbol, DUMMY_SP};
+use rustc_span::{symbol, Span, Symbol, DUMMY_SP};
 
 /// How a lint level was set.
 #[derive(Clone, Copy, PartialEq, Eq, HashStable, Debug)]
 pub enum LintLevelSource {
     /// Lint is at the default level as declared
     /// in rustc or a plugin.
-    // Default,
+    Default,
 
     /// Lint level was set by an attribute.
     Node(Symbol, Span, Option<Symbol> /* RFC 2383 reason */),
@@ -34,7 +34,7 @@ pub enum LintLevelSource {
 impl LintLevelSource {
     pub fn name(&self) -> Symbol {
         match *self {
-            /*LintLevelSource::Default => symbol::kw::Default,*/
+            LintLevelSource::Default => symbol::kw::Default,
             LintLevelSource::Node(name, _, _) => name,
             LintLevelSource::CommandLine(name, _) => name,
         }
@@ -42,7 +42,7 @@ impl LintLevelSource {
 
     pub fn span(&self) -> Span {
         match *self {
-            //LintLevelSource::Default => DUMMY_SP,
+            LintLevelSource::Default => DUMMY_SP,
             LintLevelSource::Node(_, span, _) => span,
             LintLevelSource::CommandLine(_, _) => DUMMY_SP,
         }
@@ -76,10 +76,7 @@ pub struct LintSet {
 
 impl LintLevelSets {
     pub fn new() -> Self {
-        LintLevelSets {
-            list: IndexVec::new(),
-            lint_cap: Level::Forbid,
-        }
+        LintLevelSets { list: IndexVec::new(), lint_cap: Level::Forbid }
     }
 
     pub fn get_lint_level(
@@ -146,9 +143,9 @@ impl LintLevelSets {
             if let Some(&(level, src)) = specs.get(&id) {
                 return (Some(level), src);
             }
-            /*if idx == COMMAND_LINE {
+            if idx == COMMAND_LINE {
                 return (None, LintLevelSource::Default);
-            }*/
+            }
             idx = parent;
         }
     }
@@ -174,19 +171,14 @@ impl LintLevelMap {
         id: HirId,
         session: &Session,
     ) -> Option<LevelAndSource> {
-        self.id_to_set
-            .get(&id)
-            .map(|idx| self.sets.get_lint_level(lint, *idx, None, session))
+        self.id_to_set.get(&id).map(|idx| self.sets.get_lint_level(lint, *idx, None, session))
     }
 }
 
 impl<'a> HashStable<StableHashingContext<'a>> for LintLevelMap {
     #[inline]
     fn hash_stable(&self, hcx: &mut StableHashingContext<'a>, hasher: &mut StableHasher) {
-        let LintLevelMap {
-            ref sets,
-            ref id_to_set,
-        } = *self;
+        let LintLevelMap { ref sets, ref id_to_set } = *self;
 
         id_to_set.hash_stable(hcx, hasher);
 
@@ -236,10 +228,7 @@ pub fn struct_lint_level<'s, 'd>(
             // Default allow lints trigger too often for testing.
             sess.opts.debugging_opts.future_incompat_test && lint.default_level != Level::Allow,
             |incompat| {
-                matches!(
-                    incompat.reason,
-                    FutureIncompatibilityReason::FutureReleaseErrorReportNow
-                )
+                matches!(incompat.reason, FutureIncompatibilityReason::FutureReleaseErrorReportNow)
             },
         );
 
@@ -270,12 +259,7 @@ pub fn struct_lint_level<'s, 'd>(
         // If this code originates in a foreign macro, aka something that this crate
         // did not itself author, then it's likely that there's nothing this crate
         // can do about it. We probably want to skip the lint entirely.
-        if err
-            .span
-            .primary_spans()
-            .iter()
-            .any(|s| in_external_macro(sess, *s))
-        {
+        if err.span.primary_spans().iter().any(|s| in_external_macro(sess, *s)) {
             // Any suggestions made here are likely to be incorrect, so anything we
             // emit shouldn't be automatically fixed by rustfix.
             err.allow_suggestions(false);
@@ -284,9 +268,8 @@ pub fn struct_lint_level<'s, 'd>(
             // it'll become a hard error, so we have to emit *something*. Also,
             // if this lint occurs in the expansion of a macro from an external crate,
             // allow individual lints to opt-out from being reported.
-            let not_future_incompatible = future_incompatible
-                .map(|f| f.reason.edition().is_some())
-                .unwrap_or(true);
+            let not_future_incompatible =
+                future_incompatible.map(|f| f.reason.edition().is_some()).unwrap_or(true);
             if not_future_incompatible && !lint.report_in_external_macro {
                 err.cancel();
                 // Don't continue further, since we don't want to have
@@ -297,13 +280,13 @@ pub fn struct_lint_level<'s, 'd>(
 
         let name = lint.name_lower();
         match src {
-            /*LintLevelSource::Default => {
+            LintLevelSource::Default => {
                 sess.diag_note_once(
                     &mut err,
                     DiagnosticMessageId::from(lint),
                     &format!("`#[{}({})]` on by default", level.as_str(), name),
                 );
-            }*/
+            }
             LintLevelSource::CommandLine(lint_flag_val, orig_level) => {
                 let flag = match orig_level {
                     Level::Warn => "-W",
@@ -359,11 +342,7 @@ pub fn struct_lint_level<'s, 'd>(
         }
 
         let is_force_warn = matches!(level, Level::ForceWarn);
-        err.code(DiagnosticId::Lint {
-            name,
-            has_future_breakage,
-            is_force_warn,
-        });
+        err.code(DiagnosticId::Lint { name, has_future_breakage, is_force_warn });
 
         if let Some(future_incompatible) = future_incompatible {
             let explanation = if lint_id == LintId::of(builtin::UNSTABLE_NAME_COLLISIONS) {
@@ -395,10 +374,8 @@ pub fn struct_lint_level<'s, 'd>(
                 err.warn(&explanation);
             }
             if !future_incompatible.reference.is_empty() {
-                let citation = format!(
-                    "for more information, see {}",
-                    future_incompatible.reference
-                );
+                let citation =
+                    format!("for more information, see {}", future_incompatible.reference);
                 err.note(&citation);
             }
         }

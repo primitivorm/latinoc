@@ -7,7 +7,6 @@
 // or type checking or some other kind of complex analysis.
 
 use itertools::{Either, Itertools};
-use latinoc_parse::validate_attr;
 use rustc_ast::ptr::P;
 use rustc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
 use rustc_ast::walk_list;
@@ -15,6 +14,7 @@ use rustc_ast::*;
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_errors::{error_code, pluralize, struct_span_err, Applicability};
+use latinoc_parse::validate_attr;
 use rustc_session::lint::builtin::{MISSING_ABI, PATTERNS_IN_FNS_WITHOUT_BODY};
 use rustc_session::lint::{BuiltinLintDiagnostics, LintBuffer};
 use rustc_session::Session;
@@ -23,7 +23,7 @@ use rustc_span::symbol::{kw, sym, Ident};
 use rustc_span::Span;
 use rustc_target::spec::abi;
 use std::mem;
-use std::ops::{Deref, DerefMut};
+use std::ops::DerefMut;
 
 const MORE_EXTERN: &str =
     "for more information, visit https://doc.rust-lang.org/std/keyword.extern.html";
@@ -76,10 +76,8 @@ impl<'a> AstValidator<'a> {
         f: impl FnOnce(&mut Self),
     ) {
         let old = mem::replace(&mut self.in_trait_impl, is_in);
-        let old_const = mem::replace(
-            &mut self.in_const_trait_impl,
-            matches!(constness, Some(Const::Yes(_))),
-        );
+        let old_const =
+            mem::replace(&mut self.in_const_trait_impl, matches!(constness, Some(Const::Yes(_))));
         f(self);
         self.in_trait_impl = old;
         self.in_const_trait_impl = old_const;
@@ -220,8 +218,7 @@ impl<'a> AstValidator<'a> {
     fn check_lifetime(&self, ident: Ident) {
         let valid_names = [kw::UnderscoreLifetime, kw::StaticLifetime, kw::Empty];
         if !valid_names.contains(&ident.name) && ident.without_first_quote().is_reserved() {
-            self.err_handler()
-                .span_err(ident.span, "lifetimes cannot use keyword names");
+            self.err_handler().span_err(ident.span, "lifetimes cannot use keyword names");
         }
     }
 
@@ -237,12 +234,8 @@ impl<'a> AstValidator<'a> {
             return;
         }
 
-        let mut err = struct_span_err!(
-            self.session,
-            vis.span,
-            E0449,
-            "unnecessary visibility qualifier"
-        );
+        let mut err =
+            struct_span_err!(self.session, vis.span, E0449, "unnecessary visibility qualifier");
         if vis.kind.is_pub() {
             err.span_label(vis.span, "`pub` not permitted here because it's implied");
         }
@@ -412,14 +405,7 @@ impl<'a> AstValidator<'a> {
             .iter()
             .flat_map(|i| i.attrs.as_ref())
             .filter(|attr| {
-                let arr = [
-                    sym::allow,
-                    sym::cfg,
-                    sym::cfg_attr,
-                    sym::deny,
-                    sym::forbid,
-                    sym::warn,
-                ];
+                let arr = [sym::allow, sym::cfg, sym::cfg_attr, sym::deny, sym::forbid, sym::warn];
                 !arr.contains(&attr.name_or_empty()) && rustc_attr::is_builtin_attr(attr)
             })
             .for_each(|attr| {
@@ -492,10 +478,7 @@ impl<'a> AstValidator<'a> {
             [b0, .., bl] => b0.span().to(bl.span()),
         };
         self.err_handler()
-            .struct_span_err(
-                span,
-                &format!("bounds on `type`s in {} have no effect", ctx),
-            )
+            .struct_span_err(span, &format!("bounds on `type`s in {} have no effect", ctx))
             .emit();
     }
 
@@ -522,11 +505,7 @@ impl<'a> AstValidator<'a> {
         }
 
         if !generics.where_clause.predicates.is_empty() {
-            cannot_have(
-                generics.where_clause.span,
-                "`where` clauses",
-                "`where` clause",
-            );
+            cannot_have(generics.where_clause.span, "`where` clauses", "`where` clause");
         }
     }
 
@@ -536,10 +515,7 @@ impl<'a> AstValidator<'a> {
             Some(body) => body,
         };
         self.err_handler()
-            .struct_span_err(
-                ident.span,
-                &format!("incorrect `{}` inside `extern` block", kind),
-            )
+            .struct_span_err(ident.span, &format!("incorrect `{}` inside `extern` block", kind))
             .span_label(ident.span, "cannot have a body")
             .span_label(body, "the invalid body")
             .span_label(
@@ -583,19 +559,14 @@ impl<'a> AstValidator<'a> {
     }
 
     fn current_extern_span(&self) -> Span {
-        self.session
-            .source_map()
-            .guess_head_span(self.extern_mod.unwrap().span)
+        self.session.source_map().guess_head_span(self.extern_mod.unwrap().span)
     }
 
     /// An `fn` in `extern { ... }` cannot have qualifiers, e.g. `async fn`.
     fn check_foreign_fn_headerless(&self, ident: Ident, span: Span, header: FnHeader) {
         if header.has_qualifiers() {
             self.err_handler()
-                .struct_span_err(
-                    ident.span,
-                    "functions in `extern` blocks cannot have qualifiers",
-                )
+                .struct_span_err(ident.span, "functions in `extern` blocks cannot have qualifiers")
                 .span_label(self.current_extern_span(), "in this `extern` block")
                 .span_suggestion_verbose(
                     span.until(ident.span.shrink_to_lo()),
@@ -632,11 +603,7 @@ impl<'a> AstValidator<'a> {
         match (fk.ctxt(), fk.header()) {
             (Some(FnCtxt::Foreign), _) => return,
             (Some(FnCtxt::Free), Some(header)) => match header.ext {
-                Extern::Explicit(StrLit {
-                    symbol_unescaped: sym::C,
-                    ..
-                })
-                | Extern::Implicit
+                Extern::Explicit(StrLit { symbol_unescaped: sym::C, .. }) | Extern::Implicit
                     if matches!(header.unsafety, Unsafe::Yes(_)) =>
                 {
                     return;
@@ -663,14 +630,8 @@ impl<'a> AstValidator<'a> {
             return;
         }
         self.err_handler()
-            .struct_span_err(
-                ident.span,
-                &format!("`{}` items in this context need a name", kind),
-            )
-            .span_label(
-                ident.span,
-                format!("`_` is not a valid name for this `{}` item", kind),
-            )
+            .struct_span_err(ident.span, &format!("`{}` items in this context need a name", kind))
+            .span_label(ident.span, format!("`_` is not a valid name for this `{}` item", kind))
             .emit();
     }
 
@@ -729,10 +690,7 @@ impl<'a> AstValidator<'a> {
             E0568,
             "auto traits cannot have super traits or lifetime bounds"
         )
-        .span_label(
-            ident_span,
-            "auto trait cannot have super traits or lifetime bounds",
-        )
+        .span_label(ident_span, "auto trait cannot have super traits or lifetime bounds")
         .span_suggestion(
             span,
             "remove the super traits or lifetime bounds",
@@ -758,11 +716,7 @@ impl<'a> AstValidator<'a> {
     fn deny_items(&self, trait_items: &[P<AssocItem>], ident_span: Span) {
         if !trait_items.is_empty() {
             let spans: Vec<_> = trait_items.iter().map(|i| i.ident.span).collect();
-            let total_span = trait_items
-                .first()
-                .unwrap()
-                .span
-                .to(trait_items.last().unwrap().span);
+            let total_span = trait_items.first().unwrap().span.to(trait_items.last().unwrap().span);
             struct_span_err!(
                 self.session,
                 spans,
@@ -803,22 +757,14 @@ impl<'a> AstValidator<'a> {
         });
         format!(
             "<{}>",
-            lt_sugg
-                .chain(args_sugg)
-                .chain(constraint_sugg)
-                .collect::<Vec<String>>()
-                .join(", ")
+            lt_sugg.chain(args_sugg).chain(constraint_sugg).collect::<Vec<String>>().join(", ")
         )
     }
 
     /// Enforce generic args coming before constraints in `<...>` of a path segment.
     fn check_generic_args_before_constraints(&self, data: &AngleBracketedArgs) {
         // Early exit in case it's partitioned as it should be.
-        if data
-            .args
-            .iter()
-            .is_partitioned(|arg| matches!(arg, AngleBracketedArg::Arg(_)))
-        {
+        if data.args.iter().is_partitioned(|arg| matches!(arg, AngleBracketedArg::Arg(_))) {
             return;
         }
         // Find all generic argument coming after the first constraint...
@@ -835,10 +781,7 @@ impl<'a> AstValidator<'a> {
                 arg_spans.clone(),
                 "generic arguments must come before the first constraint",
             )
-            .span_label(
-                constraint_spans[0],
-                &format!("constraint{}", pluralize!(constraint_len)),
-            )
+            .span_label(constraint_spans[0], &format!("constraint{}", pluralize!(constraint_len)))
             .span_label(
                 *arg_spans.iter().last().unwrap(),
                 &format!("generic argument{}", pluralize!(args_len)),
@@ -920,8 +863,7 @@ impl<'a> AstValidator<'a> {
                 }
 
                 if !bounds.iter().any(|b| matches!(b, GenericBound::Trait(..))) {
-                    self.err_handler()
-                        .span_err(ty.span, "at least one trait must be specified");
+                    self.err_handler().span_err(ty.span, "at least one trait must be specified");
                 }
             }
             _ => {}
@@ -967,17 +909,10 @@ fn validate_generic_param_order(
         let (ord_kind, ident) = match &param.kind {
             GenericParamKind::Lifetime => (ParamKindOrd::Lifetime, ident.to_string()),
             GenericParamKind::Type { default: _ } => (ParamKindOrd::Type, ident.to_string()),
-            GenericParamKind::Const {
-                ref ty,
-                kw_span: _,
-                default: _,
-            } => {
+            GenericParamKind::Const { ref ty, kw_span: _, default: _ } => {
                 let ty = pprust::ty_to_string(ty);
                 let unordered = sess.features_untracked().unordered_const_ty_params();
-                (
-                    ParamKindOrd::Const { unordered },
-                    format!("const {}: {}", ident, ty),
-                )
+                (ParamKindOrd::Const { unordered }, format!("const {}: {}", ident, ty))
             }
         };
         param_idents.push((kind, ord_kind, bounds, idx, ident));
@@ -1006,27 +941,17 @@ fn validate_generic_param_order(
             }
 
             match kind {
-                GenericParamKind::Type {
-                    default: Some(default),
-                } => {
+                GenericParamKind::Type { default: Some(default) } => {
                     ordered_params += " = ";
                     ordered_params += &pprust::ty_to_string(default);
                 }
                 GenericParamKind::Type { default: None } => (),
                 GenericParamKind::Lifetime => (),
-                GenericParamKind::Const {
-                    ty: _,
-                    kw_span: _,
-                    default: Some(default),
-                } => {
+                GenericParamKind::Const { ty: _, kw_span: _, default: Some(default) } => {
                     ordered_params += " = ";
                     ordered_params += &pprust::expr_to_string(&*default.value);
                 }
-                GenericParamKind::Const {
-                    ty: _,
-                    kw_span: _,
-                    default: None,
-                } => (),
+                GenericParamKind::Const { ty: _, kw_span: _, default: None } => (),
             }
             first = false;
         }
@@ -1096,14 +1021,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
                     }
                 }
             }
-            ExprKind::Paren(_)
-            | ExprKind::Binary(
-                Spanned {
-                    node: BinOpKind::And,
-                    ..
-                },
-                ..,
-            ) => {
+            ExprKind::Paren(_) | ExprKind::Binary(Spanned { node: BinOpKind::And, .. }, ..) => {
                 this.with_let_allowed(let_allowed, |this, _| visit::walk_expr(this, expr));
                 return;
             }
@@ -1137,11 +1055,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
     }
 
     fn visit_item(&mut self, item: &'a Item) {
-        if item
-            .attrs
-            .iter()
-            .any(|attr| self.session.is_proc_macro_attr(attr))
-        {
+        if item.attrs.iter().any(|attr| self.session.is_proc_macro_attr(attr)) {
             self.has_proc_macro_decls = true;
         }
 
@@ -1238,12 +1152,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
                         .emit();
                 }
             }
-            ItemKind::Fn(box Fn {
-                defaultness,
-                ref sig,
-                ref generics,
-                ref body,
-            }) => {
+            ItemKind::Fn(box Fn { defaultness, ref sig, ref generics, ref body }) => {
                 self.check_defaultness(item.span, defaultness);
 
                 if body.is_none() {
@@ -1269,8 +1178,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
                     Some("place qualifiers on individual foreign items instead"),
                 );
                 if let Unsafe::Yes(span) = unsafety {
-                    self.err_handler()
-                        .span_err(span, "extern block cannot be declared unsafe");
+                    self.err_handler().span_err(span, "extern block cannot be declared unsafe");
                 }
                 if abi.is_none() {
                     self.maybe_lint_missing_abi(item.span, item.id);
@@ -1287,13 +1195,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
                     }
                 }
             }
-            ItemKind::Trait(box Trait {
-                is_auto,
-                ref generics,
-                ref bounds,
-                ref items,
-                ..
-            }) => {
+            ItemKind::Trait(box Trait { is_auto, ref generics, ref bounds, ref items, .. }) => {
                 if is_auto == IsAuto::Yes {
                     // Auto traits cannot have generics, super traits nor contain items.
                     self.deny_generic_params(generics, item.ident.span);
@@ -1315,8 +1217,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
             }
             ItemKind::Mod(unsafety, ref mod_kind) => {
                 if let Unsafe::Yes(span) = unsafety {
-                    self.err_handler()
-                        .span_err(span, "module cannot be declared unsafe");
+                    self.err_handler().span_err(span, "module cannot be declared unsafe");
                 }
                 // Ensure that `path` attributes on modules are recorded as used (cf. issue #35584).
                 if !matches!(mod_kind, ModKind::Loaded(_, Inline::Yes, _))
@@ -1346,8 +1247,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
             },
             ItemKind::Union(ref vdata, ref generics) => {
                 if vdata.fields().is_empty() {
-                    self.err_handler()
-                        .span_err(item.span, "unions cannot have zero fields");
+                    self.err_handler().span_err(item.span, "unions cannot have zero fields");
                 }
                 match vdata {
                     VariantData::Struct(ref fields, ..) => {
@@ -1372,12 +1272,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
                 let msg = "free static item without body";
                 self.error_item_without_body(item.span, "static", msg, " = <expr>;");
             }
-            ItemKind::TyAlias(box TyAlias {
-                defaultness,
-                ref bounds,
-                ref ty,
-                ..
-            }) => {
+            ItemKind::TyAlias(box TyAlias { defaultness, ref bounds, ref ty, .. }) => {
                 self.check_defaultness(item.span, defaultness);
                 if ty.is_none() {
                     let msg = "free type alias without body";
@@ -1393,24 +1288,13 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
 
     fn visit_foreign_item(&mut self, fi: &'a ForeignItem) {
         match &fi.kind {
-            ForeignItemKind::Fn(box Fn {
-                defaultness,
-                sig,
-                body,
-                ..
-            }) => {
+            ForeignItemKind::Fn(box Fn { defaultness, sig, body, .. }) => {
                 self.check_defaultness(fi.span, *defaultness);
                 self.check_foreign_fn_bodyless(fi.ident, body.as_deref());
                 self.check_foreign_fn_headerless(fi.ident, fi.span, sig.header);
                 self.check_foreign_item_ascii_only(fi.ident);
             }
-            ForeignItemKind::TyAlias(box TyAlias {
-                defaultness,
-                generics,
-                bounds,
-                ty,
-                ..
-            }) => {
+            ForeignItemKind::TyAlias(box TyAlias { defaultness, generics, bounds, ty, .. }) => {
                 self.check_defaultness(fi.span, *defaultness);
                 self.check_foreign_kind_bodyless(fi.ident, "type", ty.as_ref().map(|b| b.span));
                 self.check_type_no_bounds(bounds, "`extern` blocks");
@@ -1458,21 +1342,14 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
     }
 
     fn visit_generics(&mut self, generics: &'a Generics) {
-        let cg_defaults = self
-            .session
-            .features_untracked()
-            .unordered_const_ty_params();
+        let cg_defaults = self.session.features_untracked().unordered_const_ty_params();
 
         let mut prev_param_default = None;
         for param in &generics.params {
             match param.kind {
                 GenericParamKind::Lifetime => (),
-                GenericParamKind::Type {
-                    default: Some(_), ..
-                }
-                | GenericParamKind::Const {
-                    default: Some(_), ..
-                } => {
+                GenericParamKind::Type { default: Some(_), .. }
+                | GenericParamKind::Const { default: Some(_), .. } => {
                     prev_param_default = Some(param.ident.span);
                 }
                 GenericParamKind::Type { .. } | GenericParamKind::Const { .. } => {
@@ -1643,15 +1520,7 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
         if let FnKind::Fn(
             _,
             _,
-            FnSig {
-                span: sig_span,
-                header:
-                    FnHeader {
-                        ext: Extern::Implicit,
-                        ..
-                    },
-                ..
-            },
+            FnSig { span: sig_span, header: FnHeader { ext: Extern::Implicit, .. }, .. },
             _,
             _,
         ) = fk
@@ -1736,12 +1605,9 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
         }
 
         match item.kind {
-            AssocItemKind::TyAlias(box TyAlias {
-                ref generics,
-                ref bounds,
-                ref ty,
-                ..
-            }) if ctxt == AssocCtxt::Trait => {
+            AssocItemKind::TyAlias(box TyAlias { ref generics, ref bounds, ref ty, .. })
+                if ctxt == AssocCtxt::Trait =>
+            {
                 self.visit_vis(&item.vis);
                 self.visit_ident(item.ident);
                 walk_list!(self, visit_attribute, &item.attrs);
@@ -1751,25 +1617,16 @@ impl<'a> Visitor<'a> for AstValidator<'a> {
                 });
                 walk_list!(self, visit_ty, ty);
             }
-            AssocItemKind::Fn(box Fn {
-                ref sig,
-                ref generics,
-                ref body,
-                ..
-            }) if self.in_const_trait_impl
-                || ctxt == AssocCtxt::Trait
-                || matches!(sig.header.constness, Const::Yes(_)) =>
+            AssocItemKind::Fn(box Fn { ref sig, ref generics, ref body, .. })
+                if self.in_const_trait_impl
+                    || ctxt == AssocCtxt::Trait
+                    || matches!(sig.header.constness, Const::Yes(_)) =>
             {
                 self.visit_vis(&item.vis);
                 self.visit_ident(item.ident);
                 self.with_tilde_const_allowed(|this| this.visit_generics(generics));
-                let kind = FnKind::Fn(
-                    FnCtxt::Assoc(ctxt),
-                    item.ident,
-                    sig,
-                    &item.vis,
-                    body.as_deref(),
-                );
+                let kind =
+                    FnKind::Fn(FnCtxt::Assoc(ctxt), item.ident, sig, &item.vis, body.as_deref());
                 self.visit_fn(kind, item.span, item.id);
             }
             _ => self
@@ -1795,9 +1652,7 @@ fn deny_equality_constraints(
     if let TyKind::Path(Some(qself), full_path) = &predicate.lhs_ty.kind {
         if let TyKind::Path(None, path) = &qself.ty.kind {
             match &path.segments[..] {
-                [PathSegment {
-                    ident, args: None, ..
-                }] => {
+                [PathSegment { ident, args: None, .. }] => {
                     for param in &generics.params {
                         if param.ident == *ident {
                             let param = ident;
@@ -1856,53 +1711,6 @@ fn deny_equality_constraints(
                     }
                 }
                 _ => {}
-            }
-        }
-    }
-    // Given `A: Foo, A::Bar = RhsTy`, suggest `A: Foo<Bar = RhsTy>`.
-    if let TyKind::Path(None, full_path) = &predicate.lhs_ty.kind {
-        if let [potential_param, potential_assoc] = &full_path.segments[..] {
-            for param in &generics.params {
-                if param.ident == potential_param.ident {
-                    for bound in &param.bounds {
-                        if let ast::GenericBound::Trait(trait_ref, TraitBoundModifier::None) = bound
-                        {
-                            if let [trait_segment] = &trait_ref.trait_ref.path.segments[..] {
-                                let assoc = pprust::path_to_string(&ast::Path::from_ident(
-                                    potential_assoc.ident,
-                                ));
-                                let ty = pprust::ty_to_string(&predicate.rhs_ty);
-                                let (args, span) = match &trait_segment.args {
-                                    Some(args) => match args.deref() {
-                                        ast::GenericArgs::AngleBracketed(args) => {
-                                            let Some(arg) = args.args.last() else {
-                                                continue;
-                                            };
-                                            (
-                                                format!(", {} = {}", assoc, ty),
-                                                arg.span().shrink_to_hi(),
-                                            )
-                                        }
-                                        _ => continue,
-                                    },
-                                    None => (
-                                        format!("<{} = {}>", assoc, ty),
-                                        trait_segment.span().shrink_to_hi(),
-                                    ),
-                                };
-                                err.multipart_suggestion(
-                                    &format!(
-                                        "if `{}::{}` is an associated type you're trying to set, \
-                                        use the associated type binding syntax",
-                                        trait_segment.ident, potential_assoc.ident,
-                                    ),
-                                    vec![(span, args), (predicate.span, String::new())],
-                                    Applicability::MaybeIncorrect,
-                                );
-                            }
-                        }
-                    }
-                }
             }
         }
     }

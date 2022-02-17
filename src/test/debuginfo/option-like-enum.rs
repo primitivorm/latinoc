@@ -42,6 +42,7 @@
 
 // gdb-command:continue
 
+
 // === LLDB TESTS ==================================================================================
 
 // lldb-command:run
@@ -76,6 +77,7 @@
 // lldb-command:print nested_non_zero_nope
 // lldb-check:[...]$9 = Nope
 
+
 #![feature(omit_gdb_pretty_printer_section)]
 #![omit_gdb_pretty_printer_section]
 
@@ -91,24 +93,24 @@
 
 enum MoreFields<'a> {
     Full(u32, &'a isize, i16),
-    Empty,
+    Empty
 }
 
 struct MoreFieldsRepr<'a> {
     a: u32,
     discr: &'a isize,
-    b: i16,
+    b: i16
 }
 
 enum NamedFields<'a> {
     Droid { id: i32, range: i64, internals: &'a isize },
-    Void,
+    Void
 }
 
 struct NamedFieldsRepr<'a> {
     id: i32,
     range: i64,
-    internals: &'a isize,
+    internals: &'a isize
 }
 
 struct NestedNonZeroField<'a> {
@@ -119,10 +121,11 @@ struct NestedNonZeroField<'a> {
 
 enum NestedNonZero<'a> {
     Yep(f64, NestedNonZeroField<'a>),
-    Nope,
+    Nope
 }
 
 fn main() {
+
     let some_str: Option<&'static str> = Some("abc");
     let none_str: Option<&'static str> = None;
 
@@ -137,20 +140,24 @@ fn main() {
     let droid = NamedFields::Droid {
         id: 675675,
         range: 10000001,
-        internals: unsafe { std::mem::transmute(0x43218765_usize) },
+        internals: unsafe { std::mem::transmute(0x43218765_usize) }
     };
 
     let void_droid = NamedFields::Void;
     let void_droid_gdb: &NamedFieldsRepr = unsafe { std::mem::transmute(&NamedFields::Void) };
 
     let x = 'x';
-    let nested_non_zero_yep = NestedNonZero::Yep(10.5, NestedNonZeroField { a: 10, b: 20, c: &x });
+    let nested_non_zero_yep = NestedNonZero::Yep(
+        10.5,
+        NestedNonZeroField {
+            a: 10,
+            b: 20,
+            c: &x
+        });
 
     let nested_non_zero_nope = NestedNonZero::Nope;
 
     zzz(); // #break
 }
 
-fn zzz() {
-    ()
-}
+fn zzz() {()}

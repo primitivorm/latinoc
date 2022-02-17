@@ -1,6 +1,5 @@
 use crate::util::check_builtin_macro_attribute;
 
-use latinoc_parse::parser::ForceCollect;
 use rustc_ast as ast;
 use rustc_ast::mut_visit::MutVisitor;
 use rustc_ast::ptr::P;
@@ -12,6 +11,7 @@ use rustc_expand::base::{Annotatable, ExtCtxt};
 use rustc_expand::config::StripUnconfigured;
 use rustc_expand::configure;
 use rustc_feature::Features;
+use latinoc_parse::parser::ForceCollect;
 use rustc_session::utils::FlattenNonterminals;
 use rustc_session::Session;
 use rustc_span::symbol::sym;
@@ -33,17 +33,11 @@ crate fn cfg_eval(
     features: Option<&Features>,
     annotatable: Annotatable,
 ) -> Annotatable {
-    CfgEval {
-        cfg: &mut StripUnconfigured {
-            sess,
-            features,
-            config_tokens: true,
-        },
-    }
-    .configure_annotatable(annotatable)
-    // Since the item itself has already been configured by the `InvocationCollector`,
-    // we know that fold result vector will contain exactly one element.
-    .unwrap()
+    CfgEval { cfg: &mut StripUnconfigured { sess, features, config_tokens: true } }
+        .configure_annotatable(annotatable)
+        // Since the item itself has already been configured by the `InvocationCollector`,
+        // we know that fold result vector will contain exactly one element.
+        .unwrap()
 }
 
 struct CfgEval<'a, 'b> {
@@ -56,37 +50,30 @@ fn flat_map_annotatable(
 ) -> Option<Annotatable> {
     match annotatable {
         Annotatable::Item(item) => vis.flat_map_item(item).pop().map(Annotatable::Item),
-        Annotatable::TraitItem(item) => vis
-            .flat_map_trait_item(item)
-            .pop()
-            .map(Annotatable::TraitItem),
-        Annotatable::ImplItem(item) => vis
-            .flat_map_impl_item(item)
-            .pop()
-            .map(Annotatable::ImplItem),
-        Annotatable::ForeignItem(item) => vis
-            .flat_map_foreign_item(item)
-            .pop()
-            .map(Annotatable::ForeignItem),
-        Annotatable::Stmt(stmt) => vis
-            .flat_map_stmt(stmt.into_inner())
-            .pop()
-            .map(P)
-            .map(Annotatable::Stmt),
+        Annotatable::TraitItem(item) => {
+            vis.flat_map_trait_item(item).pop().map(Annotatable::TraitItem)
+        }
+        Annotatable::ImplItem(item) => {
+            vis.flat_map_impl_item(item).pop().map(Annotatable::ImplItem)
+        }
+        Annotatable::ForeignItem(item) => {
+            vis.flat_map_foreign_item(item).pop().map(Annotatable::ForeignItem)
+        }
+        Annotatable::Stmt(stmt) => {
+            vis.flat_map_stmt(stmt.into_inner()).pop().map(P).map(Annotatable::Stmt)
+        }
         Annotatable::Expr(mut expr) => {
             vis.visit_expr(&mut expr);
             Some(Annotatable::Expr(expr))
         }
         Annotatable::Arm(arm) => vis.flat_map_arm(arm).pop().map(Annotatable::Arm),
-        Annotatable::ExprField(field) => vis
-            .flat_map_expr_field(field)
-            .pop()
-            .map(Annotatable::ExprField),
+        Annotatable::ExprField(field) => {
+            vis.flat_map_expr_field(field).pop().map(Annotatable::ExprField)
+        }
         Annotatable::PatField(fp) => vis.flat_map_pat_field(fp).pop().map(Annotatable::PatField),
-        Annotatable::GenericParam(param) => vis
-            .flat_map_generic_param(param)
-            .pop()
-            .map(Annotatable::GenericParam),
+        Annotatable::GenericParam(param) => {
+            vis.flat_map_generic_param(param).pop().map(Annotatable::GenericParam)
+        }
         Annotatable::Param(param) => vis.flat_map_param(param).pop().map(Annotatable::Param),
         Annotatable::FieldDef(sf) => vis.flat_map_field_def(sf).pop().map(Annotatable::FieldDef),
         Annotatable::Variant(v) => vis.flat_map_variant(v).pop().map(Annotatable::Variant),
@@ -99,9 +86,7 @@ struct CfgFinder {
 
 impl CfgFinder {
     fn has_cfg_or_cfg_attr(annotatable: &Annotatable) -> bool {
-        let mut finder = CfgFinder {
-            has_cfg_or_cfg_attr: false,
-        };
+        let mut finder = CfgFinder { has_cfg_or_cfg_attr: false };
         match annotatable {
             Annotatable::Item(item) => finder.visit_item(&item),
             Annotatable::TraitItem(item) => finder.visit_assoc_item(&item, visit::AssocCtxt::Trait),
@@ -125,9 +110,9 @@ impl<'ast> visit::Visitor<'ast> for CfgFinder {
     fn visit_attribute(&mut self, attr: &'ast Attribute) {
         // We want short-circuiting behavior, so don't use the '|=' operator.
         self.has_cfg_or_cfg_attr = self.has_cfg_or_cfg_attr
-            || attr.ident().map_or(false, |ident| {
-                ident.name == sym::cfg || ident.name == sym::cfg_attr
-            });
+            || attr
+                .ident()
+                .map_or(false, |ident| ident.name == sym::cfg || ident.name == sym::cfg_attr);
     }
 }
 
@@ -193,25 +178,13 @@ impl CfgEval<'_, '_> {
                 Annotatable::Item(parser.parse_item(ForceCollect::Yes).unwrap().unwrap())
             }
             Annotatable::TraitItem(_) => Annotatable::TraitItem(
-                parser
-                    .parse_trait_item(ForceCollect::Yes)
-                    .unwrap()
-                    .unwrap()
-                    .unwrap(),
+                parser.parse_trait_item(ForceCollect::Yes).unwrap().unwrap().unwrap(),
             ),
             Annotatable::ImplItem(_) => Annotatable::ImplItem(
-                parser
-                    .parse_impl_item(ForceCollect::Yes)
-                    .unwrap()
-                    .unwrap()
-                    .unwrap(),
+                parser.parse_impl_item(ForceCollect::Yes).unwrap().unwrap().unwrap(),
             ),
             Annotatable::ForeignItem(_) => Annotatable::ForeignItem(
-                parser
-                    .parse_foreign_item(ForceCollect::Yes)
-                    .unwrap()
-                    .unwrap()
-                    .unwrap(),
+                parser.parse_foreign_item(ForceCollect::Yes).unwrap().unwrap().unwrap(),
             ),
             Annotatable::Stmt(_) => {
                 Annotatable::Stmt(P(parser.parse_stmt(ForceCollect::Yes).unwrap().unwrap()))

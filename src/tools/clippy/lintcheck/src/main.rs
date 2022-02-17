@@ -528,7 +528,6 @@ fn parse_json_message(json_message: &str, krate: &Crate) -> ClippyWarning {
         .trim_matches('"')
         .into();
 
-    // let file = if file.contains(".cargo") {
     let file = if file.contains(".cargo") {
         // if we deal with macros, a filename may show the origin of a macro which can be inside a dep from
         // the registry.
@@ -538,7 +537,6 @@ fn parse_json_message(json_message: &str, krate: &Crate) -> ClippyWarning {
         let path = PathBuf::from(file);
         let mut piter = path.iter();
         // consume all elements until we find ".cargo", so that "/home/matthias" is skipped
-        // let _: Option<&OsStr> = piter.find(|x| x == &std::ffi::OsString::from(".cargo"));
         let _: Option<&OsStr> = piter.find(|x| x == &std::ffi::OsString::from(".cargo"));
         // collect the remaining segments
         let file = piter.collect::<PathBuf>();

@@ -1334,13 +1334,10 @@ note: if you're sure you want to do this, please open an issue as to why. In the
             cmd.arg("--force-rerun");
         }
 
-        let compare_mode = builder.config.cmd.compare_mode().or_else(|| {
-            if builder.config.test_compare_mode {
-                self.compare_mode
-            } else {
-                None
-            }
-        });
+        let compare_mode =
+            builder.config.cmd.compare_mode().or_else(|| {
+                if builder.config.test_compare_mode { self.compare_mode } else { None }
+            });
 
         if let Some(ref pass) = builder.config.cmd.pass() {
             cmd.arg("--pass");

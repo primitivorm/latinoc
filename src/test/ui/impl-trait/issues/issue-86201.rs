@@ -2,9 +2,9 @@
 #![feature(type_alias_impl_trait)]
 
 type FunType = impl Fn<()>;
-//~^ ERROR could not find defining uses
+//~^ could not find defining uses
 static STATIC_FN: FunType = some_fn;
-//~^ ERROR mismatched types
+//~^ mismatched types
 
 fn some_fn() {}
 

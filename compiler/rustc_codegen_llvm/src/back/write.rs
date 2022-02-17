@@ -259,7 +259,6 @@ pub(crate) fn save_temp_bitcode(
 pub struct DiagnosticHandlers<'a> {
     data: *mut (&'a CodegenContext<LlvmCodegenBackend>, &'a Handler),
     llcx: &'a llvm::Context,
-    old_handler: Option<&'a llvm::DiagnosticHandler>,
 }
 
 impl<'a> DiagnosticHandlers<'a> {
@@ -268,35 +267,12 @@ impl<'a> DiagnosticHandlers<'a> {
         handler: &'a Handler,
         llcx: &'a llvm::Context,
     ) -> Self {
-        let remark_passes_all: bool;
-        let remark_passes: Vec<CString>;
-        match &cgcx.remark {
-            Passes::All => {
-                remark_passes_all = true;
-                remark_passes = Vec::new();
-            }
-            Passes::Some(passes) => {
-                remark_passes_all = false;
-                remark_passes =
-                    passes.iter().map(|name| CString::new(name.as_str()).unwrap()).collect();
-            }
-        };
-        let remark_passes: Vec<*const c_char> =
-            remark_passes.iter().map(|name: &CString| name.as_ptr()).collect();
         let data = Box::into_raw(Box::new((cgcx, handler)));
         unsafe {
-            let old_handler = llvm::LLVMRustContextGetDiagnosticHandler(llcx);
-            llvm::LLVMRustContextConfigureDiagnosticHandler(
-                llcx,
-                diagnostic_handler,
-                data.cast(),
-                remark_passes_all,
-                remark_passes.as_ptr(),
-                remark_passes.len(),
-            );
             llvm::LLVMRustSetInlineAsmDiagnosticHandler(llcx, inline_asm_handler, data.cast());
-            DiagnosticHandlers { data, llcx, old_handler }
+            llvm::LLVMContextSetDiagnosticHandler(llcx, diagnostic_handler, data.cast());
         }
+        DiagnosticHandlers { data, llcx }
     }
 }
 
@@ -305,7 +281,7 @@ impl<'a> Drop for DiagnosticHandlers<'a> {
         use std::ptr::null_mut;
         unsafe {
             llvm::LLVMRustSetInlineAsmDiagnosticHandler(self.llcx, inline_asm_handler, null_mut());
-            llvm::LLVMRustContextSetDiagnosticHandler(self.llcx, self.old_handler);
+            llvm::LLVMContextSetDiagnosticHandler(self.llcx, diagnostic_handler, null_mut());
             drop(Box::from_raw(self.data));
         }
     }
@@ -361,8 +337,13 @@ unsafe extern "C" fn diagnostic_handler(info: &DiagnosticInfo, user: *mut c_void
 
             if enabled {
                 diag_handler.note_without_error(&format!(
-                    "{}:{}:{}: {}: {}",
-                    opt.filename, opt.line, opt.column, opt.pass_name, opt.message,
+                    "optimization {} for {} at {}:{}:{}: {}",
+                    opt.kind.describe(),
+                    opt.pass_name,
+                    opt.filename,
+                    opt.line,
+                    opt.column,
+                    opt.message
                 ));
             }
         }
@@ -414,18 +395,14 @@ fn get_pgo_sample_use_path(config: &ModuleConfig) -> Option<CString> {
 }
 
 pub(crate) fn should_use_new_llvm_pass_manager(
-    cgcx: &CodegenContext<LlvmCodegenBackend>,
+    _cgcx: &CodegenContext<LlvmCodegenBackend>,
     config: &ModuleConfig,
 ) -> bool {
-    // The new pass manager is enabled by default for LLVM >= 13.
-    // This matches Clang, which also enables it since Clang 13.
-
-    // FIXME: There are some perf issues with the new pass manager
-    // when targeting s390x, so it is temporarily disabled for that
-    // arch, see https://github.com/rust-lang/rust/issues/89609
+    // The new pass manager is causing significant performance issues such as #91128, and is
+    // therefore disabled in stable versions of rustc by default.
     config
         .new_llvm_pass_manager
-        .unwrap_or_else(|| cgcx.target_arch != "s390x" && llvm_util::get_version() >= (13, 0, 0))
+        .unwrap_or(false)
 }
 
 pub(crate) unsafe fn optimize_with_new_llvm_pass_manager(

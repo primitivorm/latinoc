@@ -13,7 +13,7 @@ use crate::sys::process::process_common::*;
 use crate::os::linux::process::PidFd;
 
 #[cfg(target_os = "linux")]
-use crate::sys::weak::raw_syscall;
+use crate::sys::weak::syscall;
 
 #[cfg(any(
     target_os = "macos",
@@ -162,7 +162,7 @@ impl Command {
             cgroup: u64,
         }
 
-        raw_syscall! {
+        syscall! {
             fn clone3(cl_args: *mut clone_args, len: libc::size_t) -> libc::c_long
         }
 

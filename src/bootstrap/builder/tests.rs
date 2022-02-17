@@ -405,14 +405,13 @@ mod dist {
 
     #[test]
     fn build_all() {
-        println!(">>> bootstrap/compile.rs build_all");
         let build = Build::new(configure(&["A", "B"], &["A", "B", "C"]));
         let mut builder = Builder::new(&build);
-        // TODO: proman
         builder.run_step_descriptions(
             &Builder::get_step_descriptions(Kind::Build),
-            &["compiler/latinoc".into(), "library/std".into()],
             // &["compiler/rustc".into(), "library/std".into()],
+            // TODO: proman. &["compiler/latinoc".into(), "library/std".into()],
+            &["compiler/latinoc".into(), "library/std".into()],
         );
 
         let a = TargetSelection::from_user("A");

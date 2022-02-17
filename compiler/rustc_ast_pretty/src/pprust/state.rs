@@ -55,11 +55,7 @@ pub struct Comments<'a> {
 impl<'a> Comments<'a> {
     pub fn new(sm: &'a SourceMap, filename: FileName, input: String) -> Comments<'a> {
         let comments = gather_comments(sm, filename, input);
-        Comments {
-            sm,
-            comments,
-            current: 0,
-        }
+        Comments { sm, comments, current: 0 }
     }
 
     pub fn next(&self) -> Option<Comment> {
@@ -106,11 +102,8 @@ pub fn print_crate<'a>(
     is_expanded: bool,
     edition: Edition,
 ) -> String {
-    let mut s = State {
-        s: pp::mk_printer(),
-        comments: Some(Comments::new(sm, filename, input)),
-        ann,
-    };
+    let mut s =
+        State { s: pp::mk_printer(), comments: Some(Comments::new(sm, filename, input)), ann };
 
     if is_expanded && !krate.attrs.iter().any(|attr| attr.has_name(sym::no_core)) {
         // We need to print `#![no_std]` (and its feature gate) so that
@@ -156,20 +149,12 @@ fn tt_prepend_space(tt: &TokenTree, prev: &TokenTree) -> bool {
     }
     match tt {
         TokenTree::Token(token) => !matches!(token.kind, token::Comma | token::Not | token::Dot),
-        TokenTree::Delimited(_, DelimToken::Paren, _) => !matches!(
-            prev,
-            TokenTree::Token(Token {
-                kind: token::Ident(..),
-                ..
-            })
-        ),
-        TokenTree::Delimited(_, DelimToken::Bracket, _) => !matches!(
-            prev,
-            TokenTree::Token(Token {
-                kind: token::Pound,
-                ..
-            })
-        ),
+        TokenTree::Delimited(_, DelimToken::Paren, _) => {
+            !matches!(prev, TokenTree::Token(Token { kind: token::Ident(..), .. }))
+        }
+        TokenTree::Delimited(_, DelimToken::Bracket, _) => {
+            !matches!(prev, TokenTree::Token(Token { kind: token::Pound, .. }))
+        }
         TokenTree::Delimited(..) => true,
     }
 }
@@ -203,29 +188,17 @@ fn doc_comment_to_string(
 }
 
 pub fn literal_to_string(lit: token::Lit) -> String {
-    let token::Lit {
-        kind,
-        symbol,
-        suffix,
-    } = lit;
+    let token::Lit { kind, symbol, suffix } = lit;
     let mut out = match kind {
         token::Byte => format!("b'{}'", symbol),
         token::Char => format!("'{}'", symbol),
         token::Str => format!("\"{}\"", symbol),
         token::StrRaw(n) => {
-            format!(
-                "r{delim}\"{string}\"{delim}",
-                delim = "#".repeat(n as usize),
-                string = symbol
-            )
+            format!("r{delim}\"{string}\"{delim}", delim = "#".repeat(n as usize), string = symbol)
         }
         token::ByteStr => format!("b\"{}\"", symbol),
         token::ByteStrRaw(n) => {
-            format!(
-                "br{delim}\"{string}\"{delim}",
-                delim = "#".repeat(n as usize),
-                string = symbol
-            )
+            format!("br{delim}\"{string}\"{delim}", delim = "#".repeat(n as usize), string = symbol)
         }
         token::Integer | token::Float | token::Bool | token::Err => symbol.to_string(),
     };
@@ -238,11 +211,7 @@ pub fn literal_to_string(lit: token::Lit) -> String {
 }
 
 fn visibility_qualified(vis: &ast::Visibility, s: &str) -> String {
-    format!(
-        "{}{}",
-        State::new().to_string(|s| s.print_visibility(vis)),
-        s
-    )
+    format!("{}{}", State::new().to_string(|s| s.print_visibility(vis)), s)
 }
 
 impl std::ops::Deref for State<'_> {
@@ -386,11 +355,7 @@ pub trait PrintState<'a>: std::ops::Deref<Target = pp::Printer> + std::ops::Dere
         let st = match style {
             ast::StrStyle::Cooked => (format!("\"{}\"", st.escape_debug())),
             ast::StrStyle::Raw(n) => {
-                format!(
-                    "r{delim}\"{string}\"{delim}",
-                    delim = "#".repeat(n as usize),
-                    string = st
-                )
+                format!("r{delim}\"{string}\"{delim}", delim = "#".repeat(n as usize), string = st)
             }
         };
         self.word(st)
@@ -643,10 +608,7 @@ pub trait PrintState<'a>: std::ops::Deref<Target = pp::Printer> + std::ops::Dere
     fn print_path(&mut self, path: &ast::Path, colons_before_params: bool, depth: usize) {
         self.maybe_print_comment(path.span.lo());
 
-        for (i, segment) in path.segments[..path.segments.len() - depth]
-            .iter()
-            .enumerate()
-        {
+        for (i, segment) in path.segments[..path.segments.len() - depth].iter().enumerate() {
             if i > 0 {
                 self.word("::")
             }
@@ -776,9 +738,9 @@ pub trait PrintState<'a>: std::ops::Deref<Target = pp::Printer> + std::ops::Dere
             token::Literal(lit) => literal_to_string(lit).into(),
 
             /* Name components */
-            token::Ident(s, is_raw) => IdentPrinter::new(s, is_raw, convert_dollar_crate)
-                .to_string()
-                .into(),
+            token::Ident(s, is_raw) => {
+                IdentPrinter::new(s, is_raw, convert_dollar_crate).to_string().into()
+            }
             token::Lifetime(s) => s.to_string().into(),
 
             /* Other */
@@ -888,8 +850,7 @@ impl<'a> PrintState<'a> for State<'a> {
     }
 
     fn print_ident(&mut self, ident: Ident) {
-        self.s
-            .word(IdentPrinter::for_ast_ident(ident, ident.is_raw_guess()).to_string());
+        self.s.word(IdentPrinter::for_ast_ident(ident, ident.is_raw_guess()).to_string());
         self.ann.post(self, AnnNode::Ident(&ident))
     }
 
@@ -920,11 +881,7 @@ impl<'a> PrintState<'a> for State<'a> {
 
 impl<'a> State<'a> {
     pub fn new() -> State<'a> {
-        State {
-            s: pp::mk_printer(),
-            comments: None,
-            ann: &NoAnn,
-        }
+        State { s: pp::mk_printer(), comments: None, ann: &NoAnn }
     }
 
     // Synthesizes a comment that was not textually present in the original source
@@ -978,10 +935,7 @@ impl<'a> State<'a> {
 
     pub fn print_assoc_constraint(&mut self, constraint: &ast::AssocTyConstraint) {
         self.print_ident(constraint.ident);
-        constraint
-            .gen_args
-            .as_ref()
-            .map(|args| self.print_generic_args(args, false));
+        constraint.gen_args.as_ref().map(|args| self.print_generic_args(args, false));
         self.s.space();
         match &constraint.kind {
             ast::AssocTyConstraintKind::Equality { ty } => {
@@ -1044,11 +998,7 @@ impl<'a> State<'a> {
             }
             ast::TyKind::Path(Some(ref qself), ref path) => self.print_qpath(path, qself, false),
             ast::TyKind::TraitObject(ref bounds, syntax) => {
-                let prefix = if syntax == ast::TraitObjectSyntax::Dyn {
-                    "dyn"
-                } else {
-                    ""
-                };
+                let prefix = if syntax == ast::TraitObjectSyntax::Dyn { "dyn" } else { "" };
                 self.print_type_bounds(prefix, &bounds[..]);
             }
             ast::TyKind::ImplTrait(_, ref bounds) => {
@@ -1061,11 +1011,11 @@ impl<'a> State<'a> {
                 self.print_expr(&length.value);
                 self.s.word("]");
             }
-            /*ast::TyKind::Typeof(ref e) => {
+            ast::TyKind::Typeof(ref e) => {
                 self.s.word("typeof(");
                 self.print_expr(&e.value);
                 self.s.word(")");
-            }*/
+            }
             ast::TyKind::Infer => {
                 self.s.word("_");
             }
@@ -1088,35 +1038,14 @@ impl<'a> State<'a> {
     }
 
     crate fn print_foreign_item(&mut self, item: &ast::ForeignItem) {
-        let ast::Item {
-            id,
-            span,
-            ident,
-            ref attrs,
-            ref kind,
-            ref vis,
-            tokens: _,
-        } = *item;
+        let ast::Item { id, span, ident, ref attrs, ref kind, ref vis, tokens: _ } = *item;
         self.ann.pre(self, AnnNode::SubItem(id));
         self.hardbreak_if_not_bol();
         self.maybe_print_comment(span.lo());
         self.print_outer_attributes(attrs);
         match kind {
-            ast::ForeignItemKind::Fn(box ast::Fn {
-                defaultness,
-                sig,
-                generics,
-                body,
-            }) => {
-                self.print_fn_full(
-                    sig,
-                    ident,
-                    generics,
-                    vis,
-                    *defaultness,
-                    body.as_deref(),
-                    attrs,
-                );
+            ast::ForeignItemKind::Fn(box ast::Fn { defaultness, sig, generics, body }) => {
+                self.print_fn_full(sig, ident, generics, vis, *defaultness, body.as_deref(), attrs);
             }
             ast::ForeignItemKind::Static(ty, mutbl, body) => {
                 let def = ast::Defaultness::Final;
@@ -1239,12 +1168,7 @@ impl<'a> State<'a> {
             ast::ItemKind::Const(def, ref ty, ref body) => {
                 self.print_item_const(item.ident, None, ty, body.as_deref(), &item.vis, def);
             }
-            ast::ItemKind::Fn(box ast::Fn {
-                defaultness,
-                ref sig,
-                ref generics,
-                ref body,
-            }) => {
+            ast::ItemKind::Fn(box ast::Fn { defaultness, ref sig, ref generics, ref body }) => {
                 let body = body.as_deref();
                 self.print_fn_full(
                     sig,
@@ -1582,45 +1506,19 @@ impl<'a> State<'a> {
     }
 
     crate fn print_assoc_item(&mut self, item: &ast::AssocItem) {
-        let ast::Item {
-            id,
-            span,
-            ident,
-            ref attrs,
-            ref kind,
-            ref vis,
-            tokens: _,
-        } = *item;
+        let ast::Item { id, span, ident, ref attrs, ref kind, ref vis, tokens: _ } = *item;
         self.ann.pre(self, AnnNode::SubItem(id));
         self.hardbreak_if_not_bol();
         self.maybe_print_comment(span.lo());
         self.print_outer_attributes(attrs);
         match kind {
-            ast::AssocItemKind::Fn(box ast::Fn {
-                defaultness,
-                sig,
-                generics,
-                body,
-            }) => {
-                self.print_fn_full(
-                    sig,
-                    ident,
-                    generics,
-                    vis,
-                    *defaultness,
-                    body.as_deref(),
-                    attrs,
-                );
+            ast::AssocItemKind::Fn(box ast::Fn { defaultness, sig, generics, body }) => {
+                self.print_fn_full(sig, ident, generics, vis, *defaultness, body.as_deref(), attrs);
             }
             ast::AssocItemKind::Const(def, ty, body) => {
                 self.print_item_const(ident, None, ty, body.as_deref(), vis, *def);
             }
-            ast::AssocItemKind::TyAlias(box ast::TyAlias {
-                defaultness,
-                generics,
-                bounds,
-                ty,
-            }) => {
+            ast::AssocItemKind::TyAlias(box ast::TyAlias { defaultness, generics, bounds, ty }) => {
                 self.print_associated_type(
                     ident,
                     generics,
@@ -2335,9 +2233,7 @@ impl<'a> State<'a> {
             Options(InlineAsmOptions),
         }
 
-        let mut args = vec![AsmArg::Template(InlineAsmTemplatePiece::to_string(
-            &asm.template,
-        ))];
+        let mut args = vec![AsmArg::Template(InlineAsmTemplatePiece::to_string(&asm.template))];
         args.extend(asm.operands.iter().map(|(o, _)| AsmArg::Operand(o)));
         for (abi, _) in &asm.clobber_abis {
             args.push(AsmArg::ClobberAbi(*abi));
@@ -2382,12 +2278,7 @@ impl<'a> State<'a> {
                         s.space();
                         s.print_expr(expr);
                     }
-                    InlineAsmOperand::SplitInOut {
-                        reg,
-                        late,
-                        in_expr,
-                        out_expr,
-                    } => {
+                    InlineAsmOperand::SplitInOut { reg, late, in_expr, out_expr } => {
                         s.word(if *late { "inlateout" } else { "inout" });
                         s.popen();
                         print_reg_or_class(s, reg);
@@ -2591,13 +2482,7 @@ impl<'a> State<'a> {
                 }
             }
             PatKind::Lit(ref e) => self.print_expr(&**e),
-            PatKind::Range(
-                ref begin,
-                ref end,
-                Spanned {
-                    node: ref end_kind, ..
-                },
-            ) => {
+            PatKind::Range(ref begin, ref end, Spanned { node: ref end_kind, .. }) => {
                 if let Some(e) = begin {
                     self.print_expr(e);
                     self.s.space();
@@ -2734,9 +2619,7 @@ impl<'a> State<'a> {
     crate fn print_fn_params_and_ret(&mut self, decl: &ast::FnDecl, is_closure: bool) {
         let (open, close) = if is_closure { ("|", "|") } else { ("(", ")") };
         self.word(open);
-        self.commasep(Inconsistent, &decl.inputs, |s, param| {
-            s.print_param(param, is_closure)
-        });
+        self.commasep(Inconsistent, &decl.inputs, |s, param| s.print_param(param, is_closure));
         self.word(close);
         self.print_fn_ret_ty(&decl.output)
     }
@@ -2824,10 +2707,7 @@ impl<'a> State<'a> {
 
             match param.kind {
                 ast::GenericParamKind::Lifetime => {
-                    let lt = ast::Lifetime {
-                        id: param.id,
-                        ident: param.ident,
-                    };
+                    let lt = ast::Lifetime { id: param.id, ident: param.ident };
                     s.print_lifetime_bounds(lt, &param.bounds)
                 }
                 ast::GenericParamKind::Type { ref default } => {
@@ -2839,11 +2719,7 @@ impl<'a> State<'a> {
                         s.print_type(default)
                     }
                 }
-                ast::GenericParamKind::Const {
-                    ref ty,
-                    kw_span: _,
-                    ref default,
-                } => {
+                ast::GenericParamKind::Const { ref ty, kw_span: _, ref default } => {
                     s.word_space("const");
                     s.print_ident(param.ident);
                     s.s.space();
@@ -3016,11 +2892,7 @@ impl<'a> State<'a> {
             },
             span: rustc_span::DUMMY_SP,
         };
-        let header = ast::FnHeader {
-            unsafety,
-            ext,
-            ..ast::FnHeader::default()
-        };
+        let header = ast::FnHeader { unsafety, ext, ..ast::FnHeader::default() };
         self.print_fn(decl, header, name, &generics);
         self.end();
     }

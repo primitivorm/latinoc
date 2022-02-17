@@ -23,7 +23,7 @@ pub mod bounds;
 pub mod clone;
 pub mod debug;
 pub mod decodable;
-//pub mod default;
+pub mod default;
 pub mod encodable;
 pub mod hash;
 
@@ -146,11 +146,7 @@ fn inject_impl_of_structural_trait(
                 *default = None;
                 ast::GenericArg::Type(cx.ty_ident(span, param.ident))
             }
-            ast::GenericParamKind::Const {
-                ty: _,
-                kw_span: _,
-                default,
-            } => {
+            ast::GenericParamKind::Const { ty: _, kw_span: _, default } => {
                 *default = None;
                 ast::GenericArg::Const(cx.const_ident(span, param.ident))
             }
@@ -174,15 +170,8 @@ fn inject_impl_of_structural_trait(
         item.attrs
             .iter()
             .filter(|a| {
-                [
-                    sym::allow,
-                    sym::warn,
-                    sym::deny,
-                    sym::forbid,
-                    sym::stable,
-                    sym::unstable,
-                ]
-                .contains(&a.name_or_empty())
+                [sym::allow, sym::warn, sym::deny, sym::forbid, sym::stable, sym::unstable]
+                    .contains(&a.name_or_empty())
             })
             .cloned(),
     );

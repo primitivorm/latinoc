@@ -133,10 +133,7 @@ impl DefKey {
 
         parent.hash(&mut hasher);
 
-        let DisambiguatedDefPathData {
-            ref data,
-            disambiguator,
-        } = self.disambiguated_data;
+        let DisambiguatedDefPathData { ref data, disambiguator } = self.disambiguated_data;
 
         std::mem::discriminant(data).hash(&mut hasher);
         if let Some(name) = data.get_opt_name() {
@@ -317,9 +314,7 @@ impl Definitions {
     /// path will begin with the path to the external crate).
     pub fn def_path(&self, id: LocalDefId) -> DefPath {
         DefPath::make(LOCAL_CRATE, id.local_def_index, |index| {
-            self.def_key(LocalDefId {
-                local_def_index: index,
-            })
+            self.def_key(LocalDefId { local_def_index: index })
         })
     }
 
@@ -349,9 +344,7 @@ impl Definitions {
 
         // Create the root definition.
         let mut table = DefPathTable::default();
-        let root = LocalDefId {
-            local_def_index: table.allocate(key, def_path_hash),
-        };
+        let root = LocalDefId { local_def_index: table.allocate(key, def_path_hash) };
         assert_eq!(root.local_def_index, CRATE_DEF_INDEX);
 
         let mut def_id_to_span = IndexVec::new();
@@ -372,9 +365,7 @@ impl Definitions {
 
     /// Retrieves the root definition.
     pub fn get_root_def(&self) -> LocalDefId {
-        LocalDefId {
-            local_def_index: CRATE_DEF_INDEX,
-        }
+        LocalDefId { local_def_index: CRATE_DEF_INDEX }
     }
 
     /// Adds a definition with a parent definition.
@@ -386,10 +377,7 @@ impl Definitions {
         mut next_disambiguator: impl FnMut(LocalDefId, DefPathData) -> u32,
         span: Span,
     ) -> LocalDefId {
-        debug!(
-            "create_def(parent={:?}, data={:?}, expn_id={:?})",
-            parent, data, expn_id
-        );
+        debug!("create_def(parent={:?}, data={:?}, expn_id={:?})", parent, data, expn_id);
 
         // The root node must be created with `create_root_def()`.
         assert!(data != DefPathData::CrateRoot);
@@ -397,10 +385,7 @@ impl Definitions {
         let disambiguator = next_disambiguator(parent, data);
         let key = DefKey {
             parent: Some(parent.local_def_index),
-            disambiguated_data: DisambiguatedDefPathData {
-                data,
-                disambiguator,
-            },
+            disambiguated_data: DisambiguatedDefPathData { data, disambiguator },
         };
 
         let parent_hash = self.table.def_path_hash(parent.local_def_index);
@@ -409,9 +394,7 @@ impl Definitions {
         debug!("create_def: after disambiguation, key = {:?}", key);
 
         // Create the definition.
-        let def_id = LocalDefId {
-            local_def_index: self.table.allocate(key, def_path_hash),
-        };
+        let def_id = LocalDefId { local_def_index: self.table.allocate(key, def_path_hash) };
 
         if expn_id != ExpnId::root() {
             self.expansions_that_defined.insert(def_id, expn_id);
@@ -446,10 +429,7 @@ impl Definitions {
     }
 
     pub fn expansion_that_defined(&self, id: LocalDefId) -> ExpnId {
-        self.expansions_that_defined
-            .get(&id)
-            .copied()
-            .unwrap_or_else(ExpnId::root)
+        self.expansions_that_defined.get(&id).copied().unwrap_or_else(ExpnId::root)
     }
 
     /// Retrieves the span of the given `DefId` if `DefId` is in the local crate.
@@ -500,27 +480,13 @@ impl DefPathData {
                 DefPathDataName::Named(name)
             }
             // Note that this does not show up in user print-outs.
-            CrateRoot => DefPathDataName::Anon {
-                namespace: kw::Crate,
-            },
-            Impl => DefPathDataName::Anon {
-                namespace: kw::Impl,
-            },
-            Misc => DefPathDataName::Anon {
-                namespace: sym::misc,
-            },
-            ClosureExpr => DefPathDataName::Anon {
-                namespace: sym::closure,
-            },
-            Ctor => DefPathDataName::Anon {
-                namespace: sym::constructor,
-            },
-            AnonConst => DefPathDataName::Anon {
-                namespace: sym::constant,
-            },
-            ImplTrait => DefPathDataName::Anon {
-                namespace: sym::opaque,
-            },
+            CrateRoot => DefPathDataName::Anon { namespace: kw::Crate },
+            Impl => DefPathDataName::Anon { namespace: kw::Impl },
+            Misc => DefPathDataName::Anon { namespace: sym::misc },
+            ClosureExpr => DefPathDataName::Anon { namespace: sym::closure },
+            Ctor => DefPathDataName::Anon { namespace: sym::constructor },
+            AnonConst => DefPathDataName::Anon { namespace: sym::constant },
+            ImplTrait => DefPathDataName::Anon { namespace: sym::opaque },
         }
     }
 }

@@ -1,9 +1,9 @@
 use crate::base::ModuleData;
-use latinoc_parse::new_parser_from_file;
-use latinoc_parse::validate_attr;
 use rustc_ast::ptr::P;
 use rustc_ast::{token, Attribute, Inline, Item};
 use rustc_errors::{struct_span_err, DiagnosticBuilder};
+use latinoc_parse::new_parser_from_file;
+use latinoc_parse::validate_attr;
 use rustc_session::parse::ParseSess;
 use rustc_session::Session;
 use rustc_span::symbol::{sym, Ident};
@@ -57,39 +57,25 @@ crate fn parse_external_mod(
         dir_ownership = mp.dir_ownership;
 
         // Ensure file paths are acyclic.
-        if let Some(pos) = module
-            .file_path_stack
-            .iter()
-            .position(|p| p == &mp.file_path)
-        {
-            Err(ModError::CircularInclusion(
-                module.file_path_stack[pos..].to_vec(),
-            ))?;
+        if let Some(pos) = module.file_path_stack.iter().position(|p| p == &mp.file_path) {
+            Err(ModError::CircularInclusion(module.file_path_stack[pos..].to_vec()))?;
         }
 
         // Actually parse the external file as a module.
         let mut parser = new_parser_from_file(&sess.parse_sess, &mp.file_path, Some(span));
-        let (mut inner_attrs, items, inner_span) = parser
-            .parse_mod(&token::Eof)
-            .map_err(|err| ModError::ParserError(err))?;
+        let (mut inner_attrs, items, inner_span) =
+            parser.parse_mod(&token::Eof).map_err(|err| ModError::ParserError(err))?;
         attrs.append(&mut inner_attrs);
         (items, inner_span, mp.file_path)
     };
     // (1) ...instead, we return a dummy module.
-    let (items, inner_span, file_path) = result
-        .map_err(|err| err.report(sess, span))
-        .unwrap_or_default();
+    let (items, inner_span, file_path) =
+        result.map_err(|err| err.report(sess, span)).unwrap_or_default();
 
     // Extract the directory path for submodules of the module.
     let dir_path = file_path.parent().unwrap_or(&file_path).to_owned();
 
-    ParsedExternalMod {
-        items,
-        inner_span,
-        file_path,
-        dir_path,
-        dir_ownership,
-    }
+    ParsedExternalMod { items, inner_span, file_path, dir_path, dir_ownership }
 }
 
 crate fn mod_dir_path(
@@ -158,10 +144,7 @@ fn mod_file_path<'a>(
         // `#[path]` included and contains a `mod foo;` declaration.
         // If you encounter this, it's your own darn fault :P
         let dir_ownership = DirOwnership::Owned { relative: None };
-        return Ok(ModulePathSuccess {
-            file_path,
-            dir_ownership,
-        });
+        return Ok(ModulePathSuccess { file_path, dir_ownership });
     }
 
     let relative = match dir_ownership {
@@ -238,12 +221,8 @@ pub fn default_submod_path<'a>(
 
     let mod_name = ident.name.to_string();
     let default_path_str = format!("{}{}.rs", relative_prefix, mod_name);
-    let secondary_path_str = format!(
-        "{}{}{}mod.rs",
-        relative_prefix,
-        mod_name,
-        path::MAIN_SEPARATOR
-    );
+    let secondary_path_str =
+        format!("{}{}{}mod.rs", relative_prefix, mod_name, path::MAIN_SEPARATOR);
     let default_path = dir_path.join(&default_path_str);
     let secondary_path = dir_path.join(&secondary_path_str);
     let default_exists = sess.source_map().file_exists(&default_path);
@@ -252,20 +231,14 @@ pub fn default_submod_path<'a>(
     match (default_exists, secondary_exists) {
         (true, false) => Ok(ModulePathSuccess {
             file_path: default_path,
-            dir_ownership: DirOwnership::Owned {
-                relative: Some(ident),
-            },
+            dir_ownership: DirOwnership::Owned { relative: Some(ident) },
         }),
         (false, true) => Ok(ModulePathSuccess {
             file_path: secondary_path,
             dir_ownership: DirOwnership::Owned { relative: None },
         }),
         (false, false) => Err(ModError::FileNotFound(ident, default_path, secondary_path)),
-        (true, true) => Err(ModError::MultipleCandidates(
-            ident,
-            default_path,
-            secondary_path,
-        )),
+        (true, true) => Err(ModError::MultipleCandidates(ident, default_path, secondary_path)),
     }
 }
 

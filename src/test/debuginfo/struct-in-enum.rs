@@ -21,6 +21,7 @@
 // gdbg-check:$3 = {{__0 = {x = 123, y = 456, z = 789}}}
 // gdbr-check:$3 = struct_in_enum::Univariant::TheOnlyCase(struct_in_enum::Struct {x: 123, y: 456, z: 789})
 
+
 // === LLDB TESTS ==================================================================================
 
 // lldb-command:run
@@ -43,7 +44,7 @@ use self::Univariant::TheOnlyCase;
 struct Struct {
     x: u32,
     y: i32,
-    z: i16,
+    z: i16
 }
 
 // The first element is to ensure proper alignment, irrespective of the machines word size. Since
@@ -51,14 +52,15 @@ struct Struct {
 // datatype layout should be predictable as in this case.
 enum Regular {
     Case1(u64, Struct),
-    Case2(u64, u64, i16),
+    Case2(u64, u64, i16)
 }
 
 enum Univariant {
-    TheOnlyCase(Struct),
+    TheOnlyCase(Struct)
 }
 
 fn main() {
+
     // In order to avoid endianness trouble all of the following test values consist of a single
     // repeated byte. This way each interpretation of the union should look the same, no matter if
     // this is a big or little endian machine.
@@ -80,6 +82,4 @@ fn main() {
     zzz(); // #break
 }
 
-fn zzz() {
-    ()
-}
+fn zzz() {()}

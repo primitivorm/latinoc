@@ -316,9 +316,7 @@ impl Step for Rustc {
     const ONLY_HOSTS: bool = true;
 
     fn should_run(run: ShouldRun<'_>) -> ShouldRun<'_> {
-        // TODO: proman
         run.path("rustc")
-        // run.path("latinoc")
     }
 
     fn make_run(run: RunConfig<'_>) {
@@ -331,9 +329,7 @@ impl Step for Rustc {
         let compiler = self.compiler;
         let host = self.compiler.host;
 
-        // TODO: proman
         let tarball = Tarball::new(builder, "rustc", &host.triple);
-        // let tarball = Tarball::new(builder, "latinoc", &host.triple);
 
         // Prepare the rustc "image", what will actually end up getting installed
         prepare_image(builder, compiler, tarball.image_dir());
@@ -887,9 +883,7 @@ impl Step for PlainSourceTarball {
 
     /// Creates the plain source tarball
     fn run(self, builder: &Builder<'_>) -> GeneratedTarball {
-        // TODO: proman
         let tarball = Tarball::new(builder, "rustc", "src");
-        // let tarball = Tarball::new(builder, "latinoc", "src");
         let plain_dst_src = tarball.image_dir();
 
         // This is the set of root paths which will become part of the source package
@@ -906,7 +900,6 @@ impl Step for PlainSourceTarball {
             "Cargo.toml",
             "Cargo.lock",
         ];
-        // TODO: proman
         let src_dirs = ["src", "compiler", "library"];
 
         copy_src_dirs(builder, &builder.src, &src_dirs, &[], &plain_dst_src);
@@ -1492,10 +1485,7 @@ impl Step for Extended {
                 builder.install(&etc.join("pkg/postinstall"), &pkg.join(name), 0o755);
                 pkgbuild(name);
             };
-
-            // TODO: proman
             prepare("rustc");
-            // prepare("latinoc");
             prepare("cargo");
             prepare("rust-docs");
             prepare("rust-std");
@@ -1556,10 +1546,7 @@ impl Step for Extended {
                 );
                 builder.remove(&exe.join(name).join("manifest.in"));
             };
-
-            // TODO: proman
             prepare("rustc");
-            // prepare("latinoc");
             prepare("cargo");
             prepare("rust-analysis");
             prepare("rust-docs");
@@ -1583,13 +1570,11 @@ impl Step for Extended {
             let light = wix.join("bin/light.exe");
 
             let heat_flags = ["-nologo", "-gg", "-sfrag", "-srd", "-sreg"];
-            // TODO: proman
             builder.run(
                 Command::new(&heat)
                     .current_dir(&exe)
                     .arg("dir")
                     .arg("rustc")
-                    // .arg("latinoc")
                     .args(&heat_flags)
                     .arg("-cg")
                     .arg("RustcGroup")
@@ -2185,10 +2170,6 @@ impl Step for ReproducibleArtifacts {
             tarball.add_file(path, ".", 0o644);
             added_anything = true;
         }
-        if added_anything {
-            Some(tarball.generate())
-        } else {
-            None
-        }
+        if added_anything { Some(tarball.generate()) } else { None }
     }
 }

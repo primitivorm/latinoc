@@ -16,7 +16,7 @@ extend the compiler's behavior with new lint checks, etc.
 A plugin is a dynamic library crate with a designated *registrar* function that
 registers extensions with `rustc`. Other crates can load these extensions using
 the crate attribute `#![plugin(...)]`.  See the
-`rustc_driver::plugin` documentation for more about the
+`latinoc_driver::plugin` documentation for more about the
 mechanics of defining and loading a plugin.
 
 In the vast majority of cases, a plugin should *only* be used through
@@ -42,13 +42,13 @@ that warns about any item named `lintme`.
 extern crate rustc_ast;
 
 // Load rustc as a plugin to get macros
-extern crate rustc_driver;
+extern crate latinoc_driver;
 #[macro_use]
 extern crate rustc_lint;
 #[macro_use]
 extern crate rustc_session;
 
-use rustc_driver::plugin::Registry;
+use latinoc_driver::plugin::Registry;
 use rustc_lint::{EarlyContext, EarlyLintPass, LintArray, LintContext, LintPass};
 use rustc_ast::ast;
 declare_lint!(TEST_LINT, Warn, "Warn about items named 'lintme'");

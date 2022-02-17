@@ -1,7 +1,6 @@
 use crate::expand::{self, AstFragment, Invocation};
 use crate::module::DirOwnership;
 
-use latinoc_parse::{self, nt_to_tokenstream, parser, MACRO_ARGUMENTS};
 use rustc_ast::attr::MarkedAttrs;
 use rustc_ast::ptr::P;
 use rustc_ast::token::{self, Nonterminal};
@@ -14,6 +13,7 @@ use rustc_data_structures::sync::{self, Lrc};
 use rustc_errors::{Applicability, DiagnosticBuilder, ErrorReported};
 use rustc_lint_defs::builtin::PROC_MACRO_BACK_COMPAT;
 use rustc_lint_defs::BuiltinLintDiagnostics;
+use latinoc_parse::{self, nt_to_tokenstream, parser, MACRO_ARGUMENTS};
 use rustc_session::{parse::ParseSess, Limit, Session};
 use rustc_span::def_id::{CrateNum, DefId, LocalDefId};
 use rustc_span::edition::Edition;
@@ -127,11 +127,7 @@ impl Annotatable {
     }
 
     crate fn into_tokens(self, sess: &ParseSess) -> TokenStream {
-        nt_to_tokenstream(
-            &self.into_nonterminal(),
-            sess,
-            CanSynthesizeMissingTokens::No,
-        )
+        nt_to_tokenstream(&self.into_nonterminal(), sess, CanSynthesizeMissingTokens::No)
     }
 
     pub fn expect_item(self) -> P<ast::Item> {
@@ -524,29 +520,19 @@ impl DummyResult {
     /// Use this as a return value after hitting any errors and
     /// calling `span_err`.
     pub fn any(span: Span) -> Box<dyn MacResult + 'static> {
-        Box::new(DummyResult {
-            is_error: true,
-            span,
-        })
+        Box::new(DummyResult { is_error: true, span })
     }
 
     /// Same as `any`, but must be a valid fragment, not error.
     pub fn any_valid(span: Span) -> Box<dyn MacResult + 'static> {
-        Box::new(DummyResult {
-            is_error: false,
-            span,
-        })
+        Box::new(DummyResult { is_error: false, span })
     }
 
     /// A plain dummy expression.
     pub fn raw_expr(sp: Span, is_error: bool) -> P<ast::Expr> {
         P(ast::Expr {
             id: ast::DUMMY_NODE_ID,
-            kind: if is_error {
-                ast::ExprKind::Err
-            } else {
-                ast::ExprKind::Tup(Vec::new())
-            },
+            kind: if is_error { ast::ExprKind::Err } else { ast::ExprKind::Tup(Vec::new()) },
             span: sp,
             attrs: ast::AttrVec::new(),
             tokens: None,
@@ -555,23 +541,14 @@ impl DummyResult {
 
     /// A plain dummy pattern.
     pub fn raw_pat(sp: Span) -> ast::Pat {
-        ast::Pat {
-            id: ast::DUMMY_NODE_ID,
-            kind: PatKind::Wild,
-            span: sp,
-            tokens: None,
-        }
+        ast::Pat { id: ast::DUMMY_NODE_ID, kind: PatKind::Wild, span: sp, tokens: None }
     }
 
     /// A plain dummy type.
     pub fn raw_ty(sp: Span, is_error: bool) -> P<ast::Ty> {
         P(ast::Ty {
             id: ast::DUMMY_NODE_ID,
-            kind: if is_error {
-                ast::TyKind::Err
-            } else {
-                ast::TyKind::Tup(Vec::new())
-            },
+            kind: if is_error { ast::TyKind::Err } else { ast::TyKind::Tup(Vec::new()) },
             span: sp,
             tokens: None,
         })
@@ -1067,10 +1044,7 @@ impl<'a> ExtCtxt<'a> {
     }
 
     pub fn struct_span_err<S: Into<MultiSpan>>(&self, sp: S, msg: &str) -> DiagnosticBuilder<'a> {
-        self.sess
-            .parse_sess
-            .span_diagnostic
-            .struct_span_err(sp, msg)
+        self.sess.parse_sess.span_diagnostic.struct_span_err(sp, msg)
     }
 
     /// Emit `msg` attached to `sp`, without immediately stopping
@@ -1089,11 +1063,7 @@ impl<'a> ExtCtxt<'a> {
     }
     pub fn trace_macros_diag(&mut self) {
         for (sp, notes) in self.expansions.iter() {
-            let mut db = self
-                .sess
-                .parse_sess
-                .span_diagnostic
-                .span_note_diag(*sp, "trace_macro");
+            let mut db = self.sess.parse_sess.span_diagnostic.span_note_diag(*sp, "trace_macro");
             for note in notes {
                 db.note(note);
             }
@@ -1119,10 +1089,7 @@ impl<'a> ExtCtxt<'a> {
     }
     pub fn def_site_path(&self, components: &[Symbol]) -> Vec<Ident> {
         let def_site = self.with_def_site_ctxt(DUMMY_SP);
-        components
-            .iter()
-            .map(|&s| Ident::new(s, def_site))
-            .collect()
+        components.iter().map(|&s| Ident::new(s, def_site)).collect()
     }
 
     pub fn check_unused_macros(&mut self) {
@@ -1181,10 +1148,7 @@ pub fn expr_to_spanned_string<'a>(
 ) -> Result<(Symbol, ast::StrStyle, Span), Option<(DiagnosticBuilder<'a>, bool)>> {
     // Perform eager expansion on the expression.
     // We want to be able to handle e.g., `concat!("foo", "bar")`.
-    let expr = cx
-        .expander()
-        .fully_expand_fragment(AstFragment::Expr(expr))
-        .make_expr();
+    let expr = cx.expander().fully_expand_fragment(AstFragment::Expr(expr)).make_expr();
 
     Err(match expr.kind {
         ast::ExprKind::Lit(ref l) => match l.kind {
@@ -1284,10 +1248,7 @@ pub fn get_exprs_from_tts(
 
         // Perform eager expansion on the expression.
         // We want to be able to handle e.g., `concat!("foo", "bar")`.
-        let expr = cx
-            .expander()
-            .fully_expand_fragment(AstFragment::Expr(expr))
-            .make_expr();
+        let expr = cx.expander().fully_expand_fragment(AstFragment::Expr(expr)).make_expr();
 
         es.push(expr);
         if p.eat(&token::Comma) {
@@ -1346,10 +1307,7 @@ pub fn parse_macro_name_and_helper_attrs(
         }
         attr.meta_item_list()
             .unwrap_or_else(|| {
-                diag.span_err(
-                    attr.span(),
-                    "attribute must be of form: `attributes(foo, bar)`",
-                );
+                diag.span_err(attr.span(), "attribute must be of form: `attributes(foo, bar)`");
                 &[]
             })
             .iter()

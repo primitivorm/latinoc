@@ -9,4 +9,4 @@
 #![allow(warnings)]
 
 #[no_mangle]
-fn main() {}
+fn main(){}

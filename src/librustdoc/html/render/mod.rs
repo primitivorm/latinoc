@@ -64,6 +64,7 @@ use serde::ser::SerializeSeq;
 use serde::{Serialize, Serializer};
 
 use crate::clean::{self, ItemId, RenderedLink, SelfTy};
+use crate::docfs::PathError;
 use crate::error::Error;
 use crate::formats::cache::Cache;
 use crate::formats::item_type::ItemType;
@@ -172,12 +173,8 @@ impl Serialize for TypeWithKind {
 crate struct StylePath {
     /// The path to the theme
     crate path: PathBuf,
-}
-
-impl StylePath {
-    pub fn basename(&self) -> Result<String, Error> {
-        Ok(try_none!(try_none!(self.path.file_stem(), &self.path).to_str(), &self.path).to_string())
-    }
+    /// What the `disabled` attribute should be set to in the HTML tag
+    crate disabled: bool,
 }
 
 fn write_srclink(cx: &Context<'_>, item: &clean::Item, buf: &mut Buffer) {
@@ -356,7 +353,7 @@ enum Setting {
         js_data_name: &'static str,
         description: &'static str,
         default_value: &'static str,
-        options: Vec<String>,
+        options: Vec<(String, String)>,
     },
 }
 
@@ -396,9 +393,10 @@ impl Setting {
                 options
                     .iter()
                     .map(|opt| format!(
-                        "<option value=\"{name}\" {}>{name}</option>",
-                        if opt == default_value { "selected" } else { "" },
-                        name = opt,
+                        "<option value=\"{}\" {}>{}</option>",
+                        opt.0,
+                        if opt.0 == default_value { "selected" } else { "" },
+                        opt.1,
                     ))
                     .collect::<String>(),
                 root_path,
@@ -423,7 +421,18 @@ impl<T: Into<Setting>> From<(&'static str, Vec<T>)> for Setting {
     }
 }
 
-fn settings(root_path: &str, suffix: &str, theme_names: Vec<String>) -> Result<String, Error> {
+fn settings(root_path: &str, suffix: &str, themes: &[StylePath]) -> Result<String, Error> {
+    let theme_names: Vec<(String, String)> = themes
+        .iter()
+        .map(|entry| {
+            let theme =
+                try_none!(try_none!(entry.path.file_stem(), &entry.path).to_str(), &entry.path)
+                    .to_string();
+
+            Ok((theme.clone(), theme))
+        })
+        .collect::<Result<_, Error>>()?;
+
     // (id, explanation, default value)
     let settings: &[Setting] = &[
         (
@@ -460,11 +469,10 @@ fn settings(root_path: &str, suffix: &str, theme_names: Vec<String>) -> Result<S
             <span class=\"in-band\">Rustdoc settings</span>\
         </h1>\
         <div class=\"settings\">{}</div>\
-        <link rel=\"stylesheet\" href=\"{root_path}settings{suffix}.css\">\
-        <script src=\"{root_path}settings{suffix}.js\"></script>",
+        <script src=\"{}settings{}.js\"></script>",
         settings.iter().map(|s| s.display(root_path, suffix)).collect::<String>(),
-        root_path = root_path,
-        suffix = suffix
+        root_path,
+        suffix
     ))
 }
 

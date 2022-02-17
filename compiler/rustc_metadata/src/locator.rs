@@ -1087,7 +1087,6 @@ impl CrateError {
                     err.note(&msg);
                     err
                 } else if !locator.crate_rejections.via_version.is_empty() {
-                    // TODO: proman. compiled by an incompatible version of rustc
                     let mut err = struct_span_err!(
                         sess,
                         span,

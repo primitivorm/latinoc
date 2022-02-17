@@ -536,7 +536,7 @@ impl Printer<'tcx> for &mut SymbolMangler<'tcx> {
         // 1) Instead of mangling only *used*
         // bound vars, we want to mangle *all* bound vars (`for<'b> Send` is a
         // valid trait predicate);
-        // 2) We allow multiple "main" traits in the future, or at least
+        // 2) We allow multiple "principal" traits in the future, or at least
         // allow in any form another trait predicate that can take generics.
         //
         // Here we assume that predicates have the following structure:

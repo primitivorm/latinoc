@@ -45,7 +45,6 @@ impl Step for ToolBuild {
     /// This will build the specified tool with the specified `host` compiler in
     /// `stage` into the normal cargo output directory.
     fn run(self, builder: &Builder<'_>) -> Option<PathBuf> {
-        println!(">>> bootstrap/tool.rs ToolBuild run");
         let compiler = self.compiler;
         let target = self.target;
         let mut tool = self.tool;
@@ -236,7 +235,6 @@ pub fn prepare_tool_cargo(
     source_type: SourceType,
     extra_features: &[String],
 ) -> CargoCommand {
-    println!(">>> bootstrap/tool.rs prepare_tool_cargo");
     let mut cargo = builder.cargo(compiler, mode, source_type, target, command);
     let dir = builder.src.join(path);
     cargo.arg("--manifest-path").arg(dir.join("Cargo.toml"));
@@ -542,8 +540,6 @@ impl Step for Rustdoc {
             features.push("jemalloc".to_string());
         }
 
-        // TODO: proman
-        // if target_compiler.stage == 0 {
         let cargo = prepare_tool_cargo(
             builder,
             build_compiler,
@@ -560,12 +556,10 @@ impl Step for Rustdoc {
             target_compiler.stage, target_compiler.host
         ));
         builder.run(&mut cargo.into());
-        // }
 
         // Cargo adds a number of paths to the dylib search path on windows, which results in
         // the wrong rustdoc being executed. To avoid the conflicting rustdocs, we name the "tool"
         // rustdoc a different name.
-        // TODO: proman
         let tool_rustdoc = builder
             .cargo_out(build_compiler, Mode::ToolRustc, target)
             .join(exe("rustdoc_tool_binary", target_compiler.host));
@@ -577,7 +571,6 @@ impl Step for Rustdoc {
             t!(fs::create_dir_all(&bindir));
             let bin_rustdoc = bindir.join(exe("rustdoc", target_compiler.host));
             let _ = fs::remove_file(&bin_rustdoc);
-
             builder.copy(&tool_rustdoc, &bin_rustdoc);
             bin_rustdoc
         } else {

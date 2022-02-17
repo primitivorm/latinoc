@@ -203,30 +203,13 @@ pub(super) fn check_meta_variables(
     rhses: &[TokenTree],
 ) -> bool {
     if lhses.len() != rhses.len() {
-        sess.span_diagnostic
-            .span_bug(span, "length mismatch between LHSes and RHSes")
+        sess.span_diagnostic.span_bug(span, "length mismatch between LHSes and RHSes")
     }
     let mut valid = true;
     for (lhs, rhs) in iter::zip(lhses, rhses) {
         let mut binders = Binders::default();
-        check_binders(
-            sess,
-            node_id,
-            lhs,
-            &Stack::Empty,
-            &mut binders,
-            &Stack::Empty,
-            &mut valid,
-        );
-        check_occurrences(
-            sess,
-            node_id,
-            rhs,
-            &Stack::Empty,
-            &binders,
-            &Stack::Empty,
-            &mut valid,
-        );
+        check_binders(sess, node_id, lhs, &Stack::Empty, &mut binders, &Stack::Empty, &mut valid);
+        check_occurrences(sess, node_id, rhs, &Stack::Empty, &binders, &Stack::Empty, &mut valid);
     }
     valid
 }
@@ -259,8 +242,7 @@ fn check_binders(
         // MetaVar(fragment) and not as MetaVarDecl(y, fragment).
         TokenTree::MetaVar(span, name) => {
             if macros.is_empty() {
-                sess.span_diagnostic
-                    .span_bug(span, "unexpected MetaVar in lhs");
+                sess.span_diagnostic.span_bug(span, "unexpected MetaVar in lhs");
             }
             let name = MacroRulesNormalizedIdent::new(name);
             // There are 3 possibilities:
@@ -271,13 +253,7 @@ fn check_binders(
                 buffer_lint(sess, span, node_id, "duplicate matcher binding");
             } else if get_binder_info(macros, binders, name).is_none() {
                 // 2. The meta-variable is free: This is a binder.
-                binders.insert(
-                    name,
-                    BinderInfo {
-                        span,
-                        ops: ops.into(),
-                    },
-                );
+                binders.insert(name, BinderInfo { span, ops: ops.into() });
             } else {
                 // 3. The meta-variable is bound: This is an occurrence.
                 check_occurrences(sess, node_id, lhs, macros, binders, ops, valid);
@@ -286,8 +262,7 @@ fn check_binders(
         // Similarly, this can only happen when checking a toplevel macro.
         TokenTree::MetaVarDecl(span, name, _kind) => {
             if !macros.is_empty() {
-                sess.span_diagnostic
-                    .span_bug(span, "unexpected MetaVarDecl in nested lhs");
+                sess.span_diagnostic.span_bug(span, "unexpected MetaVarDecl in nested lhs");
             }
             let name = MacroRulesNormalizedIdent::new(name);
             if let Some(prev_info) = get_binder_info(macros, binders, name) {
@@ -300,13 +275,7 @@ fn check_binders(
                     .emit();
                 *valid = false;
             } else {
-                binders.insert(
-                    name,
-                    BinderInfo {
-                        span,
-                        ops: ops.into(),
-                    },
-                );
+                binders.insert(name, BinderInfo { span, ops: ops.into() });
             }
         }
         TokenTree::Delimited(_, ref del) => {
@@ -334,9 +303,7 @@ fn get_binder_info<'a>(
     binders: &'a Binders,
     name: MacroRulesNormalizedIdent,
 ) -> Option<&'a BinderInfo> {
-    binders
-        .get(&name)
-        .or_else(|| macros.find_map(|state| state.binders.get(&name)))
+    binders.get(&name).or_else(|| macros.find_map(|state| state.binders.get(&name)))
 }
 
 /// Checks `rhs` as part of the RHS of a macro definition and sets `valid` to false in case of
@@ -361,9 +328,9 @@ fn check_occurrences(
 ) {
     match *rhs {
         TokenTree::Token(..) => {}
-        TokenTree::MetaVarDecl(span, _name, _kind) => sess
-            .span_diagnostic
-            .span_bug(span, "unexpected MetaVarDecl in rhs"),
+        TokenTree::MetaVarDecl(span, _name, _kind) => {
+            sess.span_diagnostic.span_bug(span, "unexpected MetaVarDecl in rhs")
+        }
         TokenTree::MetaVar(span, name) => {
             let name = MacroRulesNormalizedIdent::new(name);
             check_ops_is_prefix(sess, node_id, macros, binders, ops, span, name);
@@ -419,10 +386,7 @@ fn check_nested_occurrences(
     valid: &mut bool,
 ) {
     let mut state = NestedMacroState::Empty;
-    let nested_macros = macros.push(MacroState {
-        binders,
-        ops: ops.into(),
-    });
+    let nested_macros = macros.push(MacroState { binders, ops: ops.into() });
     let mut nested_binders = Binders::default();
     for tt in tts {
         match (state, tt) {
@@ -438,19 +402,13 @@ fn check_nested_occurrences(
             }
             (
                 NestedMacroState::MacroRules,
-                &TokenTree::Token(Token {
-                    kind: TokenKind::Not,
-                    ..
-                }),
+                &TokenTree::Token(Token { kind: TokenKind::Not, .. }),
             ) => {
                 state = NestedMacroState::MacroRulesNot;
             }
             (
                 NestedMacroState::MacroRulesNot,
-                &TokenTree::Token(Token {
-                    kind: TokenKind::Ident(..),
-                    ..
-                }),
+                &TokenTree::Token(Token { kind: TokenKind::Ident(..), .. }),
             ) => {
                 state = NestedMacroState::MacroRulesNotName;
             }
@@ -481,10 +439,7 @@ fn check_nested_occurrences(
             }
             (
                 NestedMacroState::Macro,
-                &TokenTree::Token(Token {
-                    kind: TokenKind::Ident(..),
-                    ..
-                }),
+                &TokenTree::Token(Token { kind: TokenKind::Ident(..), .. }),
             ) => {
                 state = NestedMacroState::MacroName;
             }
@@ -554,11 +509,7 @@ fn check_nested_macro(
 ) -> usize {
     let n = tts.len();
     let mut i = 0;
-    let separator = if macro_rules {
-        TokenKind::Semi
-    } else {
-        TokenKind::Comma
-    };
+    let separator = if macro_rules { TokenKind::Semi } else { TokenKind::Comma };
     loop {
         // We expect 3 token trees: `(LHS) => {RHS}`. The separator is checked after.
         if i + 2 >= n
@@ -571,15 +522,7 @@ fn check_nested_macro(
         let lhs = &tts[i];
         let rhs = &tts[i + 2];
         let mut binders = Binders::default();
-        check_binders(
-            sess,
-            node_id,
-            lhs,
-            macros,
-            &mut binders,
-            &Stack::Empty,
-            valid,
-        );
+        check_binders(sess, node_id, lhs, macros, &mut binders, &Stack::Empty, valid);
         check_occurrences(sess, node_id, rhs, macros, &binders, &Stack::Empty, valid);
         // Since the last semicolon is optional for `macro_rules` macros and decl_macro are not terminated,
         // we increment our checked position by how many token trees we already checked (the 3
@@ -613,10 +556,7 @@ fn check_ops_is_prefix(
     span: Span,
     name: MacroRulesNormalizedIdent,
 ) {
-    let macros = macros.push(MacroState {
-        binders,
-        ops: ops.into(),
-    });
+    let macros = macros.push(MacroState { binders, ops: ops.into() });
     // Accumulates the stacks the operators of each state until (and including when) the
     // meta-variable is found. The innermost stack is first.
     let mut acc: SmallVec<[&SmallVec<[KleeneToken; 1]>; 1]> = SmallVec::new();
@@ -635,12 +575,7 @@ fn check_ops_is_prefix(
             return;
         }
     }
-    buffer_lint(
-        sess,
-        span.into(),
-        node_id,
-        &format!("unknown macro variable `{}`", name),
-    );
+    buffer_lint(sess, span.into(), node_id, &format!("unknown macro variable `{}`", name));
 }
 
 /// Returns whether `binder_ops` is a prefix of `occurrence_ops`.

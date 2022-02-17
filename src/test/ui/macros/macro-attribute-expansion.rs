@@ -4,12 +4,13 @@ macro_rules! descriptions {
         // Check that we will correctly expand attributes
         #[doc = $desc]
         #[allow(dead_code)]
-        const $name: &'static str = $desc;
-    };
+        const $name : &'static str = $desc;
+    }
 }
 
 // item
 descriptions! { DOG is "an animal" }
 descriptions! { RUST is "a language" }
 
-pub fn main() {}
+pub fn main() {
+}

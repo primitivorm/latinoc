@@ -24,11 +24,7 @@ pub enum LitError {
 impl LitKind {
     /// Converts literal token into a semantic literal.
     fn from_lit_token(lit: token::Lit) -> Result<LitKind, LitError> {
-        let token::Lit {
-            kind,
-            symbol,
-            suffix,
-        } = lit;
+        let token::Lit { kind, symbol, suffix } = lit;
         if suffix.is_some() && !kind.may_have_suffix() {
             return Err(LitError::InvalidSuffix);
         }
@@ -158,11 +154,7 @@ impl LitKind {
                 // Don't re-intern unless the escaped string is different.
                 let s = symbol.as_str();
                 let escaped = s.escape_default().to_string();
-                let symbol = if s == escaped {
-                    symbol
-                } else {
-                    Symbol::intern(&escaped)
-                };
+                let symbol = if s == escaped { symbol } else { Symbol::intern(&escaped) };
                 (token::Str, symbol, None)
             }
             LitKind::Str(symbol, ast::StrStyle::Raw(n)) => (token::StrRaw(n), symbol, None),
@@ -176,9 +168,7 @@ impl LitKind {
                 (token::ByteStr, Symbol::intern(&string), None)
             }
             LitKind::Byte(byte) => {
-                let string: String = ascii::escape_default(byte)
-                    .map(Into::<char>::into)
-                    .collect();
+                let string: String = ascii::escape_default(byte).map(Into::<char>::into).collect();
                 (token::Byte, Symbol::intern(&string), None)
             }
             LitKind::Char(ch) => {
@@ -214,11 +204,7 @@ impl LitKind {
 impl Lit {
     /// Converts literal token into an AST literal.
     pub fn from_lit_token(token: token::Lit, span: Span) -> Result<Lit, LitError> {
-        Ok(Lit {
-            token,
-            kind: LitKind::from_lit_token(token)?,
-            span,
-        })
+        Ok(Lit { token, kind: LitKind::from_lit_token(token)?, span })
     }
 
     /// Converts arbitrary token into an AST literal.
@@ -248,11 +234,7 @@ impl Lit {
     /// This function is used when the original token doesn't exist (e.g. the literal is created
     /// by an AST-based macro) or unavailable (e.g. from HIR pretty-printing).
     pub fn from_lit_kind(kind: LitKind, span: Span) -> Lit {
-        Lit {
-            token: kind.to_lit_token(),
-            kind,
-            span,
-        }
+        Lit { token: kind.to_lit_token(), kind, span }
     }
 
     /// Losslessly convert an AST literal into a token.
@@ -338,19 +320,12 @@ fn integer_lit(symbol: Symbol, suffix: Option<Symbol>) -> Result<LitKind, LitErr
     };
 
     let s = &s[if base != 10 { 2 } else { 0 }..];
-    u128::from_str_radix(s, base)
-        .map(|i| LitKind::Int(i, ty))
-        .map_err(|_| {
-            // Small bases are lexed as if they were base 10, e.g, the string
-            // might be `0b10201`. This will cause the conversion above to fail,
-            // but these kinds of errors are already reported by the lexer.
-            let from_lexer = base < 10
-                && s.chars()
-                    .any(|c| c.to_digit(10).map_or(false, |d| d >= base));
-            if from_lexer {
-                LitError::LexerError
-            } else {
-                LitError::IntTooLarge
-            }
-        })
+    u128::from_str_radix(s, base).map(|i| LitKind::Int(i, ty)).map_err(|_| {
+        // Small bases are lexed as if they were base 10, e.g, the string
+        // might be `0b10201`. This will cause the conversion above to fail,
+        // but these kinds of errors are already reported by the lexer.
+        let from_lexer =
+            base < 10 && s.chars().any(|c| c.to_digit(10).map_or(false, |d| d >= base));
+        if from_lexer { LitError::LexerError } else { LitError::IntTooLarge }
+    })
 }

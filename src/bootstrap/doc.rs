@@ -475,7 +475,6 @@ impl Step for Std {
             .iter()
             .map(components_simplified)
             .filter_map(|path| {
-                // TODO: proman
                 if path.get(0) == Some(&"library") {
                     Some(path[1].to_owned())
                 } else if !path.is_empty() {
@@ -741,7 +740,6 @@ macro_rules! tool_doc {
 }
 
 tool_doc!(Rustdoc, "rustdoc-tool", "src/tools/rustdoc", ["rustdoc", "rustdoc-json-types"]);
-
 tool_doc!(
     Rustfmt,
     "rustfmt-nightly",
@@ -812,7 +810,6 @@ impl Step for UnstableBookGen {
         builder.create_dir(&out);
         builder.remove_dir(&out);
         let mut cmd = builder.tool_cmd(Tool::UnstableBookGen);
-        // TODO: proman
         cmd.arg(builder.src.join("library"));
         cmd.arg(builder.src.join("compiler"));
         cmd.arg(builder.src.join("src"));
@@ -870,9 +867,7 @@ impl Step for RustcBook {
     /// in the "md-doc" directory in the build output directory. Then
     /// "rustbook" is used to convert it to HTML.
     fn run(self, builder: &Builder<'_>) {
-        // TODO: proman
         let out_base = builder.md_doc_out(self.target).join("rustc");
-        // let out_base = builder.md_doc_out(self.target).join("latinoc");
         t!(fs::create_dir_all(&out_base));
         let out_listing = out_base.join("src/lints");
         builder.cp_r(&builder.src.join("src/doc/rustc"), &out_base);
@@ -902,17 +897,14 @@ impl Step for RustcBook {
         builder.add_rustc_lib_path(self.compiler, &mut cmd);
         builder.run(&mut cmd);
         // Run rustbook/mdbook to generate the HTML pages.
-        // TODO: proman
         builder.ensure(RustbookSrc {
             target: self.target,
             name: INTERNER.intern_str("rustc"),
-            // name: INTERNER.intern_str("latinoc"),
             src: INTERNER.intern_path(out_base),
         });
         if builder.was_invoked_explicitly::<Self>() {
             let out = builder.doc_out(self.target);
-            // let index = out.join("rustc").join("index.html");
-            let index = out.join("latinoc").join("index.html");
+            let index = out.join("rustc").join("index.html");
             open(builder, &index);
         }
     }

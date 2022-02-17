@@ -547,10 +547,9 @@ struct TomlTarget {
 
 impl Config {
     fn path_from_python(var_key: &str) -> PathBuf {
-        // TODO: proman
         match env::var_os(var_key) {
             Some(var_val) => Self::normalize_python_path(var_val),
-            _ => Path::new("D:\\LATINO\\latinoc\\build").to_path_buf(), // panic!("expected '{}' to be set", var_key),
+            _ => panic!("expected '{}' to be set", var_key),
         }
     }
 

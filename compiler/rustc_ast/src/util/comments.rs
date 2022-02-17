@@ -46,11 +46,7 @@ pub fn beautify_doc_string(data: Symbol) -> Symbol {
             j -= 1;
         }
 
-        if i != 0 || j != lines.len() {
-            Some((i, j))
-        } else {
-            None
-        }
+        if i != 0 || j != lines.len() { Some((i, j)) } else { None }
     }
 
     fn get_horizontal_trim(lines: &[&str]) -> Option<usize> {
@@ -199,11 +195,7 @@ pub fn gather_comments(sm: &SourceMap, path: FileName, src: String) -> Vec<Comme
                     let col = CharPos(text[line_begin_pos..pos].chars().count());
 
                     let lines = split_block_comment_into_lines(token_text, col);
-                    comments.push(Comment {
-                        style,
-                        lines,
-                        pos: pos_in_file,
-                    })
+                    comments.push(Comment { style, lines, pos: pos_in_file })
                 }
             }
             latinoc_lexer::TokenKind::LineComment { doc_style } => {

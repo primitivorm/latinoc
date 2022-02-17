@@ -30,15 +30,3 @@ pub enum VariantNonExhaustive {
 pub enum NonExhaustiveSingleVariant {
     A(bool),
 }
-
-#[repr(u8)]
-pub enum FieldLessWithNonExhaustiveVariant {
-    A,
-    B,
-    #[non_exhaustive]
-    C,
-}
-
-impl Default for FieldLessWithNonExhaustiveVariant {
-    fn default() -> Self { Self::A }
-}

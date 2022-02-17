@@ -119,11 +119,7 @@ impl Path {
     // Convert a span and an identifier to the corresponding
     // one-segment path.
     pub fn from_ident(ident: Ident) -> Path {
-        Path {
-            segments: vec![PathSegment::from_ident(ident)],
-            span: ident.span,
-            tokens: None,
-        }
+        Path { segments: vec![PathSegment::from_ident(ident)], span: ident.span, tokens: None }
     }
 
     pub fn is_global(&self) -> bool {
@@ -152,11 +148,7 @@ pub struct PathSegment {
 
 impl PathSegment {
     pub fn from_ident(ident: Ident) -> Self {
-        PathSegment {
-            ident,
-            id: DUMMY_NODE_ID,
-            args: None,
-        }
+        PathSegment { ident, id: DUMMY_NODE_ID, args: None }
     }
 
     pub fn path_root(span: Span) -> Self {
@@ -286,10 +278,7 @@ impl ParenthesizedArgs {
             .cloned()
             .map(|input| AngleBracketedArg::Arg(GenericArg::Type(input)))
             .collect();
-        AngleBracketedArgs {
-            span: self.inputs_span,
-            args,
-        }
+        AngleBracketedArgs { span: self.inputs_span, args }
     }
 }
 
@@ -423,16 +412,10 @@ impl GenericParam {
                 self.ident.span
             }
             GenericParamKind::Type { default: Some(ty) } => self.ident.span.to(ty.span),
-            GenericParamKind::Const {
-                kw_span,
-                default: Some(default),
-                ..
-            } => kw_span.to(default.value.span),
-            GenericParamKind::Const {
-                kw_span,
-                default: None,
-                ty,
-            } => kw_span.to(ty.span),
+            GenericParamKind::Const { kw_span, default: Some(default), .. } => {
+                kw_span.to(default.value.span)
+            }
+            GenericParamKind::Const { kw_span, default: None, ty } => kw_span.to(ty.span),
         }
     }
 }
@@ -625,9 +608,9 @@ impl Pat {
             PatKind::Path(qself, path) => TyKind::Path(qself.clone(), path.clone()),
             PatKind::MacCall(mac) => TyKind::MacCall(mac.clone()),
             // `&mut? P` can be reinterpreted as `&mut? T` where `T` is `P` reparsed as a type.
-            PatKind::Ref(pat, mutbl) => pat
-                .to_ty()
-                .map(|ty| TyKind::Rptr(None, MutTy { ty, mutbl: *mutbl }))?,
+            PatKind::Ref(pat, mutbl) => {
+                pat.to_ty().map(|ty| TyKind::Rptr(None, MutTy { ty, mutbl: *mutbl }))?
+            }
             // A slice/array pattern `[P]` can be reparsed as `[T]`, an unsized array,
             // when `P` can be reparsed as a type `T`.
             PatKind::Slice(pats) if pats.len() == 1 => pats[0].to_ty().map(TyKind::Slice)?,
@@ -644,12 +627,7 @@ impl Pat {
             _ => return None,
         };
 
-        Some(P(Ty {
-            kind,
-            id: self.id,
-            span: self.span,
-            tokens: None,
-        }))
+        Some(P(Ty { kind, id: self.id, span: self.span, tokens: None }))
     }
 
     /// Walk top-down and call `it` in each place where a pattern occurs
@@ -747,12 +725,7 @@ pub enum PatKind {
 
     /// A struct or struct variant pattern (e.g., `Variant {x, y, ..}`).
     /// The `bool` is `true` in the presence of a `..`.
-    Struct(
-        Option<QSelf>,
-        Path,
-        Vec<PatField>,
-        /* recovered */ bool,
-    ),
+    Struct(Option<QSelf>, Path, Vec<PatField>, /* recovered */ bool),
 
     /// A tuple struct/variant pattern (`Variant(x, y, .., z)`).
     TupleStruct(Option<QSelf>, Path, Vec<P<Pat>>),
@@ -806,19 +779,8 @@ pub enum PatKind {
     MacCall(MacCall),
 }
 
-#[derive(
-    Clone,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Debug,
-    Copy,
-    HashStable_Generic,
-    Encodable,
-    Decodable,
-)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Debug, Copy)]
+#[derive(HashStable_Generic, Encodable, Decodable)]
 pub enum Mutability {
     Mut,
     Not,
@@ -842,7 +804,8 @@ impl Mutability {
 
 /// The kind of borrow in an `AddrOf` expression,
 /// e.g., `&place` or `&raw const place`.
-#[derive(Clone, Copy, PartialEq, Eq, Debug, Encodable, Decodable, HashStable_Generic)]
+#[derive(Clone, Copy, PartialEq, Eq, Debug)]
+#[derive(Encodable, Decodable, HashStable_Generic)]
 pub enum BorrowKind {
     /// A normal borrow, `&$expr` or `&mut $expr`.
     /// The resulting type is either `&'a T` or `&'a mut T`
@@ -995,21 +958,11 @@ impl Stmt {
     pub fn add_trailing_semicolon(mut self) -> Self {
         self.kind = match self.kind {
             StmtKind::Expr(expr) => StmtKind::Semi(expr),
-            StmtKind::MacCall(mac) => StmtKind::MacCall(mac.map(
-                |MacCallStmt {
-                     mac,
-                     style: _,
-                     attrs,
-                     tokens,
-                 }| {
-                    MacCallStmt {
-                        mac,
-                        style: MacStmtStyle::Semicolon,
-                        attrs,
-                        tokens,
-                    }
-                },
-            )),
+            StmtKind::MacCall(mac) => {
+                StmtKind::MacCall(mac.map(|MacCallStmt { mac, style: _, attrs, tokens }| {
+                    MacCallStmt { mac, style: MacStmtStyle::Semicolon, attrs, tokens }
+                }))
+            }
             kind => kind,
         };
 
@@ -1203,11 +1156,7 @@ impl Expr {
     pub fn is_potential_trivial_const_param(&self) -> bool {
         let this = if let ExprKind::Block(ref block, None) = self.kind {
             if block.stmts.len() == 1 {
-                if let StmtKind::Expr(ref expr) = block.stmts[0].kind {
-                    expr
-                } else {
-                    self
-                }
+                if let StmtKind::Expr(ref expr) = block.stmts[0].kind { expr } else { self }
             } else {
                 self
             }
@@ -1251,9 +1200,9 @@ impl Expr {
 
             ExprKind::Paren(expr) => expr.to_ty().map(TyKind::Paren)?,
 
-            ExprKind::AddrOf(BorrowKind::Ref, mutbl, expr) => expr
-                .to_ty()
-                .map(|ty| TyKind::Rptr(None, MutTy { ty, mutbl: *mutbl }))?,
+            ExprKind::AddrOf(BorrowKind::Ref, mutbl, expr) => {
+                expr.to_ty().map(|ty| TyKind::Rptr(None, MutTy { ty, mutbl: *mutbl }))?
+            }
 
             ExprKind::Repeat(expr, expr_len) => {
                 expr.to_ty().map(|ty| TyKind::Array(ty, expr_len.clone()))?
@@ -1262,10 +1211,7 @@ impl Expr {
             ExprKind::Array(exprs) if exprs.len() == 1 => exprs[0].to_ty().map(TyKind::Slice)?,
 
             ExprKind::Tup(exprs) => {
-                let tys = exprs
-                    .iter()
-                    .map(|expr| expr.to_ty())
-                    .collect::<Option<Vec<_>>>()?;
+                let tys = exprs.iter().map(|expr| expr.to_ty()).collect::<Option<Vec<_>>>()?;
                 TyKind::Tup(tys)
             }
 
@@ -1286,12 +1232,7 @@ impl Expr {
             _ => return None,
         };
 
-        Some(P(Ty {
-            kind,
-            id: self.id,
-            span: self.span,
-            tokens: None,
-        }))
+        Some(P(Ty { kind, id: self.id, span: self.span, tokens: None }))
     }
 
     pub fn precedence(&self) -> ExprPrecedence {
@@ -1551,19 +1492,8 @@ pub enum CaptureBy {
 
 /// The movability of a generator / closure literal:
 /// whether a generator contains self-references, causing it to be `!Unpin`.
-#[derive(
-    Clone,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Encodable,
-    Decodable,
-    Debug,
-    Copy,
-    HashStable_Generic,
-)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Encodable, Decodable, Debug, Copy)]
+#[derive(HashStable_Generic)]
 pub enum Movability {
     /// May contain self-references, `!Unpin`.
     Static,
@@ -1582,9 +1512,7 @@ pub struct MacCall {
 
 impl MacCall {
     pub fn span(&self) -> Span {
-        self.path
-            .span
-            .to(self.args.span().unwrap_or(self.path.span))
+        self.path.span.to(self.args.span().unwrap_or(self.path.span))
     }
 }
 
@@ -1671,7 +1599,8 @@ pub struct MacroDef {
     pub macro_rules: bool,
 }
 
-#[derive(Clone, Encodable, Decodable, Debug, Copy, Hash, Eq, PartialEq, HashStable_Generic)]
+#[derive(Clone, Encodable, Decodable, Debug, Copy, Hash, Eq, PartialEq)]
+#[derive(HashStable_Generic)]
 pub enum StrStyle {
     /// A regular string, like `"foo"`.
     Cooked,
@@ -1721,7 +1650,8 @@ impl StrLit {
 }
 
 /// Type of the integer literal based on provided suffix.
-#[derive(Clone, Copy, Encodable, Decodable, Debug, Hash, Eq, PartialEq, HashStable_Generic)]
+#[derive(Clone, Copy, Encodable, Decodable, Debug, Hash, Eq, PartialEq)]
+#[derive(HashStable_Generic)]
 pub enum LitIntType {
     /// e.g. `42_i32`.
     Signed(IntTy),
@@ -1732,7 +1662,8 @@ pub enum LitIntType {
 }
 
 /// Type of the float literal based on provided suffix.
-#[derive(Clone, Copy, Encodable, Decodable, Debug, Hash, Eq, PartialEq, HashStable_Generic)]
+#[derive(Clone, Copy, Encodable, Decodable, Debug, Hash, Eq, PartialEq)]
+#[derive(HashStable_Generic)]
 pub enum LitFloatType {
     /// A float literal with a suffix (`1f32` or `1E10f32`).
     Suffixed(FloatTy),
@@ -1821,19 +1752,8 @@ pub struct FnSig {
     pub span: Span,
 }
 
-#[derive(
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Debug,
-    Encodable,
-    Decodable,
-    HashStable_Generic,
-)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Encodable, Decodable, HashStable_Generic)]
 pub enum FloatTy {
     F32,
     F64,
@@ -1855,19 +1775,8 @@ impl FloatTy {
     }
 }
 
-#[derive(
-    Clone,
-    Copy,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Debug,
-    Encodable,
-    Decodable,
-    HashStable_Generic,
-)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Hash, Debug)]
+#[derive(Encodable, Decodable, HashStable_Generic)]
 pub enum IntTy {
     Isize,
     I8,
@@ -1901,19 +1810,8 @@ impl IntTy {
     }
 }
 
-#[derive(
-    Clone,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Copy,
-    Debug,
-    Encodable,
-    Decodable,
-    HashStable_Generic,
-)]
+#[derive(Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Copy, Debug)]
+#[derive(Encodable, Decodable, HashStable_Generic)]
 pub enum UintTy {
     Usize,
     U8,
@@ -2039,7 +1937,7 @@ pub enum TyKind {
     /// No-op; kept solely so that we can pretty-print faithfully.
     Paren(P<Ty>),
     /// Unused for now.
-    //Typeof(AnonConst),
+    Typeof(AnonConst),
     /// This means the type should be inferred instead of it having been
     /// specified. This can appear anywhere in a type.
     Infer,
@@ -2096,11 +1994,7 @@ bitflags::bitflags! {
 #[derive(Clone, PartialEq, PartialOrd, Encodable, Decodable, Debug, Hash, HashStable_Generic)]
 pub enum InlineAsmTemplatePiece {
     String(String),
-    Placeholder {
-        operand_idx: usize,
-        modifier: Option<char>,
-        span: Span,
-    },
+    Placeholder { operand_idx: usize, modifier: Option<char>, span: Span },
 }
 
 impl fmt::Display for InlineAsmTemplatePiece {
@@ -2116,18 +2010,10 @@ impl fmt::Display for InlineAsmTemplatePiece {
                 }
                 Ok(())
             }
-            Self::Placeholder {
-                operand_idx,
-                modifier: Some(modifier),
-                ..
-            } => {
+            Self::Placeholder { operand_idx, modifier: Some(modifier), .. } => {
                 write!(f, "{{{}:{}}}", operand_idx, modifier)
             }
-            Self::Placeholder {
-                operand_idx,
-                modifier: None,
-                ..
-            } => {
+            Self::Placeholder { operand_idx, modifier: None, .. } => {
                 write!(f, "{{{}}}", operand_idx)
             }
         }
@@ -2287,12 +2173,7 @@ impl Param {
     /// Builds a `Param` object from `ExplicitSelf`.
     pub fn from_self(attrs: AttrVec, eself: ExplicitSelf, eself_ident: Ident) -> Param {
         let span = eself.span.to(eself_ident.span);
-        let infer_ty = P(Ty {
-            id: DUMMY_NODE_ID,
-            kind: TyKind::ImplicitSelf,
-            span,
-            tokens: None,
-        });
+        let infer_ty = P(Ty { id: DUMMY_NODE_ID, kind: TyKind::ImplicitSelf, span, tokens: None });
         let param = |mutbl, ty| Param {
             attrs,
             pat: P(Pat {
@@ -2313,13 +2194,7 @@ impl Param {
                 Mutability::Not,
                 P(Ty {
                     id: DUMMY_NODE_ID,
-                    kind: TyKind::Rptr(
-                        lt,
-                        MutTy {
-                            ty: infer_ty,
-                            mutbl,
-                        },
-                    ),
+                    kind: TyKind::Rptr(lt, MutTy { ty: infer_ty, mutbl }),
                     span,
                     tokens: None,
                 }),
@@ -2345,9 +2220,7 @@ impl FnDecl {
         self.inputs.get(0).map_or(false, Param::is_self)
     }
     pub fn c_variadic(&self) -> bool {
-        self.inputs
-            .last()
-            .map_or(false, |arg| matches!(arg.ty.kind, TyKind::CVarArgs))
+        self.inputs.last().map_or(false, |arg| matches!(arg.ty.kind, TyKind::CVarArgs))
     }
 }
 
@@ -2358,19 +2231,8 @@ pub enum IsAuto {
     No,
 }
 
-#[derive(
-    Copy,
-    Clone,
-    PartialEq,
-    Eq,
-    PartialOrd,
-    Ord,
-    Hash,
-    Encodable,
-    Decodable,
-    Debug,
-    HashStable_Generic,
-)]
+#[derive(Copy, Clone, PartialEq, Eq, PartialOrd, Ord, Hash, Encodable, Decodable, Debug)]
+#[derive(HashStable_Generic)]
 pub enum Unsafe {
     Yes(Span),
     No,
@@ -2378,11 +2240,7 @@ pub enum Unsafe {
 
 #[derive(Copy, Clone, Encodable, Decodable, Debug)]
 pub enum Async {
-    Yes {
-        span: Span,
-        closure_id: NodeId,
-        return_impl_trait_id: NodeId,
-    },
+    Yes { span: Span, closure_id: NodeId, return_impl_trait_id: NodeId },
     No,
 }
 
@@ -2394,16 +2252,14 @@ impl Async {
     /// In this case this is an `async` return, the `NodeId` for the generated `impl Trait` item.
     pub fn opt_return_id(self) -> Option<NodeId> {
         match self {
-            Async::Yes {
-                return_impl_trait_id,
-                ..
-            } => Some(return_impl_trait_id),
+            Async::Yes { return_impl_trait_id, .. } => Some(return_impl_trait_id),
             Async::No => None,
         }
     }
 }
 
-#[derive(Copy, Clone, PartialEq, Eq, Hash, Encodable, Decodable, Debug, HashStable_Generic)]
+#[derive(Copy, Clone, PartialEq, Eq, Hash, Encodable, Decodable, Debug)]
+#[derive(HashStable_Generic)]
 pub enum Const {
     Yes(Span),
     No,
@@ -2538,11 +2394,7 @@ impl UseTree {
         match self.kind {
             UseTreeKind::Simple(Some(rename), ..) => rename,
             UseTreeKind::Simple(None, ..) => {
-                self.prefix
-                    .segments
-                    .last()
-                    .expect("empty prefix in a simple import")
-                    .ident
+                self.prefix.segments.last().expect("empty prefix in a simple import").ident
             }
             _ => panic!("`UseTree::ident` can only be used on a simple import"),
         }
@@ -2636,10 +2488,7 @@ impl PolyTraitRef {
     pub fn new(generic_params: Vec<GenericParam>, path: Path, span: Span) -> Self {
         PolyTraitRef {
             bound_generic_params: generic_params,
-            trait_ref: TraitRef {
-                path,
-                ref_id: DUMMY_NODE_ID,
-            },
+            trait_ref: TraitRef { path, ref_id: DUMMY_NODE_ID },
             span,
         }
     }
@@ -2751,32 +2600,14 @@ pub struct Item<K = ItemKind> {
 impl Item {
     /// Return the span that encompasses the attributes.
     pub fn span_with_attributes(&self) -> Span {
-        self.attrs
-            .iter()
-            .fold(self.span, |acc, attr| acc.to(attr.span))
+        self.attrs.iter().fold(self.span, |acc, attr| acc.to(attr.span))
     }
 }
 
 impl<K: Into<ItemKind>> Item<K> {
     pub fn into_item(self) -> Item {
-        let Item {
-            attrs,
-            id,
-            span,
-            vis,
-            ident,
-            kind,
-            tokens,
-        } = self;
-        Item {
-            attrs,
-            id,
-            span,
-            vis,
-            ident,
-            kind: kind.into(),
-            tokens,
-        }
+        let Item { attrs, id, span, vis, ident, kind, tokens } = self;
+        Item { attrs, id, span, vis, ident, kind: kind.into(), tokens }
     }
 }
 
@@ -2809,12 +2640,7 @@ pub struct FnHeader {
 impl FnHeader {
     /// Does this function header have any qualifiers or is it empty?
     pub fn has_qualifiers(&self) -> bool {
-        let Self {
-            unsafety,
-            asyncness,
-            constness,
-            ext,
-        } = self;
+        let Self { unsafety, asyncness, constness, ext } = self;
         matches!(unsafety, Unsafe::Yes(_))
             || asyncness.is_async()
             || matches!(constness, Const::Yes(_))

@@ -574,14 +574,14 @@ impl<'tcx> OpaqueTypeExpander<'tcx> {
         if self.found_any_recursion {
             return None;
         }
-        let substs = substs.fold_with(self).into_ok();
+        let substs = substs.fold_with(self);
         if !self.check_recursion || self.seen_opaque_tys.insert(def_id) {
             let expanded_ty = match self.expanded_cache.get(&(def_id, substs)) {
                 Some(expanded_ty) => expanded_ty,
                 None => {
                     let generic_ty = self.tcx.type_of(def_id);
                     let concrete_ty = generic_ty.subst(self.tcx, substs);
-                    let expanded_ty = self.fold_ty(concrete_ty).into_ok();
+                    let expanded_ty = self.fold_ty(concrete_ty);
                     self.expanded_cache.insert((def_id, substs), expanded_ty);
                     expanded_ty
                 }
@@ -605,13 +605,13 @@ impl<'tcx> TypeFolder<'tcx> for OpaqueTypeExpander<'tcx> {
         self.tcx
     }
 
-    fn fold_ty(&mut self, t: Ty<'tcx>) -> Result<Ty<'tcx>, Self::Error> {
+    fn fold_ty(&mut self, t: Ty<'tcx>) -> Ty<'tcx> {
         if let ty::Opaque(def_id, substs) = t.kind {
-            Ok(self.expand_opaque_ty(def_id, substs).unwrap_or(t))
+            self.expand_opaque_ty(def_id, substs).unwrap_or(t)
         } else if t.has_opaque_types() {
             t.super_fold_with(self)
         } else {
-            Ok(t)
+            t
         }
     }
 }
@@ -1046,31 +1046,25 @@ pub fn fold_list<'tcx, F, T>(
     list: &'tcx ty::List<T>,
     folder: &mut F,
     intern: impl FnOnce(TyCtxt<'tcx>, &[T]) -> &'tcx ty::List<T>,
-) -> Result<&'tcx ty::List<T>, F::Error>
+) -> &'tcx ty::List<T>
 where
     F: TypeFolder<'tcx>,
     T: TypeFoldable<'tcx> + PartialEq + Copy,
 {
     let mut iter = list.iter();
     // Look for the first element that changed
-    match iter.by_ref().enumerate().find_map(|(i, t)| match t.fold_with(folder) {
-        Ok(new_t) if new_t == t => None,
-        new_t => Some((i, new_t)),
+    if let Some((i, new_t)) = iter.by_ref().enumerate().find_map(|(i, t)| {
+        let new_t = t.fold_with(folder);
+        if new_t == t { None } else { Some((i, new_t)) }
     }) {
-        Some((i, Ok(new_t))) => {
-            // An element changed, prepare to intern the resulting list
-            let mut new_list = SmallVec::<[_; 8]>::with_capacity(list.len());
-            new_list.extend_from_slice(&list[..i]);
-            new_list.push(new_t);
-            for t in iter {
-                new_list.push(t.fold_with(folder)?)
-            }
-            Ok(intern(folder.tcx(), &new_list))
-        }
-        Some((_, Err(err))) => {
-            return Err(err);
-        }
-        None => Ok(list),
+        // An element changed, prepare to intern the resulting list
+        let mut new_list = SmallVec::<[_; 8]>::with_capacity(list.len());
+        new_list.extend_from_slice(&list[..i]);
+        new_list.push(new_t);
+        new_list.extend(iter.map(|t| t.fold_with(folder)));
+        intern(folder.tcx(), &new_list)
+    } else {
+        list
     }
 }
 
@@ -1092,7 +1086,7 @@ pub fn normalize_opaque_types(
         check_recursion: false,
         tcx,
     };
-    val.fold_with(&mut visitor).into_ok()
+    val.fold_with(&mut visitor)
 }
 
 pub fn provide(providers: &mut ty::query::Providers) {

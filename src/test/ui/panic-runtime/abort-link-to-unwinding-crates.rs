@@ -9,8 +9,8 @@
 
 extern crate exit_success_if_unwind;
 
-use std::env;
 use std::process::Command;
+use std::env;
 
 fn main() {
     let mut args = env::args_os();
@@ -24,6 +24,7 @@ fn main() {
 
     let mut cmd = Command::new(env::args_os().next().unwrap());
     cmd.arg("foo");
+
 
     // ARMv6 hanges while printing the backtrace, see #41004
     if cfg!(target_arch = "arm") && cfg!(target_env = "gnu") {

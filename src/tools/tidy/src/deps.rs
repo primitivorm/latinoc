@@ -281,8 +281,6 @@ const FORBIDDEN_TO_HAVE_DUPLICATES: &[&str] = &[
 /// `root` is path to the directory with the root `Cargo.toml` (for the workspace). `cargo` is path
 /// to the cargo executable.
 pub fn check(root: &Path, cargo: &Path, bad: &mut bool) {
-    println!(">>> tools/tudy/src/deps.rs.check");
-
     let mut cmd = cargo_metadata::MetadataCommand::new();
     cmd.cargo_path(cargo)
         .manifest_path(root.join("Cargo.toml"))

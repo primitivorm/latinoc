@@ -55,8 +55,7 @@ typedef struct LLVMOpaqueTargetMachine *LLVMTargetMachineRef;
 DEFINE_STDCXX_CONVERSION_FUNCTIONS(Pass, LLVMPassRef)
 DEFINE_STDCXX_CONVERSION_FUNCTIONS(TargetMachine, LLVMTargetMachineRef)
 
-extern "C" void LLVMInitializePasses()
-{
+extern "C" void LLVMInitializePasses() {
   PassRegistry &Registry = *PassRegistry::getPassRegistry();
   initializeCore(Registry);
   initializeCodeGen(Registry);
@@ -70,20 +69,17 @@ extern "C" void LLVMInitializePasses()
   initializeTarget(Registry);
 }
 
-extern "C" void LLVMTimeTraceProfilerInitialize()
-{
+extern "C" void LLVMTimeTraceProfilerInitialize() {
   timeTraceProfilerInitialize(
       /* TimeTraceGranularity */ 0,
       /* ProcName */ "rustc");
 }
 
-extern "C" void LLVMTimeTraceProfilerFinishThread()
-{
+extern "C" void LLVMTimeTraceProfilerFinishThread() {
   timeTraceProfilerFinishThread();
 }
 
-extern "C" void LLVMTimeTraceProfilerFinish(const char *FileName)
-{
+extern "C" void LLVMTimeTraceProfilerFinish(const char* FileName) {
   StringRef FN(FileName);
   std::error_code EC;
   raw_fd_ostream OS(FN, EC, sys::fs::CD_CreateAlways);
@@ -92,17 +88,14 @@ extern "C" void LLVMTimeTraceProfilerFinish(const char *FileName)
   timeTraceProfilerCleanup();
 }
 
-enum class LLVMRustPassKind
-{
+enum class LLVMRustPassKind {
   Other,
   Function,
   Module,
 };
 
-static LLVMRustPassKind toRust(PassKind Kind)
-{
-  switch (Kind)
-  {
+static LLVMRustPassKind toRust(PassKind Kind) {
+  switch (Kind) {
   case PT_Function:
     return LLVMRustPassKind::Function;
   case PT_Module:
@@ -112,84 +105,74 @@ static LLVMRustPassKind toRust(PassKind Kind)
   }
 }
 
-extern "C" LLVMPassRef LLVMRustFindAndCreatePass(const char *PassName)
-{
+extern "C" LLVMPassRef LLVMRustFindAndCreatePass(const char *PassName) {
   StringRef SR(PassName);
   PassRegistry *PR = PassRegistry::getPassRegistry();
 
   const PassInfo *PI = PR->getPassInfo(SR);
-  if (PI)
-  {
+  if (PI) {
     return wrap(PI->createPass());
   }
   return nullptr;
 }
 
-extern "C" LLVMPassRef LLVMRustCreateAddressSanitizerFunctionPass(bool Recover)
-{
+extern "C" LLVMPassRef LLVMRustCreateAddressSanitizerFunctionPass(bool Recover) {
   const bool CompileKernel = false;
   const bool UseAfterScope = true;
 
   return wrap(createAddressSanitizerFunctionPass(CompileKernel, Recover, UseAfterScope));
 }
 
-extern "C" LLVMPassRef LLVMRustCreateModuleAddressSanitizerPass(bool Recover)
-{
+extern "C" LLVMPassRef LLVMRustCreateModuleAddressSanitizerPass(bool Recover) {
   const bool CompileKernel = false;
 
   return wrap(createModuleAddressSanitizerLegacyPassPass(CompileKernel, Recover));
 }
 
-extern "C" LLVMPassRef LLVMRustCreateMemorySanitizerPass(int TrackOrigins, bool Recover)
-{
+extern "C" LLVMPassRef LLVMRustCreateMemorySanitizerPass(int TrackOrigins, bool Recover) {
   const bool CompileKernel = false;
 
   return wrap(createMemorySanitizerLegacyPassPass(
       MemorySanitizerOptions{TrackOrigins, Recover, CompileKernel}));
 }
 
-extern "C" LLVMPassRef LLVMRustCreateThreadSanitizerPass()
-{
+extern "C" LLVMPassRef LLVMRustCreateThreadSanitizerPass() {
   return wrap(createThreadSanitizerLegacyPassPass());
 }
 
-extern "C" LLVMPassRef LLVMRustCreateHWAddressSanitizerPass(bool Recover)
-{
+extern "C" LLVMPassRef LLVMRustCreateHWAddressSanitizerPass(bool Recover) {
   const bool CompileKernel = false;
 
   return wrap(createHWAddressSanitizerLegacyPassPass(CompileKernel, Recover));
 }
 
-extern "C" LLVMRustPassKind LLVMRustPassKind(LLVMPassRef RustPass)
-{
+extern "C" LLVMRustPassKind LLVMRustPassKind(LLVMPassRef RustPass) {
   assert(RustPass);
   Pass *Pass = unwrap(RustPass);
   return toRust(Pass->getPassKind());
 }
 
-extern "C" void LLVMRustAddPass(LLVMPassManagerRef PMR, LLVMPassRef RustPass)
-{
+extern "C" void LLVMRustAddPass(LLVMPassManagerRef PMR, LLVMPassRef RustPass) {
   assert(RustPass);
   Pass *Pass = unwrap(RustPass);
   PassManagerBase *PMB = unwrap(PMR);
   PMB->add(Pass);
 }
 
-extern "C" void LLVMRustPassManagerBuilderPopulateThinLTOPassManager(
-    LLVMPassManagerBuilderRef PMBR,
-    LLVMPassManagerRef PMR)
-{
+extern "C"
+void LLVMRustPassManagerBuilderPopulateThinLTOPassManager(
+  LLVMPassManagerBuilderRef PMBR,
+  LLVMPassManagerRef PMR
+) {
   unwrap(PMBR)->populateThinLTOPassManager(*unwrap(PMR));
 }
 
-extern "C" void LLVMRustAddLastExtensionPasses(
-    LLVMPassManagerBuilderRef PMBR, LLVMPassRef *Passes, size_t NumPasses)
-{
+extern "C"
+void LLVMRustAddLastExtensionPasses(
+    LLVMPassManagerBuilderRef PMBR, LLVMPassRef *Passes, size_t NumPasses) {
   auto AddExtensionPasses = [Passes, NumPasses](
-                                const PassManagerBuilder &Builder, PassManagerBase &PM)
-  {
-    for (size_t I = 0; I < NumPasses; I++)
-    {
+      const PassManagerBuilder &Builder, PassManagerBase &PM) {
+    for (size_t I = 0; I < NumPasses; I++) {
       PM.add(unwrap(Passes[I]));
     }
   };
@@ -273,40 +256,37 @@ extern "C" void LLVMRustAddLastExtensionPasses(
 #define SUBTARGET_HEXAGON
 #endif
 
-#define GEN_SUBTARGETS \
-  SUBTARGET_X86        \
-  SUBTARGET_ARM        \
-  SUBTARGET_AARCH64    \
-  SUBTARGET_AVR        \
-  SUBTARGET_M68K       \
-  SUBTARGET_MIPS       \
-  SUBTARGET_PPC        \
-  SUBTARGET_SYSTEMZ    \
-  SUBTARGET_MSP430     \
-  SUBTARGET_SPARC      \
-  SUBTARGET_HEXAGON    \
-  SUBTARGET_RISCV
+#define GEN_SUBTARGETS                                                         \
+  SUBTARGET_X86                                                                \
+  SUBTARGET_ARM                                                                \
+  SUBTARGET_AARCH64                                                            \
+  SUBTARGET_AVR                                                                \
+  SUBTARGET_M68K                                                               \
+  SUBTARGET_MIPS                                                               \
+  SUBTARGET_PPC                                                                \
+  SUBTARGET_SYSTEMZ                                                            \
+  SUBTARGET_MSP430                                                             \
+  SUBTARGET_SPARC                                                              \
+  SUBTARGET_HEXAGON                                                            \
+  SUBTARGET_RISCV                                                              \
 
-#define SUBTARGET(x)                                \
-  namespace llvm                                    \
-  {                                                 \
-    extern const SubtargetFeatureKV x##FeatureKV[]; \
-    extern const SubtargetFeatureKV x##SubTypeKV[]; \
+#define SUBTARGET(x)                                                           \
+  namespace llvm {                                                             \
+  extern const SubtargetFeatureKV x##FeatureKV[];                              \
+  extern const SubtargetFeatureKV x##SubTypeKV[];                              \
   }
 
 GEN_SUBTARGETS
 #undef SUBTARGET
 
 extern "C" bool LLVMRustHasFeature(LLVMTargetMachineRef TM,
-                                   const char *Feature)
-{
+                                   const char *Feature) {
   TargetMachine *Target = unwrap(TM);
   const MCSubtargetInfo *MCInfo = Target->getMCSubtargetInfo();
   return MCInfo->checkFeatures(std::string("+") + Feature);
 }
 
-enum class LLVMRustCodeModel
-{
+enum class LLVMRustCodeModel {
   Tiny,
   Small,
   Kernel,
@@ -315,10 +295,8 @@ enum class LLVMRustCodeModel
   None,
 };
 
-static Optional<CodeModel::Model> fromRust(LLVMRustCodeModel Model)
-{
-  switch (Model)
-  {
+static Optional<CodeModel::Model> fromRust(LLVMRustCodeModel Model) {
+  switch (Model) {
   case LLVMRustCodeModel::Tiny:
     return CodeModel::Tiny;
   case LLVMRustCodeModel::Small:
@@ -336,18 +314,15 @@ static Optional<CodeModel::Model> fromRust(LLVMRustCodeModel Model)
   }
 }
 
-enum class LLVMRustCodeGenOptLevel
-{
+enum class LLVMRustCodeGenOptLevel {
   None,
   Less,
   Default,
   Aggressive,
 };
 
-static CodeGenOpt::Level fromRust(LLVMRustCodeGenOptLevel Level)
-{
-  switch (Level)
-  {
+static CodeGenOpt::Level fromRust(LLVMRustCodeGenOptLevel Level) {
+  switch (Level) {
   case LLVMRustCodeGenOptLevel::None:
     return CodeGenOpt::None;
   case LLVMRustCodeGenOptLevel::Less:
@@ -361,8 +336,7 @@ static CodeGenOpt::Level fromRust(LLVMRustCodeGenOptLevel Level)
   }
 }
 
-enum class LLVMRustPassBuilderOptLevel
-{
+enum class LLVMRustPassBuilderOptLevel {
   O0,
   O1,
   O2,
@@ -371,14 +345,12 @@ enum class LLVMRustPassBuilderOptLevel
   Oz,
 };
 
-#if LLVM_VERSION_LT(14, 0)
+#if LLVM_VERSION_LT(14,0)
 using OptimizationLevel = PassBuilder::OptimizationLevel;
 #endif
 
-static OptimizationLevel fromRust(LLVMRustPassBuilderOptLevel Level)
-{
-  switch (Level)
-  {
+static OptimizationLevel fromRust(LLVMRustPassBuilderOptLevel Level) {
+  switch (Level) {
   case LLVMRustPassBuilderOptLevel::O0:
     return OptimizationLevel::O0;
   case LLVMRustPassBuilderOptLevel::O1:
@@ -396,8 +368,7 @@ static OptimizationLevel fromRust(LLVMRustPassBuilderOptLevel Level)
   }
 }
 
-enum class LLVMRustRelocModel
-{
+enum class LLVMRustRelocModel {
   Static,
   PIC,
   DynamicNoPic,
@@ -406,10 +377,8 @@ enum class LLVMRustRelocModel
   ROPIRWPI,
 };
 
-static Reloc::Model fromRust(LLVMRustRelocModel RustReloc)
-{
-  switch (RustReloc)
-  {
+static Reloc::Model fromRust(LLVMRustRelocModel RustReloc) {
+  switch (RustReloc) {
   case LLVMRustRelocModel::Static:
     return Reloc::Static;
   case LLVMRustRelocModel::PIC:
@@ -428,17 +397,15 @@ static Reloc::Model fromRust(LLVMRustRelocModel RustReloc)
 
 #ifdef LLVM_RUSTLLVM
 /// getLongestEntryLength - Return the length of the longest entry in the table.
-template <typename KV>
-static size_t getLongestEntryLength(ArrayRef<KV> Table)
-{
+template<typename KV>
+static size_t getLongestEntryLength(ArrayRef<KV> Table) {
   size_t MaxLen = 0;
   for (auto &I : Table)
     MaxLen = std::max(MaxLen, std::strlen(I.Key));
   return MaxLen;
 }
 
-extern "C" void LLVMRustPrintTargetCPUs(LLVMTargetMachineRef TM)
-{
+extern "C" void LLVMRustPrintTargetCPUs(LLVMTargetMachineRef TM) {
   const TargetMachine *Target = unwrap(TM);
   const MCSubtargetInfo *MCInfo = Target->getMCSubtargetInfo();
   const Triple::ArchType HostArch = Triple(sys::getProcessTriple()).getArch();
@@ -447,19 +414,17 @@ extern "C" void LLVMRustPrintTargetCPUs(LLVMTargetMachineRef TM)
   unsigned MaxCPULen = getLongestEntryLength(CPUTable);
 
   printf("Available CPUs for this target:\n");
-  if (HostArch == TargetArch)
-  {
+  if (HostArch == TargetArch) {
     const StringRef HostCPU = sys::getHostCPUName();
     printf("    %-*s - Select the CPU of the current host (currently %.*s).\n",
-           MaxCPULen, "native", (int)HostCPU.size(), HostCPU.data());
+      MaxCPULen, "native", (int)HostCPU.size(), HostCPU.data());
   }
   for (auto &CPU : CPUTable)
     printf("    %-*s\n", MaxCPULen, CPU.Key);
   printf("\n");
 }
 
-extern "C" size_t LLVMRustGetTargetFeaturesCount(LLVMTargetMachineRef TM)
-{
+extern "C" size_t LLVMRustGetTargetFeaturesCount(LLVMTargetMachineRef TM) {
   const TargetMachine *Target = unwrap(TM);
   const MCSubtargetInfo *MCInfo = Target->getMCSubtargetInfo();
   const ArrayRef<SubtargetFeatureKV> FeatTable = MCInfo->getFeatureTable();
@@ -467,8 +432,7 @@ extern "C" size_t LLVMRustGetTargetFeaturesCount(LLVMTargetMachineRef TM)
 }
 
 extern "C" void LLVMRustGetTargetFeature(LLVMTargetMachineRef TM, size_t Index,
-                                         const char **Feature, const char **Desc)
-{
+                                         const char** Feature, const char** Desc) {
   const TargetMachine *Target = unwrap(TM);
   const MCSubtargetInfo *MCInfo = Target->getMCSubtargetInfo();
   const ArrayRef<SubtargetFeatureKV> FeatTable = MCInfo->getFeatureTable();
@@ -479,21 +443,18 @@ extern "C" void LLVMRustGetTargetFeature(LLVMTargetMachineRef TM, size_t Index,
 
 #else
 
-extern "C" void LLVMRustPrintTargetCPUs(LLVMTargetMachineRef)
-{
+extern "C" void LLVMRustPrintTargetCPUs(LLVMTargetMachineRef) {
   printf("Target CPU help is not supported by this LLVM version.\n\n");
 }
 
-extern "C" size_t LLVMRustGetTargetFeaturesCount(LLVMTargetMachineRef)
-{
+extern "C" size_t LLVMRustGetTargetFeaturesCount(LLVMTargetMachineRef) {
   return 0;
 }
 
-extern "C" void LLVMRustGetTargetFeature(LLVMTargetMachineRef, const char **, const char **) {}
+extern "C" void LLVMRustGetTargetFeature(LLVMTargetMachineRef, const char**, const char**) {}
 #endif
 
-extern "C" const char *LLVMRustGetHostCPUName(size_t *len)
-{
+extern "C" const char* LLVMRustGetHostCPUName(size_t *len) {
   StringRef Name = sys::getHostCPUName();
   *len = Name.size();
   return Name.data();
@@ -512,8 +473,7 @@ extern "C" LLVMTargetMachineRef LLVMRustCreateTargetMachine(
     bool EmitStackSizeSection,
     bool RelaxELFRelocations,
     bool UseInitArray,
-    const char *SplitDwarfFile)
-{
+    const char *SplitDwarfFile) {
 
   auto OptLevel = fromRust(RustOptLevel);
   auto RM = fromRust(RustReloc);
@@ -523,8 +483,7 @@ extern "C" LLVMTargetMachineRef LLVMRustCreateTargetMachine(
   Triple Trip(Triple::normalize(TripleStr));
   const llvm::Target *TheTarget =
       TargetRegistry::lookupTarget(Trip.getTriple(), Error);
-  if (TheTarget == nullptr)
-  {
+  if (TheTarget == nullptr) {
     LLVMRustSetLastError(Error.c_str());
     return nullptr;
   }
@@ -532,8 +491,7 @@ extern "C" LLVMTargetMachineRef LLVMRustCreateTargetMachine(
   TargetOptions Options;
 
   Options.FloatABIType = FloatABI::Default;
-  if (UseSoftFloat)
-  {
+  if (UseSoftFloat) {
     Options.FloatABIType = FloatABI::Soft;
   }
   Options.DataSections = DataSections;
@@ -542,15 +500,13 @@ extern "C" LLVMTargetMachineRef LLVMRustCreateTargetMachine(
   Options.MCOptions.AsmVerbose = AsmComments;
   Options.MCOptions.PreserveAsmComments = AsmComments;
   Options.MCOptions.ABIName = ABIStr;
-  if (SplitDwarfFile)
-  {
-    Options.MCOptions.SplitDwarfFile = SplitDwarfFile;
+  if (SplitDwarfFile) {
+      Options.MCOptions.SplitDwarfFile = SplitDwarfFile;
   }
   Options.RelaxELFRelocations = RelaxELFRelocations;
   Options.UseInitArray = UseInitArray;
 
-  if (TrapUnreachable)
-  {
+  if (TrapUnreachable) {
     // Tell LLVM to codegen `unreachable` into an explicit trap instruction.
     // This limits the extent of possible undefined behavior in some cases, as
     // it prevents control flow from "falling through" into whatever code
@@ -558,8 +514,7 @@ extern "C" LLVMTargetMachineRef LLVMRustCreateTargetMachine(
     Options.TrapUnreachable = true;
   }
 
-  if (Singlethread)
-  {
+  if (Singlethread) {
     Options.ThreadModel = ThreadModel::Single;
   }
 
@@ -570,35 +525,28 @@ extern "C" LLVMTargetMachineRef LLVMRustCreateTargetMachine(
   return wrap(TM);
 }
 
-extern "C" void LLVMRustDisposeTargetMachine(LLVMTargetMachineRef TM)
-{
+extern "C" void LLVMRustDisposeTargetMachine(LLVMTargetMachineRef TM) {
   delete unwrap(TM);
 }
 
 extern "C" void LLVMRustConfigurePassManagerBuilder(
     LLVMPassManagerBuilderRef PMBR, LLVMRustCodeGenOptLevel OptLevel,
     bool MergeFunctions, bool SLPVectorize, bool LoopVectorize, bool PrepareForThinLTO,
-    const char *PGOGenPath, const char *PGOUsePath, const char *PGOSampleUsePath)
-{
+    const char* PGOGenPath, const char* PGOUsePath, const char* PGOSampleUsePath) {
   unwrap(PMBR)->MergeFunctions = MergeFunctions;
   unwrap(PMBR)->SLPVectorize = SLPVectorize;
   unwrap(PMBR)->OptLevel = fromRust(OptLevel);
   unwrap(PMBR)->LoopVectorize = LoopVectorize;
   unwrap(PMBR)->PrepareForThinLTO = PrepareForThinLTO;
 
-  if (PGOGenPath)
-  {
+  if (PGOGenPath) {
     assert(!PGOUsePath && !PGOSampleUsePath);
     unwrap(PMBR)->EnablePGOInstrGen = true;
     unwrap(PMBR)->PGOInstrGen = PGOGenPath;
-  }
-  else if (PGOUsePath)
-  {
+  } else if (PGOUsePath) {
     assert(!PGOSampleUsePath);
     unwrap(PMBR)->PGOInstrUse = PGOUsePath;
-  }
-  else if (PGOSampleUsePath)
-  {
+  } else if (PGOSampleUsePath) {
     unwrap(PMBR)->PGOSampleUse = PGOSampleUsePath;
   }
 }
@@ -607,8 +555,7 @@ extern "C" void LLVMRustConfigurePassManagerBuilder(
 // field of a PassManagerBuilder, we expose our own method of doing so.
 extern "C" void LLVMRustAddBuilderLibraryInfo(LLVMPassManagerBuilderRef PMBR,
                                               LLVMModuleRef M,
-                                              bool DisableSimplifyLibCalls)
-{
+                                              bool DisableSimplifyLibCalls) {
   Triple TargetTriple(unwrap(M)->getTargetTriple());
   TargetLibraryInfoImpl *TLI = new TargetLibraryInfoImpl(TargetTriple);
   if (DisableSimplifyLibCalls)
@@ -619,8 +566,7 @@ extern "C" void LLVMRustAddBuilderLibraryInfo(LLVMPassManagerBuilderRef PMBR,
 // Unfortunately, the LLVM C API doesn't provide a way to create the
 // TargetLibraryInfo pass, so we use this method to do so.
 extern "C" void LLVMRustAddLibraryInfo(LLVMPassManagerRef PMR, LLVMModuleRef M,
-                                       bool DisableSimplifyLibCalls)
-{
+                                       bool DisableSimplifyLibCalls) {
   Triple TargetTriple(unwrap(M)->getTargetTriple());
   TargetLibraryInfoImpl TLII(TargetTriple);
   if (DisableSimplifyLibCalls)
@@ -632,8 +578,7 @@ extern "C" void LLVMRustAddLibraryInfo(LLVMPassManagerRef PMR, LLVMModuleRef M,
 // all the functions in a module, so we do that manually here. You'll find
 // similar code in clang's BackendUtil.cpp file.
 extern "C" void LLVMRustRunFunctionPassManager(LLVMPassManagerRef PMR,
-                                               LLVMModuleRef M)
-{
+                                               LLVMModuleRef M) {
   llvm::legacy::FunctionPassManager *P =
       unwrap<llvm::legacy::FunctionPassManager>(PMR);
   P->doInitialization();
@@ -650,8 +595,7 @@ extern "C" void LLVMRustRunFunctionPassManager(LLVMPassManagerRef PMR,
   P->doFinalization();
 }
 
-extern "C" void LLVMRustSetLLVMOptions(int Argc, char **Argv)
-{
+extern "C" void LLVMRustSetLLVMOptions(int Argc, char **Argv) {
   // Initializing the command-line options more than once is not allowed. So,
   // check if they've already been initialized.  (This could happen if we're
   // being called from rustpkg, for example). If the arguments change, then
@@ -663,16 +607,13 @@ extern "C" void LLVMRustSetLLVMOptions(int Argc, char **Argv)
   cl::ParseCommandLineOptions(Argc, Argv);
 }
 
-enum class LLVMRustFileType
-{
+enum class LLVMRustFileType {
   AssemblyFile,
   ObjectFile,
 };
 
-static CodeGenFileType fromRust(LLVMRustFileType Type)
-{
-  switch (Type)
-  {
+static CodeGenFileType fromRust(LLVMRustFileType Type) {
+  switch (Type) {
   case LLVMRustFileType::AssemblyFile:
     return CGFT_AssemblyFile;
   case LLVMRustFileType::ObjectFile:
@@ -685,8 +626,7 @@ static CodeGenFileType fromRust(LLVMRustFileType Type)
 extern "C" LLVMRustResult
 LLVMRustWriteOutputFile(LLVMTargetMachineRef Target, LLVMPassManagerRef PMR,
                         LLVMModuleRef M, const char *Path, const char *DwoPath,
-                        LLVMRustFileType RustFileType)
-{
+                        LLVMRustFileType RustFileType) {
   llvm::legacy::PassManager *PM = unwrap<llvm::legacy::PassManager>(PMR);
   auto FileType = fromRust(RustFileType);
 
@@ -695,30 +635,25 @@ LLVMRustWriteOutputFile(LLVMTargetMachineRef Target, LLVMPassManagerRef PMR,
   raw_fd_ostream OS(Path, EC, sys::fs::OF_None);
   if (EC)
     ErrorInfo = EC.message();
-  if (ErrorInfo != "")
-  {
+  if (ErrorInfo != "") {
     LLVMRustSetLastError(ErrorInfo.c_str());
     return LLVMRustResult::Failure;
   }
 
   buffer_ostream BOS(OS);
-  if (DwoPath)
-  {
+  if (DwoPath) {
     raw_fd_ostream DOS(DwoPath, EC, sys::fs::OF_None);
     EC.clear();
     if (EC)
-      ErrorInfo = EC.message();
-    if (ErrorInfo != "")
-    {
+        ErrorInfo = EC.message();
+    if (ErrorInfo != "") {
       LLVMRustSetLastError(ErrorInfo.c_str());
       return LLVMRustResult::Failure;
     }
     buffer_ostream DBOS(DOS);
     unwrap(Target)->addPassesToEmitFile(*PM, BOS, &DBOS, FileType, false);
     PM->run(*unwrap(M));
-  }
-  else
-  {
+  } else {
     unwrap(Target)->addPassesToEmitFile(*PM, BOS, nullptr, FileType, false);
     PM->run(*unwrap(M));
   }
@@ -730,13 +665,12 @@ LLVMRustWriteOutputFile(LLVMTargetMachineRef Target, LLVMPassManagerRef PMR,
   return LLVMRustResult::Success;
 }
 
-extern "C" typedef void (*LLVMRustSelfProfileBeforePassCallback)(void *,        // LlvmSelfProfiler
-                                                                 const char *,  // pass name
-                                                                 const char *); // IR name
-extern "C" typedef void (*LLVMRustSelfProfileAfterPassCallback)(void *);        // LlvmSelfProfiler
+extern "C" typedef void (*LLVMRustSelfProfileBeforePassCallback)(void*, // LlvmSelfProfiler
+                                                      const char*,      // pass name
+                                                      const char*);     // IR name
+extern "C" typedef void (*LLVMRustSelfProfileAfterPassCallback)(void*); // LlvmSelfProfiler
 
-std::string LLVMRustwrappedIrGetName(const llvm::Any &WrappedIr)
-{
+std::string LLVMRustwrappedIrGetName(const llvm::Any &WrappedIr) {
   if (any_isa<const Module *>(WrappedIr))
     return any_cast<const Module *>(WrappedIr)->getName().str();
   if (any_isa<const Function *>(WrappedIr))
@@ -748,47 +682,43 @@ std::string LLVMRustwrappedIrGetName(const llvm::Any &WrappedIr)
   return "<UNKNOWN>";
 }
 
+
 void LLVMSelfProfileInitializeCallbacks(
-    PassInstrumentationCallbacks &PIC, void *LlvmSelfProfiler,
+    PassInstrumentationCallbacks& PIC, void* LlvmSelfProfiler,
     LLVMRustSelfProfileBeforePassCallback BeforePassCallback,
-    LLVMRustSelfProfileAfterPassCallback AfterPassCallback)
-{
+    LLVMRustSelfProfileAfterPassCallback AfterPassCallback) {
   PIC.registerBeforeNonSkippedPassCallback([LlvmSelfProfiler, BeforePassCallback](
-                                               StringRef Pass, llvm::Any Ir)
-                                           {
+                                           StringRef Pass, llvm::Any Ir) {
     std::string PassName = Pass.str();
     std::string IrName = LLVMRustwrappedIrGetName(Ir);
-    BeforePassCallback(LlvmSelfProfiler, PassName.c_str(), IrName.c_str()); });
+    BeforePassCallback(LlvmSelfProfiler, PassName.c_str(), IrName.c_str());
+  });
 
   PIC.registerAfterPassCallback(
       [LlvmSelfProfiler, AfterPassCallback](StringRef Pass, llvm::Any IR,
-                                            const PreservedAnalyses &Preserved)
-      {
+                                            const PreservedAnalyses &Preserved) {
         AfterPassCallback(LlvmSelfProfiler);
       });
 
   PIC.registerAfterPassInvalidatedCallback(
-      [LlvmSelfProfiler, AfterPassCallback](StringRef Pass, const PreservedAnalyses &Preserved)
-      {
+      [LlvmSelfProfiler, AfterPassCallback](StringRef Pass, const PreservedAnalyses &Preserved) {
         AfterPassCallback(LlvmSelfProfiler);
       });
 
   PIC.registerBeforeAnalysisCallback([LlvmSelfProfiler, BeforePassCallback](
-                                         StringRef Pass, llvm::Any Ir)
-                                     {
+                                         StringRef Pass, llvm::Any Ir) {
     std::string PassName = Pass.str();
     std::string IrName = LLVMRustwrappedIrGetName(Ir);
-    BeforePassCallback(LlvmSelfProfiler, PassName.c_str(), IrName.c_str()); });
+    BeforePassCallback(LlvmSelfProfiler, PassName.c_str(), IrName.c_str());
+  });
 
   PIC.registerAfterAnalysisCallback(
-      [LlvmSelfProfiler, AfterPassCallback](StringRef Pass, llvm::Any Ir)
-      {
+      [LlvmSelfProfiler, AfterPassCallback](StringRef Pass, llvm::Any Ir) {
         AfterPassCallback(LlvmSelfProfiler);
       });
 }
 
-enum class LLVMRustOptStage
-{
+enum class LLVMRustOptStage {
   PreLinkNoLTO,
   PreLinkThinLTO,
   PreLinkFatLTO,
@@ -796,13 +726,12 @@ enum class LLVMRustOptStage
   FatLTO,
 };
 
-struct LLVMRustSanitizerOptions
-{
+struct LLVMRustSanitizerOptions {
   bool SanitizeAddress;
   bool SanitizeAddressRecover;
   bool SanitizeMemory;
   bool SanitizeMemoryRecover;
-  int SanitizeMemoryTrackOrigins;
+  int  SanitizeMemoryTrackOrigins;
   bool SanitizeThread;
   bool SanitizeHWAddress;
   bool SanitizeHWAddressRecover;
@@ -821,14 +750,14 @@ LLVMRustOptimizeWithNewPassManager(
     const char *PGOGenPath, const char *PGOUsePath,
     bool InstrumentCoverage, bool InstrumentGCOV,
     const char *PGOSampleUsePath, bool DebugInfoForProfiling,
-    void *LlvmSelfProfiler,
+    void* LlvmSelfProfiler,
     LLVMRustSelfProfileBeforePassCallback BeforePassCallback,
     LLVMRustSelfProfileAfterPassCallback AfterPassCallback,
-    const char *ExtraPasses, size_t ExtraPassesLen)
-{
+    const char *ExtraPasses, size_t ExtraPassesLen) {
   Module *TheModule = unwrap(ModuleRef);
   TargetMachine *TM = unwrap(TMRef);
   OptimizationLevel OptLevel = fromRust(OptLevelRust);
+
 
   PipelineTuningOptions PTO;
   PTO.LoopUnrolling = UnrollLoops;
@@ -844,31 +773,23 @@ LLVMRustOptimizeWithNewPassManager(
   StandardInstrumentations SI(DebugPassManager);
   SI.registerCallbacks(PIC);
 
-  if (LlvmSelfProfiler)
-  {
-    LLVMSelfProfileInitializeCallbacks(PIC, LlvmSelfProfiler, BeforePassCallback, AfterPassCallback);
+  if (LlvmSelfProfiler){
+    LLVMSelfProfileInitializeCallbacks(PIC,LlvmSelfProfiler,BeforePassCallback,AfterPassCallback);
   }
 
   Optional<PGOOptions> PGOOpt;
-  if (PGOGenPath)
-  {
+  if (PGOGenPath) {
     assert(!PGOUsePath && !PGOSampleUsePath);
     PGOOpt = PGOOptions(PGOGenPath, "", "", PGOOptions::IRInstr,
                         PGOOptions::NoCSAction, DebugInfoForProfiling);
-  }
-  else if (PGOUsePath)
-  {
+  } else if (PGOUsePath) {
     assert(!PGOSampleUsePath);
     PGOOpt = PGOOptions(PGOUsePath, "", "", PGOOptions::IRUse,
                         PGOOptions::NoCSAction, DebugInfoForProfiling);
-  }
-  else if (PGOSampleUsePath)
-  {
+  } else if (PGOSampleUsePath) {
     PGOOpt = PGOOptions(PGOSampleUsePath, "", "", PGOOptions::SampleUse,
                         PGOOptions::NoCSAction, DebugInfoForProfiling);
-  }
-  else if (DebugInfoForProfiling)
-  {
+  } else if (DebugInfoForProfiling) {
     PGOOpt = PGOOptions("", "", "", PGOOptions::NoAction,
                         PGOOptions::NoCSAction, DebugInfoForProfiling);
   }
@@ -887,15 +808,13 @@ LLVMRustOptimizeWithNewPassManager(
   ModuleAnalysisManager MAM(DebugPassManager);
 #endif
 
-  FAM.registerPass([&]
-                   { return PB.buildDefaultAAPipeline(); });
+  FAM.registerPass([&] { return PB.buildDefaultAAPipeline(); });
 
   Triple TargetTriple(TheModule->getTargetTriple());
   std::unique_ptr<TargetLibraryInfoImpl> TLII(new TargetLibraryInfoImpl(TargetTriple));
   if (DisableSimplifyLibCalls)
     TLII->disableAllFunctions();
-  FAM.registerPass([&]
-                   { return TargetLibraryAnalysis(*TLII); });
+  FAM.registerPass([&] { return TargetLibraryAnalysis(*TLII); });
 
   PB.registerModuleAnalyses(MAM);
   PB.registerCGSCCAnalyses(CGAM);
@@ -910,106 +829,98 @@ LLVMRustOptimizeWithNewPassManager(
   std::vector<std::function<void(ModulePassManager &, OptimizationLevel)>>
       OptimizerLastEPCallbacks;
 
-  if (VerifyIR)
-  {
+  if (VerifyIR) {
     PipelineStartEPCallbacks.push_back(
-        [VerifyIR](ModulePassManager &MPM, OptimizationLevel Level)
-        {
-          MPM.addPass(VerifierPass());
-        });
+      [VerifyIR](ModulePassManager &MPM, OptimizationLevel Level) {
+        MPM.addPass(VerifierPass());
+      }
+    );
   }
 
-  if (InstrumentGCOV)
-  {
+  if (InstrumentGCOV) {
     PipelineStartEPCallbacks.push_back(
-        [](ModulePassManager &MPM, OptimizationLevel Level)
-        {
-          MPM.addPass(GCOVProfilerPass(GCOVOptions::getDefault()));
-        });
+      [](ModulePassManager &MPM, OptimizationLevel Level) {
+        MPM.addPass(GCOVProfilerPass(GCOVOptions::getDefault()));
+      }
+    );
   }
 
-  if (InstrumentCoverage)
-  {
+  if (InstrumentCoverage) {
     PipelineStartEPCallbacks.push_back(
-        [](ModulePassManager &MPM, OptimizationLevel Level)
-        {
-          InstrProfOptions Options;
-          MPM.addPass(InstrProfiling(Options, false));
-        });
+      [](ModulePassManager &MPM, OptimizationLevel Level) {
+        InstrProfOptions Options;
+        MPM.addPass(InstrProfiling(Options, false));
+      }
+    );
   }
 
-  if (SanitizerOptions)
-  {
-    if (SanitizerOptions->SanitizeMemory)
-    {
+  if (SanitizerOptions) {
+    if (SanitizerOptions->SanitizeMemory) {
       MemorySanitizerOptions Options(
           SanitizerOptions->SanitizeMemoryTrackOrigins,
           SanitizerOptions->SanitizeMemoryRecover,
           /*CompileKernel=*/false);
       OptimizerLastEPCallbacks.push_back(
-          [Options](ModulePassManager &MPM, OptimizationLevel Level)
-          {
+        [Options](ModulePassManager &MPM, OptimizationLevel Level) {
 #if LLVM_VERSION_GE(14, 0)
-            MPM.addPass(ModuleMemorySanitizerPass(Options));
+          MPM.addPass(ModuleMemorySanitizerPass(Options));
 #else
-            MPM.addPass(MemorySanitizerPass(Options));
+          MPM.addPass(MemorySanitizerPass(Options));
 #endif
-            MPM.addPass(createModuleToFunctionPassAdaptor(MemorySanitizerPass(Options)));
-          });
+          MPM.addPass(createModuleToFunctionPassAdaptor(MemorySanitizerPass(Options)));
+        }
+      );
     }
 
-    if (SanitizerOptions->SanitizeThread)
-    {
+    if (SanitizerOptions->SanitizeThread) {
       OptimizerLastEPCallbacks.push_back(
-          [](ModulePassManager &MPM, OptimizationLevel Level)
-          {
+        [](ModulePassManager &MPM, OptimizationLevel Level) {
 #if LLVM_VERSION_GE(14, 0)
-            MPM.addPass(ModuleThreadSanitizerPass());
+          MPM.addPass(ModuleThreadSanitizerPass());
 #else
-            MPM.addPass(ThreadSanitizerPass());
+          MPM.addPass(ThreadSanitizerPass());
 #endif
-            MPM.addPass(createModuleToFunctionPassAdaptor(ThreadSanitizerPass()));
-          });
+          MPM.addPass(createModuleToFunctionPassAdaptor(ThreadSanitizerPass()));
+        }
+      );
     }
 
-    if (SanitizerOptions->SanitizeAddress)
-    {
+    if (SanitizerOptions->SanitizeAddress) {
       OptimizerLastEPCallbacks.push_back(
-          [SanitizerOptions](ModulePassManager &MPM, OptimizationLevel Level)
-          {
-            MPM.addPass(RequireAnalysisPass<ASanGlobalsMetadataAnalysis, Module>());
+        [SanitizerOptions](ModulePassManager &MPM, OptimizationLevel Level) {
+          MPM.addPass(RequireAnalysisPass<ASanGlobalsMetadataAnalysis, Module>());
 #if LLVM_VERSION_GE(14, 0)
-            AddressSanitizerOptions opts = AddressSanitizerOptions{
-                /*CompileKernel=*/false,
-                SanitizerOptions->SanitizeAddressRecover,
-                /*UseAfterScope=*/true,
-                AsanDetectStackUseAfterReturnMode::Runtime,
-            };
-            MPM.addPass(ModuleAddressSanitizerPass(opts));
+          AddressSanitizerOptions opts = AddressSanitizerOptions{
+            /*CompileKernel=*/false,
+            SanitizerOptions->SanitizeAddressRecover,
+            /*UseAfterScope=*/true,
+            AsanDetectStackUseAfterReturnMode::Runtime,
+          };
+          MPM.addPass(ModuleAddressSanitizerPass(opts));
 #else
-            MPM.addPass(ModuleAddressSanitizerPass(
-                /*CompileKernel=*/false, SanitizerOptions->SanitizeAddressRecover));
-            MPM.addPass(createModuleToFunctionPassAdaptor(AddressSanitizerPass(
-                /*CompileKernel=*/false, SanitizerOptions->SanitizeAddressRecover,
-                /*UseAfterScope=*/true)));
+          MPM.addPass(ModuleAddressSanitizerPass(
+              /*CompileKernel=*/false, SanitizerOptions->SanitizeAddressRecover));
+          MPM.addPass(createModuleToFunctionPassAdaptor(AddressSanitizerPass(
+              /*CompileKernel=*/false, SanitizerOptions->SanitizeAddressRecover,
+              /*UseAfterScope=*/true)));
 #endif
-          });
+        }
+      );
     }
-    if (SanitizerOptions->SanitizeHWAddress)
-    {
+    if (SanitizerOptions->SanitizeHWAddress) {
       OptimizerLastEPCallbacks.push_back(
-          [SanitizerOptions](ModulePassManager &MPM, OptimizationLevel Level)
-          {
+        [SanitizerOptions](ModulePassManager &MPM, OptimizationLevel Level) {
 #if LLVM_VERSION_GE(14, 0)
-            HWAddressSanitizerOptions opts(
-                /*CompileKernel=*/false, SanitizerOptions->SanitizeHWAddressRecover,
-                /*DisableOptimization=*/false);
-            MPM.addPass(HWAddressSanitizerPass(opts));
+          HWAddressSanitizerOptions opts(
+              /*CompileKernel=*/false, SanitizerOptions->SanitizeHWAddressRecover,
+              /*DisableOptimization=*/false);
+          MPM.addPass(HWAddressSanitizerPass(opts));
 #else
-            MPM.addPass(HWAddressSanitizerPass(
-                /*CompileKernel=*/false, SanitizerOptions->SanitizeHWAddressRecover));
+          MPM.addPass(HWAddressSanitizerPass(
+              /*CompileKernel=*/false, SanitizerOptions->SanitizeHWAddressRecover));
 #endif
-          });
+        }
+      );
     }
   }
 
@@ -1019,13 +930,11 @@ LLVMRustOptimizeWithNewPassManager(
   ModulePassManager MPM(DebugPassManager);
 #endif
   bool NeedThinLTOBufferPasses = UseThinLTOBuffers;
-  if (!NoPrepopulatePasses)
-  {
+  if (!NoPrepopulatePasses) {
     // The pre-link pipelines don't support O0 and require using budilO0DefaultPipeline() instead.
     // At the same time, the LTO pipelines do support O0 and using them is required.
     bool IsLTO = OptStage == LLVMRustOptStage::ThinLTO || OptStage == LLVMRustOptStage::FatLTO;
-    if (OptLevel == OptimizationLevel::O0 && !IsLTO)
-    {
+    if (OptLevel == OptimizationLevel::O0 && !IsLTO) {
       for (const auto &C : PipelineStartEPCallbacks)
         PB.registerPipelineStartEPCallback(C);
       for (const auto &C : OptimizerLastEPCallbacks)
@@ -1033,19 +942,15 @@ LLVMRustOptimizeWithNewPassManager(
 
       // Pass false as we manually schedule ThinLTOBufferPasses below.
       MPM = PB.buildO0DefaultPipeline(OptLevel, /* PreLinkLTO */ false);
-    }
-    else
-    {
+    } else {
       for (const auto &C : PipelineStartEPCallbacks)
         PB.registerPipelineStartEPCallback(C);
-      if (OptStage != LLVMRustOptStage::PreLinkThinLTO)
-      {
+      if (OptStage != LLVMRustOptStage::PreLinkThinLTO) {
         for (const auto &C : OptimizerLastEPCallbacks)
           PB.registerOptimizerLastEPCallback(C);
       }
 
-      switch (OptStage)
-      {
+      switch (OptStage) {
       case LLVMRustOptStage::PreLinkNoLTO:
         MPM = PB.buildPerModuleDefaultPipeline(OptLevel, DebugPassManager);
         break;
@@ -1076,18 +981,15 @@ LLVMRustOptimizeWithNewPassManager(
     }
   }
 
-  if (ExtraPassesLen)
-  {
-    if (auto Err = PB.parsePassPipeline(MPM, StringRef(ExtraPasses, ExtraPassesLen)))
-    {
+  if (ExtraPassesLen) {
+    if (auto Err = PB.parsePassPipeline(MPM, StringRef(ExtraPasses, ExtraPassesLen))) {
       std::string ErrMsg = toString(std::move(Err));
       LLVMRustSetLastError(ErrMsg.c_str());
       return LLVMRustResult::Failure;
     }
   }
 
-  if (NeedThinLTOBufferPasses)
-  {
+  if (NeedThinLTOBufferPasses) {
     MPM.addPass(CanonicalizeAliasesPass());
     MPM.addPass(NameAnonGlobalPass());
   }
@@ -1107,113 +1009,95 @@ LLVMRustOptimizeWithNewPassManager(
 // * output buffer
 // * output buffer len
 // Returns len of demangled string, or 0 if demangle failed.
-typedef size_t (*DemangleFn)(const char *, size_t, char *, size_t);
+typedef size_t (*DemangleFn)(const char*, size_t, char*, size_t);
 
-namespace
-{
 
-  class RustAssemblyAnnotationWriter : public AssemblyAnnotationWriter
-  {
-    DemangleFn Demangle;
-    std::vector<char> Buf;
+namespace {
 
-  public:
-    RustAssemblyAnnotationWriter(DemangleFn Demangle) : Demangle(Demangle) {}
+class RustAssemblyAnnotationWriter : public AssemblyAnnotationWriter {
+  DemangleFn Demangle;
+  std::vector<char> Buf;
 
-    // Return empty string if demangle failed
-    // or if name does not need to be demangled
-    StringRef CallDemangle(StringRef name)
-    {
-      if (!Demangle)
-      {
-        return StringRef();
-      }
+public:
+  RustAssemblyAnnotationWriter(DemangleFn Demangle) : Demangle(Demangle) {}
 
-      if (Buf.size() < name.size() * 2)
-      {
-        // Semangled name usually shorter than mangled,
-        // but allocate twice as much memory just in case
-        Buf.resize(name.size() * 2);
-      }
-
-      auto R = Demangle(name.data(), name.size(), Buf.data(), Buf.size());
-      if (!R)
-      {
-        // Demangle failed.
-        return StringRef();
-      }
-
-      auto Demangled = StringRef(Buf.data(), R);
-      if (Demangled == name)
-      {
-        // Do not print anything if demangled name is equal to mangled.
-        return StringRef();
-      }
-
-      return Demangled;
+  // Return empty string if demangle failed
+  // or if name does not need to be demangled
+  StringRef CallDemangle(StringRef name) {
+    if (!Demangle) {
+      return StringRef();
     }
 
-    void emitFunctionAnnot(const Function *F,
-                           formatted_raw_ostream &OS) override
-    {
-      StringRef Demangled = CallDemangle(F->getName());
-      if (Demangled.empty())
-      {
-        return;
-      }
-
-      OS << "; " << Demangled << "\n";
+    if (Buf.size() < name.size() * 2) {
+      // Semangled name usually shorter than mangled,
+      // but allocate twice as much memory just in case
+      Buf.resize(name.size() * 2);
     }
 
-    void emitInstructionAnnot(const Instruction *I,
-                              formatted_raw_ostream &OS) override
-    {
-      const char *Name;
-      const Value *Value;
-      if (const CallInst *CI = dyn_cast<CallInst>(I))
-      {
-        Name = "call";
-        Value = CI->getCalledOperand();
-      }
-      else if (const InvokeInst *II = dyn_cast<InvokeInst>(I))
-      {
-        Name = "invoke";
-        Value = II->getCalledOperand();
-      }
-      else
-      {
-        // Could demangle more operations, e. g.
-        // `store %place, @function`.
-        return;
-      }
-
-      if (!Value->hasName())
-      {
-        return;
-      }
-
-      StringRef Demangled = CallDemangle(Value->getName());
-      if (Demangled.empty())
-      {
-        return;
-      }
-
-      OS << "; " << Name << " " << Demangled << "\n";
+    auto R = Demangle(name.data(), name.size(), Buf.data(), Buf.size());
+    if (!R) {
+      // Demangle failed.
+      return StringRef();
     }
-  };
+
+    auto Demangled = StringRef(Buf.data(), R);
+    if (Demangled == name) {
+      // Do not print anything if demangled name is equal to mangled.
+      return StringRef();
+    }
+
+    return Demangled;
+  }
+
+  void emitFunctionAnnot(const Function *F,
+                         formatted_raw_ostream &OS) override {
+    StringRef Demangled = CallDemangle(F->getName());
+    if (Demangled.empty()) {
+        return;
+    }
+
+    OS << "; " << Demangled << "\n";
+  }
+
+  void emitInstructionAnnot(const Instruction *I,
+                            formatted_raw_ostream &OS) override {
+    const char *Name;
+    const Value *Value;
+    if (const CallInst *CI = dyn_cast<CallInst>(I)) {
+      Name = "call";
+      Value = CI->getCalledOperand();
+    } else if (const InvokeInst* II = dyn_cast<InvokeInst>(I)) {
+      Name = "invoke";
+      Value = II->getCalledOperand();
+    } else {
+      // Could demangle more operations, e. g.
+      // `store %place, @function`.
+      return;
+    }
+
+    if (!Value->hasName()) {
+      return;
+    }
+
+    StringRef Demangled = CallDemangle(Value->getName());
+    if (Demangled.empty()) {
+      return;
+    }
+
+    OS << "; " << Name << " " << Demangled << "\n";
+  }
+};
 
 } // namespace
 
 extern "C" LLVMRustResult
-LLVMRustPrintModule(LLVMModuleRef M, const char *Path, DemangleFn Demangle)
-{
+LLVMRustPrintModule(LLVMModuleRef M, const char *Path, DemangleFn Demangle) {
   std::string ErrorInfo;
   std::error_code EC;
   raw_fd_ostream OS(Path, EC, sys::fs::OF_None);
   if (EC)
     ErrorInfo = EC.message();
-  if (ErrorInfo != "")
-  {
+  if (ErrorInfo != "") {
     LLVMRustSetLastError(ErrorInfo.c_str());
     return LLVMRustResult::Failure;
   }
@@ -1225,17 +1109,13 @@ LLVMRustPrintModule(LLVMModuleRef M, const char *Path, DemangleFn Demangle)
   return LLVMRustResult::Success;
 }
 
-extern "C" void LLVMRustPrintPasses()
-{
+extern "C" void LLVMRustPrintPasses() {
   LLVMInitializePasses();
-  struct MyListener : PassRegistrationListener
-  {
-    void passEnumerate(const PassInfo *Info)
-    {
+  struct MyListener : PassRegistrationListener {
+    void passEnumerate(const PassInfo *Info) {
       StringRef PassArg = Info->getPassArgument();
       StringRef PassName = Info->getPassName();
-      if (!PassArg.empty())
-      {
+      if (!PassArg.empty()) {
         // These unsigned->signed casts could theoretically overflow, but
         // realistically never will (and even if, the result is implementation
         // defined rather plain UB).
@@ -1250,22 +1130,17 @@ extern "C" void LLVMRustPrintPasses()
 }
 
 extern "C" void LLVMRustAddAlwaysInlinePass(LLVMPassManagerBuilderRef PMBR,
-                                            bool AddLifetimes)
-{
+                                            bool AddLifetimes) {
   unwrap(PMBR)->Inliner = llvm::createAlwaysInlinerLegacyPass(AddLifetimes);
 }
 
 extern "C" void LLVMRustRunRestrictionPass(LLVMModuleRef M, char **Symbols,
-                                           size_t Len)
-{
+                                           size_t Len) {
   llvm::legacy::PassManager passes;
 
-  auto PreserveFunctions = [=](const GlobalValue &GV)
-  {
-    for (size_t I = 0; I < Len; I++)
-    {
-      if (GV.getName() == Symbols[I])
-      {
+  auto PreserveFunctions = [=](const GlobalValue &GV) {
+    for (size_t I = 0; I < Len; I++) {
+      if (GV.getName() == Symbols[I]) {
         return true;
       }
     }
@@ -1277,22 +1152,17 @@ extern "C" void LLVMRustRunRestrictionPass(LLVMModuleRef M, char **Symbols,
   passes.run(*unwrap(M));
 }
 
-extern "C" void LLVMRustMarkAllFunctionsNounwind(LLVMModuleRef M)
-{
+extern "C" void LLVMRustMarkAllFunctionsNounwind(LLVMModuleRef M) {
   for (Module::iterator GV = unwrap(M)->begin(), E = unwrap(M)->end(); GV != E;
-       ++GV)
-  {
+       ++GV) {
     GV->setDoesNotThrow();
     Function *F = dyn_cast<Function>(GV);
     if (F == nullptr)
       continue;
 
-    for (Function::iterator B = F->begin(), BE = F->end(); B != BE; ++B)
-    {
-      for (BasicBlock::iterator I = B->begin(), IE = B->end(); I != IE; ++I)
-      {
-        if (isa<InvokeInst>(I))
-        {
+    for (Function::iterator B = F->begin(), BE = F->end(); B != BE; ++B) {
+      for (BasicBlock::iterator I = B->begin(), IE = B->end(); I != IE; ++I) {
+        if (isa<InvokeInst>(I)) {
           InvokeInst *CI = cast<InvokeInst>(I);
           CI->setDoesNotThrow();
         }
@@ -1303,25 +1173,21 @@ extern "C" void LLVMRustMarkAllFunctionsNounwind(LLVMModuleRef M)
 
 extern "C" void
 LLVMRustSetDataLayoutFromTargetMachine(LLVMModuleRef Module,
-                                       LLVMTargetMachineRef TMR)
-{
+                                       LLVMTargetMachineRef TMR) {
   TargetMachine *Target = unwrap(TMR);
   unwrap(Module)->setDataLayout(Target->createDataLayout());
 }
 
-extern "C" void LLVMRustSetModulePICLevel(LLVMModuleRef M)
-{
+extern "C" void LLVMRustSetModulePICLevel(LLVMModuleRef M) {
   unwrap(M)->setPICLevel(PICLevel::Level::BigPIC);
 }
 
-extern "C" void LLVMRustSetModulePIELevel(LLVMModuleRef M)
-{
+extern "C" void LLVMRustSetModulePIELevel(LLVMModuleRef M) {
   unwrap(M)->setPIELevel(PIELevel::Level::Large);
 }
 
 extern "C" void LLVMRustSetModuleCodeModel(LLVMModuleRef M,
-                                           LLVMRustCodeModel Model)
-{
+                                           LLVMRustCodeModel Model) {
   auto CM = fromRust(Model);
   if (!CM.hasValue())
     return;
@@ -1359,8 +1225,7 @@ extern "C" void LLVMRustSetModuleCodeModel(LLVMModuleRef M,
 // This is a shared data structure which *must* be threadsafe to share
 // read-only amongst threads. This also corresponds basically to the arguments
 // of the `ProcessThinLTOModule` function in the LLVM source.
-struct LLVMRustThinLTOData
-{
+struct LLVMRustThinLTOData {
   // The combined index that is the global analysis over all modules we're
   // performing ThinLTO for. This is mostly managed by LLVM.
   ModuleSummaryIndex Index;
@@ -1386,8 +1251,7 @@ struct LLVMRustThinLTOData
 };
 
 // Just an argument to the `LLVMRustCreateThinLTOData` function below.
-struct LLVMRustThinLTOModule
-{
+struct LLVMRustThinLTOModule {
   const char *identifier;
   const char *data;
   size_t len;
@@ -1396,22 +1260,21 @@ struct LLVMRustThinLTOModule
 // This is copied from `lib/LTO/ThinLTOCodeGenerator.cpp`, not sure what it
 // does.
 static const GlobalValueSummary *
-getFirstDefinitionForLinker(const GlobalValueSummaryList &GVSummaryList)
-{
+getFirstDefinitionForLinker(const GlobalValueSummaryList &GVSummaryList) {
   auto StrongDefForLinker = llvm::find_if(
-      GVSummaryList, [](const std::unique_ptr<GlobalValueSummary> &Summary)
-      {
+      GVSummaryList, [](const std::unique_ptr<GlobalValueSummary> &Summary) {
         auto Linkage = Summary->linkage();
         return !GlobalValue::isAvailableExternallyLinkage(Linkage) &&
-               !GlobalValue::isWeakForLinker(Linkage); });
+               !GlobalValue::isWeakForLinker(Linkage);
+      });
   if (StrongDefForLinker != GVSummaryList.end())
     return StrongDefForLinker->get();
 
   auto FirstDefForLinker = llvm::find_if(
-      GVSummaryList, [](const std::unique_ptr<GlobalValueSummary> &Summary)
-      {
+      GVSummaryList, [](const std::unique_ptr<GlobalValueSummary> &Summary) {
         auto Linkage = Summary->linkage();
-        return !GlobalValue::isAvailableExternallyLinkage(Linkage); });
+        return !GlobalValue::isAvailableExternallyLinkage(Linkage);
+      });
   if (FirstDefForLinker == GVSummaryList.end())
     return nullptr;
   return FirstDefForLinker->get();
@@ -1420,25 +1283,22 @@ getFirstDefinitionForLinker(const GlobalValueSummaryList &GVSummaryList)
 // The main entry point for creating the global ThinLTO analysis. The structure
 // here is basically the same as before threads are spawned in the `run`
 // function of `lib/LTO/ThinLTOCodeGenerator.cpp`.
-extern "C" LLVMRustThinLTOData *
+extern "C" LLVMRustThinLTOData*
 LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
                           int num_modules,
                           const char **preserved_symbols,
-                          int num_symbols)
-{
+                          int num_symbols) {
   auto Ret = std::make_unique<LLVMRustThinLTOData>();
 
   // Load each module's summary and merge it into one combined index
-  for (int i = 0; i < num_modules; i++)
-  {
+  for (int i = 0; i < num_modules; i++) {
     auto module = &modules[i];
     StringRef buffer(module->data, module->len);
     MemoryBufferRef mem_buffer(buffer, module->identifier);
 
     Ret->ModuleMap[module->identifier] = mem_buffer;
 
-    if (Error Err = readModuleSummaryIndex(mem_buffer, Ret->Index, i))
-    {
+    if (Error Err = readModuleSummaryIndex(mem_buffer, Ret->Index, i)) {
       LLVMRustSetLastError(toString(std::move(Err)).c_str());
       return nullptr;
     }
@@ -1449,8 +1309,7 @@ LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
 
   // Convert the preserved symbols set from string to GUID, this is then needed
   // for internalization.
-  for (int i = 0; i < num_symbols; i++)
-  {
+  for (int i = 0; i < num_symbols; i++) {
     auto GUID = GlobalValue::getGUID(preserved_symbols[i]);
     Ret->GUIDPreservedSymbols.insert(GUID);
   }
@@ -1459,8 +1318,7 @@ LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
   // combined index
   //
   // This is copied from `lib/LTO/ThinLTOCodeGenerator.cpp`
-  auto deadIsPrevailing = [&](GlobalValue::GUID G)
-  {
+  auto deadIsPrevailing = [&](GlobalValue::GUID G) {
     return PrevailingType::Unknown;
   };
   // We don't have a complete picture in our use of ThinLTO, just our immediate
@@ -1469,10 +1327,11 @@ LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
   computeDeadSymbolsWithConstProp(Ret->Index, Ret->GUIDPreservedSymbols,
                                   deadIsPrevailing, /* ImportEnabled = */ false);
   ComputeCrossModuleImport(
-      Ret->Index,
-      Ret->ModuleToDefinedGVSummaries,
-      Ret->ImportLists,
-      Ret->ExportLists);
+    Ret->Index,
+    Ret->ModuleToDefinedGVSummaries,
+    Ret->ImportLists,
+    Ret->ExportLists
+  );
 
   // Resolve LinkOnce/Weak symbols, this has to be computed early be cause it
   // impacts the caching.
@@ -1480,13 +1339,11 @@ LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
   // This is copied from `lib/LTO/ThinLTOCodeGenerator.cpp` with some of this
   // being lifted from `lib/LTO/LTO.cpp` as well
   DenseMap<GlobalValue::GUID, const GlobalValueSummary *> PrevailingCopy;
-  for (auto &I : Ret->Index)
-  {
+  for (auto &I : Ret->Index) {
     if (I.second.SummaryList.size() > 1)
       PrevailingCopy[I.first] = getFirstDefinitionForLinker(I.second.SummaryList);
   }
-  auto isPrevailing = [&](GlobalValue::GUID GUID, const GlobalValueSummary *S)
-  {
+  auto isPrevailing = [&](GlobalValue::GUID GUID, const GlobalValueSummary *S) {
     const auto &Prevailing = PrevailingCopy.find(GUID);
     if (Prevailing == PrevailingCopy.end())
       return true;
@@ -1494,12 +1351,11 @@ LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
   };
   auto recordNewLinkage = [&](StringRef ModuleIdentifier,
                               GlobalValue::GUID GUID,
-                              GlobalValue::LinkageTypes NewLinkage)
-  {
+                              GlobalValue::LinkageTypes NewLinkage) {
     Ret->ResolvedODR[ModuleIdentifier][GUID] = NewLinkage;
   };
 
-#if LLVM_VERSION_GE(13, 0)
+#if LLVM_VERSION_GE(13,0)
   // Uses FromPrevailing visibility scheme which works for many binary
   // formats. We probably could and should use ELF visibility scheme for many of
   // our targets, however.
@@ -1516,10 +1372,8 @@ LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
   // symbols are internalized. Otherwise everything that's already external
   // linkage will stay as external, and internal will stay as internal.
   std::set<GlobalValue::GUID> ExportedGUIDs;
-  for (auto &List : Ret->Index)
-  {
-    for (auto &GVS : List.second.SummaryList)
-    {
+  for (auto &List : Ret->Index) {
+    for (auto &GVS: List.second.SummaryList) {
       if (GlobalValue::isLocalLinkage(GVS->linkage()))
         continue;
       auto GUID = GVS->getOriginalName();
@@ -1527,12 +1381,11 @@ LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
         ExportedGUIDs.insert(GUID);
     }
   }
-  auto isExported = [&](StringRef ModuleIdentifier, ValueInfo VI)
-  {
+  auto isExported = [&](StringRef ModuleIdentifier, ValueInfo VI) {
     const auto &ExportList = Ret->ExportLists.find(ModuleIdentifier);
     return (ExportList != Ret->ExportLists.end() &&
-            ExportList->second.count(VI)) ||
-           ExportedGUIDs.count(VI.getGUID());
+      ExportList->second.count(VI)) ||
+      ExportedGUIDs.count(VI.getGUID());
   };
   thinLTOInternalizeAndPromoteInIndex(Ret->Index, isExported, isPrevailing);
 
@@ -1540,8 +1393,7 @@ LLVMRustCreateThinLTOData(LLVMRustThinLTOModule *modules,
 }
 
 extern "C" void
-LLVMRustFreeThinLTOData(LLVMRustThinLTOData *Data)
-{
+LLVMRustFreeThinLTOData(LLVMRustThinLTOData *Data) {
   delete Data;
 }
 
@@ -1554,8 +1406,7 @@ LLVMRustFreeThinLTOData(LLVMRustThinLTOData *Data)
 // so rustc can save off the intermediate bytecode between each step.
 
 static bool
-clearDSOLocalOnDeclarations(Module &Mod, TargetMachine &TM)
-{
+clearDSOLocalOnDeclarations(Module &Mod, TargetMachine &TM) {
   // When linking an ELF shared object, dso_local should be dropped. We
   // conservatively do this for -fpic.
   bool ClearDSOLocalOnDeclarations =
@@ -1567,16 +1418,14 @@ clearDSOLocalOnDeclarations(Module &Mod, TargetMachine &TM)
 
 extern "C" bool
 LLVMRustPrepareThinLTORename(const LLVMRustThinLTOData *Data, LLVMModuleRef M,
-                             LLVMTargetMachineRef TM)
-{
+                             LLVMTargetMachineRef TM) {
   Module &Mod = *unwrap(M);
   TargetMachine &Target = *unwrap(TM);
 
   bool ClearDSOLocal = clearDSOLocalOnDeclarations(Mod, Target);
   bool error = renameModuleForThinLTO(Mod, Data->Index, ClearDSOLocal);
 
-  if (error)
-  {
+  if (error) {
     LLVMRustSetLastError("renameModuleForThinLTO failed");
     return false;
   }
@@ -1584,8 +1433,7 @@ LLVMRustPrepareThinLTORename(const LLVMRustThinLTOData *Data, LLVMModuleRef M,
 }
 
 extern "C" bool
-LLVMRustPrepareThinLTOResolveWeak(const LLVMRustThinLTOData *Data, LLVMModuleRef M)
-{
+LLVMRustPrepareThinLTOResolveWeak(const LLVMRustThinLTOData *Data, LLVMModuleRef M) {
   Module &Mod = *unwrap(M);
   const auto &DefinedGlobals = Data->ModuleToDefinedGVSummaries.lookup(Mod.getModuleIdentifier());
 #if LLVM_VERSION_GE(14, 0)
@@ -1597,8 +1445,7 @@ LLVMRustPrepareThinLTOResolveWeak(const LLVMRustThinLTOData *Data, LLVMModuleRef
 }
 
 extern "C" bool
-LLVMRustPrepareThinLTOInternalize(const LLVMRustThinLTOData *Data, LLVMModuleRef M)
-{
+LLVMRustPrepareThinLTOInternalize(const LLVMRustThinLTOData *Data, LLVMModuleRef M) {
   Module &Mod = *unwrap(M);
   const auto &DefinedGlobals = Data->ModuleToDefinedGVSummaries.lookup(Mod.getModuleIdentifier());
   thinLTOInternalizeModule(Mod, DefinedGlobals);
@@ -1607,14 +1454,12 @@ LLVMRustPrepareThinLTOInternalize(const LLVMRustThinLTOData *Data, LLVMModuleRef
 
 extern "C" bool
 LLVMRustPrepareThinLTOImport(const LLVMRustThinLTOData *Data, LLVMModuleRef M,
-                             LLVMTargetMachineRef TM)
-{
+                             LLVMTargetMachineRef TM) {
   Module &Mod = *unwrap(M);
   TargetMachine &Target = *unwrap(TM);
 
   const auto &ImportList = Data->ImportLists.lookup(Mod.getModuleIdentifier());
-  auto Loader = [&](StringRef Identifier)
-  {
+  auto Loader = [&](StringRef Identifier) {
     const auto &Memory = Data->ModuleMap.lookup(Identifier);
     auto &Context = Mod.getContext();
     auto MOrErr = getLazyBitcodeModule(Memory, Context, true, true);
@@ -1636,8 +1481,7 @@ LLVMRustPrepareThinLTOImport(const LLVMRustThinLTOData *Data, LLVMModuleRef M,
     // here before looking up if there's metadata inside. The `FunctionImporter`
     // will immediately materialize metadata anyway after an import, so this
     // shouldn't be a perf hit.
-    if (Error Err = (*MOrErr)->materializeMetadata())
-    {
+    if (Error Err = (*MOrErr)->materializeMetadata()) {
       Expected<std::unique_ptr<Module>> Ret(std::move(Err));
       return Ret;
     }
@@ -1651,31 +1495,27 @@ LLVMRustPrepareThinLTOImport(const LLVMRustThinLTOData *Data, LLVMModuleRef M,
   bool ClearDSOLocal = clearDSOLocalOnDeclarations(Mod, Target);
   FunctionImporter Importer(Data->Index, Loader, ClearDSOLocal);
   Expected<bool> Result = Importer.importFunctions(Mod, ImportList);
-  if (!Result)
-  {
+  if (!Result) {
     LLVMRustSetLastError(toString(Result.takeError()).c_str());
     return false;
   }
   return true;
 }
 
-extern "C" typedef void (*LLVMRustModuleNameCallback)(void *,        // payload
-                                                      const char *,  // importing module name
-                                                      const char *); // imported module name
+extern "C" typedef void (*LLVMRustModuleNameCallback)(void*, // payload
+                                                      const char*, // importing module name
+                                                      const char*); // imported module name
 
 // Calls `module_name_callback` for each module import done by ThinLTO.
 // The callback is provided with regular null-terminated C strings.
 extern "C" void
 LLVMRustGetThinLTOModules(const LLVMRustThinLTOData *data,
-                          LLVMRustModuleNameCallback module_name_callback,
-                          void *callback_payload)
-{
-  for (const auto &importing_module : data->ImportLists)
-  {
+                                LLVMRustModuleNameCallback module_name_callback,
+                                void* callback_payload) {
+  for (const auto& importing_module : data->ImportLists) {
     const std::string importing_module_id = importing_module.getKey().str();
-    const auto &imports = importing_module.getValue();
-    for (const auto &imported_module : imports)
-    {
+    const auto& imports = importing_module.getValue();
+    for (const auto& imported_module : imports) {
       const std::string imported_module_id = imported_module.getKey().str();
       module_name_callback(callback_payload,
                            importing_module_id.c_str(),
@@ -1692,14 +1532,12 @@ LLVMRustGetThinLTOModules(const LLVMRustThinLTOData *data,
 //
 // This structure is basically an owned version of a serialize module, with
 // a ThinLTO summary attached.
-struct LLVMRustThinLTOBuffer
-{
+struct LLVMRustThinLTOBuffer {
   std::string data;
 };
 
-extern "C" LLVMRustThinLTOBuffer *
-LLVMRustThinLTOBufferCreate(LLVMModuleRef M)
-{
+extern "C" LLVMRustThinLTOBuffer*
+LLVMRustThinLTOBufferCreate(LLVMModuleRef M) {
   auto Ret = std::make_unique<LLVMRustThinLTOBuffer>();
   {
     raw_string_ostream OS(Ret->data);
@@ -1713,20 +1551,17 @@ LLVMRustThinLTOBufferCreate(LLVMModuleRef M)
 }
 
 extern "C" void
-LLVMRustThinLTOBufferFree(LLVMRustThinLTOBuffer *Buffer)
-{
+LLVMRustThinLTOBufferFree(LLVMRustThinLTOBuffer *Buffer) {
   delete Buffer;
 }
 
-extern "C" const void *
-LLVMRustThinLTOBufferPtr(const LLVMRustThinLTOBuffer *Buffer)
-{
+extern "C" const void*
+LLVMRustThinLTOBufferPtr(const LLVMRustThinLTOBuffer *Buffer) {
   return Buffer->data.data();
 }
 
 extern "C" size_t
-LLVMRustThinLTOBufferLen(const LLVMRustThinLTOBuffer *Buffer)
-{
+LLVMRustThinLTOBufferLen(const LLVMRustThinLTOBuffer *Buffer) {
   return Buffer->data.length();
 }
 
@@ -1737,15 +1572,13 @@ extern "C" LLVMModuleRef
 LLVMRustParseBitcodeForLTO(LLVMContextRef Context,
                            const char *data,
                            size_t len,
-                           const char *identifier)
-{
+                           const char *identifier) {
   StringRef Data(data, len);
   MemoryBufferRef Buffer(Data, identifier);
   unwrap(Context)->enableDebugTypeODRUniquing();
   Expected<std::unique_ptr<Module>> SrcOrError =
       parseBitcodeFile(Buffer, *unwrap(Context));
-  if (!SrcOrError)
-  {
+  if (!SrcOrError) {
     LLVMRustSetLastError(toString(SrcOrError.takeError()).c_str());
     return nullptr;
   }
@@ -1758,20 +1591,18 @@ LLVMRustParseBitcodeForLTO(LLVMContextRef Context,
 // On success, the return value is the pointer to the start of the slice and
 // `out_len` is filled with the (non-zero) length. On failure, the return value
 // is `nullptr` and `out_len` is set to zero.
-extern "C" const char *
+extern "C" const char*
 LLVMRustGetBitcodeSliceFromObjectData(const char *data,
                                       size_t len,
-                                      size_t *out_len)
-{
+                                      size_t *out_len) {
   *out_len = 0;
 
   StringRef Data(data, len);
   MemoryBufferRef Buffer(Data, ""); // The id is unused.
 
   Expected<MemoryBufferRef> BitcodeOrError =
-      object::IRObjectFile::findBitcodeInMemBuffer(Buffer);
-  if (!BitcodeOrError)
-  {
+    object::IRObjectFile::findBitcodeInMemBuffer(Buffer);
+  if (!BitcodeOrError) {
     LLVMRustSetLastError(toString(BitcodeOrError.takeError()).c_str());
     return nullptr;
   }
@@ -1784,14 +1615,12 @@ LLVMRustGetBitcodeSliceFromObjectData(const char *data,
 // the comment in `back/lto.rs` for why this exists.
 extern "C" void
 LLVMRustLTOGetDICompileUnit(LLVMModuleRef Mod,
-                            DICompileUnit **A,
-                            DICompileUnit **B)
-{
+                                DICompileUnit **A,
+                                DICompileUnit **B) {
   Module *M = unwrap(Mod);
   DICompileUnit **Cur = A;
   DICompileUnit **Next = B;
-  for (DICompileUnit *CU : M->debug_compile_units())
-  {
+  for (DICompileUnit *CU : M->debug_compile_units()) {
     *Cur = CU;
     Cur = Next;
     Next = nullptr;
@@ -1803,17 +1632,14 @@ LLVMRustLTOGetDICompileUnit(LLVMModuleRef Mod,
 // Rewrite all `DICompileUnit` pointers to the `DICompileUnit` specified. See
 // the comment in `back/lto.rs` for why this exists.
 extern "C" void
-LLVMRustLTOPatchDICompileUnit(LLVMModuleRef Mod, DICompileUnit *Unit)
-{
+LLVMRustLTOPatchDICompileUnit(LLVMModuleRef Mod, DICompileUnit *Unit) {
   Module *M = unwrap(Mod);
 
   // If the original source module didn't have a `DICompileUnit` then try to
   // merge all the existing compile units. If there aren't actually any though
   // then there's not much for us to do so return.
-  if (Unit == nullptr)
-  {
-    for (DICompileUnit *CU : M->debug_compile_units())
-    {
+  if (Unit == nullptr) {
+    for (DICompileUnit *CU : M->debug_compile_units()) {
       Unit = CU;
       break;
     }
@@ -1830,8 +1656,7 @@ LLVMRustLTOPatchDICompileUnit(LLVMModuleRef Mod, DICompileUnit *Unit)
 
   // After we've found all our debuginfo, rewrite all subprograms to point to
   // the same `DICompileUnit`.
-  for (auto &F : Finder.subprograms())
-  {
+  for (auto &F : Finder.subprograms()) {
     F->replaceUnit(Unit);
   }
 
@@ -1851,8 +1676,7 @@ LLVMRustLTOPatchDICompileUnit(LLVMModuleRef Mod, DICompileUnit *Unit)
 // The precise details are determined by LLVM in `computeLTOCacheKey`, which is
 // used during the normal linker-plugin incremental thin-LTO process.
 extern "C" void
-LLVMRustComputeLTOCacheKey(RustStringRef KeyOut, const char *ModId, LLVMRustThinLTOData *Data)
-{
+LLVMRustComputeLTOCacheKey(RustStringRef KeyOut, const char *ModId, LLVMRustThinLTOData *Data) {
   SmallString<40> Key;
   llvm::lto::Config conf;
   const auto &ImportList = Data->ImportLists.lookup(ModId);
@@ -1871,7 +1695,8 @@ LLVMRustComputeLTOCacheKey(RustStringRef KeyOut, const char *ModId, LLVMRustThin
         GlobalValue::getGUID(GlobalValue::dropLLVMManglingEscape(Name)));
 
   llvm::computeLTOCacheKey(Key, conf, Data->Index, ModId,
-                           ImportList, ExportList, ResolvedODR, DefinedGlobals, CfiFunctionDefs, CfiFunctionDecls);
+      ImportList, ExportList, ResolvedODR, DefinedGlobals, CfiFunctionDefs, CfiFunctionDecls
+  );
 
   LLVMRustStringWriteImpl(KeyOut, Key.c_str(), Key.size());
 }

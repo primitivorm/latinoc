@@ -5,8 +5,8 @@
 
 #![feature(rustc_private)]
 
-extern crate latinoc_parse;
 extern crate rustc_ast;
+extern crate latinoc_parse;
 extern crate rustc_session;
 extern crate rustc_span;
 

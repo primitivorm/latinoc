@@ -6,8 +6,8 @@
 // ignore-sgx no processes
 // ignore-macos
 
-use std::env;
 use std::process::Command;
+use std::env;
 
 struct Bomb;
 
@@ -23,6 +23,7 @@ fn main() {
 
     if let Some(s) = args.next() {
         if &*s == "foo" {
+
             let _bomb = Bomb;
 
             panic!("try to catch me");

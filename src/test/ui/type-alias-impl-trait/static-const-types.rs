@@ -5,9 +5,12 @@
 
 use std::fmt::Debug;
 
-type Foo = impl Debug; //~ ERROR could not find defining uses
+type Foo = impl Debug;
+//~^ ERROR: could not find defining uses
 
-static FOO1: Foo = 22_u32; //~ ERROR mismatched types
-const FOO2: Foo = 22_u32; //~ ERROR mismatched types
+static FOO1: Foo = 22_u32;
+//~^ ERROR: mismatched types [E0308]
+const FOO2: Foo = 22_u32;
+//~^ ERROR: mismatched types [E0308]
 
 fn main() {}

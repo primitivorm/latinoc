@@ -4,5 +4,5 @@
 // rustc-env:RUSTC_LOG=error
 // edition:2018
 #![no_std]
-use foo; //~ ERROR invalid metadata files for crate `foo`
-         //~| NOTE failed to mmap file
+use ::foo; //~ ERROR invalid metadata files for crate `foo`
+//~| NOTE failed to mmap file

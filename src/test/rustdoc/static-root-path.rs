@@ -3,7 +3,7 @@
 // @has static_root_path/struct.SomeStruct.html
 // @matches - '"/cache/main\.js"'
 // @!matches - '"\.\./main\.js"'
-// @matches - 'data-root-path="\.\./"'
+// @matches - '"\.\./search-index\.js"'
 // @!matches - '"/cache/search-index\.js"'
 pub struct SomeStruct;
 

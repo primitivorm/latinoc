@@ -36,6 +36,7 @@
 // gdbr-check:$7 = by_value_non_immediate_argument::Enum::Case1{x: 0, y: 8970181431921507452}
 // gdb-command:continue
 
+
 // === LLDB TESTS ==================================================================================
 
 // lldb-command:run
@@ -70,13 +71,13 @@
 #[derive(Clone)]
 struct Struct {
     a: isize,
-    b: f64,
+    b: f64
 }
 
 #[derive(Clone)]
 struct StructStruct {
     a: Struct,
-    b: Struct,
+    b: Struct
 }
 
 fn fun(s: Struct) {
@@ -102,7 +103,7 @@ fn new_type(a: Newtype) {
 // datatype layout should be predictable as in this case.
 enum Enum {
     Case1 { x: i64, y: i64 },
-    Case2(i64, i32, i32),
+    Case2 (i64, i32, i32),
 }
 
 fn by_val_enum(x: Enum) {
@@ -122,6 +123,4 @@ fn main() {
     by_val_enum(Enum::Case1 { x: 0, y: 8970181431921507452 });
 }
 
-fn zzz() {
-    ()
-}
+fn zzz() { () }

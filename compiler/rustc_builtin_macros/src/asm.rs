@@ -1,4 +1,3 @@
-use latinoc_parse::parser::Parser;
 use rustc_ast as ast;
 use rustc_ast::ptr::P;
 use rustc_ast::token;
@@ -6,6 +5,7 @@ use rustc_ast::tokenstream::TokenStream;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_errors::{Applicability, DiagnosticBuilder};
 use rustc_expand::base::{self, *};
+use latinoc_parse::parser::Parser;
 use rustc_parse_format as parse;
 use rustc_session::lint;
 use rustc_span::symbol::Ident;
@@ -418,11 +418,9 @@ fn parse_options<'a>(
             try_set_option(p, args, sym::nostack, ast::InlineAsmOptions::NOSTACK);
         } else if p.eat_keyword(sym::att_syntax) {
             try_set_option(p, args, sym::att_syntax, ast::InlineAsmOptions::ATT_SYNTAX);
-        }
-        /*else if p.eat_keyword(kw::Raw) {
+        } else if p.eat_keyword(kw::Raw) {
             try_set_option(p, args, kw::Raw, ast::InlineAsmOptions::RAW);
-        }*/
-        else {
+        } else {
             return p.unexpected();
         }
 

@@ -1,4 +1,4 @@
-[submodule "src/tools/rust-installer"]
+[submodule "src/rust-installer"]
 	path = src/tools/rust-installer
 	url = https://github.com/primitivorm/rust-installer.git
 [submodule "src/doc/nomicon"]
@@ -35,9 +35,9 @@
 	path = src/llvm-project
 	url = https://github.com/primitivorm/llvm-project.git
 	branch = rustc/13.0-2021-09-30
-# [submodule "src/doc/embedded-book"]
-# 	path = src/doc/embedded-book
-# 	url = https://github.com/primitivorm/book.git
+[submodule "src/doc/embedded-book"]
+	path = src/doc/embedded-book
+	url = https://github.com/primitivorm/book.git
 [submodule "src/tools/rust-analyzer"]
 	path = src/tools/rust-analyzer
 	url = https://github.com/primitivorm/rust-analyzer.git

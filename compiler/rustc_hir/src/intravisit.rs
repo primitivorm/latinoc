@@ -119,13 +119,11 @@ impl<'a> FnKind<'a> {
     }
 
     pub fn constness(self) -> Constness {
-        self.header()
-            .map_or(Constness::NotConst, |header| header.constness)
+        self.header().map_or(Constness::NotConst, |header| header.constness)
     }
 
     pub fn asyncness(self) -> IsAsync {
-        self.header()
-            .map_or(IsAsync::NotAsync, |header| header.asyncness)
+        self.header().map_or(IsAsync::NotAsync, |header| header.asyncness)
     }
 }
 
@@ -300,10 +298,7 @@ pub trait Visitor<'v>: Sized {
     /// `visit_nested_item()` for advice on when to override this
     /// method.
     fn visit_nested_trait_item(&mut self, id: TraitItemId) {
-        let opt_item = self
-            .nested_visit_map()
-            .inter()
-            .map(|map| map.trait_item(id));
+        let opt_item = self.nested_visit_map().inter().map(|map| map.trait_item(id));
         walk_list!(self, visit_trait_item, opt_item);
     }
 
@@ -319,10 +314,7 @@ pub trait Visitor<'v>: Sized {
     /// `visit_nested_item()` for advice on when to override this
     /// method.
     fn visit_nested_foreign_item(&mut self, id: ForeignItemId) {
-        let opt_item = self
-            .nested_visit_map()
-            .inter()
-            .map(|map| map.foreign_item(id));
+        let opt_item = self.nested_visit_map().inter().map(|map| map.foreign_item(id));
         walk_list!(self, visit_foreign_item, opt_item);
     }
 
@@ -623,11 +615,7 @@ pub fn walk_item<'v, V: Visitor<'v>>(visitor: &mut V, item: &'v Item<'v>) {
             visitor.visit_ty(ty);
             visitor.visit_generics(generics)
         }
-        ItemKind::OpaqueTy(OpaqueTy {
-            ref generics,
-            bounds,
-            ..
-        }) => {
+        ItemKind::OpaqueTy(OpaqueTy { ref generics, bounds, .. }) => {
             visitor.visit_id(item.hir_id());
             walk_generics(visitor, generics);
             walk_list!(visitor, visit_param_bound, bounds);
@@ -691,9 +679,7 @@ fn walk_inline_asm<'v, V: Visitor<'v>>(visitor: &mut V, asm: &'v InlineAsm<'v>) 
                     visitor.visit_expr(expr);
                 }
             }
-            InlineAsmOperand::SplitInOut {
-                in_expr, out_expr, ..
-            } => {
+            InlineAsmOperand::SplitInOut { in_expr, out_expr, .. } => {
                 visitor.visit_expr(in_expr);
                 if let Some(out_expr) = out_expr {
                     visitor.visit_expr(out_expr);
@@ -716,13 +702,7 @@ pub fn walk_enum_def<'v, V: Visitor<'v>>(
     item_id: HirId,
 ) {
     visitor.visit_id(item_id);
-    walk_list!(
-        visitor,
-        visit_variant,
-        enum_definition.variants,
-        generics,
-        item_id
-    );
+    walk_list!(visitor, visit_variant, enum_definition.variants, generics, item_id);
 }
 
 pub fn walk_variant<'v, V: Visitor<'v>>(
@@ -758,11 +738,7 @@ pub fn walk_ty<'v, V: Visitor<'v>>(visitor: &mut V, typ: &'v Ty<'v>) {
             walk_list!(visitor, visit_ty, tuple_element_types);
         }
         TyKind::BareFn(ref function_declaration) => {
-            walk_list!(
-                visitor,
-                visit_generic_param,
-                function_declaration.generic_params
-            );
+            walk_list!(visitor, visit_generic_param, function_declaration.generic_params);
             visitor.visit_fn_decl(&function_declaration.decl);
         }
         TyKind::Path(ref qpath) => {
@@ -782,7 +758,7 @@ pub fn walk_ty<'v, V: Visitor<'v>>(visitor: &mut V, typ: &'v Ty<'v>) {
             }
             visitor.visit_lifetime(lifetime);
         }
-        //TyKind::Typeof(ref expression) => visitor.visit_anon_const(expression),
+        TyKind::Typeof(ref expression) => visitor.visit_anon_const(expression),
         TyKind::Infer | TyKind::Err => {}
     }
 }
@@ -937,10 +913,7 @@ pub fn walk_generic_param<'v, V: Visitor<'v>>(visitor: &mut V, param: &'v Generi
     match param.kind {
         GenericParamKind::Lifetime { .. } => {}
         GenericParamKind::Type { ref default, .. } => walk_list!(visitor, visit_ty, default),
-        GenericParamKind::Const {
-            ref ty,
-            ref default,
-        } => {
+        GenericParamKind::Const { ref ty, ref default } => {
             visitor.visit_ty(ty);
             if let Some(ref default) = default {
                 visitor.visit_const_param_default(param.hir_id, default);
@@ -956,11 +929,7 @@ pub fn walk_const_param_default<'v, V: Visitor<'v>>(visitor: &mut V, ct: &'v Ano
 
 pub fn walk_generics<'v, V: Visitor<'v>>(visitor: &mut V, generics: &'v Generics<'v>) {
     walk_list!(visitor, visit_generic_param, generics.params);
-    walk_list!(
-        visitor,
-        visit_where_predicate,
-        generics.where_clause.predicates
-    );
+    walk_list!(visitor, visit_where_predicate, generics.where_clause.predicates);
 }
 
 pub fn walk_where_predicate<'v, V: Visitor<'v>>(
@@ -978,19 +947,12 @@ pub fn walk_where_predicate<'v, V: Visitor<'v>>(
             walk_list!(visitor, visit_param_bound, bounds);
             walk_list!(visitor, visit_generic_param, bound_generic_params);
         }
-        WherePredicate::RegionPredicate(WhereRegionPredicate {
-            ref lifetime,
-            bounds,
-            ..
-        }) => {
+        WherePredicate::RegionPredicate(WhereRegionPredicate { ref lifetime, bounds, .. }) => {
             visitor.visit_lifetime(lifetime);
             walk_list!(visitor, visit_param_bound, bounds);
         }
         WherePredicate::EqPredicate(WhereEqPredicate {
-            hir_id,
-            ref lhs_ty,
-            ref rhs_ty,
-            ..
+            hir_id, ref lhs_ty, ref rhs_ty, ..
         }) => {
             visitor.visit_id(hir_id);
             visitor.visit_ty(lhs_ty);
@@ -1070,13 +1032,7 @@ pub fn walk_trait_item<'v, V: Visitor<'v>>(visitor: &mut V, trait_item: &'v Trai
 
 pub fn walk_trait_item_ref<'v, V: Visitor<'v>>(visitor: &mut V, trait_item_ref: &'v TraitItemRef) {
     // N.B., deliberately force a compilation error if/when new fields are added.
-    let TraitItemRef {
-        id,
-        ident,
-        ref kind,
-        span: _,
-        ref defaultness,
-    } = *trait_item_ref;
+    let TraitItemRef { id, ident, ref kind, span: _, ref defaultness } = *trait_item_ref;
     visitor.visit_nested_trait_item(id);
     visitor.visit_ident(ident);
     visitor.visit_associated_item_kind(kind);
@@ -1085,15 +1041,8 @@ pub fn walk_trait_item_ref<'v, V: Visitor<'v>>(visitor: &mut V, trait_item_ref: 
 
 pub fn walk_impl_item<'v, V: Visitor<'v>>(visitor: &mut V, impl_item: &'v ImplItem<'v>) {
     // N.B., deliberately force a compilation error if/when new fields are added.
-    let ImplItem {
-        def_id: _,
-        ident,
-        ref vis,
-        ref defaultness,
-        ref generics,
-        ref kind,
-        span: _,
-    } = *impl_item;
+    let ImplItem { def_id: _, ident, ref vis, ref defaultness, ref generics, ref kind, span: _ } =
+        *impl_item;
 
     visitor.visit_ident(ident);
     visitor.visit_vis(vis);
@@ -1133,13 +1082,7 @@ pub fn walk_foreign_item_ref<'v, V: Visitor<'v>>(
 
 pub fn walk_impl_item_ref<'v, V: Visitor<'v>>(visitor: &mut V, impl_item_ref: &'v ImplItemRef) {
     // N.B., deliberately force a compilation error if/when new fields are added.
-    let ImplItemRef {
-        id,
-        ident,
-        ref kind,
-        span: _,
-        ref defaultness,
-    } = *impl_item_ref;
+    let ImplItemRef { id, ident, ref kind, span: _, ref defaultness } = *impl_item_ref;
     visitor.visit_nested_impl_item(id);
     visitor.visit_ident(ident);
     visitor.visit_associated_item_kind(kind);
