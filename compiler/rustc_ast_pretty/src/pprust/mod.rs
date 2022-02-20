@@ -4,9 +4,9 @@ mod tests;
 pub mod state;
 pub use state::{print_crate, AnnNode, Comments, PpAnn, PrintState, State};
 
-use rustc_ast as ast;
-use rustc_ast::token::{Nonterminal, Token, TokenKind};
-use rustc_ast::tokenstream::{TokenStream, TokenTree};
+use latinoc_ast as ast;
+use latinoc_ast::token::{Nonterminal, Token, TokenKind};
+use latinoc_ast::tokenstream::{TokenStream, TokenTree};
 
 use std::borrow::Cow;
 

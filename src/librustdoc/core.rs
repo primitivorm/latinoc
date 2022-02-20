@@ -21,10 +21,10 @@ use rustc_session::config::{self, CrateType, ErrorOutputType};
 use rustc_session::lint;
 use rustc_session::DiagnosticOutput;
 use rustc_session::Session;
-use rustc_span::def_id::CRATE_DEF_INDEX;
-use rustc_span::source_map;
-use rustc_span::symbol::sym;
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::def_id::CRATE_DEF_INDEX;
+use latinoc_span::source_map;
+use latinoc_span::symbol::sym;
+use latinoc_span::{Span, DUMMY_SP};
 
 use std::cell::RefCell;
 use std::lazy::SyncLazy;
@@ -49,7 +49,7 @@ crate struct DocContext<'tcx> {
     crate resolver: Rc<RefCell<interface::BoxedResolver>>,
     /// Used for normalization.
     ///
-    /// Most of this logic is copied from rustc_lint::late.
+    /// Most of this logic is copied from latinoc_lint::late.
     crate param_env: ParamEnv<'tcx>,
     /// Later on moved through `clean::Crate` into `cache`
     crate external_traits: Rc<RefCell<FxHashMap<DefId, clean::TraitWithExtraInfo>>>,
@@ -204,11 +204,11 @@ crate fn create_config(
     // Specifically unblock lints relevant to documentation or the lint machinery itself.
     let mut lints_to_show = vec![
         // it's unclear whether these should be part of rustdoc directly (#77364)
-        rustc_lint::builtin::MISSING_DOCS.name.to_string(),
-        rustc_lint::builtin::INVALID_DOC_ATTRIBUTES.name.to_string(),
+        latinoc_lint::builtin::MISSING_DOCS.name.to_string(),
+        latinoc_lint::builtin::INVALID_DOC_ATTRIBUTES.name.to_string(),
         // these are definitely not part of rustdoc, but we want to warn on them anyway.
-        rustc_lint::builtin::RENAMED_AND_REMOVED_LINTS.name.to_string(),
-        rustc_lint::builtin::UNKNOWN_LINTS.name.to_string(),
+        latinoc_lint::builtin::RENAMED_AND_REMOVED_LINTS.name.to_string(),
+        latinoc_lint::builtin::UNKNOWN_LINTS.name.to_string(),
     ];
     lints_to_show.extend(crate::lint::RUSTDOC_LINTS.iter().map(|lint| lint.name.to_string()));
 
@@ -254,7 +254,7 @@ crate fn create_config(
         override_queries: Some(|_sess, providers, _external_providers| {
             // Most lints will require typechecking, so just don't run them.
             providers.lint_mod = |_, _| {};
-            // Prevent `rustc_typeck::check_crate` from calling `typeck` on all bodies.
+            // Prevent `latinoc_typeck::check_crate` from calling `typeck` on all bodies.
             providers.typeck_item_bodies = |_, _| {};
             // hack so that `used_trait_imports` won't try to call typeck
             providers.used_trait_imports = |_, _| {
@@ -349,7 +349,7 @@ crate fn run_global_ctxt(
     });
     tcx.sess.abort_if_errors();
     tcx.sess.time("missing_docs", || {
-        rustc_lint::check_crate(tcx, rustc_lint::builtin::MissingDoc::new);
+        latinoc_lint::check_crate(tcx, latinoc_lint::builtin::MissingDoc::new);
     });
     tcx.sess.time("check_mod_attrs", || {
         tcx.hir().for_each_module(|module| tcx.ensure().check_mod_attrs(module))

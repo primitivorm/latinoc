@@ -1,0 +1,24 @@
+[package]
+name = "latinoc_builtin_macros"
+version = "0.0.0"
+edition = "2021"
+
+[lib]
+doctest = false
+
+[dependencies]
+rustc_parse_format = { path = "../rustc_parse_format" }
+tracing = "0.1"
+rustc_ast_pretty = { path = "../rustc_ast_pretty" }
+rustc_attr = { path = "../rustc_attr" }
+rustc_data_structures = { path = "../rustc_data_structures" }
+rustc_errors = { path = "../rustc_errors" }
+rustc_feature = { path = "../rustc_feature" }
+latinoc_lexer = { path = "../latinoc_lexer" }
+latinoc_parse = { path = "../latinoc_parse" }
+rustc_target = { path = "../rustc_target" }
+rustc_session = { path = "../rustc_session" }
+smallvec = { version = "1.6.1", features = ["union", "may_dangle"] }
+latinoc_ast = { path = "../latinoc_ast" }
+latinoc_expand = { path = "../latinoc_expand" }
+latinoc_span = { path = "../latinoc_span" }

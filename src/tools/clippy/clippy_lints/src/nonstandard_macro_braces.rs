@@ -5,12 +5,12 @@ use std::{
 
 use clippy_utils::{diagnostics::span_lint_and_help, in_macro, is_direct_expn_of, source::snippet_opt};
 use if_chain::if_chain;
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_hir::def_id::DefId;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::Span;
+use latinoc_span::Span;
 use serde::{de, Deserialize};
 
 declare_clippy_lint! {

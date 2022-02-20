@@ -3,7 +3,7 @@ use rustc_middle::middle::codegen_fn_attrs::CodegenFnAttrFlags;
 use rustc_middle::mir::mono::{Linkage, Visibility};
 use rustc_middle::ty::{self, Instance, TypeFoldable};
 use rustc_middle::ty::layout::{FnAbiOf, LayoutOf};
-use rustc_span::def_id::DefId;
+use latinoc_span::def_id::DefId;
 
 use crate::base;
 use crate::context::CodegenCx;

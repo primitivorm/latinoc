@@ -279,7 +279,7 @@ where
         value_ty: Ty<'tcx>,
     ) -> Ty<'tcx> {
         use crate::infer::type_variable::{TypeVariableOrigin, TypeVariableOriginKind};
-        use rustc_span::DUMMY_SP;
+        use latinoc_span::DUMMY_SP;
 
         match *value_ty.kind() {
             ty::Projection(other_projection_ty) => {

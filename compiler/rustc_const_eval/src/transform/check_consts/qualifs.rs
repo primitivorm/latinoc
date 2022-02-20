@@ -7,7 +7,7 @@ use rustc_hir as hir;
 use rustc_infer::infer::TyCtxtInferExt;
 use rustc_middle::mir::*;
 use rustc_middle::ty::{self, subst::SubstsRef, AdtDef, Ty};
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 use rustc_trait_selection::traits::{
     self, ImplSource, Obligation, ObligationCause, SelectionContext,
 };

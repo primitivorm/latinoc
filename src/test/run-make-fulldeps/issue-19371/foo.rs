@@ -3,12 +3,12 @@
 extern crate latinoc_interface;
 extern crate latinoc_driver;
 extern crate rustc_session;
-extern crate rustc_span;
+extern crate latinoc_span;
 
 use rustc_session::DiagnosticOutput;
 use rustc_session::config::{Input, Options, OutputType, OutputTypes};
 use latinoc_interface::interface;
-use rustc_span::source_map::FileName;
+use latinoc_span::source_map::FileName;
 
 use std::path::PathBuf;
 

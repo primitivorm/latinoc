@@ -11,7 +11,7 @@
 #![warn(rust_2018_idioms)]
 #![warn(unused_lifetimes)]
 
-extern crate rustc_ast;
+extern crate latinoc_ast;
 extern crate rustc_codegen_ssa;
 extern crate rustc_data_structures;
 extern crate rustc_errors;
@@ -19,7 +19,7 @@ extern crate rustc_hir;
 extern crate rustc_metadata;
 extern crate rustc_middle;
 extern crate rustc_session;
-extern crate rustc_span;
+extern crate latinoc_span;
 extern crate rustc_symbol_mangling;
 extern crate rustc_target;
 extern crate snap;
@@ -51,7 +51,7 @@ use std::any::Any;
 use std::sync::Arc;
 
 use gccjit::{Context, OptimizationLevel};
-use rustc_ast::expand::allocator::AllocatorKind;
+use latinoc_ast::expand::allocator::AllocatorKind;
 use rustc_codegen_ssa::{CodegenResults, CompiledModule, ModuleCodegen};
 use rustc_codegen_ssa::base::codegen_crate;
 use rustc_codegen_ssa::back::write::{CodegenContext, FatLTOInput, ModuleConfig, TargetMachineFactoryFn};
@@ -65,8 +65,8 @@ use rustc_middle::dep_graph::{WorkProduct, WorkProductId};
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{Lto, OptLevel, OutputFilenames};
 use rustc_session::Session;
-use rustc_span::Symbol;
-use rustc_span::fatal_error::FatalError;
+use latinoc_span::Symbol;
+use latinoc_span::fatal_error::FatalError;
 
 pub struct PrintOnPanic<F: Fn() -> String>(pub F);
 

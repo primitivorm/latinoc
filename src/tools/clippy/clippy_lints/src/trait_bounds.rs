@@ -6,9 +6,9 @@ use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::unhash::UnhashMap;
 use rustc_errors::Applicability;
 use rustc_hir::{def::Res, GenericBound, Generics, ParamName, Path, QPath, TyKind, WherePredicate};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 declare_clippy_lint! {
     /// ### What it does

@@ -7,18 +7,18 @@ use super::TrailingToken;
 use super::{AttrWrapper, BlockMode, ForceCollect, Parser, Restrictions, SemiColonMode};
 use crate::maybe_whole;
 
-use rustc_ast as ast;
-use rustc_ast::ptr::P;
-use rustc_ast::token::{self, TokenKind};
-use rustc_ast::util::classify;
-use rustc_ast::{
+use latinoc_ast as ast;
+use latinoc_ast::ptr::P;
+use latinoc_ast::token::{self, TokenKind};
+use latinoc_ast::util::classify;
+use latinoc_ast::{
     AstLike, AttrStyle, AttrVec, Attribute, LocalKind, MacCall, MacCallStmt, MacStmtStyle,
 };
-use rustc_ast::{Block, BlockCheckMode, Expr, ExprKind, Local, Stmt};
-use rustc_ast::{StmtKind, DUMMY_NODE_ID};
+use latinoc_ast::{Block, BlockCheckMode, Expr, ExprKind, Local, Stmt};
+use latinoc_ast::{StmtKind, DUMMY_NODE_ID};
 use rustc_errors::{Applicability, DiagnosticBuilder, PResult};
-use rustc_span::source_map::{BytePos, Span};
-use rustc_span::symbol::{kw/*, sym*/};
+use latinoc_span::source_map::{BytePos, Span};
+use latinoc_span::symbol::{kw/*, sym*/};
 
 use std::mem;
 
@@ -135,7 +135,7 @@ impl<'a> Parser<'a> {
             })?;
             // `DUMMY_SP` will get overwritten later in this function
             Ok((
-                this.mk_stmt(rustc_span::DUMMY_SP, StmtKind::Expr(expr)),
+                this.mk_stmt(latinoc_span::DUMMY_SP, StmtKind::Expr(expr)),
                 TrailingToken::None,
             ))
         })?;

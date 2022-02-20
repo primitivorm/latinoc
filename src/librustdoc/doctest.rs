@@ -1,4 +1,4 @@
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::{ColorConfig, ErrorReported, FatalError};
@@ -11,11 +11,11 @@ use rustc_middle::hir::map::Map;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{self, CrateType, ErrorOutputType};
 use rustc_session::{lint, DiagnosticOutput, Session};
-use rustc_span::edition::Edition;
-use rustc_span::source_map::SourceMap;
-use rustc_span::symbol::sym;
-use rustc_span::Symbol;
-use rustc_span::{BytePos, FileName, Pos, Span, DUMMY_SP};
+use latinoc_span::edition::Edition;
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::symbol::sym;
+use latinoc_span::Symbol;
+use latinoc_span::{BytePos, FileName, Pos, Span, DUMMY_SP};
 use rustc_target::spec::TargetTriple;
 use tempfile::Builder as TempFileBuilder;
 
@@ -520,13 +520,13 @@ crate fn make_test(
     // Uses librustc_ast to parse the doctest and find if there's a main fn and the extern
     // crate already is included.
     let result = latinoc_driver::catch_fatal_errors(|| {
-        rustc_span::create_session_if_not_set_then(edition, |_| {
+        latinoc_span::create_session_if_not_set_then(edition, |_| {
             use rustc_errors::emitter::{Emitter, EmitterWriter};
             use rustc_errors::Handler;
             use latinoc_parse::maybe_new_parser_from_source_str;
             use latinoc_parse::parser::ForceCollect;
             use rustc_session::parse::ParseSess;
-            use rustc_span::source_map::FilePathMapping;
+            use latinoc_span::source_map::FilePathMapping;
 
             let filename = FileName::anon_source_code(s);
             let source = crates + everything_else;

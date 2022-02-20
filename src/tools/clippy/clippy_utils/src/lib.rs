@@ -15,21 +15,21 @@
 
 // FIXME: switch to something more ergonomic here, once available.
 // (Currently there is no way to opt into sysroot crates without `extern crate`.)
-extern crate rustc_ast;
+extern crate latinoc_ast;
+extern crate latinoc_lexer;
+extern crate latinoc_lint;
+extern crate latinoc_span;
+extern crate latinoc_typeck;
 extern crate rustc_ast_pretty;
 extern crate rustc_attr;
 extern crate rustc_data_structures;
 extern crate rustc_errors;
 extern crate rustc_hir;
 extern crate rustc_infer;
-extern crate latinoc_lexer;
-extern crate rustc_lint;
 extern crate rustc_middle;
 extern crate rustc_session;
-extern crate rustc_span;
 extern crate rustc_target;
 extern crate rustc_trait_selection;
-extern crate rustc_typeck;
 
 #[macro_use]
 pub mod sym_helper;
@@ -62,7 +62,13 @@ use std::collections::hash_map::Entry;
 use std::hash::BuildHasherDefault;
 
 use if_chain::if_chain;
-use rustc_ast::ast::{self, Attribute, LitKind};
+use latinoc_ast::ast::{self, Attribute, LitKind};
+use latinoc_lint::{LateContext, Level, Lint, LintContext};
+use latinoc_span::hygiene::{ExpnKind, MacroKind};
+use latinoc_span::source_map::original_sp;
+use latinoc_span::sym;
+use latinoc_span::symbol::{kw, Symbol};
+use latinoc_span::{Span, DUMMY_SP};
 use rustc_data_structures::unhash::UnhashMap;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, Res};
@@ -77,7 +83,6 @@ use rustc_hir::{
     Param, Pat, PatKind, Path, PathSegment, PrimTy, QPath, Stmt, StmtKind, TraitItem, TraitItemKind, TraitRef, TyKind,
     UnOp,
 };
-use rustc_lint::{LateContext, Level, Lint, LintContext};
 use rustc_middle::hir::exports::Export;
 use rustc_middle::hir::map::Map;
 use rustc_middle::hir::place::PlaceBase;
@@ -87,11 +92,6 @@ use rustc_middle::ty::binding::BindingMode;
 use rustc_middle::ty::{layout::IntegerExt, BorrowKind, DefIdTree, Ty, TyCtxt, TypeAndMut, TypeFoldable, UpvarCapture};
 use rustc_semver::RustcVersion;
 use rustc_session::Session;
-use rustc_span::hygiene::{ExpnKind, MacroKind};
-use rustc_span::source_map::original_sp;
-use rustc_span::sym;
-use rustc_span::symbol::{kw, Symbol};
-use rustc_span::{Span, DUMMY_SP};
 use rustc_target::abi::Integer;
 
 use crate::consts::{constant, Constant};
@@ -121,7 +121,7 @@ macro_rules! extract_msrv_attr {
         extract_msrv_attr!(@EarlyContext);
     };
     (@$context:ident$(, $call:tt)?) => {
-        fn enter_lint_attrs(&mut self, cx: &rustc_lint::$context<'tcx>, attrs: &'tcx [rustc_ast::ast::Attribute]) {
+        fn enter_lint_attrs(&mut self, cx: &latinoc_lint::$context<'tcx>, attrs: &'tcx [latinoc_ast::ast::Attribute]) {
             use $crate::get_unique_inner_attr;
             match get_unique_inner_attr(cx.sess$($call)?, attrs, "msrv") {
                 Some(msrv_attr) => {
@@ -844,13 +844,10 @@ pub fn capture_local_usage(cx: &LateContext<'tcx>, e: &Expr<'_>) -> CaptureKind 
     let mut capture_expr_ty = e;
 
     for (parent_id, parent) in cx.tcx.hir().parent_iter(e.hir_id) {
-        if let [
-            Adjustment {
-                kind: Adjust::Deref(_) | Adjust::Borrow(AutoBorrow::Ref(..)),
-                target,
-            },
-            ref adjust @ ..,
-        ] = *cx
+        if let [Adjustment {
+            kind: Adjust::Deref(_) | Adjust::Borrow(AutoBorrow::Ref(..)),
+            target,
+        }, ref adjust @ ..] = *cx
             .typeck_results()
             .adjustments()
             .get(child_id)
@@ -1305,7 +1302,7 @@ pub fn is_integer_literal(expr: &Expr<'_>, value: u128) -> bool {
 /// Examples of coercions can be found in the Nomicon at
 /// <https://doc.rust-lang.org/nomicon/coercions.html>.
 ///
-/// See `rustc_middle::ty::adjustment::Adjustment` and `rustc_typeck::check::coercion` for more
+/// See `rustc_middle::ty::adjustment::Adjustment` and `latinoc_typeck::check::coercion` for more
 /// information on adjustments and coercions.
 pub fn is_adjusted(cx: &LateContext<'_>, e: &Expr<'_>) -> bool {
     cx.typeck_results().adjustments().get(e.hir_id).is_some()
@@ -1693,12 +1690,10 @@ pub fn is_async_fn(kind: FnKind<'_>) -> bool {
 pub fn get_async_fn_body(tcx: TyCtxt<'tcx>, body: &Body<'_>) -> Option<&'tcx Expr<'tcx>> {
     if let ExprKind::Call(
         _,
-        &[
-            Expr {
-                kind: ExprKind::Closure(_, _, body, _, _),
-                ..
-            },
-        ],
+        &[Expr {
+            kind: ExprKind::Closure(_, _, body, _, _),
+            ..
+        }],
     ) = body.value.kind
     {
         if let ExprKind::Block(
@@ -1873,12 +1868,12 @@ pub fn is_trait_impl_item(cx: &LateContext<'_>, hir_id: HirId) -> bool {
 /// ```
 pub fn fn_has_unsatisfiable_preds(cx: &LateContext<'_>, did: DefId) -> bool {
     use rustc_trait_selection::traits;
-    let predicates = cx
-        .tcx
-        .predicates_of(did)
-        .predicates
-        .iter()
-        .filter_map(|(p, _)| if p.is_global(cx.tcx) { Some(*p) } else { None });
+    let predicates =
+        cx.tcx
+            .predicates_of(did)
+            .predicates
+            .iter()
+            .filter_map(|(p, _)| if p.is_global(cx.tcx) { Some(*p) } else { None });
     traits::impossible_predicates(
         cx.tcx,
         traits::elaborate_predicates(cx.tcx, predicates)

@@ -10,9 +10,9 @@
 #![feature(rustc_private)]
 #![crate_type = "lib"]
 
-extern crate rustc_span;
-use rustc_span::Span;
-use rustc_span::symbol::Ident;
+extern crate latinoc_span;
+use latinoc_span::Span;
+use latinoc_span::symbol::Ident;
 
 extern crate rustc_macros;
 use rustc_macros::SessionDiagnostic;

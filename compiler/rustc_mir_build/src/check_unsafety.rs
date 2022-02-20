@@ -8,9 +8,9 @@ use rustc_middle::thir::*;
 use rustc_middle::ty::{self, ParamEnv, Ty, TyCtxt};
 use rustc_session::lint::builtin::{UNSAFE_OP_IN_UNSAFE_FN, UNUSED_UNSAFE};
 use rustc_session::lint::Level;
-use rustc_span::def_id::{DefId, LocalDefId};
-use rustc_span::symbol::Symbol;
-use rustc_span::Span;
+use latinoc_span::def_id::{DefId, LocalDefId};
+use latinoc_span::symbol::Symbol;
+use latinoc_span::Span;
 
 use std::ops::Bound;
 

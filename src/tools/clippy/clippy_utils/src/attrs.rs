@@ -1,7 +1,7 @@
-use rustc_ast::{ast, attr};
+use latinoc_ast::{ast, attr};
 use rustc_errors::Applicability;
 use rustc_session::Session;
-use rustc_span::sym;
+use latinoc_span::sym;
 use std::str::FromStr;
 
 /// Deprecation status of attributes known by Clippy.

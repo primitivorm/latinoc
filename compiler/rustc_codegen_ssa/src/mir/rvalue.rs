@@ -13,7 +13,7 @@ use rustc_middle::mir;
 use rustc_middle::ty::cast::{CastTy, IntTy};
 use rustc_middle::ty::layout::{HasTyCtxt, LayoutOf};
 use rustc_middle::ty::{self, adjustment::PointerCast, Instance, Ty, TyCtxt};
-use rustc_span::source_map::{Span, DUMMY_SP};
+use latinoc_span::source_map::{Span, DUMMY_SP};
 use rustc_target::abi::{Abi, Int, Variants};
 
 impl<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>> FunctionCx<'a, 'tcx, Bx> {

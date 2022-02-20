@@ -2,10 +2,10 @@ use clippy_utils::diagnostics::span_lint_and_sugg;
 use itertools::Itertools;
 use rustc_errors::Applicability;
 use rustc_hir::{Item, ItemKind};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::symbol::Ident;
+use latinoc_span::symbol::Ident;
 
 declare_clippy_lint! {
     /// ### What it does

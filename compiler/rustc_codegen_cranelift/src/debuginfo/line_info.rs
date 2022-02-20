@@ -5,7 +5,7 @@ use std::path::{Component, Path};
 
 use crate::prelude::*;
 
-use rustc_span::{
+use latinoc_span::{
     FileName, Pos, SourceFile, SourceFileAndLine, SourceFileHash, SourceFileHashAlgorithm,
 };
 
@@ -147,7 +147,7 @@ impl<'tcx> DebugContext<'tcx> {
                 // Walk up the macro expansion chain until we reach a non-expanded span.
                 // We also stop at the function body level because no line stepping can occur
                 // at the level above that.
-                rustc_span::hygiene::walk_chain(span, function_span.ctxt())
+                latinoc_span::hygiene::walk_chain(span, function_span.ctxt())
             };
 
             let (file, line, col) = match tcx.sess.source_map().lookup_line(span.lo()) {

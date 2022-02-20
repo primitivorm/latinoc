@@ -4,19 +4,19 @@
 extern crate rustc_ast_pretty;
 extern crate latinoc_driver;
 extern crate rustc_hir;
-extern crate rustc_lint;
+extern crate latinoc_lint;
 #[macro_use]
 extern crate rustc_session;
-extern crate rustc_span;
-extern crate rustc_ast;
+extern crate latinoc_span;
+extern crate latinoc_ast;
 
 use rustc_ast_pretty::pprust;
 use latinoc_driver::plugin::Registry;
 use rustc_hir as hir;
 use rustc_hir::intravisit;
 use rustc_hir::Node;
-use rustc_lint::{LateContext, LateLintPass, LintContext};
-use rustc_span::source_map;
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_span::source_map;
 
 #[no_mangle]
 fn __rustc_plugin_registrar(reg: &mut Registry) {

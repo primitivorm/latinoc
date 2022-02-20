@@ -10,7 +10,7 @@ use rustc_middle::mir::mono::{CodegenUnit, CodegenUnitNameBuilder, Linkage, Visi
 use rustc_middle::mir::mono::{InstantiationMode, MonoItem};
 use rustc_middle::ty::print::characteristic_def_id_of_type;
 use rustc_middle::ty::{self, fold::TypeFoldable, DefIdTree, InstanceDef, TyCtxt};
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 
 use super::PartitioningCx;
 use crate::collector::InliningMap;

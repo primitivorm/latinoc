@@ -9,15 +9,15 @@
 //! a simple mistake)
 
 use if_chain::if_chain;
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_hir::{
     self as hir, def::DefKind, intravisit, intravisit::Visitor, ExprKind, Item, ItemKind, Mutability, QPath,
 };
-use rustc_lint::{CheckLintNameResult, LateContext, LateLintPass, LintContext, LintId};
+use latinoc_lint::{CheckLintNameResult, LateContext, LateLintPass, LintContext, LintId};
 use rustc_middle::hir::map::Map;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::{sym, Loc, Span, Symbol};
+use latinoc_span::{sym, Loc, Span, Symbol};
 use serde::{ser::SerializeStruct, Serialize, Serializer};
 use std::collections::BinaryHeap;
 use std::fmt;

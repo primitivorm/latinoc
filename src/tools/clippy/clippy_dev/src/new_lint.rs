@@ -171,7 +171,7 @@ fn get_lint_file_contents(lint: &LintData<'_>, enable_msrv: bool) -> String {
     let mut result = String::new();
 
     let (pass_type, pass_lifetimes, pass_import, context_import) = match lint.pass {
-        "early" => ("EarlyLintPass", "", "use rustc_ast::ast::*;", "EarlyContext"),
+        "early" => ("EarlyLintPass", "", "use latinoc_ast::ast::*;", "EarlyContext"),
         "late" => ("LateLintPass", "<'_>", "use rustc_hir::*;", "LateContext"),
         _ => {
             unreachable!("`pass_type` should only ever be `early` or `late`!");
@@ -188,7 +188,7 @@ fn get_lint_file_contents(lint: &LintData<'_>, enable_msrv: bool) -> String {
             indoc! {"
                 use clippy_utils::msrvs;
                 {pass_import}
-                use rustc_lint::{{{context_import}, {pass_type}, LintContext}};
+                use latinoc_lint::{{{context_import}, {pass_type}, LintContext}};
                 use rustc_semver::RustcVersion;
                 use rustc_session::{{declare_tool_lint, impl_lint_pass}};
 
@@ -201,7 +201,7 @@ fn get_lint_file_contents(lint: &LintData<'_>, enable_msrv: bool) -> String {
         format!(
             indoc! {"
                 {pass_import}
-                use rustc_lint::{{{context_import}, {pass_type}}};
+                use latinoc_lint::{{{context_import}, {pass_type}}};
                 use rustc_session::{{declare_lint_pass, declare_tool_lint}};
 
             "},

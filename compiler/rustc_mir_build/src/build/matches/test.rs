@@ -17,9 +17,9 @@ use rustc_middle::thir::*;
 use rustc_middle::ty::subst::{GenericArg, Subst};
 use rustc_middle::ty::util::IntTypeExt;
 use rustc_middle::ty::{self, adjustment::PointerCast, Ty, TyCtxt};
-use rustc_span::def_id::DefId;
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::def_id::DefId;
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::Span;
 use rustc_target::abi::VariantIdx;
 
 use std::cmp::Ordering;

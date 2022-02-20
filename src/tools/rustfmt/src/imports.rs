@@ -2,8 +2,8 @@ use std::borrow::Cow;
 use std::cmp::Ordering;
 use std::fmt;
 
-use rustc_ast::ast::{self, UseTreeKind};
-use rustc_span::{
+use latinoc_ast::ast::{self, UseTreeKind};
+use latinoc_span::{
     symbol::{self, sym},
     BytePos, Span, DUMMY_SP,
 };
@@ -952,7 +952,7 @@ pub(crate) enum SharedPrefix {
 #[cfg(test)]
 mod test {
     use super::*;
-    use rustc_span::DUMMY_SP;
+    use latinoc_span::DUMMY_SP;
 
     // Parse the path part of an import. This parser is not robust and is only
     // suitable for use in a test harness.

@@ -1,14 +1,14 @@
 //! Parsing and validation of builtin attributes
 
-use rustc_ast::{self as ast, Attribute, Lit, LitKind, MetaItem, MetaItemKind, NestedMetaItem};
+use latinoc_ast::{self as ast, Attribute, Lit, LitKind, MetaItem, MetaItemKind, NestedMetaItem};
 use rustc_ast_pretty::pprust;
 use rustc_errors::{struct_span_err, Applicability};
 use rustc_feature::{find_gated_cfg, is_builtin_attr_name, Features, GatedCfg};
 use rustc_macros::HashStable_Generic;
 use rustc_session::parse::{feature_err, ParseSess};
 use rustc_session::Session;
-use rustc_span::hygiene::Transparency;
-use rustc_span::{symbol::sym, symbol::Symbol, Span};
+use latinoc_span::hygiene::Transparency;
+use latinoc_span::{symbol::sym, symbol::Symbol, Span};
 use std::num::NonZeroU32;
 
 pub fn is_builtin_attr(attr: &Attribute) -> bool {

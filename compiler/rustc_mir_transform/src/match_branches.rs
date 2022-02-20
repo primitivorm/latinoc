@@ -135,7 +135,7 @@ impl<'tcx> MirPass<'tcx> for MatchBranchSimplification {
                                 tcx,
                                 switch_ty,
                                 rustc_const_eval::interpret::Scalar::from_uint(val, size),
-                                rustc_span::DUMMY_SP,
+                                latinoc_span::DUMMY_SP,
                             );
                             let op = if f_b { BinOp::Eq } else { BinOp::Ne };
                             let rhs = Rvalue::BinaryOp(

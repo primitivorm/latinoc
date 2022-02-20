@@ -1,12 +1,12 @@
-use rustc_ast::Attribute;
+use latinoc_ast::Attribute;
 use rustc_hir as hir;
 use rustc_hir::def_id::LocalDefId;
 use rustc_hir::itemlikevisit::ItemLikeVisitor;
 use rustc_hir::ItemKind;
 use rustc_middle::ty::layout::{HasParamEnv, HasTyCtxt, LayoutError, LayoutOfHelpers, TyAndLayout};
 use rustc_middle::ty::{ParamEnv, Ty, TyCtxt};
-use rustc_span::symbol::sym;
-use rustc_span::Span;
+use latinoc_span::symbol::sym;
+use latinoc_span::Span;
 use rustc_target::abi::{HasDataLayout, TargetDataLayout};
 
 pub fn test_layout(tcx: TyCtxt<'_>) {

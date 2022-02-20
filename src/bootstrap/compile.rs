@@ -686,7 +686,7 @@ pub fn rustc_cargo_env(builder: &Builder<'_>, cargo: &mut Cargo, target: TargetS
     }
 
     // Pass down configuration from the LLVM build into the build of
-    // rustc_llvm and rustc_codegen_llvm.
+    // rustc_llvm and latinoc_codegen_llvm.
     //
     // Note that this is disabled if LLVM itself is disabled or we're in a check
     // build. If we are in a check build we still go ahead here presuming we've
@@ -1187,6 +1187,16 @@ impl Step for Assemble {
         t!(fs::create_dir_all(&bindir));
         let compiler = builder.rustc(target_compiler);
         builder.copy(&rustc, &compiler);
+
+        println!(">>>>>> compile.rs Assemble");
+        println!(">>> rustc: {:?}", rustc);
+        println!(">>> out_dir: {:?}", out_dir);
+        println!(">>> sysroot: {:?}", sysroot);
+        println!(">>> rustc_libdir: {:?}", rustc_libdir);
+        println!(">>> libdir: {:?}", libdir);
+        println!(">>> libdir_bin: {:?}", libdir_bin);
+        println!(">>> src_libdir: {:?}", src_libdir);
+        println!(">>> bindir: {:?}", bindir);
 
         target_compiler
     }

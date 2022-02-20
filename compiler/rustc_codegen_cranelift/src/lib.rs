@@ -7,7 +7,7 @@
 extern crate snap;
 #[macro_use]
 extern crate rustc_middle;
-extern crate rustc_ast;
+extern crate latinoc_ast;
 extern crate rustc_codegen_ssa;
 extern crate rustc_data_structures;
 extern crate rustc_errors;
@@ -18,7 +18,7 @@ extern crate rustc_index;
 extern crate latinoc_interface;
 extern crate rustc_metadata;
 extern crate rustc_session;
-extern crate rustc_span;
+extern crate latinoc_span;
 extern crate rustc_target;
 
 // This prevents duplicating functions and statics that are already part of the host rustc process.
@@ -73,7 +73,7 @@ mod vtable;
 mod prelude {
     pub(crate) use std::convert::{TryFrom, TryInto};
 
-    pub(crate) use rustc_span::{Span, FileNameDisplayPreference};
+    pub(crate) use latinoc_span::{Span, FileNameDisplayPreference};
 
     pub(crate) use rustc_hir::def_id::{DefId, LOCAL_CRATE};
     pub(crate) use rustc_middle::bug;
@@ -165,7 +165,7 @@ impl CodegenBackend for CraneliftCodegenBackend {
         }
     }
 
-    fn target_features(&self, _sess: &Session) -> Vec<rustc_span::Symbol> {
+    fn target_features(&self, _sess: &Session) -> Vec<latinoc_span::Symbol> {
         vec![]
     }
 

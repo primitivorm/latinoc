@@ -29,7 +29,7 @@ use rustc_infer::infer::resolve::OpportunisticRegionResolver;
 use rustc_middle::ty::fold::{TypeFoldable, TypeFolder};
 use rustc_middle::ty::subst::Subst;
 use rustc_middle::ty::{self, ToPredicate, Ty, TyCtxt, WithConstness};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use std::collections::BTreeMap;
 

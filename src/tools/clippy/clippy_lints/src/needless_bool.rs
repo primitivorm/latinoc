@@ -7,13 +7,13 @@ use clippy_utils::higher;
 use clippy_utils::source::snippet_with_applicability;
 use clippy_utils::sugg::Sugg;
 use clippy_utils::{is_else_clause, is_expn_of};
-use rustc_ast::ast::LitKind;
+use latinoc_ast::ast::LitKind;
 use rustc_errors::Applicability;
 use rustc_hir::{BinOpKind, Block, Expr, ExprKind, StmtKind, UnOp};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Spanned;
-use rustc_span::Span;
+use latinoc_span::source_map::Spanned;
+use latinoc_span::Span;
 
 declare_clippy_lint! {
     /// ### What it does

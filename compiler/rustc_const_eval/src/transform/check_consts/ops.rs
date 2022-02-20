@@ -5,8 +5,8 @@ use rustc_hir as hir;
 use rustc_hir::def_id::DefId;
 use rustc_middle::mir;
 use rustc_session::parse::feature_err;
-use rustc_span::symbol::sym;
-use rustc_span::{Span, Symbol};
+use latinoc_span::symbol::sym;
+use latinoc_span::{Span, Symbol};
 
 use super::ConstCx;
 

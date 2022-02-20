@@ -3,7 +3,7 @@ use rustc_codegen_ssa::mir::debuginfo::{FunctionDebugContext, VariableKind};
 use rustc_codegen_ssa::traits::{DebugInfoBuilderMethods, DebugInfoMethods};
 use rustc_middle::mir;
 use rustc_middle::ty::{Instance, PolyExistentialTraitRef, Ty};
-use rustc_span::{SourceFile, Span, Symbol};
+use latinoc_span::{SourceFile, Span, Symbol};
 use rustc_target::abi::Size;
 use rustc_target::abi::call::FnAbi;
 

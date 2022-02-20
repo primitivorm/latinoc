@@ -2,8 +2,8 @@ use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::is_ty_param_diagnostic_item;
 use if_chain::if_chain;
 use rustc_hir::{self as hir, def_id::DefId, QPath};
-use rustc_lint::LateContext;
-use rustc_span::symbol::sym;
+use latinoc_lint::LateContext;
+use latinoc_span::symbol::sym;
 
 use super::RC_MUTEX;
 

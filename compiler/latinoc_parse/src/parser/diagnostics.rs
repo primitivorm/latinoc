@@ -2,11 +2,11 @@ use super::ty::AllowPlus;
 use super::TokenType;
 use super::{BlockMode, Parser, PathStyle, Restrictions, SemiColonMode, SeqSep, TokenExpectType};
 
-use rustc_ast as ast;
-use rustc_ast::ptr::P;
-use rustc_ast::token::{self, Lit, LitKind, TokenKind};
-use rustc_ast::util::parser::AssocOp;
-use rustc_ast::{
+use latinoc_ast as ast;
+use latinoc_ast::ptr::P;
+use latinoc_ast::token::{self, Lit, LitKind, TokenKind};
+use latinoc_ast::util::parser::AssocOp;
+use latinoc_ast::{
     AngleBracketedArg, AngleBracketedArgs, AnonConst, AttrVec, BinOpKind, BindingMode, Block,
     BlockCheckMode, Expr, ExprKind, GenericArg, Generics, Item, ItemKind, Mutability, Param, Pat,
     PatKind, Path, PathSegment, QSelf, Ty, TyKind,
@@ -15,9 +15,9 @@ use rustc_ast_pretty::pprust;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{pluralize, struct_span_err};
 use rustc_errors::{Applicability, DiagnosticBuilder, Handler, PResult};
-use rustc_span::source_map::Spanned;
-use rustc_span::symbol::{kw, Ident};
-use rustc_span::{MultiSpan, Span, SpanSnippetError, DUMMY_SP};
+use latinoc_span::source_map::Spanned;
+use latinoc_span::symbol::{kw, Ident};
+use latinoc_span::{MultiSpan, Span, SpanSnippetError, DUMMY_SP};
 
 use tracing::{debug, trace};
 

@@ -21,8 +21,8 @@ use rustc_middle::ty::subst::{GenericArg, InternalSubsts, Subst};
 use rustc_middle::ty::{self, Ty, TyCtxt, TypeFoldable, TypeVisitor, WithConstness};
 use rustc_middle::ty::{Predicate, ToPredicate};
 use rustc_session::lint::builtin::WHERE_CLAUSES_OBJECT_SAFETY;
-use rustc_span::symbol::Symbol;
-use rustc_span::{MultiSpan, Span};
+use latinoc_span::symbol::Symbol;
+use latinoc_span::{MultiSpan, Span};
 use smallvec::SmallVec;
 
 use std::array;

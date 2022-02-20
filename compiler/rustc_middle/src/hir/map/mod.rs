@@ -1,6 +1,6 @@
 use crate::hir::{ModuleItems, Owner};
 use crate::ty::TyCtxt;
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fingerprint::Fingerprint;
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_data_structures::svh::Svh;
@@ -12,11 +12,11 @@ use rustc_hir::intravisit::{self, Visitor};
 use rustc_hir::itemlikevisit::ItemLikeVisitor;
 use rustc_hir::*;
 use rustc_index::vec::Idx;
-use rustc_span::def_id::StableCrateId;
-use rustc_span::hygiene::MacroKind;
-use rustc_span::source_map::Spanned;
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::Span;
+use latinoc_span::def_id::StableCrateId;
+use latinoc_span::hygiene::MacroKind;
+use latinoc_span::source_map::Spanned;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::Span;
 use rustc_target::spec::abi::Abi;
 use std::collections::VecDeque;
 

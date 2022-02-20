@@ -4,18 +4,18 @@ use clippy_utils::diagnostics::{span_lint, span_lint_and_help, span_lint_and_sug
 use clippy_utils::match_panic_def_id;
 use clippy_utils::source::{first_line_of_span, is_present_in_source, snippet_opt, without_block_comments};
 use if_chain::if_chain;
-use rustc_ast::{AttrKind, AttrStyle, Attribute, Lit, LitKind, MetaItemKind, NestedMetaItem};
+use latinoc_ast::{AttrKind, AttrStyle, Attribute, Lit, LitKind, MetaItemKind, NestedMetaItem};
 use rustc_errors::Applicability;
 use rustc_hir::{
     Block, Expr, ExprKind, ImplItem, ImplItemKind, Item, ItemKind, StmtKind, TraitFn, TraitItem, TraitItemKind,
 };
-use rustc_lint::{EarlyContext, EarlyLintPass, LateContext, LateLintPass, LintContext};
+use latinoc_lint::{EarlyContext, EarlyLintPass, LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Span;
-use rustc_span::sym;
-use rustc_span::symbol::{Symbol, SymbolStr};
+use latinoc_span::source_map::Span;
+use latinoc_span::sym;
+use latinoc_span::symbol::{Symbol, SymbolStr};
 use semver::Version;
 
 static UNIX_SYSTEMS: &[&str] = &[
@@ -504,7 +504,7 @@ declare_lint_pass!(EarlyAttributes => [
 ]);
 
 impl EarlyLintPass for EarlyAttributes {
-    fn check_item(&mut self, cx: &EarlyContext<'_>, item: &rustc_ast::Item) {
+    fn check_item(&mut self, cx: &EarlyContext<'_>, item: &latinoc_ast::Item) {
         check_empty_line_after_outer_attr(cx, item);
     }
 
@@ -514,7 +514,7 @@ impl EarlyLintPass for EarlyAttributes {
     }
 }
 
-fn check_empty_line_after_outer_attr(cx: &EarlyContext<'_>, item: &rustc_ast::Item) {
+fn check_empty_line_after_outer_attr(cx: &EarlyContext<'_>, item: &latinoc_ast::Item) {
     for attr in &item.attrs {
         let attr_item = if let AttrKind::Normal(ref attr, _) = attr.kind {
             attr

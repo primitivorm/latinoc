@@ -11,8 +11,8 @@ use crate::{CodeSuggestion, Diagnostic, DiagnosticId, Emitter, Level, SubDiagnos
 use annotate_snippets::display_list::{DisplayList, FormatOptions};
 use annotate_snippets::snippet::*;
 use rustc_data_structures::sync::Lrc;
-use rustc_span::source_map::SourceMap;
-use rustc_span::{MultiSpan, SourceFile};
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::{MultiSpan, SourceFile};
 
 /// Generates diagnostics using annotate-snippet
 pub struct AnnotateSnippetEmitterWriter {

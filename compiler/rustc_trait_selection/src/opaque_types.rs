@@ -6,7 +6,7 @@ use rustc_infer::infer::InferCtxt;
 use rustc_middle::ty::fold::{TypeFoldable, TypeFolder};
 use rustc_middle::ty::subst::{GenericArg, GenericArgKind, InternalSubsts};
 use rustc_middle::ty::{self, OpaqueTypeKey, Ty, TyCtxt};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 pub trait InferCtxtExt<'tcx> {
     fn infer_opaque_definition_from_instantiation(

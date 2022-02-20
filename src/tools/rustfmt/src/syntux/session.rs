@@ -1,14 +1,14 @@
 use std::path::Path;
 use std::sync::atomic::{AtomicBool, Ordering};
 
+use latinoc_span::{
+    source_map::{FilePathMapping, SourceMap},
+    symbol, BytePos, Span,
+};
 use rustc_data_structures::sync::{Lrc, Send};
 use rustc_errors::emitter::{Emitter, EmitterWriter};
 use rustc_errors::{ColorConfig, Diagnostic, Handler, Level as DiagnosticLevel};
 use rustc_session::parse::ParseSess as RawParseSess;
-use rustc_span::{
-    source_map::{FilePathMapping, SourceMap},
-    symbol, BytePos, Span,
-};
 
 use crate::config::file_lines::LineRange;
 use crate::ignore_path::IgnorePathSet;
@@ -65,7 +65,7 @@ impl Emitter for SilentOnIgnoredFilesEmitter {
         }
         if let Some(primary_span) = &db.span.primary_span() {
             let file_name = self.source_map.span_to_filename(*primary_span);
-            if let rustc_span::FileName::Real(rustc_span::RealFileName::LocalPath(ref path)) =
+            if let latinoc_span::FileName::Real(latinoc_span::RealFileName::LocalPath(ref path)) =
                 file_name
             {
                 if self
@@ -150,15 +150,16 @@ impl ParseSess {
         id: symbol::Ident,
         relative: Option<symbol::Ident>,
         dir_path: &Path,
-    ) -> Result<rustc_expand::module::ModulePathSuccess, rustc_expand::module::ModError<'_>> {
-        rustc_expand::module::default_submod_path(&self.parse_sess, id, relative, dir_path)
+    ) -> Result<latinoc_expand::module::ModulePathSuccess, latinoc_expand::module::ModError<'_>>
+    {
+        latinoc_expand::module::default_submod_path(&self.parse_sess, id, relative, dir_path)
     }
 
     pub(crate) fn is_file_parsed(&self, path: &Path) -> bool {
         self.parse_sess
             .source_map()
-            .get_source_file(&rustc_span::FileName::Real(
-                rustc_span::RealFileName::LocalPath(path.to_path_buf()),
+            .get_source_file(&latinoc_span::FileName::Real(
+                latinoc_span::RealFileName::LocalPath(path.to_path_buf()),
             ))
             .is_some()
     }
@@ -175,7 +176,7 @@ impl ParseSess {
         self.parse_sess.source_map().span_to_filename(span).into()
     }
 
-    pub(crate) fn span_to_file_contents(&self, span: Span) -> Lrc<rustc_span::SourceFile> {
+    pub(crate) fn span_to_file_contents(&self, span: Span) -> Lrc<latinoc_span::SourceFile> {
         self.parse_sess
             .source_map()
             .lookup_source_file(span.data().lo)
@@ -291,7 +292,7 @@ mod tests {
         use crate::config::IgnoreList;
         use crate::is_nightly_channel;
         use crate::utils::mk_sp;
-        use rustc_span::{FileName as SourceMapFileName, MultiSpan, RealFileName, DUMMY_SP};
+        use latinoc_span::{FileName as SourceMapFileName, MultiSpan, RealFileName, DUMMY_SP};
         use std::path::PathBuf;
         use std::sync::atomic::AtomicU32;
 

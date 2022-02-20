@@ -1,9 +1,9 @@
 use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::in_macro;
-use rustc_ast::ast::{AssocItemKind, Extern, Fn, FnSig, Impl, Item, ItemKind, Trait, Ty, TyKind};
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_ast::ast::{AssocItemKind, Extern, Fn, FnSig, Impl, Item, ItemKind, Trait, Ty, TyKind};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::{sym, Span};
+use latinoc_span::{sym, Span};
 
 use std::convert::TryInto;
 

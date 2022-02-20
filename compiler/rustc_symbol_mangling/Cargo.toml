@@ -11,7 +11,7 @@ tracing = "0.1"
 punycode = "0.4.0"
 rustc-demangle = "0.1.21"
 
-rustc_span = { path = "../rustc_span" }
+latinoc_span = { path = "../latinoc_span" }
 rustc_middle = { path = "../rustc_middle" }
 rustc_hir = { path = "../rustc_hir" }
 rustc_target = { path = "../rustc_target" }

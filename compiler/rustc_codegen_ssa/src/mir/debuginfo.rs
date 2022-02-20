@@ -5,8 +5,8 @@ use rustc_middle::mir;
 use rustc_middle::ty;
 use rustc_middle::ty::layout::LayoutOf;
 use rustc_session::config::DebugInfo;
-use rustc_span::symbol::{kw, Symbol};
-use rustc_span::{BytePos, Span};
+use latinoc_span::symbol::{kw, Symbol};
+use latinoc_span::{BytePos, Span};
 use rustc_target::abi::Abi;
 use rustc_target::abi::Size;
 
@@ -112,7 +112,7 @@ impl<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>> FunctionCx<'a, 'tcx, Bx> {
             // We also stop at the function body level because no line stepping can occur
             // at the level above that.
             // Use span of the outermost expansion site, while keeping the original lexical scope.
-            span = rustc_span::hygiene::walk_chain(span, self.mir.span.ctxt());
+            span = latinoc_span::hygiene::walk_chain(span, self.mir.span.ctxt());
         }
 
         span

@@ -25,9 +25,9 @@ use rustc_middle::ty::{
 };
 use rustc_middle::ty::{TypeAndMut, TypeckResults};
 use rustc_session::Limit;
-use rustc_span::def_id::LOCAL_CRATE;
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::{BytePos, DesugaringKind, ExpnKind, MultiSpan, Span, DUMMY_SP};
+use latinoc_span::def_id::LOCAL_CRATE;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::{BytePos, DesugaringKind, ExpnKind, MultiSpan, Span, DUMMY_SP};
 use rustc_target::spec::abi;
 use std::fmt;
 

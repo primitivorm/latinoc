@@ -5,21 +5,21 @@
 
 #![feature(rustc_private)]
 
-extern crate rustc_ast;
+extern crate latinoc_ast;
 extern crate latinoc_parse;
 extern crate rustc_session;
-extern crate rustc_span;
+extern crate latinoc_span;
 
 use latinoc_parse::new_parser_from_file;
 use rustc_session::parse::ParseSess;
-use rustc_span::source_map::FilePathMapping;
+use latinoc_span::source_map::FilePathMapping;
 use std::path::Path;
 
 #[path = "mod_dir_simple/test.rs"]
 mod gravy;
 
 pub fn main() {
-    rustc_span::create_default_session_globals_then(|| parse());
+    latinoc_span::create_default_session_globals_then(|| parse());
 
     assert_eq!(gravy::foo(), 10);
 }

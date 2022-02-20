@@ -30,7 +30,7 @@ use rustc_middle::mir::visit::Visitor as _;
 use rustc_middle::mir::{dump_mir, traversal, Body, ConstQualifs, MirPhase, Promoted};
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, TyCtxt, TypeFoldable};
-use rustc_span::{Span, Symbol};
+use latinoc_span::{Span, Symbol};
 
 mod abort_unwinding_calls;
 mod add_call_guards;

@@ -27,9 +27,9 @@ use rustc_middle::mir::{
     TerminatorKind,
 };
 use rustc_middle::ty::TyCtxt;
-use rustc_span::def_id::DefId;
-use rustc_span::source_map::SourceMap;
-use rustc_span::{CharPos, ExpnKind, Pos, SourceFile, Span, Symbol};
+use latinoc_span::def_id::DefId;
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::{CharPos, ExpnKind, Pos, SourceFile, Span, Symbol};
 
 /// A simple error message wrapper for `coverage::Error`s.
 #[derive(Debug)]

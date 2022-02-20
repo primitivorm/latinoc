@@ -1,9 +1,9 @@
 use std::cell::{Cell, RefCell};
 use std::rc::Rc;
 
-use rustc_ast::{ast, token::DelimToken, visit, AstLike};
+use latinoc_ast::{ast, token::DelimToken, visit, AstLike};
 use rustc_data_structures::sync::Lrc;
-use rustc_span::{symbol, BytePos, Pos, Span};
+use latinoc_span::{symbol, BytePos, Pos, Span};
 
 use crate::attr::*;
 use crate::comment::{contains_comment, rewrite_comment, CodeCharKind, CommentCodeSlices};
@@ -847,7 +847,7 @@ impl<'b, 'a: 'b> FmtVisitor<'a> {
         !is_skip_attr(segments)
     }
 
-    fn walk_mod_items(&mut self, items: &[rustc_ast::ptr::P<ast::Item>]) {
+    fn walk_mod_items(&mut self, items: &[latinoc_ast::ptr::P<ast::Item>]) {
         self.visit_items_with_reordering(&ptr_vec_to_ref_vec(items));
     }
 

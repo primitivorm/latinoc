@@ -1,7 +1,7 @@
 use clippy_utils::diagnostics::span_lint;
 use clippy_utils::ty::is_isize_or_usize;
 use rustc_hir::Expr;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, FloatTy, Ty};
 
 use super::{utils, CAST_PRECISION_LOSS};

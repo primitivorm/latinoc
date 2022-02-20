@@ -2,7 +2,7 @@
 use rustc_data_structures::stable_map::FxHashMap;
 use rustc_hir as hir;
 use rustc_middle::ty::{self, Ty, TyCtxt};
-use rustc_span::Span;
+use latinoc_span::Span;
 use std::cmp;
 
 /// Describes whether a type is representable. For types that are not

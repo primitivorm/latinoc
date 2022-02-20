@@ -16,7 +16,7 @@ use clippy_utils::{paths, search_same, SpanlessEq, SpanlessHash};
 use core::array;
 use core::iter::{once, ExactSizeIterator};
 use if_chain::if_chain;
-use rustc_ast::ast::{Attribute, LitKind};
+use latinoc_ast::ast::{Attribute, LitKind};
 use rustc_errors::Applicability;
 use rustc_hir::def::{CtorKind, DefKind, Res};
 use rustc_hir::LangItem::{OptionNone, OptionSome};
@@ -25,13 +25,13 @@ use rustc_hir::{
     Mutability, Node, Pat, PatKind, PathSegment, QPath, RangeEnd, TyKind,
 };
 use rustc_hir::{HirIdMap, HirIdSet};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty::{self, Ty, TyS, VariantDef};
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::{Span, Spanned};
-use rustc_span::sym;
+use latinoc_span::source_map::{Span, Spanned};
+use latinoc_span::sym;
 use std::cmp::Ordering;
 use std::collections::hash_map::Entry;
 use std::iter;
@@ -1790,7 +1790,7 @@ mod redundant_pattern_match {
     use clippy_utils::ty::{implements_trait, is_type_diagnostic_item, is_type_lang_item, match_type};
     use clippy_utils::{is_lang_ctor, is_qpath_def_path, is_trait_method, paths};
     use if_chain::if_chain;
-    use rustc_ast::ast::LitKind;
+    use latinoc_ast::ast::LitKind;
     use rustc_data_structures::fx::FxHashSet;
     use rustc_errors::Applicability;
     use rustc_hir::LangItem::{OptionNone, OptionSome, PollPending, PollReady, ResultErr, ResultOk};
@@ -1798,9 +1798,9 @@ mod redundant_pattern_match {
         intravisit::{walk_expr, ErasedMap, NestedVisitorMap, Visitor},
         Arm, Block, Expr, ExprKind, LangItem, MatchSource, Node, Pat, PatKind, QPath,
     };
-    use rustc_lint::LateContext;
+    use latinoc_lint::LateContext;
     use rustc_middle::ty::{self, subst::GenericArgKind, Ty};
-    use rustc_span::sym;
+    use latinoc_span::sym;
 
     pub fn check<'tcx>(cx: &LateContext<'tcx>, expr: &'tcx Expr<'_>) {
         if let Some(higher::IfLet {
@@ -2217,7 +2217,7 @@ mod redundant_pattern_match {
 
 #[test]
 fn test_overlapping() {
-    use rustc_span::source_map::DUMMY_SP;
+    use latinoc_span::source_map::DUMMY_SP;
 
     let sp = |s, e| SpannedRange {
         span: DUMMY_SP,

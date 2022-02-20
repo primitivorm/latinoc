@@ -6,7 +6,7 @@
 #![feature(associated_type_defaults)]
 #![recursion_limit = "256"]
 
-use rustc_ast::MacroDef;
+use latinoc_ast::MacroDef;
 use rustc_attr as attr;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::struct_span_err;
@@ -26,9 +26,9 @@ use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::subst::InternalSubsts;
 use rustc_middle::ty::{self, Const, GenericParamDefKind, TraitRef, Ty, TyCtxt, TypeFoldable};
 use rustc_session::lint;
-use rustc_span::hygiene::Transparency;
-use rustc_span::symbol::{kw, sym, Ident};
-use rustc_span::Span;
+use latinoc_span::hygiene::Transparency;
+use latinoc_span::symbol::{kw, sym, Ident};
+use latinoc_span::Span;
 use rustc_trait_selection::traits::const_evaluatable::{self, AbstractConst};
 
 use std::marker::PhantomData;
@@ -1240,7 +1240,7 @@ impl<'tcx> Visitor<'tcx> for TypePrivacyVisitor<'tcx> {
             // Types in signatures.
             // FIXME: This is very ineffective. Ideally each HIR type should be converted
             // into a semantic type only once and the result should be cached somehow.
-            if self.visit(rustc_typeck::hir_ty_to_ty(self.tcx, hir_ty)).is_break() {
+            if self.visit(latinoc_typeck::hir_ty_to_ty(self.tcx, hir_ty)).is_break() {
                 return;
             }
         }
@@ -1265,7 +1265,7 @@ impl<'tcx> Visitor<'tcx> for TypePrivacyVisitor<'tcx> {
             }
 
             // FIXME see above note for same issue.
-            if self.visit(rustc_typeck::hir_ty_to_ty(self.tcx, &inf.to_ty())).is_break() {
+            if self.visit(latinoc_typeck::hir_ty_to_ty(self.tcx, &inf.to_ty())).is_break() {
                 return;
             }
         }
@@ -1277,7 +1277,7 @@ impl<'tcx> Visitor<'tcx> for TypePrivacyVisitor<'tcx> {
         if self.maybe_typeck_results.is_none() {
             // Avoid calling `hir_trait_to_predicates` in bodies, it will ICE.
             // The traits' privacy in bodies is already checked as a part of trait object types.
-            let bounds = rustc_typeck::hir_trait_to_predicates(
+            let bounds = latinoc_typeck::hir_trait_to_predicates(
                 self.tcx,
                 trait_ref,
                 // NOTE: This isn't really right, but the actual type doesn't matter here. It's

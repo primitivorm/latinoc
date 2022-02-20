@@ -1,11 +1,11 @@
 use clippy_utils::{diagnostics::span_lint_and_sugg, higher, is_direct_expn_of, ty::implements_trait};
-use rustc_ast::ast::LitKind;
+use latinoc_ast::ast::LitKind;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind, Lit};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::symbol::Ident;
+use latinoc_span::symbol::Ident;
 
 declare_clippy_lint! {
     /// ### What it does

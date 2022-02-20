@@ -2,13 +2,13 @@ use clippy_utils::diagnostics::span_lint_and_sugg;
 use clippy_utils::numeric_literal;
 use clippy_utils::source::snippet_opt;
 use if_chain::if_chain;
-use rustc_ast::ast::{LitFloatType, LitIntType, LitKind};
+use latinoc_ast::ast::{LitFloatType, LitIntType, LitKind};
 use rustc_errors::Applicability;
 use rustc_hir::{
     intravisit::{walk_expr, walk_stmt, NestedVisitorMap, Visitor},
     Body, Expr, ExprKind, HirId, Lit, Stmt, StmtKind,
 };
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::{
     hir::map::Map,
     lint::in_external_macro,

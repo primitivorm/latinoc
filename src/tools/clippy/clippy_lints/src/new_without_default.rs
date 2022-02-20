@@ -6,11 +6,11 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
 use rustc_hir::HirIdSet;
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty::TyS;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::sym;
+use latinoc_span::sym;
 
 declare_clippy_lint! {
     /// ### What it does

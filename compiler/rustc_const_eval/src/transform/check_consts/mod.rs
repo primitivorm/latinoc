@@ -9,7 +9,7 @@ use rustc_hir as hir;
 use rustc_hir::def_id::{DefId, LocalDefId};
 use rustc_middle::mir;
 use rustc_middle::ty::{self, TyCtxt};
-use rustc_span::{sym, Symbol};
+use latinoc_span::{sym, Symbol};
 
 pub use self::qualifs::Qualif;
 

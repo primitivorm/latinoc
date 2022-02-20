@@ -2,7 +2,7 @@ use crate::path_to_local_id;
 use rustc_hir as hir;
 use rustc_hir::intravisit::{self, walk_expr, ErasedMap, NestedVisitorMap, Visitor};
 use rustc_hir::{def::Res, Arm, Block, Body, BodyId, Destination, Expr, ExprKind, HirId, Stmt};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
 use std::ops::ControlFlow;
 

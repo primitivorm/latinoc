@@ -9,8 +9,8 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::intravisit::{walk_expr, ErasedMap, NestedVisitorMap, Visitor};
 use rustc_hir::{def::Res, Expr, ExprKind, HirId, Local, PatKind, QPath, UnOp};
-use rustc_lint::LateContext;
-use rustc_span::{symbol::sym, Span, Symbol};
+use latinoc_lint::LateContext;
+use latinoc_span::{symbol::sym, Span, Symbol};
 
 pub(super) fn check(cx: &LateContext<'tcx>, expr: &'tcx Expr<'_>) {
     let (scrutinee_expr, iter_expr, some_pat, loop_expr) = if_chain! {

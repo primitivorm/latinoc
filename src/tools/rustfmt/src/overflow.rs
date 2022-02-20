@@ -3,9 +3,9 @@
 use std::cmp::min;
 
 use itertools::Itertools;
-use rustc_ast::token::DelimToken;
-use rustc_ast::{ast, ptr};
-use rustc_span::Span;
+use latinoc_ast::token::DelimToken;
+use latinoc_ast::{ast, ptr};
+use latinoc_span::Span;
 
 use crate::closures;
 use crate::config::lists::*;

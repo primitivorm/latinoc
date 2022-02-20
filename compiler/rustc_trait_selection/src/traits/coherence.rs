@@ -15,8 +15,8 @@ use rustc_hir::def_id::{DefId, LOCAL_CRATE};
 use rustc_middle::ty::fold::TypeFoldable;
 use rustc_middle::ty::subst::Subst;
 use rustc_middle::ty::{self, fast_reject, Ty, TyCtxt};
-use rustc_span::symbol::sym;
-use rustc_span::DUMMY_SP;
+use latinoc_span::symbol::sym;
+use latinoc_span::DUMMY_SP;
 use std::iter;
 
 /// Whether we do the orphan check relative to this crate or

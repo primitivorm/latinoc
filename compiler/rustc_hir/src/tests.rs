@@ -1,5 +1,5 @@
 use crate::definitions::{DefKey, DefPathData, DisambiguatedDefPathData};
-use rustc_span::def_id::{DefPathHash, StableCrateId};
+use latinoc_span::def_id::{DefPathHash, StableCrateId};
 
 #[test]
 fn def_path_hash_depends_on_crate_id() {

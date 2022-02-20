@@ -9,9 +9,9 @@ use rustc_hir::{
     AsyncGeneratorKind, Block, Body, Expr, ExprKind, FnDecl, FnRetTy, GeneratorKind, GenericArg, GenericBound, HirId,
     IsAsync, ItemKind, LifetimeName, TraitRef, Ty, TyKind, TypeBindingKind,
 };
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{sym, Span};
+use latinoc_span::{sym, Span};
 
 declare_clippy_lint! {
     /// ### What it does

@@ -3,14 +3,14 @@
 
 extern crate clippy_utils;
 extern crate rustc_hir;
-extern crate rustc_lint;
+extern crate latinoc_lint;
 extern crate rustc_middle;
 
 #[macro_use]
 extern crate rustc_session;
 use clippy_utils::{paths, ty::match_type};
 use rustc_hir::Expr;
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty::Ty;
 
 declare_lint! {

@@ -5,8 +5,8 @@ use clippy_utils::higher::ForLoop;
 use clippy_utils::source::snippet;
 use rustc_errors::Applicability;
 use rustc_hir::{Block, Expr, ExprKind, HirId, InlineAsmOperand, Pat, Stmt, StmtKind};
-use rustc_lint::LateContext;
-use rustc_span::Span;
+use latinoc_lint::LateContext;
+use latinoc_span::Span;
 use std::iter::{once, Iterator};
 
 pub(super) fn check(

@@ -10,9 +10,9 @@ use rustc_target::spec::{
 };
 
 use rustc_feature::UnstableFeatures;
-use rustc_span::edition::Edition;
-use rustc_span::RealFileName;
-use rustc_span::SourceFileHashAlgorithm;
+use latinoc_span::edition::Edition;
+use latinoc_span::RealFileName;
+use latinoc_span::SourceFileHashAlgorithm;
 
 use std::collections::BTreeMap;
 

@@ -17,9 +17,9 @@ use rustc_hir::intravisit;
 use rustc_hir::intravisit::{NestedVisitorMap, Visitor};
 
 use rustc_hir::{Block, Expr, ExprKind, Path, QPath};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
-use rustc_span::sym;
+use latinoc_span::sym;
 
 /// Is the expr pure (is it free from side-effects)?
 /// This function is named so to stress that it isn't exhaustive and returns FNs.

@@ -90,7 +90,7 @@ use rustc_middle::middle::region;
 use rustc_middle::mir::*;
 use rustc_middle::thir::{Expr, LintLevel};
 
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::{Span, DUMMY_SP};
 
 #[derive(Debug)]
 pub struct Scopes<'tcx> {

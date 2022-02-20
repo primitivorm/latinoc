@@ -7,11 +7,11 @@ use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::Applicability;
 use rustc_hir::def::Res;
 use rustc_hir::{Block, Expr, ExprKind, PatKind, QPath, Stmt, StmtKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::symbol::{Ident, Symbol};
-use rustc_span::Span;
+use latinoc_span::symbol::{Ident, Symbol};
+use latinoc_span::Span;
 
 declare_clippy_lint! {
     /// ### What it does

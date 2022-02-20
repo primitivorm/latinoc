@@ -7,7 +7,7 @@ use rustc_data_structures::sync::Lock;
 use rustc_errors::{pluralize, struct_span_err, DiagnosticBuilder, ErrorReported};
 use rustc_macros::HashStable;
 use rustc_session::CtfeBacktrace;
-use rustc_span::def_id::DefId;
+use latinoc_span::def_id::DefId;
 use rustc_target::abi::{Align, Size};
 use std::{any::Any, backtrace::Backtrace, fmt};
 

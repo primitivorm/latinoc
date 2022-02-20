@@ -2,11 +2,11 @@
 extern crate rustc_macros;
 
 pub use self::Level::*;
-use rustc_ast::node_id::{NodeId, NodeMap};
+use latinoc_ast::node_id::{NodeId, NodeMap};
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher, ToStableHashKey};
 use rustc_serialize::json::Json;
-use rustc_span::edition::Edition;
-use rustc_span::{sym, symbol::Ident, MultiSpan, Span, Symbol};
+use latinoc_span::edition::Edition;
+use latinoc_span::{sym, symbol::Ident, MultiSpan, Span, Symbol};
 use rustc_target::spec::abi::Abi;
 
 pub mod builtin;
@@ -323,7 +323,7 @@ pub struct BufferedEarlyLint {
     pub node_id: NodeId,
 
     /// A lint Id that can be passed to
-    /// `rustc_lint::early::EarlyContextAndPass::check_id`.
+    /// `latinoc_lint::early::EarlyContextAndPass::check_id`.
     pub lint_id: LintId,
 
     /// Customization of the `DiagnosticBuilder<'_>` for the lint.

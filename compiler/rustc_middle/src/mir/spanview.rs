@@ -3,7 +3,7 @@ use rustc_middle::hir;
 use rustc_middle::mir::*;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::MirSpanview;
-use rustc_span::{BytePos, Pos, Span, SyntaxContext};
+use latinoc_span::{BytePos, Pos, Span, SyntaxContext};
 
 use std::cmp;
 use std::io::{self, Write};

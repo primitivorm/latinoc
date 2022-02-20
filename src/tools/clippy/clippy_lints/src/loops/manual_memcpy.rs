@@ -5,13 +5,13 @@ use clippy_utils::sugg::Sugg;
 use clippy_utils::ty::is_type_diagnostic_item;
 use clippy_utils::{get_enclosing_block, higher, path_to_local, sugg};
 use if_chain::if_chain;
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_errors::Applicability;
 use rustc_hir::intravisit::walk_block;
 use rustc_hir::{BinOpKind, Block, Expr, ExprKind, HirId, Pat, PatKind, StmtKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 use std::iter::Iterator;
 
 /// Checks for for loops that sequentially copy items from one slice-like

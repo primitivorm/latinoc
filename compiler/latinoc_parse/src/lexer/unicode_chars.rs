@@ -4,7 +4,7 @@
 use super::StringReader;
 use crate::token;
 use rustc_errors::{Applicability, DiagnosticBuilder};
-use rustc_span::{symbol::kw, BytePos, Pos, Span};
+use latinoc_span::{symbol::kw, BytePos, Pos, Span};
 
 #[rustfmt::skip] // for line breaks
 pub(crate) const UNICODE_ARRAY: &[(char, &str, char)] = &[

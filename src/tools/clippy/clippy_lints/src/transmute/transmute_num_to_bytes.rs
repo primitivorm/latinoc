@@ -3,7 +3,7 @@ use clippy_utils::diagnostics::span_lint_and_then;
 use clippy_utils::sugg;
 use rustc_errors::Applicability;
 use rustc_hir::Expr;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty, UintTy};
 
 /// Checks for `transmute_int_to_float` lint.

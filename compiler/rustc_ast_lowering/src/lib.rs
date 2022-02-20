@@ -36,10 +36,10 @@
 #![feature(never_type)]
 #![recursion_limit = "256"]
 
-use rustc_ast::token::{self, Token};
-use rustc_ast::tokenstream::{CanSynthesizeMissingTokens, TokenStream, TokenTree};
-use rustc_ast::visit;
-use rustc_ast::{self as ast, *};
+use latinoc_ast::token::{self, Token};
+use latinoc_ast::tokenstream::{CanSynthesizeMissingTokens, TokenStream, TokenTree};
+use latinoc_ast::visit;
+use latinoc_ast::{self as ast, *};
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::captures::Captures;
 use rustc_data_structures::fingerprint::Fingerprint;
@@ -60,11 +60,11 @@ use rustc_session::lint::builtin::BARE_TRAIT_OBJECTS;
 use rustc_session::lint::{BuiltinLintDiagnostics, LintBuffer};
 use rustc_session::utils::{FlattenNonterminals, NtToTokenstream};
 use rustc_session::Session;
-use rustc_span::edition::Edition;
-use rustc_span::hygiene::ExpnId;
-use rustc_span::source_map::{respan, DesugaringKind};
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::edition::Edition;
+use latinoc_span::hygiene::ExpnId;
+use latinoc_span::source_map::{respan, DesugaringKind};
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::{Span, DUMMY_SP};
 
 use smallvec::SmallVec;
 use tracing::{debug, trace};

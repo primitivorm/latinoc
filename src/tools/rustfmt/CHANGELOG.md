@@ -138,7 +138,7 @@ https://rust-lang.github.io/rustfmt/?version=v1.4.33&search=#imports_granularity
 - Correct span on const generics to include type bounds ([#4310](https://github.com/rust-lang/rustfmt/issues/4310))
 - Idempotence issue on blocks containing only empty statements ([#4627](https://github.com/rust-lang/rustfmt/issues/4627) and [#3868](https://github.com/rust-lang/rustfmt/issues/3868))
 - Fix issue with semicolon placement on required functions that have a trailing comment that ends in a line-style comment before the semicolon ([#4646](https://github.com/rust-lang/rustfmt/issues/4646))
-- Avoid shared interned cfg_if symbol since rustfmt can re-initialize the rustc_ast globals on multiple inputs ([#4656](https://github.com/rust-lang/rustfmt/issues/4656))
+- Avoid shared interned cfg_if symbol since rustfmt can re-initialize the latinoc_ast globals on multiple inputs ([#4656](https://github.com/rust-lang/rustfmt/issues/4656))
 
 ### Install/Download Options
 - **crates.io package** - *pending*

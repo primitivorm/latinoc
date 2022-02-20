@@ -6,11 +6,11 @@ use rustc_errors::Applicability;
 use rustc_hir::intravisit::FnKind;
 use rustc_hir::LangItem::{OptionSome, ResultOk};
 use rustc_hir::{Body, ExprKind, FnDecl, HirId, Impl, ItemKind, Node};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::symbol::sym;
-use rustc_span::Span;
+use latinoc_span::symbol::sym;
+use latinoc_span::Span;
 
 declare_clippy_lint! {
     /// ### What it does

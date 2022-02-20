@@ -5,7 +5,7 @@
 use std::convert::TryFrom;
 use std::hash::Hash;
 
-use rustc_ast::Mutability;
+use latinoc_ast::Mutability;
 use rustc_macros::HashStable;
 use rustc_middle::mir;
 use rustc_middle::ty::layout::{LayoutOf, PrimitiveExt, TyAndLayout};

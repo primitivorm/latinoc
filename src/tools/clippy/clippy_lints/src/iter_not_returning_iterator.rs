@@ -1,9 +1,9 @@
 use clippy_utils::{diagnostics::span_lint, return_ty, ty::implements_trait};
 use rustc_hir::{ImplItem, ImplItemKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::symbol::kw;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::kw;
+use latinoc_span::symbol::sym;
 
 declare_clippy_lint! {
     /// ### What it does

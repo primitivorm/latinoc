@@ -2,7 +2,7 @@ use clippy_utils::diagnostics::span_lint;
 use clippy_utils::higher;
 use rustc_hir as hir;
 use rustc_hir::intravisit;
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::hir::map::Map;
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty;

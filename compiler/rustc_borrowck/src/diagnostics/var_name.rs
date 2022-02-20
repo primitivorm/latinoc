@@ -3,8 +3,8 @@ use crate::{nll::ToRegionVid, region_infer::RegionInferenceContext};
 use rustc_index::vec::{Idx, IndexVec};
 use rustc_middle::mir::{Body, Local};
 use rustc_middle::ty::{RegionVid, TyCtxt};
-use rustc_span::source_map::Span;
-use rustc_span::symbol::Symbol;
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::Symbol;
 
 impl<'tcx> RegionInferenceContext<'tcx> {
     crate fn get_var_name_and_span_for_region(

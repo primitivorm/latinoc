@@ -14,7 +14,7 @@ use rustc_session::config::{CodegenOptions, DebuggingOptions, ErrorOutputType, E
 use rustc_session::getopts;
 use rustc_session::lint::Level;
 use rustc_session::search_paths::SearchPath;
-use rustc_span::edition::Edition;
+use latinoc_span::edition::Edition;
 use rustc_target::spec::TargetTriple;
 
 use crate::core::new_handler;

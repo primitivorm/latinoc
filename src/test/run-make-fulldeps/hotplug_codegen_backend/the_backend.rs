@@ -1,15 +1,15 @@
 #![feature(rustc_private)]
 #![deny(warnings)]
 
+extern crate latinoc_driver;
+extern crate latinoc_span;
 extern crate rustc_codegen_ssa;
 extern crate rustc_data_structures;
-extern crate latinoc_driver;
 extern crate rustc_errors;
 extern crate rustc_hir;
 extern crate rustc_metadata;
 extern crate rustc_middle;
 extern crate rustc_session;
-extern crate rustc_span;
 extern crate rustc_symbol_mangling;
 extern crate rustc_target;
 
@@ -74,7 +74,7 @@ impl CodegenBackend for TheBackend {
     }
 }
 
-/// This is the entrypoint for a hot plugged rustc_codegen_llvm
+/// This is the entrypoint for a hot plugged latinoc_codegen_llvm
 #[no_mangle]
 pub fn __rustc_codegen_backend() -> Box<dyn CodegenBackend> {
     Box::new(TheBackend)

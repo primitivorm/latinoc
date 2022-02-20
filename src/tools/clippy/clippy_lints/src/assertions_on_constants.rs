@@ -5,7 +5,7 @@ use clippy_utils::source::snippet_opt;
 use clippy_utils::{is_direct_expn_of, is_expn_of, match_panic_call};
 use if_chain::if_chain;
 use rustc_hir::{Expr, ExprKind, UnOp};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
 
 declare_clippy_lint! {

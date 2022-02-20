@@ -1,16 +1,16 @@
 use super::ty::{AllowPlus, RecoverQPath, RecoverReturnSign};
 use super::{Parser, TokenType};
 use crate::maybe_whole;
-use rustc_ast::ptr::P;
-use rustc_ast::token::{self, Token};
-use rustc_ast::{
+use latinoc_ast::ptr::P;
+use latinoc_ast::token::{self, Token};
+use latinoc_ast::{
     self as ast, AngleBracketedArg, AngleBracketedArgs, AnonConst, AssocTyConstraint,
     AssocTyConstraintKind, BlockCheckMode, GenericArg, GenericArgs, Generics, ParenthesizedArgs,
     Path, PathSegment, QSelf,
 };
 use rustc_errors::{pluralize, Applicability, PResult};
-use rustc_span::source_map::{BytePos, Span};
-use rustc_span::symbol::{kw, sym, Ident};
+use latinoc_span::source_map::{BytePos, Span};
+use latinoc_span::symbol::{kw, sym, Ident};
 
 use std::mem;
 use tracing::debug;
@@ -551,7 +551,7 @@ impl<'a> Parser<'a> {
     /// - A literal.
     /// - A numeric literal prefixed by `-`.
     /// - A single-segment path.
-    pub(super) fn expr_is_valid_const_arg(&self, expr: &P<rustc_ast::Expr>) -> bool {
+    pub(super) fn expr_is_valid_const_arg(&self, expr: &P<latinoc_ast::Expr>) -> bool {
         match &expr.kind {
             ast::ExprKind::Block(_, _) | ast::ExprKind::Lit(_) => true,
             ast::ExprKind::Unary(ast::UnOp::Neg, expr) => {

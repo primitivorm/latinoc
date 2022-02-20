@@ -14,7 +14,7 @@ use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::struct_span_err;
 use rustc_query_system::ich::StableHashingContext;
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 use std::iter::FromIterator;
 use std::mem;
 

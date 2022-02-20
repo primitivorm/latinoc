@@ -1,7 +1,7 @@
 use clippy_utils::diagnostics::span_lint_and_sugg;
-use rustc_ast::ast::Lit;
+use latinoc_ast::ast::Lit;
 use rustc_errors::Applicability;
-use rustc_lint::EarlyContext;
+use latinoc_lint::EarlyContext;
 
 use super::{SEPARATED_LITERAL_SUFFIX, UNSEPARATED_LITERAL_SUFFIX};
 

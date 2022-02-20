@@ -18,7 +18,7 @@ use crate::ty::{self, List, Ty, TyCtxt};
 use rustc_data_structures::fx::FxHashMap;
 use rustc_hir::def_id::DefId;
 use rustc_serialize::{Decodable, Decoder, Encodable, Encoder};
-use rustc_span::Span;
+use latinoc_span::Span;
 use std::hash::Hash;
 use std::intrinsics;
 use std::marker::DiscriminantKind;

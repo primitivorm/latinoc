@@ -19,8 +19,8 @@ use rustc_middle::thir::abstract_const::{self, Node, NodeId, NotConstEvaluatable
 use rustc_middle::ty::subst::{Subst, SubstsRef};
 use rustc_middle::ty::{self, TyCtxt, TypeFoldable};
 use rustc_session::lint;
-use rustc_span::def_id::LocalDefId;
-use rustc_span::Span;
+use latinoc_span::def_id::LocalDefId;
+use latinoc_span::Span;
 
 use std::cmp;
 use std::iter;

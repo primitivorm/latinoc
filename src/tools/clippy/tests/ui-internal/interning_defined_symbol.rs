@@ -2,13 +2,13 @@
 #![deny(clippy::internal)]
 #![feature(rustc_private)]
 
-extern crate rustc_span;
+extern crate latinoc_span;
 
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 
 macro_rules! sym {
     ($tt:tt) => {
-        rustc_span::symbol::Symbol::intern(stringify!($tt))
+        latinoc_span::symbol::Symbol::intern(stringify!($tt))
     };
 }
 

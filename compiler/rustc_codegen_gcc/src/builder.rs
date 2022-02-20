@@ -32,8 +32,8 @@ use rustc_codegen_ssa::traits::{
 };
 use rustc_middle::ty::{ParamEnv, Ty, TyCtxt};
 use rustc_middle::ty::layout::{FnAbiError, FnAbiOfHelpers, FnAbiRequest, HasParamEnv, HasTyCtxt, LayoutError, LayoutOfHelpers, TyAndLayout};
-use rustc_span::Span;
-use rustc_span::def_id::DefId;
+use latinoc_span::Span;
+use latinoc_span::def_id::DefId;
 use rustc_target::abi::{
     self,
     call::FnAbi,

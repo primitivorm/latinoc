@@ -1,0 +1,18 @@
+[package]
+name = "latinoc_ast"
+version = "0.0.0"
+edition = "2021"
+
+[lib]
+doctest = false
+
+[dependencies]
+rustc_serialize = { path = "../rustc_serialize" }
+tracing = "0.1"
+latinoc_span = { path = "../latinoc_span" }
+rustc_data_structures = { path = "../rustc_data_structures" }
+rustc_index = { path = "../rustc_index" }
+latinoc_lexer = { path = "../latinoc_lexer" }
+rustc_macros = { path = "../rustc_macros" }
+smallvec = { version = "1.6.1", features = ["union", "may_dangle"] }
+bitflags = "1.2.1"

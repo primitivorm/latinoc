@@ -7,8 +7,8 @@ use rustc_hir::intravisit::{self, NestedVisitorMap, Visitor};
 use rustc_hir::*;
 use rustc_index::vec::{Idx, IndexVec};
 use rustc_session::Session;
-use rustc_span::source_map::SourceMap;
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::{Span, DUMMY_SP};
 
 use tracing::debug;
 

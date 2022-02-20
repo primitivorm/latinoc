@@ -12,9 +12,9 @@ use crate::hir;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::stable_hasher::StableHasher;
 use rustc_index::vec::IndexVec;
-use rustc_span::hygiene::ExpnId;
-use rustc_span::symbol::{kw, sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::hygiene::ExpnId;
+use latinoc_span::symbol::{kw, sym, Symbol};
+use latinoc_span::Span;
 
 use std::fmt::{self, Write};
 use std::hash::Hash;

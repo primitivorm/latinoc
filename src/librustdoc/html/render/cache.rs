@@ -3,7 +3,7 @@ use std::collections::BTreeMap;
 
 use rustc_data_structures::fx::FxHashMap;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 use serde::ser::{Serialize, SerializeStruct, Serializer};
 
 use crate::clean;

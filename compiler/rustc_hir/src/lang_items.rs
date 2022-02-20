@@ -10,12 +10,12 @@
 use crate::def_id::DefId;
 use crate::{MethodKind, Target};
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_macros::HashStable_Generic;
-use rustc_span::symbol::{kw, sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::symbol::{kw, sym, Symbol};
+use latinoc_span::Span;
 
 use std::lazy::SyncLazy;
 

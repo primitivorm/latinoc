@@ -1,8 +1,8 @@
 //! lint when items are used after statements
 
 use clippy_utils::diagnostics::span_lint;
-use rustc_ast::ast::{Block, ItemKind, StmtKind};
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_ast::ast::{Block, ItemKind, StmtKind};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
 

@@ -1,7 +1,7 @@
 use super::CROSSPOINTER_TRANSMUTE;
 use clippy_utils::diagnostics::span_lint;
 use rustc_hir::Expr;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty};
 
 /// Checks for `crosspointer_transmute` lint.

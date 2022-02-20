@@ -5,9 +5,9 @@ use clippy_utils::sugg;
 use clippy_utils::ty::is_copy;
 use rustc_errors::Applicability;
 use rustc_hir::{BindingAnnotation, Expr, ExprKind, MatchSource, Node, PatKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, adjustment::Adjust};
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
 use super::CLONE_DOUBLE_REF;
 use super::CLONE_ON_COPY;

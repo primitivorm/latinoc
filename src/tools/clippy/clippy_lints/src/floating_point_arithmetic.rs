@@ -8,12 +8,12 @@ use clippy_utils::{eq_expr_value, get_parent_expr, numeric_literal, sugg};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{BinOpKind, Expr, ExprKind, PathSegment, UnOp};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Spanned;
+use latinoc_span::source_map::Spanned;
 
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use std::f32::consts as f32_consts;
 use std::f64::consts as f64_consts;
 use sugg::Sugg;

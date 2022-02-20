@@ -3,12 +3,12 @@ use clippy_utils::diagnostics::span_lint_and_then;
 use clippy_utils::source::snippet_opt;
 use clippy_utils::{meets_msrv, msrvs};
 use if_chain::if_chain;
-use rustc_ast::ast::{FieldDef, Item, ItemKind, Variant, VariantData, VisibilityKind};
+use latinoc_ast::ast::{FieldDef, Item, ItemKind, Variant, VariantData, VisibilityKind};
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::{sym, Span};
+use latinoc_span::{sym, Span};
 
 declare_clippy_lint! {
     /// ### What it does

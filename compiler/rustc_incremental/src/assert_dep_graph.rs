@@ -33,7 +33,7 @@
 //! fn baz() { foo(); }
 //! ```
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::graph::implementation::{Direction, NodeIndex, INCOMING, OUTGOING};
 use rustc_graphviz as dot;
@@ -45,8 +45,8 @@ use rustc_middle::dep_graph::{
 };
 use rustc_middle::hir::map::Map;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::Span;
 
 use std::env;
 use std::fs::{self, File};

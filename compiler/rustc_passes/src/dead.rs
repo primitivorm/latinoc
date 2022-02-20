@@ -14,7 +14,7 @@ use rustc_middle::middle::codegen_fn_attrs::CodegenFnAttrFlags;
 use rustc_middle::middle::privacy;
 use rustc_middle::ty::{self, DefIdTree, TyCtxt};
 use rustc_session::lint;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 use std::mem;
 
 // Any local node that may call something in its body block should be
@@ -343,7 +343,7 @@ impl<'tcx> Visitor<'tcx> for MarkSymbolVisitor<'tcx> {
         _: Symbol,
         _: &hir::Generics<'_>,
         _: hir::HirId,
-        _: rustc_span::Span,
+        _: latinoc_span::Span,
     ) {
         let has_repr_c = self.repr_has_repr_c;
         let inherited_pub_visibility = self.inherited_pub_visibility;
@@ -658,7 +658,7 @@ impl DeadVisitor<'tcx> {
     fn warn_dead_code(
         &mut self,
         id: hir::HirId,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         name: Symbol,
         participle: &str,
     ) {

@@ -14,9 +14,9 @@ use std::fmt::{Display, Write};
 
 use rustc_data_structures::fx::FxHashMap;
 use latinoc_lexer::{LiteralKind, TokenKind};
-use rustc_span::edition::Edition;
-use rustc_span::symbol::Symbol;
-use rustc_span::{BytePos, Span, DUMMY_SP};
+use latinoc_span::edition::Edition;
+use latinoc_span::symbol::Symbol;
+use latinoc_span::{BytePos, Span, DUMMY_SP};
 
 use super::format::{self, Buffer};
 use super::render::LinkFromSrc;

@@ -17,7 +17,7 @@ use rustc_middle::ty;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::parse::feature_err;
-use rustc_span::{sym, Span, Symbol};
+use latinoc_span::{sym, Span, Symbol};
 
 /// An expression that is not *always* legal in a const context.
 #[derive(Clone, Copy)]

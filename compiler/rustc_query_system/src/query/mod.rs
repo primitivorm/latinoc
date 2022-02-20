@@ -19,7 +19,7 @@ use crate::dep_graph::{DepNodeIndex, HasDepContext, SerializedDepNodeIndex};
 use rustc_data_structures::sync::Lock;
 use rustc_data_structures::thin_vec::ThinVec;
 use rustc_errors::Diagnostic;
-use rustc_span::Span;
+use latinoc_span::Span;
 
 /// Description of a frame in the query stack.
 ///

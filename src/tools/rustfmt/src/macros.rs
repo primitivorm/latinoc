@@ -12,16 +12,16 @@
 use std::collections::HashMap;
 use std::panic::{catch_unwind, AssertUnwindSafe};
 
-use rustc_ast::token::{BinOpToken, DelimToken, Token, TokenKind};
-use rustc_ast::tokenstream::{Cursor, Spacing, TokenStream, TokenTree};
-use rustc_ast::{ast, ptr};
-use rustc_ast_pretty::pprust;
 use latinoc_parse::parser::{ForceCollect, Parser};
 use latinoc_parse::{stream_to_parser, MACRO_ARGUMENTS};
-use rustc_span::{
+use latinoc_span::{
     symbol::{self, kw},
     BytePos, Span, Symbol, DUMMY_SP,
 };
+use latinoc_ast::token::{BinOpToken, DelimToken, Token, TokenKind};
+use latinoc_ast::tokenstream::{Cursor, Spacing, TokenStream, TokenTree};
+use latinoc_ast::{ast, ptr};
+use rustc_ast_pretty::pprust;
 
 use crate::comment::{
     contains_comment, CharClasses, FindUncommented, FullCodeCharKind, LineClasses,

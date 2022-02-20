@@ -9,10 +9,10 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
 use rustc_hir::{BlockCheckMode, UnsafeSource};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty;
-use rustc_span::source_map::Span;
-use rustc_span::symbol::{kw, sym};
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::{kw, sym};
 use std::borrow::Cow;
 
 use super::OR_FUN_CALL;

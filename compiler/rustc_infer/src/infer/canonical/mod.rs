@@ -27,7 +27,7 @@ use rustc_index::vec::IndexVec;
 use rustc_middle::ty::fold::TypeFoldable;
 use rustc_middle::ty::subst::GenericArg;
 use rustc_middle::ty::{self, BoundVar, List};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 pub use rustc_middle::infer::canonical::*;
 use substitute::CanonicalExt;

@@ -19,12 +19,12 @@ use rustc_serialize::{
     Decodable, Decoder, Encodable, Encoder,
 };
 use rustc_session::Session;
-use rustc_span::hygiene::{
+use latinoc_span::hygiene::{
     ExpnId, HygieneDecodeContext, HygieneEncodeContext, SyntaxContext, SyntaxContextData,
 };
-use rustc_span::source_map::{SourceMap, StableSourceFileId};
-use rustc_span::CachingSourceMapView;
-use rustc_span::{BytePos, ExpnData, ExpnHash, Pos, SourceFile, Span};
+use latinoc_span::source_map::{SourceMap, StableSourceFileId};
+use latinoc_span::CachingSourceMapView;
+use latinoc_span::{BytePos, ExpnData, ExpnHash, Pos, SourceFile, Span};
 use std::mem;
 
 const TAG_FILE_FOOTER: u128 = 0xC0FFEE_C0FFEE_C0FFEE_C0FFEE_C0FFEE;
@@ -613,7 +613,7 @@ impl<'a, 'tcx> Decodable<CacheDecoder<'a, 'tcx>> for Vec<u8> {
 impl<'a, 'tcx> Decodable<CacheDecoder<'a, 'tcx>> for SyntaxContext {
     fn decode(decoder: &mut CacheDecoder<'a, 'tcx>) -> Result<Self, String> {
         let syntax_contexts = decoder.syntax_contexts;
-        rustc_span::hygiene::decode_syntax_context(decoder, decoder.hygiene_context, |this, id| {
+        latinoc_span::hygiene::decode_syntax_context(decoder, decoder.hygiene_context, |this, id| {
             // This closure is invoked if we haven't already decoded the data for the `SyntaxContext` we are deserializing.
             // We look up the position of the associated `SyntaxData` and decode it.
             let pos = syntax_contexts.get(&id).unwrap();
@@ -647,7 +647,7 @@ impl<'a, 'tcx> Decodable<CacheDecoder<'a, 'tcx>> for ExpnId {
 
             let data: ExpnData = decoder
                 .with_position(pos.to_usize(), |decoder| decode_tagged(decoder, TAG_EXPN_DATA))?;
-            let expn_id = rustc_span::hygiene::register_local_expn_id(data, hash);
+            let expn_id = latinoc_span::hygiene::register_local_expn_id(data, hash);
 
             #[cfg(debug_assertions)]
             {
@@ -777,7 +777,7 @@ impl<'a, 'tcx> Decodable<CacheDecoder<'a, 'tcx>> for &'tcx [(ty::Predicate<'tcx>
     }
 }
 
-impl<'a, 'tcx> Decodable<CacheDecoder<'a, 'tcx>> for &'tcx [rustc_ast::InlineAsmTemplatePiece] {
+impl<'a, 'tcx> Decodable<CacheDecoder<'a, 'tcx>> for &'tcx [latinoc_ast::InlineAsmTemplatePiece] {
     fn decode(d: &mut CacheDecoder<'a, 'tcx>) -> Result<Self, String> {
         RefDecodable::decode(d)
     }
@@ -847,7 +847,7 @@ where
     E: 'a + OpaqueEncoder,
 {
     fn encode(&self, s: &mut CacheEncoder<'a, 'tcx, E>) -> Result<(), E::Error> {
-        rustc_span::hygiene::raw_encode_syntax_context(*self, s.hygiene_context, s)
+        latinoc_span::hygiene::raw_encode_syntax_context(*self, s.hygiene_context, s)
     }
 }
 

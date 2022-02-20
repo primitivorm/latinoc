@@ -1,9 +1,9 @@
 use ast::visit;
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_hir::def::Namespace::TypeNS;
 use rustc_hir::def_id::{LocalDefId, CRATE_DEF_ID};
 use latinoc_interface::interface;
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use std::cell::RefCell;
 use std::mem;

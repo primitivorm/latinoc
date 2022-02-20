@@ -3,7 +3,7 @@ use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::{is_in_panic_handler, is_no_std_crate};
 
 use rustc_hir::{Block, Expr};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 
 pub(super) fn check(cx: &LateContext<'tcx>, expr: &'tcx Expr<'_>, loop_block: &'tcx Block<'_>) {
     if loop_block.stmts.is_empty() && loop_block.expr.is_none() && !is_in_panic_handler(cx, expr) {

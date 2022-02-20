@@ -3,8 +3,8 @@ use crate::proc_macro_decls;
 use crate::util;
 
 use latinoc_parse::{parse_crate_from_file, parse_crate_from_source_str, validate_attr};
-use rustc_ast::mut_visit::MutVisitor;
-use rustc_ast::{self as ast, visit};
+use latinoc_ast::mut_visit::MutVisitor;
+use latinoc_ast::{self as ast, visit};
 use rustc_borrowck as mir_borrowck;
 use rustc_codegen_ssa::back::link::emit_metadata;
 use rustc_codegen_ssa::traits::CodegenBackend;
@@ -12,10 +12,10 @@ use rustc_data_structures::parallel;
 use rustc_data_structures::sync::{Lrc, OnceCell, WorkerLocal};
 use rustc_data_structures::temp_dir::MaybeTempDir;
 use rustc_errors::{ErrorReported, PResult};
-use rustc_expand::base::ExtCtxt;
+use latinoc_expand::base::ExtCtxt;
 use rustc_hir::def_id::{StableCrateId, LOCAL_CRATE};
 use rustc_hir::Crate;
-use rustc_lint::LintStore;
+use latinoc_lint::LintStore;
 use rustc_metadata::creader::CStore;
 use rustc_metadata::{encode_metadata, EncodedMetadata};
 use rustc_middle::arena::Arena;
@@ -34,10 +34,10 @@ use rustc_session::lint;
 use rustc_session::output::{filename_for_input, filename_for_metadata};
 use rustc_session::search_paths::PathKind;
 use rustc_session::{Limit, Session};
-use rustc_span::symbol::{sym, Ident, Symbol};
-use rustc_span::{FileName, MultiSpan};
+use latinoc_span::symbol::{sym, Ident, Symbol};
+use latinoc_span::{FileName, MultiSpan};
 use rustc_trait_selection::traits;
-use rustc_typeck as typeck;
+use latinoc_typeck as typeck;
 use tempfile::Builder as TempFileBuilder;
 use tracing::{info, warn};
 
@@ -188,14 +188,14 @@ pub fn register_plugins<'a>(
     crate_name: &str,
 ) -> Result<(ast::Crate, LintStore)> {
     krate = sess.time("attributes_injection", || {
-        rustc_builtin_macros::cmdline_attrs::inject(
+        latinoc_builtin_macros::cmdline_attrs::inject(
             krate,
             &sess.parse_sess,
             &sess.opts.debugging_opts.crate_attr,
         )
     });
 
-    let (krate, features) = rustc_expand::config::features(sess, krate);
+    let (krate, features) = latinoc_expand::config::features(sess, krate);
     // these need to be set "early" so that expansion sees `quote` if enabled.
     sess.init_features(features);
 
@@ -224,7 +224,7 @@ pub fn register_plugins<'a>(
         });
     }
 
-    let mut lint_store = rustc_lint::new_lint_store(
+    let mut lint_store = latinoc_lint::new_lint_store(
         sess.opts.debugging_opts.no_interleave_lints,
         sess.unstable_options(),
     );
@@ -255,14 +255,14 @@ fn pre_expansion_lint(
     sess.prof
         .generic_activity_with_arg("pre_AST_expansion_lint_checks", crate_name)
         .run(|| {
-            rustc_lint::check_ast_crate(
+            latinoc_lint::check_ast_crate(
                 sess,
                 lint_store,
                 krate,
                 crate_attrs,
                 true,
                 None,
-                rustc_lint::BuiltinCombinedPreExpansionLintPass::new(),
+                latinoc_lint::BuiltinCombinedPreExpansionLintPass::new(),
             );
         });
 }
@@ -280,11 +280,11 @@ pub fn configure_and_expand(
 ) -> Result<ast::Crate> {
     tracing::trace!("configure_and_expand");
     pre_expansion_lint(sess, lint_store, &krate, &krate.attrs, crate_name);
-    rustc_builtin_macros::register_builtin_macros(resolver);
+    latinoc_builtin_macros::register_builtin_macros(resolver);
 
     krate = sess.time("crate_injection", || {
         let alt_std_name = sess.opts.alt_std_name.as_ref().map(|s| Symbol::intern(s));
-        rustc_builtin_macros::standard_library_imports::inject(krate, resolver, sess, alt_std_name)
+        latinoc_builtin_macros::standard_library_imports::inject(krate, resolver, sess, alt_std_name)
     });
 
     util::check_attr_crate_type(sess, &krate.attrs, &mut resolver.lint_buffer());
@@ -327,14 +327,14 @@ pub fn configure_and_expand(
         // Create the config for macro expansion
         let features = sess.features_untracked();
         let recursion_limit = get_recursion_limit(&krate.attrs, sess);
-        let cfg = rustc_expand::expand::ExpansionConfig {
+        let cfg = latinoc_expand::expand::ExpansionConfig {
             features: Some(features),
             recursion_limit,
             trace_mac: sess.opts.debugging_opts.trace_macros,
             should_test: sess.opts.test,
             span_debug: sess.opts.debugging_opts.span_debug,
             proc_macro_backtrace: sess.opts.debugging_opts.proc_macro_backtrace,
-            ..rustc_expand::expand::ExpansionConfig::default(crate_name.to_string())
+            ..latinoc_expand::expand::ExpansionConfig::default(crate_name.to_string())
         };
 
         let crate_attrs = krate.attrs.clone();
@@ -387,7 +387,7 @@ pub fn configure_and_expand(
     })?;
 
     sess.time("maybe_building_test_harness", || {
-        rustc_builtin_macros::test_harness::inject(sess, resolver, &mut krate)
+        latinoc_builtin_macros::test_harness::inject(sess, resolver, &mut krate)
     });
 
     if let Some(PpMode::Source(PpSourceMode::EveryBodyLoops)) = sess.opts.pretty {
@@ -420,7 +420,7 @@ pub fn configure_and_expand(
         krate = sess.time("maybe_create_a_macro_crate", || {
             let num_crate_types = crate_types.len();
             let is_test_crate = sess.opts.test;
-            rustc_builtin_macros::proc_macro_harness::inject(
+            latinoc_builtin_macros::proc_macro_harness::inject(
                 sess,
                 resolver,
                 krate,
@@ -506,14 +506,14 @@ pub fn lower_to_hir<'res, 'tcx>(
     );
 
     sess.time("early_lint_checks", || {
-        rustc_lint::check_ast_crate(
+        latinoc_lint::check_ast_crate(
             sess,
             lint_store,
             &krate,
             &krate.attrs,
             false,
             Some(std::mem::take(resolver.lint_buffer())),
-            rustc_lint::BuiltinCombinedEarlyLintPass::new(),
+            latinoc_lint::BuiltinCombinedEarlyLintPass::new(),
         )
     });
 
@@ -522,7 +522,7 @@ pub fn lower_to_hir<'res, 'tcx>(
 
     // Discard hygiene data, which isn't required after lowering to HIR.
     if !sess.opts.debugging_opts.keep_hygiene_data {
-        rustc_span::hygiene::clear_syntax_context_map();
+        latinoc_span::hygiene::clear_syntax_context_map();
     }
 
     hir_crate
@@ -806,7 +806,7 @@ pub static DEFAULT_QUERY_PROVIDERS: SyncLazy<Providers> = SyncLazy::new(|| {
     rustc_traits::provide(providers);
     rustc_ty_utils::provide(providers);
     rustc_metadata::provide(providers);
-    rustc_lint::provide(providers);
+    latinoc_lint::provide(providers);
     rustc_symbol_mangling::provide(providers);
     rustc_codegen_ssa::provide(providers);
     *providers
@@ -1012,8 +1012,8 @@ fn analysis(tcx: TyCtxt<'_>, (): ()) -> Result<()> {
                     },
                     {
                         sess.time("lint_checking", || {
-                            rustc_lint::check_crate(tcx, || {
-                                rustc_lint::BuiltinCombinedLateLintPass::new()
+                            latinoc_lint::check_crate(tcx, || {
+                                latinoc_lint::BuiltinCombinedLateLintPass::new()
                             });
                         });
                     }

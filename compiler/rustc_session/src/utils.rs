@@ -1,8 +1,8 @@
 use crate::parse::ParseSess;
 use crate::session::Session;
-use rustc_ast::token::{self, DelimToken, Nonterminal, Token};
-use rustc_ast::tokenstream::CanSynthesizeMissingTokens;
-use rustc_ast::tokenstream::{DelimSpan, TokenStream, TokenTree};
+use latinoc_ast::token::{self, DelimToken, Nonterminal, Token};
+use latinoc_ast::tokenstream::CanSynthesizeMissingTokens;
+use latinoc_ast::tokenstream::{DelimSpan, TokenStream, TokenTree};
 use rustc_data_structures::profiling::VerboseTimingGuard;
 use std::path::{Path, PathBuf};
 

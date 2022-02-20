@@ -19,15 +19,15 @@ use rustc_hir::{self as hir, HirId};
 use rustc_target::abi::{Size, VariantIdx};
 
 use polonius_engine::Atom;
-pub use rustc_ast::Mutability;
+pub use latinoc_ast::Mutability;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::graph::dominators::{dominators, Dominators};
 use rustc_data_structures::graph::{self, GraphSuccessors};
 use rustc_index::bit_set::BitMatrix;
 use rustc_index::vec::{Idx, IndexVec};
 use rustc_serialize::{Decodable, Encodable};
-use rustc_span::symbol::Symbol;
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::symbol::Symbol;
+use latinoc_span::{Span, DUMMY_SP};
 use rustc_target::asm::InlineAsmRegOrRegClass;
 use std::borrow::Cow;
 use std::convert::TryInto;

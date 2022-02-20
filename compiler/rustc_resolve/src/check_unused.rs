@@ -26,15 +26,15 @@
 use crate::imports::ImportKind;
 use crate::Resolver;
 
-use rustc_ast as ast;
-use rustc_ast::node_id::NodeMap;
-use rustc_ast::visit::{self, Visitor};
+use latinoc_ast as ast;
+use latinoc_ast::node_id::NodeMap;
+use latinoc_ast::visit::{self, Visitor};
 use rustc_ast_lowering::ResolverAstLowering;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::pluralize;
 use rustc_session::lint::builtin::{MACRO_USE_EXTERN_CRATE, UNUSED_IMPORTS};
 use rustc_session::lint::BuiltinLintDiagnostics;
-use rustc_span::{MultiSpan, Span, DUMMY_SP};
+use latinoc_span::{MultiSpan, Span, DUMMY_SP};
 
 struct UnusedImport<'a> {
     use_tree: &'a ast::UseTree,

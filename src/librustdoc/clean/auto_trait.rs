@@ -142,7 +142,7 @@ impl<'a, 'tcx> AutoTraitFinder<'a, 'tcx> {
             })
             .collect();
         // We are only interested in case the type *doesn't* implement the Sized trait.
-        if !ty.is_sized(tcx.at(rustc_span::DUMMY_SP), param_env) {
+        if !ty.is_sized(tcx.at(latinoc_span::DUMMY_SP), param_env) {
             // In case `#![no_core]` is used, `sized_trait` returns nothing.
             if let Some(item) = tcx.lang_items().sized_trait().and_then(|sized_trait_did| {
                 self.generate_for_trait(ty, sized_trait_did, param_env, item_def_id, &f, true)

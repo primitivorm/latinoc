@@ -1,7 +1,7 @@
 use clippy_utils::diagnostics::span_lint_and_sugg;
-use rustc_ast::ast::{BindingMode, Mutability, Pat, PatKind};
+use latinoc_ast::ast::{BindingMode, Mutability, Pat, PatKind};
 use rustc_errors::Applicability;
-use rustc_lint::EarlyContext;
+use latinoc_lint::EarlyContext;
 
 use super::REDUNDANT_PATTERN;
 

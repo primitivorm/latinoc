@@ -2,12 +2,12 @@ use clippy_utils::consts::{constant_context, Constant};
 use clippy_utils::diagnostics::span_lint;
 use clippy_utils::is_expr_diagnostic_item;
 use if_chain::if_chain;
-use rustc_ast::LitKind;
+use latinoc_ast::LitKind;
 use rustc_hir::{Expr, ExprKind};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 declare_clippy_lint! {
     /// ### What it does

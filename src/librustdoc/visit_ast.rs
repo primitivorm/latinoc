@@ -9,9 +9,9 @@ use rustc_hir::Node;
 use rustc_hir::CRATE_HIR_ID;
 use rustc_middle::middle::privacy::AccessLevel;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::def_id::{CRATE_DEF_ID, LOCAL_CRATE};
-use rustc_span::symbol::{kw, sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::def_id::{CRATE_DEF_ID, LOCAL_CRATE};
+use latinoc_span::symbol::{kw, sym, Symbol};
+use latinoc_span::Span;
 
 use std::mem;
 

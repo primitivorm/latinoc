@@ -8,7 +8,7 @@
 //!
 //! [rustc dev guide]: https://rustc-dev-guide.rust-lang.org/thir.html
 
-use rustc_ast::{InlineAsmOptions, InlineAsmTemplatePiece};
+use latinoc_ast::{InlineAsmOptions, InlineAsmTemplatePiece};
 use rustc_hir as hir;
 use rustc_hir::def::CtorKind;
 use rustc_hir::def_id::DefId;
@@ -26,7 +26,7 @@ use rustc_middle::ty::{self, AdtDef, Const, Ty, UpvarSubsts, UserType};
 use rustc_middle::ty::{
     CanonicalUserType, CanonicalUserTypeAnnotation, CanonicalUserTypeAnnotations,
 };
-use rustc_span::{Span, Symbol, DUMMY_SP};
+use latinoc_span::{Span, Symbol, DUMMY_SP};
 use rustc_target::abi::VariantIdx;
 use rustc_target::asm::InlineAsmRegOrRegClass;
 

@@ -5,9 +5,9 @@ use clippy_utils::eq_expr_value;
 use clippy_utils::source::snippet_with_applicability;
 use rustc_errors::Applicability;
 use rustc_hir::{BinOpKind, Expr, ExprKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 declare_clippy_lint! {
     /// ### What it does

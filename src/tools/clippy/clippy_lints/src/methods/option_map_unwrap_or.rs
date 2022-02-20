@@ -7,10 +7,10 @@ use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::Applicability;
 use rustc_hir::intravisit::{walk_path, NestedVisitorMap, Visitor};
 use rustc_hir::{self, HirId, Path};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
-use rustc_span::source_map::Span;
-use rustc_span::{sym, Symbol};
+use latinoc_span::source_map::Span;
+use latinoc_span::{sym, Symbol};
 
 use super::MAP_UNWRAP_OR;
 

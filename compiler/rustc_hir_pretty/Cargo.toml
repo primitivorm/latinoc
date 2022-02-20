@@ -10,5 +10,5 @@ doctest = false
 rustc_ast_pretty = { path = "../rustc_ast_pretty" }
 rustc_hir = { path = "../rustc_hir" }
 rustc_target = { path = "../rustc_target" }
-rustc_span = { path = "../rustc_span" }
-rustc_ast = { path = "../rustc_ast" }
+latinoc_span = { path = "../latinoc_span" }
+latinoc_ast = { path = "../latinoc_ast" }

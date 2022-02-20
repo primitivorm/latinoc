@@ -8,7 +8,7 @@ use rustc_middle::ty::{
     PredicateKind, Ty, TyCtxt, TyS,
 };
 use rustc_session::lint::builtin::FUNCTION_ITEM_REFERENCES;
-use rustc_span::{symbol::sym, Span};
+use latinoc_span::{symbol::sym, Span};
 use rustc_target::spec::abi::Abi;
 
 use crate::MirPass;

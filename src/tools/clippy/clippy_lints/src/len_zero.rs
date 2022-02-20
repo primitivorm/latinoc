@@ -2,17 +2,17 @@ use clippy_utils::diagnostics::{span_lint, span_lint_and_sugg, span_lint_and_the
 use clippy_utils::source::snippet_with_applicability;
 use clippy_utils::{get_item_name, get_parent_as_impl, is_lint_allowed};
 use if_chain::if_chain;
-use rustc_ast::ast::LitKind;
+use latinoc_ast::ast::LitKind;
 use rustc_errors::Applicability;
 use rustc_hir::def_id::DefIdSet;
 use rustc_hir::{
     def_id::DefId, AssocItemKind, BinOpKind, Expr, ExprKind, FnRetTy, ImplItem, ImplItemKind, ImplicitSelfKind, Item,
     ItemKind, Mutability, Node, TraitItemRef, TyKind,
 };
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty::{self, AssocKind, FnSig, Ty, TyS};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{
+use latinoc_span::{
     source_map::{Span, Spanned, Symbol},
     symbol::sym,
 };

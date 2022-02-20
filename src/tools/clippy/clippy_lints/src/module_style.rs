@@ -3,11 +3,11 @@ use std::{
     path::{Component, Path},
 };
 
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
-use rustc_lint::{EarlyContext, EarlyLintPass, Level, LintContext};
+use latinoc_lint::{EarlyContext, EarlyLintPass, Level, LintContext};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::{FileName, RealFileName, SourceFile, Span, SyntaxContext};
+use latinoc_span::{FileName, RealFileName, SourceFile, Span, SyntaxContext};
 
 declare_clippy_lint! {
     /// ### What it does

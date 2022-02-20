@@ -144,7 +144,7 @@ fn format_align_fill() {
 }
 #[test]
 fn format_counts() {
-    rustc_span::create_default_session_globals_then(|| {
+    latinoc_span::create_default_session_globals_then(|| {
         same(
             "{:10x}",
             &[NextArgument(Argument {

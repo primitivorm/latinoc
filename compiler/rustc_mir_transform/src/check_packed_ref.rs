@@ -4,7 +4,7 @@ use rustc_middle::mir::*;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, TyCtxt};
 use rustc_session::lint::builtin::UNALIGNED_REFERENCES;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use crate::util;
 use crate::MirPass;

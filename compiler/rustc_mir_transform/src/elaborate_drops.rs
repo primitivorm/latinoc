@@ -12,7 +12,7 @@ use rustc_mir_dataflow::on_lookup_result_bits;
 use rustc_mir_dataflow::MoveDataParamEnv;
 use rustc_mir_dataflow::{on_all_children_bits, on_all_drop_children_bits};
 use rustc_mir_dataflow::{Analysis, ResultsCursor};
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_target::abi::VariantIdx;
 use std::fmt;
 

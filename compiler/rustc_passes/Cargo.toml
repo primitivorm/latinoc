@@ -14,9 +14,9 @@ rustc_index = { path = "../rustc_index" }
 latinoc_parse = { path = "../latinoc_parse" }
 rustc_session = { path = "../rustc_session" }
 rustc_target = { path = "../rustc_target" }
-rustc_ast = { path = "../rustc_ast" }
+latinoc_ast = { path = "../latinoc_ast" }
 rustc_serialize = { path = "../rustc_serialize" }
-rustc_span = { path = "../rustc_span" }
+latinoc_span = { path = "../latinoc_span" }
 latinoc_lexer = { path = "../latinoc_lexer" }
 rustc_ast_pretty = { path = "../rustc_ast_pretty" }
 rustc_feature = { path = "../rustc_feature" }

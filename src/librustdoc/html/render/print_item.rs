@@ -11,8 +11,8 @@ use rustc_middle::middle::stability;
 use rustc_middle::span_bug;
 use rustc_middle::ty::layout::LayoutError;
 use rustc_middle::ty::{Adt, TyCtxt};
-use rustc_span::hygiene::MacroKind;
-use rustc_span::symbol::{kw, sym, Symbol};
+use latinoc_span::hygiene::MacroKind;
+use latinoc_span::symbol::{kw, sym, Symbol};
 use rustc_target::abi::{Layout, Primitive, TagEncoding, Variants};
 
 use super::{

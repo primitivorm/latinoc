@@ -11,8 +11,8 @@ use rustc_middle::mir::{
 };
 use rustc_middle::ty::{self, suggest_constraining_type_param, Ty};
 use rustc_mir_dataflow::move_paths::{InitKind, MoveOutIndex, MovePathIndex};
-use rustc_span::symbol::sym;
-use rustc_span::{BytePos, MultiSpan, Span, DUMMY_SP};
+use latinoc_span::symbol::sym;
+use latinoc_span::{BytePos, MultiSpan, Span, DUMMY_SP};
 use rustc_trait_selection::infer::InferCtxtExt;
 
 use crate::borrowck_errors;

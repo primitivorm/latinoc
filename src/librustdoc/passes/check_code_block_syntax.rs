@@ -3,8 +3,8 @@ use rustc_errors::{emitter::Emitter, Applicability, Diagnostic, Handler};
 use rustc_middle::lint::LintDiagnosticBuilder;
 use latinoc_parse::parse_stream_from_source_str;
 use rustc_session::parse::ParseSess;
-use rustc_span::source_map::{FilePathMapping, SourceMap};
-use rustc_span::{hygiene::AstPass, ExpnData, ExpnKind, FileName, InnerSpan, DUMMY_SP};
+use latinoc_span::source_map::{FilePathMapping, SourceMap};
+use latinoc_span::{hygiene::AstPass, ExpnData, ExpnKind, FileName, InnerSpan, DUMMY_SP};
 
 use crate::clean;
 use crate::core::DocContext;

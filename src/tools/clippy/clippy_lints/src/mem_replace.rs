@@ -6,12 +6,12 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::LangItem::OptionNone;
 use rustc_hir::{BorrowKind, Expr, ExprKind, Mutability, QPath};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::Span;
-use rustc_span::symbol::sym;
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::sym;
 
 declare_clippy_lint! {
     /// ### What it does

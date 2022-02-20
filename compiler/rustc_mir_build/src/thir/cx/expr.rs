@@ -16,8 +16,8 @@ use rustc_middle::ty::adjustment::{
 };
 use rustc_middle::ty::subst::{InternalSubsts, SubstsRef};
 use rustc_middle::ty::{self, AdtKind, Ty, UpvarSubsts, UserType};
-use rustc_span::def_id::DefId;
-use rustc_span::Span;
+use latinoc_span::def_id::DefId;
+use latinoc_span::Span;
 use rustc_target::abi::VariantIdx;
 
 impl<'tcx> Cx<'tcx> {
@@ -1049,7 +1049,7 @@ impl<'tcx> Cx<'tcx> {
         let temp_lifetime = self.region_scope_tree.temporary_scope(closure_expr.hir_id.local_id);
         let var_ty = place.base_ty;
 
-        // The result of capture analysis in `rustc_typeck/check/upvar.rs`represents a captured path
+        // The result of capture analysis in `latinoc_typeck/check/upvar.rs`represents a captured path
         // as it's seen for use within the closure and not at the time of closure creation.
         //
         // That is we see expect to see it start from a captured upvar and not something that is local

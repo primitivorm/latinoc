@@ -3,9 +3,9 @@ use super::UNSOUND_COLLECTION_TRANSMUTE;
 use clippy_utils::diagnostics::span_lint;
 use clippy_utils::match_any_diagnostic_items;
 use rustc_hir::Expr;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
 // used to check for UNSOUND_COLLECTION_TRANSMUTE
 static COLLECTIONS: &[Symbol] = &[

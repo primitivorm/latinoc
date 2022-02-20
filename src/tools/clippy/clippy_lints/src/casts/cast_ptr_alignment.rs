@@ -2,10 +2,10 @@ use clippy_utils::diagnostics::span_lint;
 use clippy_utils::is_hir_ty_cfg_dependant;
 use if_chain::if_chain;
 use rustc_hir::{Expr, ExprKind, GenericArg};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::layout::LayoutOf;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use super::CAST_PTR_ALIGNMENT;
 

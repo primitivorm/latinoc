@@ -1,7 +1,7 @@
 use std::cmp::max;
 
-use rustc_ast::{ast, ptr};
-use rustc_span::{source_map, Span};
+use latinoc_ast::{ast, ptr};
+use latinoc_span::{source_map, Span};
 
 use crate::macros::MacroArg;
 use crate::utils::{mk_sp, outer_attributes};

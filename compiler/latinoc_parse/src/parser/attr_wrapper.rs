@@ -1,11 +1,11 @@
 use super::{Capturing, FlatToken, ForceCollect, Parser, ReplaceRange, TokenCursor, TrailingToken};
-use rustc_ast::token::{self, DelimToken, Token, TokenKind};
-use rustc_ast::tokenstream::{AttrAnnotatedTokenStream, AttributesData, CreateTokenStream};
-use rustc_ast::tokenstream::{AttrAnnotatedTokenTree, DelimSpan, LazyTokenStream, Spacing};
-use rustc_ast::{self as ast};
-use rustc_ast::{AstLike, AttrVec, Attribute};
+use latinoc_ast::token::{self, DelimToken, Token, TokenKind};
+use latinoc_ast::tokenstream::{AttrAnnotatedTokenStream, AttributesData, CreateTokenStream};
+use latinoc_ast::tokenstream::{AttrAnnotatedTokenTree, DelimSpan, LazyTokenStream, Spacing};
+use latinoc_ast::{self as ast};
+use latinoc_ast::{AstLike, AttrVec, Attribute};
 use rustc_errors::PResult;
-use rustc_span::{sym, Span, DUMMY_SP};
+use latinoc_span::{sym, Span, DUMMY_SP};
 
 use std::convert::TryInto;
 use std::ops::Range;
@@ -488,7 +488,7 @@ fn make_token_stream(
 
             // An 'unglued' token is always two ASCII characters
             let mut first_span = last_token.span.shrink_to_lo();
-            first_span = first_span.with_hi(first_span.lo() + rustc_span::BytePos(1));
+            first_span = first_span.with_hi(first_span.lo() + latinoc_span::BytePos(1));
 
             final_buf.inner.push((
                 AttrAnnotatedTokenTree::Token(Token::new(unglued_first, first_span)),

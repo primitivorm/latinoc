@@ -6,10 +6,10 @@ use clippy_utils::{get_parent_expr, is_trait_method, match_def_path, paths};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind, HirId, MatchSource};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::sym;
+use latinoc_span::sym;
 
 declare_clippy_lint! {
     /// ### What it does

@@ -1,10 +1,10 @@
 use super::TRANSMUTE_INT_TO_BOOL;
 use clippy_utils::diagnostics::span_lint_and_then;
 use clippy_utils::sugg;
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_errors::Applicability;
 use rustc_hir::Expr;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty};
 use std::borrow::Cow;
 

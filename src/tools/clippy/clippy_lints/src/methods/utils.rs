@@ -1,12 +1,12 @@
 use clippy_utils::source::snippet_with_applicability;
 use clippy_utils::ty::is_type_diagnostic_item;
 use if_chain::if_chain;
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 pub(super) fn derefs_to_slice<'tcx>(
     cx: &LateContext<'tcx>,

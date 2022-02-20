@@ -5,7 +5,7 @@ use clippy_utils::sugg;
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, Mutability};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty};
 
 /// Checks for `transmute_bytes_to_str` and `transmute_ptr_to_ptr` lints.

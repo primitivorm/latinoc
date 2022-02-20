@@ -1,7 +1,7 @@
 //! Metadata from source code coverage analysis and instrumentation.
 
 use rustc_macros::HashStable;
-use rustc_span::Symbol;
+use latinoc_span::Symbol;
 
 use std::cmp::Ord;
 use std::fmt::{self, Debug, Formatter};

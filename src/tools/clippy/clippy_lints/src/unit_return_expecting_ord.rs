@@ -3,11 +3,11 @@ use clippy_utils::{get_trait_def_id, paths};
 use if_chain::if_chain;
 use rustc_hir::def_id::DefId;
 use rustc_hir::{Expr, ExprKind, StmtKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_middle::ty::{GenericPredicates, PredicateKind, ProjectionPredicate, TraitPredicate};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{BytePos, Span};
+use latinoc_span::{BytePos, Span};
 
 declare_clippy_lint! {
     /// ### What it does

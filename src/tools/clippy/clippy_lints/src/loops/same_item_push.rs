@@ -8,9 +8,9 @@ use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::def::{DefKind, Res};
 use rustc_hir::intravisit::{walk_expr, NestedVisitorMap, Visitor};
 use rustc_hir::{BindingAnnotation, Block, Expr, ExprKind, HirId, Node, Pat, PatKind, Stmt, StmtKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 use std::iter::Iterator;
 
 /// Detects for loop pushing the same item into a Vec

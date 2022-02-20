@@ -6,9 +6,9 @@ use std::iter;
 use std::ops::{Deref, Range};
 use std::ptr;
 
-use rustc_ast::Mutability;
+use latinoc_ast::Mutability;
 use rustc_data_structures::sorted_map::SortedMap;
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 use rustc_target::abi::{Align, HasDataLayout, Size};
 
 use super::{

@@ -5,8 +5,8 @@ use crate::path_names_to_string;
 use crate::{CrateLint, Module, ModuleKind, ModuleOrUniformRoot};
 use crate::{PathResult, PathSource, Segment};
 
-use rustc_ast::visit::FnKind;
-use rustc_ast::{
+use latinoc_ast::visit::FnKind;
+use latinoc_ast::{
     self as ast, AssocItemKind, Expr, ExprKind, GenericParam, GenericParamKind, Item, ItemKind,
     NodeId, Path, Ty, TyKind,
 };
@@ -19,11 +19,11 @@ use rustc_hir::def::{self, CtorKind, CtorOf, DefKind};
 use rustc_hir::def_id::{DefId, CRATE_DEF_INDEX, LOCAL_CRATE};
 use rustc_hir::PrimTy;
 use rustc_session::parse::feature_err;
-use rustc_span::edition::Edition;
-use rustc_span::hygiene::MacroKind;
-use rustc_span::lev_distance::find_best_match_for_name;
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::{BytePos, MultiSpan, Span, DUMMY_SP};
+use latinoc_span::edition::Edition;
+use latinoc_span::hygiene::MacroKind;
+use latinoc_span::lev_distance::find_best_match_for_name;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::{BytePos, MultiSpan, Span, DUMMY_SP};
 
 use std::iter;
 
@@ -1082,7 +1082,7 @@ impl<'a: 'ast, 'ast> LateResolutionVisitor<'a, '_, 'ast> {
                         .collect();
 
                     if non_visible_spans.len() > 0 {
-                        let mut m: rustc_span::MultiSpan = non_visible_spans.clone().into();
+                        let mut m: latinoc_span::MultiSpan = non_visible_spans.clone().into();
                         non_visible_spans
                             .into_iter()
                             .for_each(|s| m.push_span_label(s, "private field".to_string()));

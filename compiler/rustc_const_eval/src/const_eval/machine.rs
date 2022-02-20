@@ -7,11 +7,11 @@ use std::hash::Hash;
 use rustc_data_structures::fx::FxHashMap;
 use std::fmt;
 
-use rustc_ast::Mutability;
+use latinoc_ast::Mutability;
 use rustc_hir::def_id::DefId;
 use rustc_middle::mir::AssertMessage;
 use rustc_session::Limit;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 use rustc_target::abi::{Align, Size};
 use rustc_target::spec::abi::Abi;
 

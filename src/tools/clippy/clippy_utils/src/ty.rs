@@ -2,18 +2,18 @@
 
 #![allow(clippy::module_name_repetitions)]
 
-use rustc_ast::ast::Mutability;
+use latinoc_ast::ast::Mutability;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_hir as hir;
 use rustc_hir::def_id::DefId;
 use rustc_hir::{TyKind, Unsafety};
 use rustc_infer::infer::TyCtxtInferExt;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::subst::{GenericArg, GenericArgKind};
 use rustc_middle::ty::{self, AdtDef, IntTy, Ty, TyCtxt, TypeFoldable, UintTy};
-use rustc_span::sym;
-use rustc_span::symbol::{Ident, Symbol};
-use rustc_span::DUMMY_SP;
+use latinoc_span::sym;
+use latinoc_span::symbol::{Ident, Symbol};
+use latinoc_span::DUMMY_SP;
 use rustc_trait_selection::infer::InferCtxtExt;
 use rustc_trait_selection::traits::query::normalize::AtExt;
 

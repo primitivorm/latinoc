@@ -6,15 +6,15 @@ use clippy_utils::diagnostics::span_lint_and_then;
 use clippy_utils::source::{snippet_opt, snippet_with_applicability, snippet_with_context};
 use clippy_utils::{get_parent_expr, in_macro, path_to_local};
 use if_chain::if_chain;
-use rustc_ast::util::parser::PREC_POSTFIX;
+use latinoc_ast::util::parser::PREC_POSTFIX;
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_errors::Applicability;
 use rustc_hir::{BindingAnnotation, Body, BodyId, BorrowKind, Expr, ExprKind, HirId, Mutability, Pat, PatKind, UnOp};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_middle::ty::adjustment::{Adjust, Adjustment};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 declare_clippy_lint! {
     /// ### What it does

@@ -2,9 +2,9 @@
 
 use clippy_utils::{diagnostics::span_lint, is_lint_allowed};
 use rustc_hir::hir_id::CRATE_HIR_ID;
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::DUMMY_SP;
+use latinoc_span::source_map::DUMMY_SP;
 
 declare_clippy_lint! {
     /// ### What it does

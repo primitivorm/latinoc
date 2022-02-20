@@ -2,9 +2,9 @@ use crate::def::{CtorOf, DefKind, Res};
 use crate::def_id::DefId;
 use crate::hir::{self, HirId, PatKind};
 use rustc_data_structures::stable_set::FxHashSet;
-use rustc_span::hygiene::DesugaringKind;
-use rustc_span::symbol::Ident;
-use rustc_span::Span;
+use latinoc_span::hygiene::DesugaringKind;
+use latinoc_span::symbol::Ident;
+use latinoc_span::Span;
 
 use std::iter::{Enumerate, ExactSizeIterator};
 

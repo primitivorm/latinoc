@@ -15,8 +15,8 @@ use rustc_middle::mir::*;
 use rustc_middle::thir::{BindingMode, Expr, ExprId, LintLevel, PatKind, Thir};
 use rustc_middle::ty::subst::Subst;
 use rustc_middle::ty::{self, Ty, TyCtxt, TypeFoldable, TypeckResults};
-use rustc_span::symbol::sym;
-use rustc_span::Span;
+use latinoc_span::symbol::sym;
+use latinoc_span::Span;
 use rustc_target::spec::abi::Abi;
 
 use super::lints;

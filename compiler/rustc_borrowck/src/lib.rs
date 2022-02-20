@@ -37,7 +37,7 @@ use rustc_middle::mir::{InlineAsmOperand, Terminator, TerminatorKind};
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, CapturedPlace, ParamEnv, RegionVid, TyCtxt};
 use rustc_session::lint::builtin::{MUTABLE_BORROW_RESERVATION_CONFLICT, UNUSED_MUT};
-use rustc_span::{Span, Symbol, DUMMY_SP};
+use latinoc_span::{Span, Symbol, DUMMY_SP};
 
 use either::Either;
 use smallvec::SmallVec;

@@ -10,12 +10,12 @@ use rustc_middle::traits::ChalkRustInterner as RustInterner;
 use rustc_middle::ty::subst::{InternalSubsts, Subst, SubstsRef};
 use rustc_middle::ty::{self, AssocItemContainer, AssocKind, TyCtxt, TypeFoldable};
 
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_attr as attr;
 
 use rustc_hir::def_id::DefId;
 
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use std::fmt;
 use std::sync::Arc;

@@ -16,7 +16,7 @@ use rustc_codegen_ssa::mono_item::MonoItemExt;
 use rustc_codegen_ssa::traits::DebugInfoMethods;
 use rustc_metadata::EncodedMetadata;
 use rustc_session::config::DebugInfo;
-use rustc_span::Symbol;
+use latinoc_span::Symbol;
 
 use crate::GccContext;
 use crate::builder::Builder;

@@ -1,10 +1,10 @@
 use super::{AttrWrapper, Capturing, ForceCollect, Parser, PathStyle};
-use rustc_ast as ast;
-use rustc_ast::attr;
-use rustc_ast::token::{self, Nonterminal};
+use latinoc_ast as ast;
+use latinoc_ast::attr;
+use latinoc_ast::token::{self, Nonterminal};
 use rustc_ast_pretty::pprust;
 use rustc_errors::{error_code, DiagnosticBuilder, PResult};
-use rustc_span::{sym, BytePos, Span};
+use latinoc_span::{sym, BytePos, Span};
 use std::convert::TryInto;
 
 use tracing::debug;

@@ -5,7 +5,7 @@ use rustc_middle::ty::subst::Subst;
 use rustc_middle::ty::{
     self, Binder, Predicate, PredicateKind, ToPredicate, Ty, TyCtxt, WithConstness,
 };
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_trait_selection::traits;
 
 fn sized_constraint_for_ty<'tcx>(

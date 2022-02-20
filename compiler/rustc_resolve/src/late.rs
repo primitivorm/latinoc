@@ -11,9 +11,9 @@ use crate::{path_names_to_string, BindingError, CrateLint, LexicalScopeBinding};
 use crate::{Module, ModuleOrUniformRoot, ParentScope, PathResult};
 use crate::{ResolutionError, Resolver, Segment, UseError};
 
-use rustc_ast::ptr::P;
-use rustc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
-use rustc_ast::*;
+use latinoc_ast::ptr::P;
+use latinoc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
+use latinoc_ast::*;
 use rustc_ast_lowering::ResolverAstLowering;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_errors::DiagnosticId;
@@ -23,11 +23,11 @@ use rustc_hir::def_id::{DefId, CRATE_DEF_INDEX};
 use rustc_hir::{PrimTy, TraitCandidate};
 use rustc_middle::{bug, span_bug};
 use rustc_session::lint;
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::Span;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::Span;
 use smallvec::{smallvec, SmallVec};
 
-use rustc_span::source_map::{respan, Spanned};
+use latinoc_span::source_map::{respan, Spanned};
 use std::collections::{hash_map::Entry, BTreeSet};
 use std::mem::{replace, take};
 use tracing::debug;

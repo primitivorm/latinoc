@@ -84,7 +84,7 @@
 use self::LiveNodeKind::*;
 use self::VarKind::*;
 
-use rustc_ast::InlineAsmOptions;
+use latinoc_ast::InlineAsmOptions;
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
@@ -97,8 +97,8 @@ use rustc_middle::hir::map::Map;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, DefIdTree, RootVariableMinCaptureList, Ty, TyCtxt};
 use rustc_session::lint;
-use rustc_span::symbol::{kw, sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::symbol::{kw, sym, Symbol};
+use latinoc_span::Span;
 
 use std::collections::VecDeque;
 use std::io;

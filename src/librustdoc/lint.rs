@@ -1,5 +1,5 @@
 use rustc_data_structures::fx::FxHashMap;
-use rustc_lint::LintStore;
+use latinoc_lint::LintStore;
 use rustc_lint_defs::{declare_tool_lint, Lint, LintId};
 use rustc_session::{lint, Session};
 
@@ -33,7 +33,7 @@ where
     let lints = || {
         lint::builtin::HardwiredLints::get_lints()
             .into_iter()
-            .chain(rustc_lint::SoftLints::get_lints().into_iter())
+            .chain(latinoc_lint::SoftLints::get_lints().into_iter())
     };
 
     let lint_opts = lints()

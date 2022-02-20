@@ -1,8 +1,8 @@
 use super::{ImplTraitContext, LoweringContext, ParamMode, ParenthesizedGenericArgs};
 
-use rustc_ast::attr;
-use rustc_ast::ptr::P as AstP;
-use rustc_ast::*;
+use latinoc_ast::attr;
+use latinoc_ast::ptr::P as AstP;
+use latinoc_ast::*;
 use rustc_data_structures::stack::ensure_sufficient_stack;
 use rustc_data_structures::thin_vec::ThinVec;
 use rustc_errors::struct_span_err;
@@ -10,10 +10,10 @@ use rustc_hir as hir;
 use rustc_hir::def::Res;
 use rustc_hir::definitions::DefPathData;
 use rustc_session::parse::feature_err;
-use rustc_span::hygiene::ExpnId;
-use rustc_span::source_map::{respan, DesugaringKind, Span, Spanned};
-use rustc_span::symbol::{sym, Ident, Symbol};
-use rustc_span::DUMMY_SP;
+use latinoc_span::hygiene::ExpnId;
+use latinoc_span::source_map::{respan, DesugaringKind, Span, Spanned};
+use latinoc_span::symbol::{sym, Ident, Symbol};
+use latinoc_span::DUMMY_SP;
 
 impl<'hir> LoweringContext<'_, 'hir> {
     fn lower_exprs(&mut self, exprs: &[AstP<Expr>]) -> &'hir [hir::Expr<'hir>] {
@@ -1157,7 +1157,7 @@ impl<'hir> LoweringContext<'_, 'hir> {
         e2: Option<&Expr>,
         lims: RangeLimits,
     ) -> hir::ExprKind<'hir> {
-        use rustc_ast::RangeLimits::*;
+        use latinoc_ast::RangeLimits::*;
 
         let lang_item = match (e1, e2, lims) {
             (None, None, HalfOpen) => hir::LangItem::RangeFull,

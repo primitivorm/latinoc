@@ -1,7 +1,7 @@
 use rustc_hir::{self as hir, intravisit, HirIdSet};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::{hir::map::Map, ty};
-use rustc_span::def_id::LocalDefId;
+use latinoc_span::def_id::LocalDefId;
 
 use clippy_utils::diagnostics::span_lint;
 use clippy_utils::ty::type_is_unsafe_function;

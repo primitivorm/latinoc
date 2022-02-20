@@ -227,7 +227,7 @@ rustc_queries! {
         desc { |tcx| "parent module of `{}`", tcx.def_path_str(key.to_def_id()) }
     }
 
-    query expn_that_defined(key: DefId) -> rustc_span::ExpnId {
+    query expn_that_defined(key: DefId) -> latinoc_span::ExpnId {
         // This query reads from untracked data in definitions.
         eval_always
         desc { |tcx| "expansion that defined `{}`", tcx.def_path_str(key) }
@@ -363,7 +363,7 @@ rustc_queries! {
 
     query symbols_for_closure_captures(
         key: (LocalDefId, DefId)
-    ) -> Vec<rustc_span::Symbol> {
+    ) -> Vec<latinoc_span::Symbol> {
         desc {
             |tcx| "symbols for captures of closure `{}` in `{}`",
             tcx.def_path_str(key.1),
@@ -499,7 +499,7 @@ rustc_queries! {
     /// returns the full set of predicates. If `Some<Ident>`, then the query returns only the
     /// subset of super-predicates that reference traits that define the given associated type.
     /// This is used to avoid cycles in resolving types like `T::Item`.
-    query super_predicates_that_define_assoc_type(key: (DefId, Option<rustc_span::symbol::Ident>)) -> ty::GenericPredicates<'tcx> {
+    query super_predicates_that_define_assoc_type(key: (DefId, Option<latinoc_span::symbol::Ident>)) -> ty::GenericPredicates<'tcx> {
         desc { |tcx| "computing the super traits of `{}`{}",
             tcx.def_path_str(key.0),
             if let Some(assoc_name) = key.1 { format!(" with associated type name `{}`", assoc_name) } else { "".to_string() },
@@ -508,7 +508,7 @@ rustc_queries! {
 
     /// To avoid cycles within the predicates of a single item we compute
     /// per-type-parameter predicates for resolving `T::AssocTy`.
-    query type_param_predicates(key: (DefId, LocalDefId, rustc_span::symbol::Ident)) -> ty::GenericPredicates<'tcx> {
+    query type_param_predicates(key: (DefId, LocalDefId, latinoc_span::symbol::Ident)) -> ty::GenericPredicates<'tcx> {
         desc { |tcx| "computing the bounds for type parameter `{}`", {
             let id = tcx.hir().local_def_id_to_hir_id(key.1);
             tcx.hir().ty_param_name(id)
@@ -898,7 +898,7 @@ rustc_queries! {
         desc { "deref constant" }
     }
 
-    query const_caller_location(key: (rustc_span::Symbol, u32, u32)) -> ConstValue<'tcx> {
+    query const_caller_location(key: (latinoc_span::Symbol, u32, u32)) -> ConstValue<'tcx> {
         desc { "get a &core::panic::Location referring to a span" }
     }
 
@@ -995,7 +995,7 @@ rustc_queries! {
         cache_on_disk_if { true }
     }
 
-    query fn_arg_names(def_id: DefId) -> &'tcx [rustc_span::symbol::Ident] {
+    query fn_arg_names(def_id: DefId) -> &'tcx [latinoc_span::symbol::Ident] {
         desc { |tcx| "looking up function parameter names for `{}`", tcx.def_path_str(def_id) }
         separate_provide_extern
     }

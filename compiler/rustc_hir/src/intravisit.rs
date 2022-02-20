@@ -33,10 +33,10 @@
 
 use crate::hir::*;
 use crate::itemlikevisit::{ItemLikeVisitor, ParItemLikeVisitor};
-use rustc_ast::walk_list;
-use rustc_ast::{Attribute, Label};
-use rustc_span::symbol::{Ident, Symbol};
-use rustc_span::Span;
+use latinoc_ast::walk_list;
+use latinoc_ast::{Attribute, Label};
+use latinoc_span::symbol::{Ident, Symbol};
+use latinoc_span::Span;
 
 pub struct DeepVisitor<'v, V> {
     visitor: &'v mut V,

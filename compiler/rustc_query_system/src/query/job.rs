@@ -5,7 +5,7 @@ use crate::query::{QueryContext, QueryStackFrame, SimpleDefKind};
 use rustc_data_structures::fx::FxHashMap;
 use rustc_errors::{struct_span_err, Diagnostic, DiagnosticBuilder, Handler, Level};
 use rustc_session::Session;
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use std::convert::TryFrom;
 use std::hash::Hash;
@@ -20,7 +20,7 @@ use {
     rustc_data_structures::sync::Lrc,
     rustc_data_structures::{jobserver, OnDrop},
     rustc_rayon_core as rayon_core,
-    rustc_span::DUMMY_SP,
+    latinoc_span::DUMMY_SP,
     std::iter::{self, FromIterator},
     std::{mem, process},
 };

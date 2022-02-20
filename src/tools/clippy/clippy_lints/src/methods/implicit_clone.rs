@@ -3,9 +3,9 @@ use clippy_utils::{is_diag_item_method, is_diag_trait_item};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::TyS;
-use rustc_span::{sym, Span};
+use latinoc_span::{sym, Span};
 
 use super::IMPLICIT_CLONE;
 

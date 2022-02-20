@@ -80,7 +80,7 @@ There are three ways to do this, depending on if the target trait has a diagnost
 
 ```rust
 use clippy_utils::{implements_trait, is_trait_method, match_trait_method, paths};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 impl LateLintPass<'_> for MyStructLint {
     fn check_expr(&mut self, cx: &LateContext<'_>, expr: &Expr<'_>) {
@@ -203,7 +203,7 @@ assert_eq!(differing_macro_contexts(x_is_some_span, x_unwrap_span), true);
 [TyKind]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/enum.TyKind.html
 [TypeckResults]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/struct.TypeckResults.html
 [expr_ty]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/struct.TypeckResults.html#method.expr_ty
-[LateContext]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/struct.LateContext.html
+[LateContext]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_lint/struct.LateContext.html
 [TyCtxt]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/context/struct.TyCtxt.html
 [pat_ty]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/context/struct.TypeckResults.html#method.pat_ty
 [paths]: ../clippy_utils/src/paths.rs

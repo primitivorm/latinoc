@@ -6,12 +6,12 @@ use clippy_utils::{get_parent_expr, is_lint_allowed, match_function_call, method
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{BinOpKind, BorrowKind, Expr, ExprKind, LangItem, QPath};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Spanned;
-use rustc_span::sym;
+use latinoc_span::source_map::Spanned;
+use latinoc_span::sym;
 
 declare_clippy_lint! {
     /// ### What it does
@@ -239,7 +239,7 @@ declare_lint_pass!(StringLitAsBytes => [STRING_LIT_AS_BYTES, STRING_FROM_UTF8_AS
 
 impl<'tcx> LateLintPass<'tcx> for StringLitAsBytes {
     fn check_expr(&mut self, cx: &LateContext<'tcx>, e: &'tcx Expr<'_>) {
-        use rustc_ast::LitKind;
+        use latinoc_ast::LitKind;
 
         if_chain! {
             // Find std::str::converts::from_utf8

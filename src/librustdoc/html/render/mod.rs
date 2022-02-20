@@ -56,7 +56,7 @@ use rustc_hir::Mutability;
 use rustc_middle::middle::stability;
 use rustc_middle::ty;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::{
+use latinoc_span::{
     symbol::{kw, sym, Symbol},
     BytePos, FileName, RealFileName,
 };
@@ -2671,12 +2671,12 @@ fn render_call_locations(w: &mut Buffer, cx: &Context<'_>, item: &clean::Item) {
                 FileName::Real(RealFileName::LocalPath(other_path)) => rel_path == other_path,
                 _ => false,
             })?;
-            Some(rustc_span::Span::with_root_ctxt(
+            Some(latinoc_span::Span::with_root_ctxt(
                 file.start_pos + BytePos(byte_min),
                 file.start_pos + BytePos(byte_max),
             ))
         })()
-        .unwrap_or(rustc_span::DUMMY_SP);
+        .unwrap_or(latinoc_span::DUMMY_SP);
 
         // The root path is the inverse of Context::current
         let root_path = vec!["../"; cx.current.len() - 1].join("");

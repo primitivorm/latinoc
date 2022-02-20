@@ -2,7 +2,7 @@ use clippy_utils::diagnostics::span_lint;
 use clippy_utils::{is_expr_path_def_path, paths, ty::is_uninit_value_valid_for_ty};
 use if_chain::if_chain;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 
 use super::UNINIT_ASSUMED_INIT;
 

@@ -1,6 +1,6 @@
 //! Module that contains skip related stuffs.
 
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_ast_pretty::pprust;
 
 /// Take care of skip name stack. You can update it by attributes slice or
@@ -56,7 +56,7 @@ fn get_skip_names(kind: &str, attrs: &[ast::Attribute]) -> Vec<String> {
     let mut skip_names = vec![];
     let path = format!("{}::{}::{}", RUSTFMT, SKIP, kind);
     for attr in attrs {
-        // rustc_ast::ast::Path is implemented partialEq
+        // latinoc_ast::ast::Path is implemented partialEq
         // but it is designed for segments.len() == 1
         if let ast::AttrKind::Normal(attr_item, _) = &attr.kind {
             if pprust::path_to_string(&attr_item.path) != path {

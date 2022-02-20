@@ -11,7 +11,7 @@ use rustc_codegen_ssa::traits::{ArgAbiMethods, BaseTypeMethods, BuilderMethods, 
 use rustc_middle::bug;
 use rustc_middle::ty::{self, Instance, Ty};
 use rustc_middle::ty::layout::LayoutOf;
-use rustc_span::{Span, Symbol, symbol::kw, sym};
+use latinoc_span::{Span, Symbol, symbol::kw, sym};
 use rustc_target::abi::HasDataLayout;
 use rustc_target::abi::call::{ArgAbi, FnAbi, PassMode};
 use rustc_target::spec::PanicStrategy;

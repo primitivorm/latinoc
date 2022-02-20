@@ -1,7 +1,7 @@
 use super::{AnonymousLifetimeMode, ImplTraitContext, LoweringContext, ParamMode};
 use super::{GenericArgsCtor, ParenthesizedGenericArgs};
 
-use rustc_ast::{self as ast, *};
+use latinoc_ast::{self as ast, *};
 use rustc_errors::{struct_span_err, Applicability};
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, PartialRes, Res};
@@ -9,8 +9,8 @@ use rustc_hir::def_id::DefId;
 use rustc_hir::GenericArg;
 use rustc_session::lint::builtin::ELIDED_LIFETIMES_IN_PATHS;
 use rustc_session::lint::BuiltinLintDiagnostics;
-use rustc_span::symbol::Ident;
-use rustc_span::{BytePos, Span, DUMMY_SP};
+use latinoc_span::symbol::Ident;
+use latinoc_span::{BytePos, Span, DUMMY_SP};
 
 use smallvec::smallvec;
 use tracing::debug;

@@ -103,7 +103,7 @@ use rustc_middle::mir::mono::{CodegenUnit, Linkage};
 use rustc_middle::ty::print::with_no_trimmed_paths;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 
 use crate::collector::InliningMap;
 use crate::collector::{self, MonoItemCollectionMode};

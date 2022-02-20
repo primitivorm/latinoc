@@ -19,8 +19,8 @@ smallvec = { version = "1.6.1", features = ["union", "may_dangle"] }
 regex = "1.4"
 
 rustc_serialize = { path = "../rustc_serialize" }
-rustc_ast = { path = "../rustc_ast" }
-rustc_span = { path = "../rustc_span" }
+latinoc_ast = { path = "../latinoc_ast" }
+latinoc_span = { path = "../latinoc_span" }
 rustc_middle = { path = "../rustc_middle" }
 rustc_apfloat = { path = "../rustc_apfloat" }
 rustc_attr = { path = "../rustc_attr" }

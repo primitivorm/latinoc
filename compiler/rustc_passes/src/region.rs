@@ -6,7 +6,7 @@
 //!
 //! [rustc dev guide]: https://rustc-dev-guide.rust-lang.org/borrow_check.html
 
-use rustc_ast::walk_list;
+use latinoc_ast::walk_list;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_hir as hir;
 use rustc_hir::def_id::DefId;
@@ -16,8 +16,8 @@ use rustc_index::vec::Idx;
 use rustc_middle::middle::region::*;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::source_map;
-use rustc_span::Span;
+use latinoc_span::source_map;
+use latinoc_span::Span;
 
 use std::mem;
 

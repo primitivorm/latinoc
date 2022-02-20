@@ -1,6 +1,6 @@
 use super::{find_testable_code, plain_text_summary, short_markdown_summary};
 use super::{ErrorCodes, HeadingOffset, IdMap, Ignore, LangString, Markdown, MarkdownHtml};
-use rustc_span::edition::{Edition, DEFAULT_EDITION};
+use latinoc_span::edition::{Edition, DEFAULT_EDITION};
 
 #[test]
 fn test_unique_id() {

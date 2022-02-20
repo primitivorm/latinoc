@@ -5,9 +5,9 @@ use rustc_errors::Applicability;
 use rustc_hir::intravisit::{walk_expr, walk_pat, walk_stmt, NestedVisitorMap, Visitor};
 use rustc_hir::HirIdMap;
 use rustc_hir::{BinOpKind, BorrowKind, Expr, ExprKind, HirId, Mutability, Pat, PatKind, Stmt, StmtKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 use std::iter::Iterator;
 
 #[derive(Debug, PartialEq)]

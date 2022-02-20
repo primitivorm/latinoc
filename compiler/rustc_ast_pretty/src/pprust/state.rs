@@ -1,22 +1,22 @@
 use crate::pp::Breaks::{Consistent, Inconsistent};
 use crate::pp::{self, Breaks};
 
-use rustc_ast::attr;
-use rustc_ast::ptr::P;
-use rustc_ast::token::{self, BinOpToken, CommentKind, DelimToken, Nonterminal, Token, TokenKind};
-use rustc_ast::tokenstream::{TokenStream, TokenTree};
-use rustc_ast::util::classify;
-use rustc_ast::util::comments::{gather_comments, Comment, CommentStyle};
-use rustc_ast::util::parser::{self, AssocOp, Fixity};
-use rustc_ast::{self as ast, BlockCheckMode, PatKind, RangeEnd, RangeSyntax};
-use rustc_ast::{GenericArg, MacArgs, ModKind};
-use rustc_ast::{GenericBound, SelfKind, TraitBoundModifier};
-use rustc_ast::{InlineAsmOperand, InlineAsmRegOrRegClass};
-use rustc_ast::{InlineAsmOptions, InlineAsmTemplatePiece};
-use rustc_span::edition::Edition;
-use rustc_span::source_map::{SourceMap, Spanned};
-use rustc_span::symbol::{kw, sym, Ident, IdentPrinter, Symbol};
-use rustc_span::{BytePos, FileName, Span};
+use latinoc_ast::attr;
+use latinoc_ast::ptr::P;
+use latinoc_ast::token::{self, BinOpToken, CommentKind, DelimToken, Nonterminal, Token, TokenKind};
+use latinoc_ast::tokenstream::{TokenStream, TokenTree};
+use latinoc_ast::util::classify;
+use latinoc_ast::util::comments::{gather_comments, Comment, CommentStyle};
+use latinoc_ast::util::parser::{self, AssocOp, Fixity};
+use latinoc_ast::{self as ast, BlockCheckMode, PatKind, RangeEnd, RangeSyntax};
+use latinoc_ast::{GenericArg, MacArgs, ModKind};
+use latinoc_ast::{GenericBound, SelfKind, TraitBoundModifier};
+use latinoc_ast::{InlineAsmOperand, InlineAsmRegOrRegClass};
+use latinoc_ast::{InlineAsmOptions, InlineAsmTemplatePiece};
+use latinoc_span::edition::Edition;
+use latinoc_span::source_map::{SourceMap, Spanned};
+use latinoc_span::symbol::{kw, sym, Ident, IdentPrinter, Symbol};
+use latinoc_span::{BytePos, FileName, Span};
 
 use std::borrow::Cow;
 
@@ -64,7 +64,7 @@ impl<'a> Comments<'a> {
 
     pub fn trailing_comment(
         &self,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         next_pos: Option<BytePos>,
     ) -> Option<Comment> {
         if let Some(cmnt) = self.next() {
@@ -642,7 +642,7 @@ pub trait PrintState<'a>: std::ops::Deref<Target = pp::Printer> + std::ops::Dere
         self.end(); // Close the head-box.
     }
 
-    fn bclose_maybe_open(&mut self, span: rustc_span::Span, close_box: bool) {
+    fn bclose_maybe_open(&mut self, span: latinoc_span::Span, close_box: bool) {
         self.maybe_print_comment(span.hi());
         self.break_offset_if_not_bol(1, -(INDENT_UNIT as isize));
         self.word("}");
@@ -651,7 +651,7 @@ pub trait PrintState<'a>: std::ops::Deref<Target = pp::Printer> + std::ops::Dere
         }
     }
 
-    fn bclose(&mut self, span: rustc_span::Span) {
+    fn bclose(&mut self, span: latinoc_span::Span) {
         self.bclose_maybe_open(span, true)
     }
 
@@ -897,7 +897,7 @@ impl<'a> State<'a> {
     crate fn commasep_cmnt<T, F, G>(&mut self, b: Breaks, elts: &[T], mut op: F, mut get_span: G)
     where
         F: FnMut(&mut State<'_>, &T),
-        G: FnMut(&T) -> rustc_span::Span,
+        G: FnMut(&T) -> latinoc_span::Span,
     {
         self.rbox(0, b);
         let len = elts.len();
@@ -1387,7 +1387,7 @@ impl<'a> State<'a> {
         enum_definition: &ast::EnumDef,
         generics: &ast::Generics,
         ident: Ident,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         visibility: &ast::Visibility,
     ) {
         self.head(visibility_qualified(visibility, "enum"));
@@ -1398,7 +1398,7 @@ impl<'a> State<'a> {
         self.print_variants(&enum_definition.variants, span)
     }
 
-    crate fn print_variants(&mut self, variants: &[ast::Variant], span: rustc_span::Span) {
+    crate fn print_variants(&mut self, variants: &[ast::Variant], span: latinoc_span::Span) {
         self.bopen();
         for v in variants {
             self.space_if_not_bol();
@@ -1438,7 +1438,7 @@ impl<'a> State<'a> {
         }
     }
 
-    crate fn print_record_struct_body(&mut self, fields: &[ast::FieldDef], span: rustc_span::Span) {
+    crate fn print_record_struct_body(&mut self, fields: &[ast::FieldDef], span: latinoc_span::Span) {
         self.nbsp();
         self.bopen();
         self.hardbreak_if_not_bol();
@@ -1462,7 +1462,7 @@ impl<'a> State<'a> {
         struct_def: &ast::VariantData,
         generics: &ast::Generics,
         ident: Ident,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         print_finalizer: bool,
     ) {
         self.print_ident(ident);
@@ -2888,9 +2888,9 @@ impl<'a> State<'a> {
             where_clause: ast::WhereClause {
                 has_where_token: false,
                 predicates: Vec::new(),
-                span: rustc_span::DUMMY_SP,
+                span: latinoc_span::DUMMY_SP,
             },
-            span: rustc_span::DUMMY_SP,
+            span: latinoc_span::DUMMY_SP,
         };
         let header = ast::FnHeader { unsafety, ext, ..ast::FnHeader::default() };
         self.print_fn(decl, header, name, &generics);
@@ -2899,7 +2899,7 @@ impl<'a> State<'a> {
 
     crate fn maybe_print_trailing_comment(
         &mut self,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         next_pos: Option<BytePos>,
     ) {
         if let Some(cmnts) = self.comments() {

@@ -5,7 +5,7 @@ use crate::build::Builder;
 
 use rustc_middle::mir::*;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::{Span, DUMMY_SP};
 use rustc_trait_selection::infer::InferCtxtExt;
 
 impl<'a, 'tcx> Builder<'a, 'tcx> {

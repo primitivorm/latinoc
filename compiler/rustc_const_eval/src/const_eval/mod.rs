@@ -8,7 +8,7 @@ use rustc_middle::{
     mir::{self, interpret::ConstAlloc},
     ty::ScalarInt,
 };
-use rustc_span::{source_map::DUMMY_SP, symbol::Symbol};
+use latinoc_span::{source_map::DUMMY_SP, symbol::Symbol};
 
 use crate::interpret::{
     intern_const_alloc_recursive, ConstValue, InternKind, InterpCx, MPlaceTy, MemPlaceMeta, Scalar,

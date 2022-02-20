@@ -6,7 +6,7 @@ use rustc_infer::traits::TraitEngineExt as _;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::subst::{InternalSubsts, Subst};
 use rustc_middle::ty::{self, ParamEnvAnd, Ty, TyCtxt};
-use rustc_span::source_map::{Span, DUMMY_SP};
+use latinoc_span::source_map::{Span, DUMMY_SP};
 use rustc_trait_selection::traits::query::dropck_outlives::trivial_dropck_outlives;
 use rustc_trait_selection::traits::query::dropck_outlives::{
     DropckOutlivesResult, DtorckConstraint,

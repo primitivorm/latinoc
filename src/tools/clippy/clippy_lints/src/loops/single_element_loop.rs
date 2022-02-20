@@ -5,7 +5,7 @@ use clippy_utils::source::{indent_of, snippet};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{BorrowKind, Expr, ExprKind, Pat, PatKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 
 pub(super) fn check<'tcx>(
     cx: &LateContext<'tcx>,
@@ -16,7 +16,7 @@ pub(super) fn check<'tcx>(
 ) {
     let arg_expr = match arg.kind {
         ExprKind::AddrOf(BorrowKind::Ref, _, ref_arg) => ref_arg,
-        ExprKind::MethodCall(method, _, args, _) if args.len() == 1 && method.ident.name == rustc_span::sym::iter => {
+        ExprKind::MethodCall(method, _, args, _) if args.len() == 1 && method.ident.name == latinoc_span::sym::iter => {
             &args[0]
         },
         _ => return,

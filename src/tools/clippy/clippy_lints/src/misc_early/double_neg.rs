@@ -1,6 +1,6 @@
 use clippy_utils::diagnostics::span_lint;
-use rustc_ast::ast::{Expr, ExprKind, UnOp};
-use rustc_lint::EarlyContext;
+use latinoc_ast::ast::{Expr, ExprKind, UnOp};
+use latinoc_lint::EarlyContext;
 
 use super::DOUBLE_NEG;
 

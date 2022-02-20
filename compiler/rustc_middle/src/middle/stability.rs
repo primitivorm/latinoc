@@ -4,7 +4,7 @@
 pub use self::StabilityLevel::*;
 
 use crate::ty::{self, DefIdTree, TyCtxt};
-use rustc_ast::NodeId;
+use latinoc_ast::NodeId;
 use rustc_attr::{self as attr, ConstStability, Deprecation, Stability};
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_errors::{Applicability, DiagnosticBuilder};
@@ -18,8 +18,8 @@ use rustc_session::lint::builtin::{DEPRECATED, DEPRECATED_IN_FUTURE, SOFT_UNSTAB
 use rustc_session::lint::{BuiltinLintDiagnostics, Level, Lint, LintBuffer};
 use rustc_session::parse::feature_err_issue;
 use rustc_session::{DiagnosticMessageId, Session};
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::{MultiSpan, Span};
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::{MultiSpan, Span};
 use std::num::NonZeroU32;
 
 #[derive(PartialEq, Clone, Copy, Debug)]

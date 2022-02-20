@@ -6,8 +6,8 @@ use clippy_utils::{
 };
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
-use rustc_span::sym;
+use latinoc_lint::LateContext;
+use latinoc_span::sym;
 
 pub(super) fn check<'tcx>(
     cx: &LateContext<'tcx>,

@@ -8,4 +8,4 @@ doctest = false
 
 [dependencies]
 rustc_data_structures = { path = "../rustc_data_structures" }
-rustc_span = { path = "../rustc_span" }
+latinoc_span = { path = "../latinoc_span" }

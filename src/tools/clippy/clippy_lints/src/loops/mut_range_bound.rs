@@ -2,14 +2,14 @@ use super::MUT_RANGE_BOUND;
 use clippy_utils::diagnostics::span_lint_and_note;
 use clippy_utils::{get_enclosing_block, higher, path_to_local};
 use if_chain::if_chain;
+use latinoc_lint::LateContext;
+use latinoc_span::source_map::Span;
+use latinoc_typeck::expr_use_visitor::{Delegate, ExprUseVisitor, PlaceBase, PlaceWithHirId};
 use rustc_hir::intravisit::{self, NestedVisitorMap, Visitor};
 use rustc_hir::{BindingAnnotation, Expr, ExprKind, HirId, Node, PatKind};
 use rustc_infer::infer::TyCtxtInferExt;
-use rustc_lint::LateContext;
 use rustc_middle::hir::map::Map;
 use rustc_middle::{mir::FakeReadCause, ty};
-use rustc_span::source_map::Span;
-use rustc_typeck::expr_use_visitor::{Delegate, ExprUseVisitor, PlaceBase, PlaceWithHirId};
 
 pub(super) fn check(cx: &LateContext<'_>, arg: &Expr<'_>, body: &Expr<'_>) {
     if_chain! {
@@ -115,7 +115,7 @@ impl<'tcx> Delegate<'tcx> for MutatePairDelegate<'_, 'tcx> {
         }
     }
 
-    fn fake_read(&mut self, _: rustc_typeck::expr_use_visitor::Place<'tcx>, _: FakeReadCause, _: HirId) {}
+    fn fake_read(&mut self, _: latinoc_typeck::expr_use_visitor::Place<'tcx>, _: FakeReadCause, _: HirId) {}
 }
 
 impl MutatePairDelegate<'_, '_> {

@@ -4,8 +4,8 @@ use crate::MirPass;
 use rustc_middle::mir::*;
 use rustc_middle::ty::subst::SubstsRef;
 use rustc_middle::ty::{self, Ty, TyCtxt};
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::Span;
 use rustc_target::spec::abi::Abi;
 
 pub struct LowerIntrinsics;

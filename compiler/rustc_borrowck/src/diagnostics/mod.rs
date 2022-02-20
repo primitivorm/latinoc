@@ -13,7 +13,7 @@ use rustc_middle::mir::{
 use rustc_middle::ty::print::Print;
 use rustc_middle::ty::{self, DefIdTree, Instance, Ty, TyCtxt};
 use rustc_mir_dataflow::move_paths::{InitLocation, LookupResult};
-use rustc_span::{hygiene::DesugaringKind, symbol::sym, Span};
+use latinoc_span::{hygiene::DesugaringKind, symbol::sym, Span};
 use rustc_target::abi::VariantIdx;
 
 use super::borrow_set::BorrowData;
@@ -36,7 +36,7 @@ crate use mutability_errors::AccessKind;
 crate use outlives_suggestion::OutlivesSuggestionBuilder;
 crate use region_errors::{ErrorConstraintInfo, RegionErrorKind, RegionErrors};
 crate use region_name::{RegionName, RegionNameSource};
-use rustc_span::symbol::Ident;
+use latinoc_span::symbol::Ident;
 
 pub(super) struct IncludingDowncast(pub(super) bool);
 

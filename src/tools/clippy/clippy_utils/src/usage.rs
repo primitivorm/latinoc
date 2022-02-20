@@ -1,15 +1,15 @@
 use crate as utils;
+use latinoc_lint::LateContext;
+use latinoc_typeck::expr_use_visitor::{Delegate, ExprUseVisitor, PlaceBase, PlaceWithHirId};
 use rustc_hir as hir;
 use rustc_hir::intravisit;
 use rustc_hir::intravisit::{NestedVisitorMap, Visitor};
 use rustc_hir::HirIdSet;
 use rustc_hir::{Expr, ExprKind, HirId};
 use rustc_infer::infer::TyCtxtInferExt;
-use rustc_lint::LateContext;
 use rustc_middle::hir::map::Map;
 use rustc_middle::mir::FakeReadCause;
 use rustc_middle::ty;
-use rustc_typeck::expr_use_visitor::{Delegate, ExprUseVisitor, PlaceBase, PlaceWithHirId};
 
 /// Returns a set of mutated local variable IDs, or `None` if mutations could not be determined.
 pub fn mutated_variables<'tcx>(expr: &'tcx Expr<'_>, cx: &LateContext<'tcx>) -> Option<HirIdSet> {
@@ -74,7 +74,7 @@ impl<'tcx> Delegate<'tcx> for MutVarsDelegate {
         self.update(cmt);
     }
 
-    fn fake_read(&mut self, _: rustc_typeck::expr_use_visitor::Place<'tcx>, _: FakeReadCause, _: HirId) {}
+    fn fake_read(&mut self, _: latinoc_typeck::expr_use_visitor::Place<'tcx>, _: FakeReadCause, _: HirId) {}
 }
 
 pub struct ParamBindingIdCollector {

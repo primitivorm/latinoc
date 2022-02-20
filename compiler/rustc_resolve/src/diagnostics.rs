@@ -1,7 +1,7 @@
 use std::cmp::Reverse;
 use std::ptr;
 
-use rustc_ast::{self as ast, Path};
+use latinoc_ast::{self as ast, Path};
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder};
@@ -13,11 +13,11 @@ use rustc_hir::PrimTy;
 use rustc_middle::bug;
 use rustc_middle::ty::DefIdTree;
 use rustc_session::Session;
-use rustc_span::hygiene::MacroKind;
-use rustc_span::lev_distance::find_best_match_for_name;
-use rustc_span::source_map::SourceMap;
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::{BytePos, MultiSpan, Span};
+use latinoc_span::hygiene::MacroKind;
+use latinoc_span::lev_distance::find_best_match_for_name;
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::{BytePos, MultiSpan, Span};
 use tracing::debug;
 
 use crate::imports::{Import, ImportKind, ImportResolver};

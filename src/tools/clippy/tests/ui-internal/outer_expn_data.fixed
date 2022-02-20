@@ -4,12 +4,12 @@
 #![feature(rustc_private)]
 
 extern crate rustc_hir;
-extern crate rustc_lint;
+extern crate latinoc_lint;
 extern crate rustc_middle;
 #[macro_use]
 extern crate rustc_session;
 use rustc_hir::Expr;
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 
 declare_lint! {
     pub TEST_LINT,

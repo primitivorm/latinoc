@@ -10,7 +10,7 @@ use rustc_hir::def_id::{DefId, LocalDefId};
 use rustc_index::bit_set::BitMatrix;
 use rustc_index::vec::IndexVec;
 use rustc_middle::ty::OpaqueTypeKey;
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_target::abi::VariantIdx;
 use smallvec::SmallVec;
 use std::cell::Cell;

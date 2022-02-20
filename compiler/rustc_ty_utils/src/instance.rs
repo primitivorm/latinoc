@@ -1,9 +1,9 @@
+use latinoc_span::{sym, DUMMY_SP};
 use rustc_errors::ErrorReported;
 use rustc_hir::def_id::{DefId, LocalDefId};
 use rustc_infer::infer::TyCtxtInferExt;
 use rustc_middle::ty::subst::SubstsRef;
 use rustc_middle::ty::{self, Binder, Instance, Ty, TyCtxt, TypeFoldable, TypeVisitor};
-use rustc_span::{sym, DUMMY_SP};
 use rustc_target::spec::abi::Abi;
 use rustc_trait_selection::traits;
 use traits::{translate_substs, Reveal};
@@ -293,7 +293,7 @@ fn resolve_associated_item<'tcx>(
             // we know the error would've been caught (e.g. in an upstream crate).
             //
             // A better approach might be to just introduce a query (returning
-            // `Result<(), ErrorReported>`) for the check that `rustc_typeck`
+            // `Result<(), ErrorReported>`) for the check that `latinoc_typeck`
             // performs (i.e. that the definition's type in the `impl` matches
             // the declaration in the `trait`), so that we can cheaply check
             // here if it failed, instead of approximating it.

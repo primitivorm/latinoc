@@ -10,7 +10,7 @@ use rustc_middle::mir::{
     Promoted,
 };
 use rustc_middle::ty::{self, OpaqueTypeKey, RegionKind, RegionVid, Ty};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 use std::env;
 use std::fmt::Debug;
 use std::io;

@@ -5,7 +5,7 @@ use rustc_data_structures::sorted_map::SortedIndexMultiMap;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, Namespace};
 use rustc_hir::def_id::DefId;
-use rustc_span::symbol::{Ident, Symbol};
+use latinoc_span::symbol::{Ident, Symbol};
 
 use super::{TyCtxt, Visibility};
 

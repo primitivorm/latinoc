@@ -7,10 +7,10 @@ use rustc_errors::Applicability;
 use rustc_hir as hir;
 use rustc_hir::def::Res;
 use rustc_hir::{Expr, ExprKind, PatKind, QPath, UnOp};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::TyS;
-use rustc_span::source_map::Span;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::{sym, Symbol};
 use std::borrow::Cow;
 
 use super::MANUAL_FILTER_MAP;

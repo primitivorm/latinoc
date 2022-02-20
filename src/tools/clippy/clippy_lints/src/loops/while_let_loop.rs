@@ -4,7 +4,7 @@ use clippy_utils::higher;
 use clippy_utils::source::snippet_with_applicability;
 use rustc_errors::Applicability;
 use rustc_hir::{Block, Expr, ExprKind, MatchSource, Pat, StmtKind};
-use rustc_lint::{LateContext, LintContext};
+use latinoc_lint::{LateContext, LintContext};
 use rustc_middle::lint::in_external_macro;
 
 pub(super) fn check(cx: &LateContext<'tcx>, expr: &'tcx Expr<'_>, loop_block: &'tcx Block<'_>) {

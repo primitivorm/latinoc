@@ -2,9 +2,9 @@ use clippy_utils::diagnostics::span_lint;
 use clippy_utils::{is_diag_trait_item, match_def_path, path_to_local_id, paths};
 use if_chain::if_chain;
 use rustc_hir::{Expr, ExprKind, HirId, Impl, ImplItem, ImplItemKind, Item, ItemKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 declare_clippy_lint! {
     /// ### What it does

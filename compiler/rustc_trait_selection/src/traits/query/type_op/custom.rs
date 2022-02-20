@@ -5,7 +5,7 @@ use crate::traits::query::type_op::TypeOpOutput;
 use crate::traits::query::Fallible;
 use crate::traits::{ObligationCause, TraitEngine};
 use rustc_infer::traits::TraitEngineExt as _;
-use rustc_span::source_map::DUMMY_SP;
+use latinoc_span::source_map::DUMMY_SP;
 
 use std::fmt;
 use std::rc::Rc;

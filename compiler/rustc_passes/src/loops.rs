@@ -9,8 +9,8 @@ use rustc_middle::hir::map::Map;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::Session;
-use rustc_span::hygiene::DesugaringKind;
-use rustc_span::Span;
+use latinoc_span::hygiene::DesugaringKind;
+use latinoc_span::Span;
 
 #[derive(Clone, Copy, Debug, PartialEq)]
 enum Context {

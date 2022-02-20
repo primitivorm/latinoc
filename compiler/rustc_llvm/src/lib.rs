@@ -36,7 +36,7 @@ pub unsafe extern "C" fn LLVMRustStringWriteImpl(
 }
 
 /// Initialize targets enabled by the build script via `cfg(llvm_component = "...")`.
-/// N.B., this function can't be moved to `rustc_codegen_llvm` because of the `cfg`s.
+/// N.B., this function can't be moved to `latinoc_codegen_llvm` because of the `cfg`s.
 pub fn initialize_available_targets() {
     macro_rules! init_target(
         ($cfg:meta, $($method:ident),*) => { {

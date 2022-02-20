@@ -1,8 +1,8 @@
 use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::is_trait_method;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
-use rustc_span::sym;
+use latinoc_lint::LateContext;
+use latinoc_span::sym;
 
 use super::SKIP_WHILE_NEXT;
 

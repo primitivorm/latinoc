@@ -13,14 +13,14 @@ extern crate lazy_static;
 extern crate log;
 
 // N.B. these crates are loaded from the sysroot, so they need extern crate.
-extern crate rustc_ast;
+extern crate latinoc_ast;
+extern crate latinoc_expand;
+extern crate latinoc_parse;
+extern crate latinoc_span;
 extern crate rustc_ast_pretty;
 extern crate rustc_data_structures;
 extern crate rustc_errors;
-extern crate rustc_expand;
-extern crate latinoc_parse;
 extern crate rustc_session;
-extern crate rustc_span;
 
 use std::cell::RefCell;
 use std::collections::HashMap;
@@ -31,8 +31,8 @@ use std::panic;
 use std::path::PathBuf;
 use std::rc::Rc;
 
-use rustc_ast::ast;
-use rustc_span::symbol;
+use latinoc_ast::ast;
+use latinoc_span::symbol;
 use thiserror::Error;
 
 use crate::comment::LineClasses;

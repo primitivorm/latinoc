@@ -1,15 +1,15 @@
-use rustc_ast as ast;
-use rustc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
-use rustc_ast::{AssocTyConstraint, AssocTyConstraintKind, NodeId};
-use rustc_ast::{PatKind, RangeEnd, VariantData};
+use latinoc_ast as ast;
+use latinoc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
+use latinoc_ast::{AssocTyConstraint, AssocTyConstraintKind, NodeId};
+use latinoc_ast::{PatKind, RangeEnd, VariantData};
 use rustc_errors::struct_span_err;
 use rustc_feature::{AttributeGate, BuiltinAttribute, BUILTIN_ATTRIBUTE_MAP};
 use rustc_feature::{Features, GateIssue};
 use rustc_session::parse::{feature_err, feature_err_issue};
 use rustc_session::Session;
-use rustc_span::source_map::Spanned;
-use rustc_span::symbol::sym;
-use rustc_span::Span;
+use latinoc_span::source_map::Spanned;
+use latinoc_span::symbol::sym;
+use latinoc_span::Span;
 
 use tracing::debug;
 

@@ -5,7 +5,7 @@ use rustc_middle::ty;
 use rustc_mir_dataflow::move_paths::{
     IllegalMoveOrigin, IllegalMoveOriginKind, LookupResult, MoveError, MovePathIndex,
 };
-use rustc_span::{sym, Span, DUMMY_SP};
+use latinoc_span::{sym, Span, DUMMY_SP};
 use rustc_trait_selection::traits::type_known_to_meet_bound_modulo_regions;
 
 use crate::diagnostics::{FnSelfUseKind, UseSpans};

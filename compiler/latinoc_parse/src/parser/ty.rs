@@ -2,15 +2,15 @@ use super::{Parser, PathStyle, TokenType};
 
 use crate::{maybe_recover_from_interpolated_ty_qpath, maybe_whole};
 
-use rustc_ast::ptr::P;
-use rustc_ast::token::{self, /*Token,*/ TokenKind};
-use rustc_ast::{
+use latinoc_ast::ptr::P;
+use latinoc_ast::token::{self, /*Token,*/ TokenKind};
+use latinoc_ast::{
     self as ast, BareFnTy, FnRetTy, GenericBound, GenericBounds, GenericParam, Generics, Lifetime,
     MacCall, MutTy, Mutability, PolyTraitRef, TraitBoundModifier, TraitObjectSyntax, Ty, TyKind,
 };
 use rustc_errors::{pluralize, struct_span_err, Applicability, PResult};
-use rustc_span::source_map::Span;
-use rustc_span::symbol::{kw, sym};
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::{kw, sym};
 
 /// Any `?` or `~const` modifiers that appear at the start of a bound.
 struct BoundModifiers {

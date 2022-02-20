@@ -13,7 +13,7 @@ use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_hir::def_id::LocalDefId;
 use rustc_hir::*;
 use rustc_query_system::ich::StableHashingContext;
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 
 /// Top-level HIR node for current owner. This only contains the node for which
 /// `HirId::local_id == 0`, and excludes bodies.

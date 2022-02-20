@@ -8,10 +8,10 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::intravisit::{walk_block, walk_expr, NestedVisitorMap, Visitor};
 use rustc_hir::{Block, Expr, ExprKind, HirId, PatKind, StmtKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
-use rustc_span::sym;
-use rustc_span::{MultiSpan, Span};
+use latinoc_span::sym;
+use latinoc_span::{MultiSpan, Span};
 
 const NEEDLESS_COLLECT_MSG: &str = "avoid using `collect()` when not needed";
 

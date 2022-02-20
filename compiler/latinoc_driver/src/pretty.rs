@@ -1,6 +1,6 @@
 //! The various pretty-printing routines.
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_ast_pretty::pprust;
 use rustc_errors::ErrorReported;
 use rustc_hir as hir;
@@ -10,8 +10,8 @@ use rustc_middle::mir::{write_mir_graphviz, write_mir_pretty};
 use rustc_middle::ty::{self, TyCtxt};
 use rustc_session::config::{Input, PpAstTreeMode, PpHirMode, PpMode, PpSourceMode};
 use rustc_session::Session;
-use rustc_span::symbol::Ident;
-use rustc_span::FileName;
+use latinoc_span::symbol::Ident;
+use latinoc_span::FileName;
 
 use std::cell::Cell;
 use std::fmt::Write;
@@ -281,7 +281,7 @@ impl<'a> pprust::PpAnn for HygieneAnnotation<'a> {
             pprust::AnnNode::Crate(_) => {
                 s.s.hardbreak();
                 let verbose = self.sess.verbose();
-                s.synth_comment(rustc_span::hygiene::debug_hygiene_data(verbose));
+                s.synth_comment(latinoc_span::hygiene::debug_hygiene_data(verbose));
                 s.s.hardbreak_if_not_bol();
             }
             _ => {}
@@ -496,7 +496,7 @@ fn print_with_analysis(
 
         ThirTree => {
             let mut out = String::new();
-            abort_on_err(rustc_typeck::check_crate(tcx), tcx.sess);
+            abort_on_err(latinoc_typeck::check_crate(tcx), tcx.sess);
             debug!("pretty printing THIR tree");
             for did in tcx.hir().body_owners() {
                 let _ = writeln!(

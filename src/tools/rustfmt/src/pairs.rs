@@ -1,4 +1,4 @@
-use rustc_ast::ast;
+use latinoc_ast::ast;
 
 use crate::config::lists::*;
 use crate::config::IndentStyle;

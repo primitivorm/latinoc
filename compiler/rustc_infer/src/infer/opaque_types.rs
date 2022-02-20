@@ -8,7 +8,7 @@ use rustc_hir::def_id::LocalDefId;
 use rustc_middle::ty::fold::BottomUpFolder;
 use rustc_middle::ty::subst::{GenericArgKind, Subst};
 use rustc_middle::ty::{self, OpaqueTypeKey, Ty, TyCtxt, TypeFoldable, TypeVisitor};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use std::ops::ControlFlow;
 

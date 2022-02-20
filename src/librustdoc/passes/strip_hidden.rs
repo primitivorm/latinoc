@@ -1,4 +1,4 @@
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 use std::mem;
 
 use crate::clean;

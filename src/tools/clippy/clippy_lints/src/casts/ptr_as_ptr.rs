@@ -6,7 +6,7 @@ use clippy_utils::{meets_msrv, msrvs};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind, Mutability, TyKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, TypeAndMut};
 use rustc_semver::RustcVersion;
 

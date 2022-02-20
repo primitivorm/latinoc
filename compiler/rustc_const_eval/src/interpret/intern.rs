@@ -21,7 +21,7 @@ use rustc_hir as hir;
 use rustc_middle::mir::interpret::InterpResult;
 use rustc_middle::ty::{self, layout::TyAndLayout, Ty};
 
-use rustc_ast::Mutability;
+use latinoc_ast::Mutability;
 
 use super::{AllocId, Allocation, InterpCx, MPlaceTy, Machine, MemoryKind, PlaceTy, ValueVisitor};
 use crate::const_eval;

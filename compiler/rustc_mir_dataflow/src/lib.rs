@@ -17,10 +17,10 @@ extern crate tracing;
 #[macro_use]
 extern crate rustc_middle;
 
-use rustc_ast::{self as ast, MetaItem};
+use latinoc_ast::{self as ast, MetaItem};
 use rustc_middle::ty;
 use rustc_session::Session;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
 pub use self::drop_flag_effects::{
     drop_flag_effects_for_function_entry, drop_flag_effects_for_location,

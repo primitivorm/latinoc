@@ -2,10 +2,13 @@
 //!
 //! [RFC 1946]: https://github.com/rust-lang/rfcs/blob/master/text/1946-intra-rustdoc-links.md
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
+use latinoc_expand::base::SyntaxExtensionKind;
+use latinoc_span::hygiene::{MacroKind, SyntaxContext};
+use latinoc_span::symbol::{sym, Ident, Symbol};
+use latinoc_span::{BytePos, DUMMY_SP};
 use rustc_data_structures::{fx::FxHashMap, stable_set::FxHashSet};
 use rustc_errors::{Applicability, DiagnosticBuilder};
-use rustc_expand::base::SyntaxExtensionKind;
 use rustc_hir as hir;
 use rustc_hir::def::{
     DefKind,
@@ -17,9 +20,6 @@ use rustc_middle::ty::TyCtxt;
 use rustc_middle::{bug, span_bug, ty};
 use rustc_resolve::ParentScope;
 use rustc_session::lint::Lint;
-use rustc_span::hygiene::{MacroKind, SyntaxContext};
-use rustc_span::symbol::{sym, Ident, Symbol};
-use rustc_span::{BytePos, DUMMY_SP};
 use smallvec::{smallvec, SmallVec};
 
 use pulldown_cmark::LinkType;
@@ -75,7 +75,7 @@ enum Res {
     Primitive(PrimitiveType),
 }
 
-type ResolveRes = rustc_hir::def::Res<rustc_ast::NodeId>;
+type ResolveRes = rustc_hir::def::Res<latinoc_ast::NodeId>;
 
 impl Res {
     fn descr(self) -> &'static str {
@@ -797,7 +797,11 @@ fn traits_implemented_by(cx: &mut DocContext<'_>, type_: DefId, module: DefId) -
                     _ => false,
                 };
 
-            if saw_impl { Some(trait_) } else { None }
+            if saw_impl {
+                Some(trait_)
+            } else {
+                None
+            }
         })
     });
     iter.collect()
@@ -1122,7 +1126,7 @@ impl LinkCollector<'_, '_> {
                 }
             }
         } else if path_str.starts_with("crate::") || is_lone_crate {
-            use rustc_span::def_id::CRATE_DEF_INDEX;
+            use latinoc_span::def_id::CRATE_DEF_INDEX;
 
             // HACK(jynelson): rustc_resolve thinks that `crate` is the crate currently being documented.
             // But rustdoc wants it to mean the crate this item was originally present in.
@@ -1174,7 +1178,7 @@ impl LinkCollector<'_, '_> {
         let report_mismatch = |specified: Disambiguator, resolved: Disambiguator| {
             // The resolved item did not match the disambiguator; give a better error than 'not found'
             let msg = format!("incompatible link kind for `{}`", path_str);
-            let callback = |diag: &mut DiagnosticBuilder<'_>, sp: Option<rustc_span::Span>| {
+            let callback = |diag: &mut DiagnosticBuilder<'_>, sp: Option<latinoc_span::Span>| {
                 let note = format!(
                     "this link resolved to {} {}, which is not {} {}",
                     resolved.article(),
@@ -1691,8 +1695,8 @@ impl Suggestion {
         &self,
         path_str: &str,
         ori_link: &str,
-        sp: rustc_span::Span,
-    ) -> Vec<(rustc_span::Span, String)> {
+        sp: latinoc_span::Span,
+    ) -> Vec<(latinoc_span::Span, String)> {
         let inner_sp = match ori_link.find('(') {
             Some(index) => sp.with_hi(sp.lo() + BytePos(index as _)),
             None => sp,
@@ -1748,7 +1752,7 @@ fn report_diagnostic(
     lint: &'static Lint,
     msg: &str,
     DiagnosticInfo { item, ori_link: _, dox, link_range }: &DiagnosticInfo<'_>,
-    decorate: impl FnOnce(&mut DiagnosticBuilder<'_>, Option<rustc_span::Span>),
+    decorate: impl FnOnce(&mut DiagnosticBuilder<'_>, Option<latinoc_span::Span>),
 ) {
     let hir_id = match DocContext::as_local_hir_id(tcx, item.def_id) {
         Some(hir_id) => hir_id,
@@ -2130,7 +2134,7 @@ fn suggest_disambiguator(
     diag: &mut DiagnosticBuilder<'_>,
     path_str: &str,
     ori_link: &str,
-    sp: Option<rustc_span::Span>,
+    sp: Option<latinoc_span::Span>,
 ) {
     let suggestion = disambiguator.suggestion();
     let help = format!("to link to the {}, {}", disambiguator.descr(), suggestion.descr());

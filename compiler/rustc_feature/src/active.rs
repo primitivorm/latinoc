@@ -2,9 +2,9 @@
 
 use super::{to_nonzero, Feature, State};
 
-use rustc_span::edition::Edition;
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::edition::Edition;
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::Span;
 
 macro_rules! set {
     ($field: ident) => {{

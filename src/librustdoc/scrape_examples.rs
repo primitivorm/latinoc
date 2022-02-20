@@ -20,7 +20,7 @@ use rustc_serialize::{
     Decodable, Encodable,
 };
 use rustc_session::getopts;
-use rustc_span::{
+use latinoc_span::{
     def_id::{CrateNum, DefPathHash, LOCAL_CRATE},
     edition::Edition,
     BytePos, FileName, SourceFile,
@@ -63,7 +63,7 @@ crate struct SyntaxRange {
 }
 
 impl SyntaxRange {
-    fn new(span: rustc_span::Span, file: &SourceFile) -> Self {
+    fn new(span: latinoc_span::Span, file: &SourceFile) -> Self {
         let get_pos = |bytepos: BytePos| file.original_relative_byte_pos(bytepos).0;
         let get_line = |bytepos: BytePos| file.lookup_line(bytepos).unwrap();
 
@@ -82,8 +82,8 @@ crate struct CallLocation {
 
 impl CallLocation {
     fn new(
-        expr_span: rustc_span::Span,
-        enclosing_item_span: rustc_span::Span,
+        expr_span: latinoc_span::Span,
+        enclosing_item_span: latinoc_span::Span,
         source_file: &SourceFile,
     ) -> Self {
         CallLocation {

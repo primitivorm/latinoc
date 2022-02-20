@@ -8,5 +8,5 @@ doctest = false
 
 [dependencies]
 tracing = "0.1"
-rustc_span = { path = "../rustc_span" }
-rustc_ast = { path = "../rustc_ast" }
+latinoc_span = { path = "../latinoc_span" }
+latinoc_ast = { path = "../latinoc_ast" }

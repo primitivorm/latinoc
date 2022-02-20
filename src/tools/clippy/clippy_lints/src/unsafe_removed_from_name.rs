@@ -1,9 +1,9 @@
 use clippy_utils::diagnostics::span_lint;
-use rustc_ast::ast::{Item, ItemKind, UseTree, UseTreeKind};
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_ast::ast::{Item, ItemKind, UseTree, UseTreeKind};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Span;
-use rustc_span::symbol::Ident;
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::Ident;
 
 declare_clippy_lint! {
     /// ### What it does

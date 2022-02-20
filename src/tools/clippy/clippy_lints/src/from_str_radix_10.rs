@@ -4,10 +4,10 @@ use clippy_utils::ty::is_type_diagnostic_item;
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{def, Expr, ExprKind, PrimTy, QPath, TyKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty::Ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 declare_clippy_lint! {
     /// ### What it does
@@ -61,7 +61,7 @@ impl LateLintPass<'tcx> for FromStrRadix10 {
             // check if the second argument is a primitive `10`
             if arguments.len() == 2;
             if let ExprKind::Lit(lit) = &arguments[1].kind;
-            if let rustc_ast::ast::LitKind::Int(10, _) = lit.node;
+            if let latinoc_ast::ast::LitKind::Int(10, _) = lit.node;
 
             then {
                 let expr = if let ExprKind::AddrOf(_, _, expr) = &arguments[0].kind {

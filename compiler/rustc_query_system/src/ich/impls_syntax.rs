@@ -1,11 +1,11 @@
 //! This module contains `HashStable` implementations for various data types
-//! from `rustc_ast` in no particular order.
+//! from `latinoc_ast` in no particular order.
 
 use crate::ich::StableHashingContext;
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
-use rustc_span::{BytePos, NormalizedPos, SourceFile};
+use latinoc_span::{BytePos, NormalizedPos, SourceFile};
 use std::assert_matches::assert_matches;
 
 use smallvec::SmallVec;
@@ -35,7 +35,7 @@ impl<'a> HashStable<StableHashingContext<'a>> for [ast::Attribute] {
     }
 }
 
-impl<'ctx> rustc_ast::HashStableContext for StableHashingContext<'ctx> {
+impl<'ctx> latinoc_ast::HashStableContext for StableHashingContext<'ctx> {
     fn hash_attr(&mut self, attr: &ast::Attribute, hasher: &mut StableHasher) {
         // Make sure that these have been filtered out.
         debug_assert!(!attr.ident().map_or(false, |ident| self.is_ignored_attr(ident.name)));
@@ -109,14 +109,14 @@ fn stable_byte_pos(pos: BytePos, source_file_start: BytePos) -> u32 {
     pos.0 - source_file_start.0
 }
 
-fn stable_multibyte_char(mbc: rustc_span::MultiByteChar, source_file_start: BytePos) -> (u32, u32) {
-    let rustc_span::MultiByteChar { pos, bytes } = mbc;
+fn stable_multibyte_char(mbc: latinoc_span::MultiByteChar, source_file_start: BytePos) -> (u32, u32) {
+    let latinoc_span::MultiByteChar { pos, bytes } = mbc;
 
     (pos.0 - source_file_start.0, bytes as u32)
 }
 
 fn stable_non_narrow_char(
-    swc: rustc_span::NonNarrowChar,
+    swc: latinoc_span::NonNarrowChar,
     source_file_start: BytePos,
 ) -> (u32, u32) {
     let pos = swc.pos();

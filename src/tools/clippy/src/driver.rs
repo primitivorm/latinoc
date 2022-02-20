@@ -12,11 +12,11 @@ extern crate latinoc_driver;
 extern crate rustc_errors;
 extern crate latinoc_interface;
 extern crate rustc_session;
-extern crate rustc_span;
+extern crate latinoc_span;
 
 use latinoc_interface::interface;
 use rustc_session::parse::ParseSess;
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 use rustc_tools_util::VersionInfo;
 
 use std::borrow::Cow;

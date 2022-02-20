@@ -33,8 +33,8 @@ use rustc_middle::ty::{
     self, CanonicalUserTypeAnnotation, CanonicalUserTypeAnnotations, OpaqueTypeKey, RegionVid,
     ToPredicate, Ty, TyCtxt, UserType, UserTypeAnnotationIndex, WithConstness,
 };
-use rustc_span::def_id::CRATE_DEF_ID;
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::def_id::CRATE_DEF_ID;
+use latinoc_span::{Span, DUMMY_SP};
 use rustc_target::abi::VariantIdx;
 use rustc_trait_selection::infer::InferCtxtExt as _;
 use rustc_trait_selection::traits::error_reporting::InferCtxtExt as _;

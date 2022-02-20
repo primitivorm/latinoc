@@ -18,11 +18,11 @@ use rustc_serialize::json;
 
 use crate::parse::CrateConfig;
 use rustc_feature::UnstableFeatures;
-use rustc_span::edition::{Edition, DEFAULT_EDITION, EDITION_NAME_LIST, LATEST_STABLE_EDITION};
-use rustc_span::source_map::{FileName, FilePathMapping};
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::RealFileName;
-use rustc_span::SourceFileHashAlgorithm;
+use latinoc_span::edition::{Edition, DEFAULT_EDITION, EDITION_NAME_LIST, LATEST_STABLE_EDITION};
+use latinoc_span::source_map::{FileName, FilePathMapping};
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::RealFileName;
+use latinoc_span::SourceFileHashAlgorithm;
 
 use rustc_errors::emitter::HumanReadableErrorType;
 use rustc_errors::{ColorConfig, HandlerFlags};
@@ -2488,8 +2488,8 @@ crate mod dep_tracking {
     use crate::options::WasiExecModel;
     use crate::utils::{NativeLib, NativeLibKind};
     use rustc_feature::UnstableFeatures;
-    use rustc_span::edition::Edition;
-    use rustc_span::RealFileName;
+    use latinoc_span::edition::Edition;
+    use latinoc_span::RealFileName;
     use rustc_target::spec::{CodeModel, MergeFunctions, PanicStrategy, RelocModel};
     use rustc_target::spec::{
         RelroLevel, SanitizerSet, SplitDebuginfo, StackProtector, TargetTriple, TlsModel,

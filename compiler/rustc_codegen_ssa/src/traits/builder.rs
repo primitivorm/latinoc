@@ -15,7 +15,7 @@ use crate::MemFlags;
 
 use rustc_middle::ty::layout::{HasParamEnv, TyAndLayout};
 use rustc_middle::ty::Ty;
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_target::abi::{Abi, Align, Scalar, Size, WrappingRange};
 use rustc_target::spec::HasTargetSpec;
 

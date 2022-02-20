@@ -1,9 +1,9 @@
 use crate::{ImplTraitContext, ImplTraitPosition, LoweringContext};
-use rustc_ast::{AttrVec, Block, BlockCheckMode, Expr, Local, LocalKind, Stmt, StmtKind};
+use latinoc_ast::{AttrVec, Block, BlockCheckMode, Expr, Local, LocalKind, Stmt, StmtKind};
 use rustc_hir as hir;
 use rustc_session::parse::feature_err;
-use rustc_span::symbol::Ident;
-use rustc_span::{sym, DesugaringKind};
+use latinoc_span::symbol::Ident;
+use latinoc_span::{sym, DesugaringKind};
 
 use smallvec::SmallVec;
 

@@ -5,16 +5,16 @@ use clippy_utils::sugg::Sugg;
 use clippy_utils::{get_parent_expr, in_constant, is_integer_const, meets_msrv, msrvs, single_segment_path};
 use clippy_utils::{higher, SpanlessEq};
 use if_chain::if_chain;
-use rustc_ast::ast::RangeLimits;
+use latinoc_ast::ast::RangeLimits;
 use rustc_errors::Applicability;
 use rustc_hir::{BinOpKind, Expr, ExprKind, PathSegment, QPath};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::ty;
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::{Span, Spanned};
-use rustc_span::sym;
-use rustc_span::symbol::Ident;
+use latinoc_span::source_map::{Span, Spanned};
+use latinoc_span::sym;
+use latinoc_span::symbol::Ident;
 use std::cmp::Ordering;
 
 declare_clippy_lint! {

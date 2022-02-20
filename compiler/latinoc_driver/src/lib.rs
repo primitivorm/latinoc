@@ -16,14 +16,14 @@ pub extern crate rustc_plugin_impl as plugin;
 
 use latinoc_interface::util::{self, collect_crate_types, get_codegen_backend};
 use latinoc_interface::{interface, Queries};
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_codegen_ssa::{traits::CodegenBackend, CodegenResults};
 use rustc_data_structures::profiling::{get_resident_set_size, print_time_passes_entry};
 use rustc_data_structures::sync::SeqCst;
 use rustc_errors::registry::{InvalidErrorCode, Registry};
 use rustc_errors::{ErrorReported, PResult};
 use rustc_feature::find_gated_cfg;
-use rustc_lint::LintStore;
+use latinoc_lint::LintStore;
 use rustc_metadata::locator;
 use rustc_save_analysis as save;
 use rustc_save_analysis::DumpHandler;
@@ -35,8 +35,8 @@ use rustc_session::getopts;
 use rustc_session::lint::{Lint, LintId};
 use rustc_session::{config, DiagnosticOutput, Session};
 use rustc_session::{early_error, early_error_no_abort, early_warn};
-use rustc_span::source_map::{FileLoader, FileName};
-use rustc_span::symbol::sym;
+use latinoc_span::source_map::{FileLoader, FileName};
+use latinoc_span::symbol::sym;
 
 use std::borrow::Cow;
 use std::cmp::max;
@@ -247,7 +247,7 @@ fn run_compiler(
                 interface::run_compiler(config, |compiler| {
                     let sopts = &compiler.session().opts;
                     if sopts.describe_lints {
-                        let mut lint_store = rustc_lint::new_lint_store(
+                        let mut lint_store = latinoc_lint::new_lint_store(
                             sopts.debugging_opts.no_interleave_lints,
                             compiler.session().unstable_options(),
                         );

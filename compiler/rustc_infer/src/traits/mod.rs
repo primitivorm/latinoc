@@ -11,7 +11,7 @@ pub mod util;
 use rustc_hir as hir;
 use rustc_middle::ty::error::{ExpectedFound, TypeError};
 use rustc_middle::ty::{self, Const, Ty, TyCtxt};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 pub use self::FulfillmentErrorCode::*;
 pub use self::ImplSource::*;

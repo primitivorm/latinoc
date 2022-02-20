@@ -2,7 +2,7 @@ use crate::generated_code;
 use rustc_data_structures::sync::Lrc;
 use latinoc_lexer::{tokenize, TokenKind};
 use rustc_session::Session;
-use rustc_span::*;
+use latinoc_span::*;
 
 #[derive(Clone)]
 pub struct SpanUtils<'a> {

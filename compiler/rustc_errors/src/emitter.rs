@@ -9,8 +9,8 @@
 
 use Destination::*;
 
-use rustc_span::source_map::SourceMap;
-use rustc_span::{MultiSpan, SourceFile, Span};
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::{MultiSpan, SourceFile, Span};
 
 use crate::snippet::{Annotation, AnnotationType, Line, MultilineAnnotation, Style, StyledString};
 use crate::styled_buffer::StyledBuffer;
@@ -23,7 +23,7 @@ use rustc_lint_defs::pluralize;
 
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::sync::Lrc;
-use rustc_span::hygiene::{ExpnKind, MacroKind};
+use latinoc_span::hygiene::{ExpnKind, MacroKind};
 use std::borrow::Cow;
 use std::cmp::{max, min, Reverse};
 use std::io;

@@ -14,7 +14,7 @@ use rustc_query_system::ich::{NodeIdHashingMode, StableHashingContext};
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_macros::HashStable;
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::{Span, DUMMY_SP};
 
 use std::fmt;
 

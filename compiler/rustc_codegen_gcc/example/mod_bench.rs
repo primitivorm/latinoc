@@ -2,7 +2,7 @@
 #![no_std]
 
 #[link(name = "c")]
-extern {}
+extern "C" {}
 
 #[panic_handler]
 fn panic_handler(_: &core::panic::PanicInfo) -> ! {
@@ -11,10 +11,10 @@ fn panic_handler(_: &core::panic::PanicInfo) -> ! {
     }
 }
 
-#[lang="eh_personality"]
-fn eh_personality(){}
+#[lang = "eh_personality"]
+fn eh_personality() {}
 
-// Required for rustc_codegen_llvm
+// Required for latinoc_codegen_llvm
 #[no_mangle]
 unsafe extern "C" fn _Unwind_Resume() {
     core::intrinsics::unreachable();
@@ -32,6 +32,8 @@ fn main(_argc: isize, _argv: *const *const u8) -> isize {
 #[inline(never)]
 fn black_box(i: u32) {
     if i != 1 {
-        unsafe { core::intrinsics::abort(); }
+        unsafe {
+            core::intrinsics::abort();
+        }
     }
 }

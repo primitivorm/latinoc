@@ -64,7 +64,7 @@ const EXCEPTIONS_CRANELIFT: &[(&str, &str)] = &[
 const RUNTIME_CRATES: &[&str] = &["std", "core", "alloc", "test", "panic_abort", "panic_unwind"];
 
 /// Crates whose dependencies must be explicitly permitted.
-const RESTRICTED_DEPENDENCY_CRATES: &[&str] = &["latinoc_driver", "rustc_codegen_llvm"];
+const RESTRICTED_DEPENDENCY_CRATES: &[&str] = &["latinoc_driver", "latinoc_codegen_llvm"];
 
 /// Crates rustc is allowed to depend on. Avoid adding to the list if possible.
 ///
@@ -273,7 +273,7 @@ const FORBIDDEN_TO_HAVE_DUPLICATES: &[&str] = &[
     // to accidentally sneak into our dependency graph, in order to ensure we keep our CI times
     // under control.
     "cargo",
-    "rustc-ap-rustc_ast",
+    "rustc-ap-latinoc_ast",
 ];
 
 /// Dependency checks.

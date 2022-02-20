@@ -6,7 +6,7 @@ use std::path::PathBuf;
 use std::{cmp, fmt, iter, str};
 
 use rustc_data_structures::sync::Lrc;
-use rustc_span::{self, SourceFile};
+use latinoc_span::{self, SourceFile};
 use serde::{ser, Deserialize, Deserializer, Serialize, Serializer};
 use serde_json as json;
 use thiserror::Error;
@@ -25,11 +25,11 @@ pub enum FileName {
     Stdin,
 }
 
-impl From<rustc_span::FileName> for FileName {
-    fn from(name: rustc_span::FileName) -> FileName {
+impl From<latinoc_span::FileName> for FileName {
+    fn from(name: latinoc_span::FileName) -> FileName {
         match name {
-            rustc_span::FileName::Real(rustc_span::RealFileName::LocalPath(p)) => FileName::Real(p),
-            rustc_span::FileName::Custom(ref f) if f == "stdin" => FileName::Stdin,
+            latinoc_span::FileName::Real(latinoc_span::RealFileName::LocalPath(p)) => FileName::Real(p),
+            latinoc_span::FileName::Custom(ref f) if f == "stdin" => FileName::Stdin,
             _ => unreachable!(),
         }
     }

@@ -8,8 +8,8 @@ use rustc_session::cstore::{DllCallingConvention, DllImport, NativeLib};
 use rustc_session::parse::feature_err;
 use rustc_session::utils::NativeLibKind;
 use rustc_session::Session;
-use rustc_span::symbol::{kw, sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::symbol::{kw, sym, Symbol};
+use latinoc_span::Span;
 use rustc_target::spec::abi::Abi;
 
 crate fn collect(tcx: TyCtxt<'_>) -> Vec<NativeLib> {

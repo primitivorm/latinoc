@@ -1,7 +1,7 @@
 use gccjit::{Function, FunctionType, GlobalKind, LValue, RValue, Type};
 use rustc_codegen_ssa::traits::BaseTypeMethods;
 use rustc_middle::ty::Ty;
-use rustc_span::Symbol;
+use latinoc_span::Symbol;
 use rustc_target::abi::call::FnAbi;
 
 use crate::abi::FnAbiGccExt;

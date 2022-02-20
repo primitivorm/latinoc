@@ -4,10 +4,10 @@ use clippy_utils::{is_lang_ctor, is_trait_method, path_to_local_id};
 use rustc_hir as hir;
 use rustc_hir::intravisit::{walk_expr, NestedVisitorMap, Visitor};
 use rustc_hir::LangItem::{OptionNone, OptionSome};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
 use rustc_middle::ty::{self, TyS};
-use rustc_span::sym;
+use latinoc_span::sym;
 
 use super::UNNECESSARY_FILTER_MAP;
 

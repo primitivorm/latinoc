@@ -13,8 +13,8 @@
 //! DumpVisitor walks the AST and processes it, and Dumper is used for
 //! recording the output.
 
-use rustc_ast as ast;
-use rustc_ast::walk_list;
+use latinoc_ast as ast;
+use latinoc_ast::walk_list;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind as HirDefKind, Res};
@@ -25,9 +25,9 @@ use rustc_middle::hir::map::Map;
 use rustc_middle::span_bug;
 use rustc_middle::ty::{self, DefIdTree, TyCtxt};
 use rustc_session::config::Input;
-use rustc_span::source_map::respan;
-use rustc_span::symbol::Ident;
-use rustc_span::*;
+use latinoc_span::source_map::respan;
+use latinoc_span::symbol::Ident;
+use latinoc_span::*;
 
 use std::env;
 use std::path::Path;

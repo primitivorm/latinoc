@@ -2,11 +2,11 @@ use clippy_utils::consts::{constant, Constant};
 use clippy_utils::diagnostics::{span_lint, span_lint_and_help};
 use clippy_utils::{match_def_path, paths};
 use if_chain::if_chain;
-use rustc_ast::ast::{LitKind, StrStyle};
+use latinoc_ast::ast::{LitKind, StrStyle};
 use rustc_hir::{BorrowKind, Expr, ExprKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::{BytePos, Span};
+use latinoc_span::source_map::{BytePos, Span};
 use std::convert::TryFrom;
 
 declare_clippy_lint! {

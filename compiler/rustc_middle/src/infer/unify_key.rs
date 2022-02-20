@@ -4,9 +4,9 @@ use rustc_data_structures::undo_log::UndoLogs;
 use rustc_data_structures::unify::{
     self, EqUnifyValue, InPlace, NoError, UnificationTable, UnifyKey, UnifyValue,
 };
-use rustc_span::def_id::DefId;
-use rustc_span::symbol::Symbol;
-use rustc_span::Span;
+use latinoc_span::def_id::DefId;
+use latinoc_span::symbol::Symbol;
+use latinoc_span::Span;
 
 use std::cmp;
 use std::marker::PhantomData;

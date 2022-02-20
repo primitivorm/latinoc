@@ -2,28 +2,28 @@
 #![deny(clippy::internal)]
 #![feature(rustc_private)]
 
-extern crate rustc_span;
+extern crate latinoc_span;
 
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 
 macro_rules! sym {
     ($tt:tt) => {
-        rustc_span::symbol::Symbol::intern(stringify!($tt))
+        latinoc_span::symbol::Symbol::intern(stringify!($tt))
     };
 }
 
 fn main() {
     // Direct use of Symbol::intern
-    let _ = rustc_span::sym::f32;
+    let _ = latinoc_span::sym::f32;
 
     // Using a sym macro
-    let _ = rustc_span::sym::f32;
+    let _ = latinoc_span::sym::f32;
 
     // Correct suggestion when symbol isn't stringified constant name
-    let _ = rustc_span::sym::proc_dash_macro;
+    let _ = latinoc_span::sym::proc_dash_macro;
 
     // interning a keyword
-    let _ = rustc_span::symbol::kw::SelfLower;
+    let _ = latinoc_span::symbol::kw::SelfLower;
 
     // Interning a symbol that is not defined
     let _ = Symbol::intern("xyz123");

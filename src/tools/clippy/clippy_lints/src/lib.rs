@@ -19,33 +19,33 @@
 
 // FIXME: switch to something more ergonomic here, once available.
 // (Currently there is no way to opt into sysroot crates without `extern crate`.)
-extern crate rustc_ast;
+extern crate latinoc_ast;
+extern crate latinoc_driver;
+extern crate latinoc_lexer;
+extern crate latinoc_lint;
+extern crate latinoc_parse;
+extern crate latinoc_span;
+extern crate latinoc_typeck;
 extern crate rustc_ast_pretty;
 extern crate rustc_data_structures;
-extern crate latinoc_driver;
 extern crate rustc_errors;
 extern crate rustc_hir;
 extern crate rustc_hir_pretty;
 extern crate rustc_index;
 extern crate rustc_infer;
-extern crate latinoc_lexer;
-extern crate rustc_lint;
 extern crate rustc_middle;
 extern crate rustc_mir_dataflow;
-extern crate latinoc_parse;
 extern crate rustc_parse_format;
 extern crate rustc_session;
-extern crate rustc_span;
 extern crate rustc_target;
 extern crate rustc_trait_selection;
-extern crate rustc_typeck;
 
 #[macro_use]
 extern crate clippy_utils;
 
 use clippy_utils::parse_msrv;
+use latinoc_lint::LintId;
 use rustc_data_structures::fx::FxHashSet;
-use rustc_lint::LintId;
 use rustc_session::Session;
 
 /// Macro used to declare a Clippy lint.
@@ -404,7 +404,7 @@ use crate::utils::conf::TryConf;
 /// level (i.e `#![cfg_attr(...)]`) will still be expanded even when using a pre-expansion pass.
 ///
 /// Used in `./src/driver.rs`.
-pub fn register_pre_expansion_lints(store: &mut rustc_lint::LintStore) {
+pub fn register_pre_expansion_lints(store: &mut latinoc_lint::LintStore) {
     // NOTE: Do not add any more pre-expansion passes. These should be removed eventually.
     store.register_pre_expansion_pass(|| Box::new(write::Write::default()));
     store.register_pre_expansion_pass(|| Box::new(attrs::EarlyAttributes));
@@ -442,7 +442,7 @@ pub fn read_conf(sess: &Session) -> Conf {
 /// Used in `./src/driver.rs`.
 #[allow(clippy::too_many_lines)]
 #[rustfmt::skip]
-pub fn register_plugins(store: &mut rustc_lint::LintStore, sess: &Session, conf: &Conf) {
+pub fn register_plugins(store: &mut latinoc_lint::LintStore, sess: &Session, conf: &Conf) {
     register_removed_non_tool_lints(store);
 
     include!("lib.deprecated.rs");
@@ -783,7 +783,7 @@ pub fn register_plugins(store: &mut rustc_lint::LintStore, sess: &Session, conf:
 }
 
 #[rustfmt::skip]
-fn register_removed_non_tool_lints(store: &mut rustc_lint::LintStore) {
+fn register_removed_non_tool_lints(store: &mut latinoc_lint::LintStore) {
     store.register_removed(
         "should_assert_eq",
         "`assert!()` will be more flexible with RFC 2011",
@@ -829,7 +829,7 @@ fn register_removed_non_tool_lints(store: &mut rustc_lint::LintStore) {
 /// Register renamed lints.
 ///
 /// Used in `./src/driver.rs`.
-pub fn register_renamed(ls: &mut rustc_lint::LintStore) {
+pub fn register_renamed(ls: &mut latinoc_lint::LintStore) {
     // NOTE: when renaming a lint, add a corresponding test to tests/ui/rename.rs
     ls.register_renamed("clippy::stutter", "clippy::module_name_repetitions");
     ls.register_renamed("clippy::new_without_default_derive", "clippy::new_without_default");

@@ -22,7 +22,7 @@
 //! are unrelated to the `TyCtxt` global. Without initializing the `Span` session globals, some
 //! basic, coverage-specific features would be impossible to test, but thankfully initializing these
 //! globals is comparatively simpler. The easiest way is to wrap the test in a closure argument
-//! to: `rustc_span::create_default_session_globals_then(|| { test_here(); })`.
+//! to: `latinoc_span::create_default_session_globals_then(|| { test_here(); })`.
 
 use super::counters;
 use super::debug;
@@ -37,7 +37,7 @@ use rustc_index::vec::{Idx, IndexVec};
 use rustc_middle::mir::coverage::CoverageKind;
 use rustc_middle::mir::*;
 use rustc_middle::ty::{self, DebruijnIndex, TyS, TypeFlags};
-use rustc_span::{self, BytePos, Pos, Span, DUMMY_SP};
+use latinoc_span::{self, BytePos, Pos, Span, DUMMY_SP};
 
 // All `TEMP_BLOCK` targets should be replaced before calling `to_body() -> mir::Body`.
 const TEMP_BLOCK: BasicBlock = BasicBlock::MAX;
@@ -677,7 +677,7 @@ fn synthesize_body_span_from_terminators(mir_body: &Body<'_>) -> Span {
 
 #[test]
 fn test_make_bcb_counters() {
-    rustc_span::create_default_session_globals_then(|| {
+    latinoc_span::create_default_session_globals_then(|| {
         let mir_body = goto_switchint();
         let body_span = synthesize_body_span_from_terminators(&mir_body);
         let mut basic_coverage_blocks = graph::CoverageGraph::from_mir(&mir_body);

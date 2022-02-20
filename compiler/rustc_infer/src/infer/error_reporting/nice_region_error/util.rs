@@ -5,7 +5,7 @@ use crate::infer::error_reporting::nice_region_error::NiceRegionError;
 use rustc_hir as hir;
 use rustc_hir::def_id::LocalDefId;
 use rustc_middle::ty::{self, DefIdTree, Region, Ty};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 /// Information about the anonymous region we are searching for.
 #[derive(Debug)]
@@ -121,7 +121,7 @@ impl<'a, 'tcx> NiceRegionError<'a, 'tcx> {
                             ) = b
                             {
                                 for type_binding in generic_args.bindings.iter() {
-                                    if type_binding.ident.name == rustc_span::sym::Output {
+                                    if type_binding.ident.name == latinoc_span::sym::Output {
                                         if let hir::TypeBindingKind::Equality { ty } =
                                             type_binding.kind
                                         {

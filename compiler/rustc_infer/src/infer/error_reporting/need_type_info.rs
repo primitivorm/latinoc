@@ -11,8 +11,8 @@ use rustc_middle::infer::unify_key::ConstVariableOriginKind;
 use rustc_middle::ty::print::Print;
 use rustc_middle::ty::subst::{GenericArg, GenericArgKind};
 use rustc_middle::ty::{self, DefIdTree, InferConst, Ty, TyCtxt};
-use rustc_span::symbol::kw;
-use rustc_span::Span;
+use latinoc_span::symbol::kw;
+use latinoc_span::Span;
 use std::borrow::Cow;
 
 struct FindHirNodeVisitor<'a, 'tcx> {

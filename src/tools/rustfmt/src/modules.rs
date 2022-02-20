@@ -2,11 +2,11 @@ use std::borrow::Cow;
 use std::collections::BTreeMap;
 use std::path::{Path, PathBuf};
 
-use rustc_ast::ast;
-use rustc_ast::visit::Visitor;
-use rustc_ast::AstLike;
-use rustc_span::symbol::{self, sym, Symbol};
-use rustc_span::Span;
+use latinoc_ast::ast;
+use latinoc_ast::visit::Visitor;
+use latinoc_ast::AstLike;
+use latinoc_span::symbol::{self, sym, Symbol};
+use latinoc_span::Span;
 use thiserror::Error;
 
 use crate::attr::MetaVisitor;
@@ -26,7 +26,7 @@ type FileModMap<'ast> = BTreeMap<FileName, Module<'ast>>;
 #[derive(Debug, Clone)]
 pub(crate) struct Module<'a> {
     ast_mod_kind: Option<Cow<'a, ast::ModKind>>,
-    pub(crate) items: Cow<'a, Vec<rustc_ast::ptr::P<ast::Item>>>,
+    pub(crate) items: Cow<'a, Vec<latinoc_ast::ptr::P<ast::Item>>>,
     inner_attr: Vec<ast::Attribute>,
     pub(crate) span: Span,
 }
@@ -35,7 +35,7 @@ impl<'a> Module<'a> {
     pub(crate) fn new(
         mod_span: Span,
         ast_mod_kind: Option<Cow<'a, ast::ModKind>>,
-        mod_items: Cow<'a, Vec<rustc_ast::ptr::P<ast::Item>>>,
+        mod_items: Cow<'a, Vec<latinoc_ast::ptr::P<ast::Item>>>,
         mod_attrs: Cow<'a, Vec<ast::Attribute>>,
     ) -> Self {
         let inner_attr = mod_attrs
@@ -60,7 +60,7 @@ impl<'a> AstLike for Module<'a> {
     fn visit_attrs(&mut self, f: impl FnOnce(&mut Vec<ast::Attribute>)) {
         f(&mut self.inner_attr)
     }
-    fn tokens_mut(&mut self) -> Option<&mut Option<rustc_ast::tokenstream::LazyTokenStream>> {
+    fn tokens_mut(&mut self) -> Option<&mut Option<latinoc_ast::tokenstream::LazyTokenStream>> {
         unimplemented!()
     }
 }
@@ -172,7 +172,7 @@ impl<'ast, 'sess, 'c> ModResolver<'ast, 'sess> {
     /// Visit modules defined inside macro calls.
     fn visit_mod_outside_ast(
         &mut self,
-        items: Vec<rustc_ast::ptr::P<ast::Item>>,
+        items: Vec<latinoc_ast::ptr::P<ast::Item>>,
     ) -> Result<(), ModuleResolutionError> {
         for item in items {
             if is_cfg_if(&item) {
@@ -199,7 +199,7 @@ impl<'ast, 'sess, 'c> ModResolver<'ast, 'sess> {
     /// Visit modules from AST.
     fn visit_mod_from_ast(
         &mut self,
-        items: &'ast [rustc_ast::ptr::P<ast::Item>],
+        items: &'ast [latinoc_ast::ptr::P<ast::Item>],
     ) -> Result<(), ModuleResolutionError> {
         for item in items {
             if is_cfg_if(item) {

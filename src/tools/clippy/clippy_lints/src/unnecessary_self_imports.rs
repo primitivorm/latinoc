@@ -1,10 +1,10 @@
 use clippy_utils::diagnostics::span_lint_and_then;
 use if_chain::if_chain;
-use rustc_ast::{Item, ItemKind, UseTreeKind};
+use latinoc_ast::{Item, ItemKind, UseTreeKind};
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::symbol::kw;
+use latinoc_span::symbol::kw;
 
 declare_clippy_lint! {
     /// ### What it does

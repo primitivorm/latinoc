@@ -13,7 +13,7 @@ use crate::visit_ast::inherits_doc_hidden;
 use rustc_hir as hir;
 use rustc_middle::lint::LintLevelSource;
 use rustc_session::lint;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 crate const CHECK_DOC_TEST_VISIBILITY: Pass = Pass {
     name: "check_doc_test_visibility",

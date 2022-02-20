@@ -3,11 +3,11 @@ use clippy_utils::in_macro;
 use clippy_utils::source::{snippet_opt, snippet_with_applicability};
 use clippy_utils::sugg::Sugg;
 use if_chain::if_chain;
-use rustc_ast::ast::{Expr, ExprKind, Mutability, UnOp};
+use latinoc_ast::ast::{Expr, ExprKind, Mutability, UnOp};
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::BytePos;
+use latinoc_span::BytePos;
 
 declare_clippy_lint! {
     /// ### What it does

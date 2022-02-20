@@ -5,7 +5,7 @@ use clippy_utils::{get_parent_expr, match_trait_method, paths};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 
 use super::USELESS_ASREF;
 

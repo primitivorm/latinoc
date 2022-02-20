@@ -2,8 +2,8 @@ use super::ITER_NEXT_LOOP;
 use clippy_utils::diagnostics::span_lint;
 use clippy_utils::is_trait_method;
 use rustc_hir::Expr;
-use rustc_lint::LateContext;
-use rustc_span::sym;
+use latinoc_lint::LateContext;
+use latinoc_span::sym;
 
 pub(super) fn check(cx: &LateContext<'_>, arg: &Expr<'_>) -> bool {
     if is_trait_method(cx, arg, sym::Iterator) {

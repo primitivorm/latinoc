@@ -6,7 +6,7 @@ use rustc_index::bit_set::BitSet;
 use rustc_index::vec::IndexVec;
 use rustc_middle::mir::{self, BasicBlock, Location};
 use rustc_middle::ty;
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 
 use super::*;
 

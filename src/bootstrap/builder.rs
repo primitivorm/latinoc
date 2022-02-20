@@ -388,7 +388,8 @@ impl<'a> Builder<'a> {
                 tool::Rls,
                 tool::RustAnalyzer,
                 tool::RustDemangler,
-                tool::Rustdoc,
+                // TODO: proman. tool::Rustdoc,
+                // tool::Rustdoc,
                 tool::Clippy,
                 tool::CargoClippy,
                 native::Llvm,
@@ -402,7 +403,8 @@ impl<'a> Builder<'a> {
             Kind::Check | Kind::Clippy { .. } | Kind::Fix | Kind::Format => describe!(
                 check::Std,
                 check::Rustc,
-                check::Rustdoc,
+                // TODO: proman. check::Rustdoc,
+                // check::Rustdoc,
                 check::CodegenBackend,
                 check::Clippy,
                 check::Miri,
@@ -423,7 +425,8 @@ impl<'a> Builder<'a> {
                 test::Incremental,
                 test::Debuginfo,
                 test::UiFullDeps,
-                test::Rustdoc,
+                // TODO: proman. test::Rustdoc,
+                // test::Rustdoc,
                 test::Pretty,
                 test::Crate,
                 test::CrateLibrustc,
@@ -473,7 +476,8 @@ impl<'a> Builder<'a> {
                 doc::Standalone,
                 doc::Std,
                 doc::Rustc,
-                doc::Rustdoc,
+                // TODO: proman. doc::Rustdoc,
+                // doc::Rustdoc,
                 doc::Rustfmt,
                 doc::ErrorIndex,
                 doc::Nomicon,
@@ -701,14 +705,26 @@ impl<'a> Builder<'a> {
     /// For example this returns `<sysroot>/lib` on Unix and `<sysroot>/bin` on
     /// Windows.
     pub fn rustc_libdir(&self, compiler: Compiler) -> PathBuf {
+        // TODO: proman. pub fn rustc_libdir
         if compiler.is_snapshot(self) {
+            println!(">>> rustc_libdir. rustc_snapshot_libdir: {:?}", self.rustc_snapshot_libdir());
             self.rustc_snapshot_libdir()
         } else {
             match self.config.libdir_relative() {
                 Some(relative_libdir) if compiler.stage >= 1 => {
+                    println!(
+                        ">>> rustc_libdir. relative_libdir: {:?}",
+                        self.sysroot(compiler).join(relative_libdir)
+                    );
                     self.sysroot(compiler).join(relative_libdir)
                 }
-                _ => self.sysroot(compiler).join(libdir(compiler.host)),
+                _ => {
+                    println!(
+                        ">>> rustc_libdir. libdir: {:?}",
+                        self.sysroot(compiler).join(libdir(compiler.host))
+                    );
+                    self.sysroot(compiler).join(libdir(compiler.host))
+                }
             }
         }
     }
@@ -1034,7 +1050,14 @@ impl<'a> Builder<'a> {
         // feature on the rustc side.
         cargo.arg("-Zbinary-dep-depinfo");
 
+        // TODO: proman. cargo.arg("-j").arg(self.jobs().to_string());
         cargo.arg("-j").arg(self.jobs().to_string());
+        // if stage == 0 {
+        //     cargo.arg("-j").arg(self.jobs().to_string());
+        // } else {
+        //     cargo.arg("-j").arg("1");
+        // }
+
         // Remove make-related flags to ensure Cargo can correctly set things up
         cargo.env_remove("MAKEFLAGS");
         cargo.env_remove("MFLAGS");
@@ -1117,9 +1140,11 @@ impl<'a> Builder<'a> {
         //
         // These variables are primarily all read by
         // src/bootstrap/bin/{rustc.rs,rustdoc.rs}
-        cargo
+        // TODO: proman. cargo.env
+        if stage > 0 {
+            cargo
             .env("RUSTBUILD_NATIVE_DIR", self.native_dir(target))
-            .env("RUSTC_REAL", self.rustc(compiler))
+            .env("RUSTC_REAL", "C:\\Users\\ciber\\.rustup\\toolchains\\1.58.1-x86_64-pc-windows-msvc\\bin\\rustc.exe")
             .env("RUSTC_STAGE", stage.to_string())
             .env("RUSTC_SYSROOT", &sysroot)
             .env("RUSTC_LIBDIR", &libdir)
@@ -1134,6 +1159,33 @@ impl<'a> Builder<'a> {
             )
             .env("RUSTC_ERROR_METADATA_DST", self.extended_error_dir())
             .env("RUSTC_BREAK_ON_ICE", "1");
+        } else {
+            cargo
+                .env("RUSTBUILD_NATIVE_DIR", self.native_dir(target))
+                .env("RUSTC_REAL", self.rustc(compiler))
+                .env("RUSTC_STAGE", stage.to_string())
+                .env("RUSTC_SYSROOT", &sysroot)
+                .env("RUSTC_LIBDIR", &libdir)
+                .env("RUSTDOC", self.out.join("bootstrap/debug/rustdoc"))
+                .env(
+                    "RUSTDOC_REAL",
+                    if cmd == "doc" || cmd == "rustdoc" || (cmd == "test" && want_rustdoc) {
+                        self.rustdoc(compiler)
+                    } else {
+                        PathBuf::from("/path/to/nowhere/rustdoc/not/required")
+                    },
+                )
+                .env("RUSTC_ERROR_METADATA_DST", self.extended_error_dir())
+                .env("RUSTC_BREAK_ON_ICE", "1");
+        }
+
+        println!(">>>>>> builder.rs. cargo");
+        println!(">>>> RUSTBUILD_NATIVE_DIR: {:?}", self.native_dir(target));
+        println!(">>>> RUSTC_REAL: {:?}", self.rustc(compiler));
+        println!(">>>> RUSTC_STAGE: {:?}", stage.to_string());
+        println!(">>>> RUSTC_SYSROOT: {:?}", &sysroot);
+        println!(">>>> RUSTC_LIBDIR: {:?}", &libdir);
+
         // Clippy support is a hack and uses the default `cargo-clippy` in path.
         // Don't override RUSTC so that the `cargo-clippy` in path will be run.
         if cmd != "clippy" {
@@ -1294,10 +1346,16 @@ impl<'a> Builder<'a> {
         // library up and running, so we can use the normal compiler to compile
         // build scripts in that situation.
         if mode == Mode::Std {
+            println!(">>> mode == Mode::Std");
+            println!(">>> builder.rs. RUSTC_SNAPSHOT: {:?}", &self.initial_rustc);
+            println!(">>> builder.rs. RUSTC_SNAPSHOT_LIBDIR: {:?}", self.rustc_snapshot_libdir());
             cargo
                 .env("RUSTC_SNAPSHOT", &self.initial_rustc)
                 .env("RUSTC_SNAPSHOT_LIBDIR", self.rustc_snapshot_libdir());
         } else {
+            println!(">>> mode != Mode::Std");
+            println!(">>> builder.rs. RUSTC_SNAPSHOT: {:?}", self.rustc(compiler));
+            println!(">>> builder.rs. RUSTC_SNAPSHOT_LIBDIR: {:?}", self.rustc_libdir(compiler));
             cargo
                 .env("RUSTC_SNAPSHOT", self.rustc(compiler))
                 .env("RUSTC_SNAPSHOT_LIBDIR", self.rustc_libdir(compiler));
@@ -1485,7 +1543,7 @@ impl<'a> Builder<'a> {
         // default via `-ldylib=winapi_foo`. That is, they're linked with the
         // `dylib` type with a `winapi_` prefix (so the winapi ones don't
         // conflict with the system MinGW ones). This consequently means that
-        // the binaries we ship of things like rustc_codegen_llvm (aka the rustc_codegen_llvm
+        // the binaries we ship of things like latinoc_codegen_llvm (aka the latinoc_codegen_llvm
         // DLL) when linked against *again*, for example with procedural macros
         // or plugins, will trigger the propagation logic of `-ldylib`, passing
         // `-lwinapi_foo` to the linker again. This isn't actually available in
@@ -1628,7 +1686,11 @@ impl<'a> Builder<'a> {
         }
 
         // Only execute if it's supposed to run as default
-        if desc.default && should_run.is_really_default() { self.ensure(step) } else { None }
+        if desc.default && should_run.is_really_default() {
+            self.ensure(step)
+        } else {
+            None
+        }
     }
 
     /// Checks if any of the "should_run" paths is in the `Builder` paths.

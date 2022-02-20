@@ -2,7 +2,7 @@ use crate::creader::{CStore, LoadedMacro};
 use crate::foreign_modules;
 use crate::native_libs;
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::stable_map::FxHashMap;
 use rustc_hir::def::{CtorKind, DefKind};
 use rustc_hir::def_id::{CrateNum, DefId, DefIdMap, CRATE_DEF_INDEX, LOCAL_CRATE};
@@ -15,9 +15,9 @@ use rustc_middle::ty::{self, TyCtxt, Visibility};
 use rustc_session::cstore::{CrateSource, CrateStore, ForeignModule};
 use rustc_session::utils::NativeLibKind;
 use rustc_session::{Session, StableCrateId};
-use rustc_span::hygiene::{ExpnHash, ExpnId};
-use rustc_span::source_map::{Span, Spanned};
-use rustc_span::symbol::Symbol;
+use latinoc_span::hygiene::{ExpnHash, ExpnId};
+use latinoc_span::source_map::{Span, Spanned};
+use latinoc_span::symbol::Symbol;
 
 use rustc_data_structures::sync::Lrc;
 use smallvec::SmallVec;

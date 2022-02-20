@@ -2,10 +2,10 @@ use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::{meets_msrv, msrvs};
 use if_chain::if_chain;
 use rustc_hir as hir;
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 declare_clippy_lint! {
     /// ### What it does

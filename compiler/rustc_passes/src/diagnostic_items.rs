@@ -9,14 +9,14 @@
 //!
 //! * Compiler internal types like `Ty` and `TyCtxt`
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_hir as hir;
 use rustc_hir::diagnostic_items::DiagnosticItems;
 use rustc_hir::itemlikevisit::ItemLikeVisitor;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::def_id::{CrateNum, DefId, LocalDefId, LOCAL_CRATE};
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::def_id::{CrateNum, DefId, LocalDefId, LOCAL_CRATE};
+use latinoc_span::symbol::{sym, Symbol};
 
 struct DiagnosticItemCollector<'tcx> {
     tcx: TyCtxt<'tcx>,

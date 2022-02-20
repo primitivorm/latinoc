@@ -7,7 +7,7 @@ use crate::traits::*;
 use crate::MemFlags;
 
 use rustc_middle::ty::{self, Ty, TyCtxt};
-use rustc_span::{sym, Span};
+use latinoc_span::{sym, Span};
 use rustc_target::abi::call::{FnAbi, PassMode};
 
 fn copy_intrinsic<'a, 'tcx, Bx: BuilderMethods<'a, 'tcx>>(

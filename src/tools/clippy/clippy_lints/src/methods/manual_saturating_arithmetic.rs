@@ -2,10 +2,10 @@ use clippy_utils::diagnostics::span_lint_and_sugg;
 use clippy_utils::is_qpath_def_path;
 use clippy_utils::source::snippet_with_applicability;
 use if_chain::if_chain;
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::layout::LayoutOf;
 
 pub fn check(

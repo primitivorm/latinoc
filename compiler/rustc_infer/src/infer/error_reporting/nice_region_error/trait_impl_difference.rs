@@ -12,7 +12,7 @@ use rustc_hir::intravisit::Visitor;
 use rustc_middle::ty::print::RegionHighlightMode;
 use rustc_middle::ty::{self, Ty, TyCtxt, TypeFoldable, TypeVisitor};
 
-use rustc_span::{MultiSpan, Span, Symbol};
+use latinoc_span::{MultiSpan, Span, Symbol};
 
 use std::ops::ControlFlow;
 

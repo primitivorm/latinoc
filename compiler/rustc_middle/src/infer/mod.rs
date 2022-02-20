@@ -5,7 +5,7 @@ use crate::ty::Region;
 use crate::ty::Ty;
 use rustc_data_structures::sync::Lrc;
 use rustc_hir::def_id::DefId;
-use rustc_span::Span;
+use latinoc_span::Span;
 
 /// Requires that `region` must be equal to one of the regions in `choice_regions`.
 /// We often denote this using the syntax:

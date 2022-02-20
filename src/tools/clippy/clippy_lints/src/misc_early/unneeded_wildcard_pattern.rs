@@ -1,8 +1,8 @@
 use clippy_utils::diagnostics::span_lint_and_sugg;
-use rustc_ast::ast::{Pat, PatKind};
+use latinoc_ast::ast::{Pat, PatKind};
 use rustc_errors::Applicability;
-use rustc_lint::EarlyContext;
-use rustc_span::source_map::Span;
+use latinoc_lint::EarlyContext;
+use latinoc_span::source_map::Span;
 
 use super::UNNEEDED_WILDCARD_PATTERN;
 

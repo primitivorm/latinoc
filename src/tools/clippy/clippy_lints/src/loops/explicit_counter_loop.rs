@@ -6,7 +6,7 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::intravisit::{walk_block, walk_expr};
 use rustc_hir::{Expr, Pat};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 
 // To trigger the EXPLICIT_COUNTER_LOOP lint, a variable must be
 // incremented exactly once in the loop body, and initialized to zero

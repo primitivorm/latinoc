@@ -6,7 +6,7 @@ use rustc_middle::thir::{FieldPat, Pat, PatKind};
 use rustc_middle::ty::print::with_no_trimmed_paths;
 use rustc_middle::ty::{self, AdtDef, Ty, TyCtxt};
 use rustc_session::lint;
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_trait_selection::traits::predicate_for_trait_def;
 use rustc_trait_selection::traits::query::evaluate_obligation::InferCtxtExt;
 use rustc_trait_selection::traits::{self, ObligationCause, PredicateObligation};

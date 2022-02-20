@@ -7,11 +7,11 @@
 use std::convert::From;
 use std::fmt;
 
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_hir::{def::CtorKind, def_id::DefId};
 use rustc_middle::ty::{self, TyCtxt};
-use rustc_span::def_id::CRATE_DEF_INDEX;
-use rustc_span::Pos;
+use latinoc_span::def_id::CRATE_DEF_INDEX;
+use latinoc_span::Pos;
 
 use rustdoc_json_types::*;
 
@@ -61,7 +61,7 @@ impl JsonRenderer<'_> {
 
     fn convert_span(&self, span: clean::Span) -> Option<Span> {
         match span.filename(self.sess()) {
-            rustc_span::FileName::Real(name) => {
+            latinoc_span::FileName::Real(name) => {
                 if let Some(local_path) = name.into_local_path() {
                     let hi = span.hi(self.sess());
                     let lo = span.lo(self.sess());
@@ -624,8 +624,8 @@ impl FromWithTcx<clean::ProcMacro> for ProcMacro {
     }
 }
 
-crate fn from_macro_kind(kind: rustc_span::hygiene::MacroKind) -> MacroKind {
-    use rustc_span::hygiene::MacroKind::*;
+crate fn from_macro_kind(kind: latinoc_span::hygiene::MacroKind) -> MacroKind {
+    use latinoc_span::hygiene::MacroKind::*;
     match kind {
         Bang => MacroKind::Bang,
         Attr => MacroKind::Attr,

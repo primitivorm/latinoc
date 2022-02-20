@@ -2,7 +2,7 @@ use crate::abi::Size;
 use crate::spec::Target;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_macros::HashStable_Generic;
-use rustc_span::Symbol;
+use latinoc_span::Symbol;
 use std::fmt;
 use std::str::FromStr;
 
@@ -19,16 +19,16 @@ macro_rules! def_reg_class {
         }
 
         impl $arch_regclass {
-            pub fn name(self) -> rustc_span::Symbol {
+            pub fn name(self) -> latinoc_span::Symbol {
                 match self {
-                    $(Self::$class => rustc_span::symbol::sym::$class,)*
+                    $(Self::$class => latinoc_span::symbol::sym::$class,)*
                 }
             }
 
-            pub fn parse(_arch: super::InlineAsmArch, name: rustc_span::Symbol) -> Result<Self, &'static str> {
+            pub fn parse(_arch: super::InlineAsmArch, name: latinoc_span::Symbol) -> Result<Self, &'static str> {
                 match name {
                     $(
-                        rustc_span::sym::$class => Ok(Self::$class),
+                        latinoc_span::sym::$class => Ok(Self::$class),
                     )*
                     _ => Err("unknown register class"),
                 }
@@ -411,7 +411,7 @@ impl InlineAsmRegClass {
             Self::SpirV(r) => r.name(),
             Self::Wasm(r) => r.name(),
             Self::Bpf(r) => r.name(),
-            Self::Err => rustc_span::symbol::sym::reg,
+            Self::Err => latinoc_span::symbol::sym::reg,
         }
     }
 

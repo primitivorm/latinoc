@@ -8,9 +8,9 @@ use clippy_utils::{
     numeric_literal::{NumericLiteral, Radix},
 };
 use if_chain::if_chain;
-use rustc_ast::ast::{Expr, ExprKind, Lit, LitKind};
+use latinoc_ast::ast::{Expr, ExprKind, Lit, LitKind};
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
 use std::iter;
@@ -146,7 +146,7 @@ enum WarningType {
 }
 
 impl WarningType {
-    fn display(&self, suggested_format: String, cx: &EarlyContext<'_>, span: rustc_span::Span) {
+    fn display(&self, suggested_format: String, cx: &EarlyContext<'_>, span: latinoc_span::Span) {
         match self {
             Self::MistypedLiteralSuffix => span_lint_and_sugg(
                 cx,
@@ -300,7 +300,7 @@ impl LiteralDigitGrouping {
     // Returns `false` if the check fails
     fn check_for_mistyped_suffix(
         cx: &EarlyContext<'_>,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         num_lit: &mut NumericLiteral<'_>,
     ) -> bool {
         if num_lit.suffix.is_some() {

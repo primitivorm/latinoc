@@ -2,10 +2,10 @@ use clippy_utils::diagnostics::span_lint_and_note;
 use clippy_utils::{match_def_path, paths};
 use rustc_hir::def_id::DefId;
 use rustc_hir::{AsyncGeneratorKind, Body, BodyId, GeneratorKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty::GeneratorInteriorTypeCause;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 declare_clippy_lint! {
     /// ### What it does

@@ -29,9 +29,9 @@ use rustc_session::cgu_reuse_tracker::CguReuseTracker;
 use rustc_session::config::{self, CrateType, Lto, OutputFilenames, OutputType};
 use rustc_session::config::{Passes, SwitchWithOptPath};
 use rustc_session::Session;
-use rustc_span::source_map::SourceMap;
-use rustc_span::symbol::sym;
-use rustc_span::{BytePos, FileName, InnerSpan, Pos, Span};
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::symbol::sym;
+use latinoc_span::{BytePos, FileName, InnerSpan, Pos, Span};
 use rustc_target::spec::{MergeFunctions, PanicStrategy, SanitizerSet};
 
 use std::any::Any;

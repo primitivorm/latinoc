@@ -6,9 +6,9 @@ use rustc_hir::def::Res;
 use rustc_hir::def_id::LocalDefId;
 use rustc_hir::hir_id::ItemLocalId;
 use rustc_hir::{Block, Body, BodyOwnerKind, Expr, ExprKind, HirId, Node, Pat, PatKind, QPath, UnOp};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::{Span, Symbol};
+use latinoc_span::{Span, Symbol};
 
 declare_clippy_lint! {
     /// ### What it does

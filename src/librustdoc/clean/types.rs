@@ -10,9 +10,13 @@ use std::{slice, vec};
 
 use arrayvec::ArrayVec;
 
-use rustc_ast::attr;
-use rustc_ast::util::comments::beautify_doc_string;
-use rustc_ast::{self as ast, AttrStyle};
+use latinoc_ast::attr;
+use latinoc_ast::util::comments::beautify_doc_string;
+use latinoc_ast::{self as ast, AttrStyle};
+use latinoc_span::hygiene::MacroKind;
+use latinoc_span::source_map::DUMMY_SP;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol, SymbolStr};
+use latinoc_span::{self, FileName, Loc};
 use rustc_attr::{ConstStability, Deprecation, Stability, StabilityLevel};
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::thin_vec::ThinVec;
@@ -24,10 +28,6 @@ use rustc_hir::{BodyId, Mutability};
 use rustc_index::vec::IndexVec;
 use rustc_middle::ty::{self, TyCtxt};
 use rustc_session::Session;
-use rustc_span::hygiene::MacroKind;
-use rustc_span::source_map::DUMMY_SP;
-use rustc_span::symbol::{kw, sym, Ident, Symbol, SymbolStr};
-use rustc_span::{self, FileName, Loc};
 use rustc_target::abi::VariantIdx;
 use rustc_target::spec::abi::Abi;
 
@@ -361,7 +361,7 @@ crate struct Item {
 #[cfg(all(target_arch = "x86_64", target_pointer_width = "64"))]
 rustc_data_structures::static_assert_size!(Item, 56);
 
-crate fn rustc_span(def_id: DefId, tcx: TyCtxt<'_>) -> Span {
+crate fn latinoc_span(def_id: DefId, tcx: TyCtxt<'_>) -> Span {
     Span::new(def_id.as_local().map_or_else(
         || tcx.def_span(def_id),
         |local| {
@@ -398,18 +398,20 @@ impl Item {
             ItemKind::ImplItem(Impl { kind: ImplKind::Auto, .. }) => Span::dummy(),
             ItemKind::ImplItem(Impl { kind: ImplKind::Blanket(_), .. }) => {
                 if let ItemId::Blanket { impl_id, .. } = self.def_id {
-                    rustc_span(impl_id, tcx)
+                    latinoc_span(impl_id, tcx)
                 } else {
                     panic!("blanket impl item has non-blanket ID")
                 }
             }
-            _ => {
-                self.def_id.as_def_id().map(|did| rustc_span(did, tcx)).unwrap_or_else(Span::dummy)
-            }
+            _ => self
+                .def_id
+                .as_def_id()
+                .map(|did| latinoc_span(did, tcx))
+                .unwrap_or_else(Span::dummy),
         }
     }
 
-    crate fn attr_span(&self, tcx: TyCtxt<'_>) -> rustc_span::Span {
+    crate fn attr_span(&self, tcx: TyCtxt<'_>) -> latinoc_span::Span {
         crate::passes::span_of_attrs(&self.attrs).unwrap_or_else(|| self.span(tcx).inner())
     }
 
@@ -598,7 +600,11 @@ impl Item {
                 classes.push("deprecated");
             }
 
-            if !classes.is_empty() { Some(classes.join(" ")) } else { None }
+            if !classes.is_empty() {
+                Some(classes.join(" "))
+            } else {
+                None
+            }
         })
     }
 
@@ -764,7 +770,7 @@ crate trait AttributesExt {
     /// Finds an attribute as List and returns the list of attributes nested inside.
     fn lists(&self, name: Symbol) -> ListAttributesIter<'_>;
 
-    fn span(&self) -> Option<rustc_span::Span>;
+    fn span(&self) -> Option<latinoc_span::Span>;
 
     fn inner_docs(&self) -> bool;
 
@@ -779,7 +785,7 @@ impl AttributesExt for [ast::Attribute] {
     }
 
     /// Return the span of the first doc-comment, if it exists.
-    fn span(&self) -> Option<rustc_span::Span> {
+    fn span(&self) -> Option<latinoc_span::Span> {
         self.iter().find(|attr| attr.doc_str().is_some()).map(|attr| attr.span)
     }
 
@@ -847,7 +853,7 @@ impl AttributesExt for [ast::Attribute] {
                         // #[doc(cfg(...))]
                         if let Some(cfg_mi) = item
                             .meta_item()
-                            .and_then(|item| rustc_expand::config::parse_cfg(item, sess))
+                            .and_then(|item| latinoc_expand::config::parse_cfg(item, sess))
                         {
                             match Cfg::parse(cfg_mi) {
                                 Ok(new_cfg) => cfg &= new_cfg,
@@ -876,7 +882,11 @@ impl AttributesExt for [ast::Attribute] {
             }
         }
 
-        if cfg == Cfg::True { None } else { Some(Arc::new(cfg)) }
+        if cfg == Cfg::True {
+            None
+        } else {
+            Some(Arc::new(cfg))
+        }
     }
 }
 
@@ -908,7 +918,7 @@ impl<I: Iterator<Item = ast::NestedMetaItem> + IntoIterator<Item = ast::NestedMe
 /// kept separate because of issue #42760.
 #[derive(Clone, PartialEq, Eq, Debug, Hash)]
 crate struct DocFragment {
-    crate span: rustc_span::Span,
+    crate span: latinoc_span::Span,
     /// The module this doc-comment came from.
     ///
     /// This allows distinguishing between the original documentation and a pub re-export.
@@ -1094,7 +1104,11 @@ impl Attributes {
             }
             add_doc_fragment(&mut out, new_frag);
         }
-        if out.is_empty() { None } else { Some(out) }
+        if out.is_empty() {
+            None
+        } else {
+            Some(out)
+        }
     }
 
     /// Return the doc-comments on this item, grouped by the module they came from.
@@ -1113,7 +1127,11 @@ impl Attributes {
     /// Finds all `doc` attributes as NameValues and returns their corresponding values, joined
     /// with newlines.
     crate fn collapsed_doc_value(&self) -> Option<String> {
-        if self.doc_strings.is_empty() { None } else { Some(self.doc_strings.iter().collect()) }
+        if self.doc_strings.is_empty() {
+            None
+        } else {
+            Some(self.doc_strings.iter().collect())
+        }
     }
 
     crate fn get_doc_aliases(&self) -> Box<[Symbol]> {
@@ -1926,26 +1944,26 @@ crate enum Variant {
     Struct(VariantStruct),
 }
 
-/// Small wrapper around [`rustc_span::Span`] that adds helper methods
-/// and enforces calling [`rustc_span::Span::source_callsite()`].
+/// Small wrapper around [`latinoc_span::Span`] that adds helper methods
+/// and enforces calling [`latinoc_span::Span::source_callsite()`].
 #[derive(Copy, Clone, Debug)]
-crate struct Span(rustc_span::Span);
+crate struct Span(latinoc_span::Span);
 
 impl Span {
-    /// Wraps a [`rustc_span::Span`]. In case this span is the result of a macro expansion, the
+    /// Wraps a [`latinoc_span::Span`]. In case this span is the result of a macro expansion, the
     /// span will be updated to point to the macro invocation instead of the macro definition.
     ///
     /// (See rust-lang/rust#39726)
-    crate fn new(sp: rustc_span::Span) -> Self {
+    crate fn new(sp: latinoc_span::Span) -> Self {
         Self(sp.source_callsite())
     }
 
-    crate fn inner(&self) -> rustc_span::Span {
+    crate fn inner(&self) -> latinoc_span::Span {
         self.0
     }
 
     crate fn dummy() -> Self {
-        Self(rustc_span::DUMMY_SP)
+        Self(latinoc_span::DUMMY_SP)
     }
 
     crate fn is_dummy(&self) -> bool {
@@ -2292,10 +2310,18 @@ crate enum SubstParam {
 
 impl SubstParam {
     crate fn as_ty(&self) -> Option<&Type> {
-        if let Self::Type(ty) = self { Some(ty) } else { None }
+        if let Self::Type(ty) = self {
+            Some(ty)
+        } else {
+            None
+        }
     }
 
     crate fn as_lt(&self) -> Option<&Lifetime> {
-        if let Self::Lifetime(lt) = self { Some(lt) } else { None }
+        if let Self::Lifetime(lt) = self {
+            Some(lt)
+        } else {
+            None
+        }
     }
 }

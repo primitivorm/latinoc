@@ -4,7 +4,7 @@ use crate::creader::CrateMetadataRef;
 use crate::rmeta::table::{FixedSizeEncoding, Table};
 use crate::rmeta::*;
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_attr as attr;
 use rustc_data_structures::captures::Captures;
 use rustc_data_structures::fx::FxHashMap;
@@ -12,8 +12,8 @@ use rustc_data_structures::svh::Svh;
 use rustc_data_structures::sync::{Lock, LockGuard, Lrc, OnceCell};
 use rustc_data_structures::unhash::UnhashMap;
 use rustc_errors::ErrorReported;
-use rustc_expand::base::{SyntaxExtension, SyntaxExtensionKind};
-use rustc_expand::proc_macro::{AttrProcMacro, BangProcMacro, ProcMacroDerive};
+use latinoc_expand::base::{SyntaxExtension, SyntaxExtensionKind};
+use latinoc_expand::proc_macro::{AttrProcMacro, BangProcMacro, ProcMacroDerive};
 use rustc_hir as hir;
 use rustc_hir::def::{CtorKind, CtorOf, DefKind, Res};
 use rustc_hir::def_id::{CrateNum, DefId, DefIndex, CRATE_DEF_INDEX, LOCAL_CRATE};
@@ -33,10 +33,10 @@ use rustc_session::cstore::{
     CrateSource, ExternCrate, ForeignModule, LinkagePreference, NativeLib,
 };
 use rustc_session::Session;
-use rustc_span::hygiene::{ExpnIndex, MacroKind};
-use rustc_span::source_map::{respan, Spanned};
-use rustc_span::symbol::{sym, Ident, Symbol};
-use rustc_span::{self, BytePos, ExpnId, Pos, Span, SyntaxContext, DUMMY_SP};
+use latinoc_span::hygiene::{ExpnIndex, MacroKind};
+use latinoc_span::source_map::{respan, Spanned};
+use latinoc_span::symbol::{sym, Ident, Symbol};
+use latinoc_span::{self, BytePos, ExpnId, Pos, Span, SyntaxContext, DUMMY_SP};
 
 use proc_macro::bridge::client::ProcMacro;
 use std::io;
@@ -46,7 +46,7 @@ use std::path::Path;
 use tracing::debug;
 
 pub use cstore_impl::{provide, provide_extern};
-use rustc_span::hygiene::HygieneDecodeContext;
+use latinoc_span::hygiene::HygieneDecodeContext;
 
 mod cstore_impl;
 
@@ -139,15 +139,15 @@ crate struct CrateMetadata {
     extern_crate: Lock<Option<ExternCrate>>,
 }
 
-/// Holds information about a rustc_span::SourceFile imported from another crate.
+/// Holds information about a latinoc_span::SourceFile imported from another crate.
 /// See `imported_source_files()` for more information.
 struct ImportedSourceFile {
     /// This SourceFile's byte-offset within the source_map of its original crate
-    original_start_pos: rustc_span::BytePos,
+    original_start_pos: latinoc_span::BytePos,
     /// The end of this SourceFile within the source_map of its original crate
-    original_end_pos: rustc_span::BytePos,
+    original_end_pos: latinoc_span::BytePos,
     /// The imported SourceFile's representation within the local source_map
-    translated_source_file: Lrc<rustc_span::SourceFile>,
+    translated_source_file: Lrc<latinoc_span::SourceFile>,
 }
 
 pub(super) struct DecodeContext<'a, 'tcx> {
@@ -409,7 +409,7 @@ impl<'a, 'tcx> Decodable<DecodeContext<'a, 'tcx>> for SyntaxContext {
         let cdata = decoder.cdata();
         let sess = decoder.sess.unwrap();
         let cname = cdata.root.name;
-        rustc_span::hygiene::decode_syntax_context(decoder, &cdata.hygiene_context, |_, id| {
+        latinoc_span::hygiene::decode_syntax_context(decoder, &cdata.hygiene_context, |_, id| {
             debug!("SpecializedDecoder<SyntaxContext>: decoding {}", id);
             Ok(cdata
                 .root
@@ -429,7 +429,7 @@ impl<'a, 'tcx> Decodable<DecodeContext<'a, 'tcx>> for ExpnId {
         let cnum = CrateNum::decode(decoder)?;
         let index = u32::decode(decoder)?;
 
-        let expn_id = rustc_span::hygiene::decode_expn_id(cnum, index, |expn_id| {
+        let expn_id = latinoc_span::hygiene::decode_expn_id(cnum, index, |expn_id| {
             let ExpnId { krate: cnum, local_id: index } = expn_id;
             // Lookup local `ExpnData`s in our own crate data. Foreign `ExpnData`s
             // are stored in the owning crate, to avoid duplication.
@@ -1661,7 +1661,7 @@ impl<'a, 'tcx> CrateMetadataRef<'a> {
         };
 
         let data = self.root.expn_data.get(self, index).unwrap().decode((self, sess));
-        rustc_span::hygiene::register_expn_id(self.cnum, index, data, hash)
+        latinoc_span::hygiene::register_expn_id(self.cnum, index, data, hash)
     }
 
     /// Imports the source_map from an external crate into the source_map of the crate
@@ -1707,7 +1707,7 @@ impl<'a, 'tcx> CrateMetadataRef<'a> {
                 // and we don't want the real path to leak into codegen/debuginfo.
                 !sess.opts.remap_path_prefix.iter().any(|(_from, to)| to == virtual_dir)
             });
-        let try_to_translate_virtual_to_real = |name: &mut rustc_span::FileName| {
+        let try_to_translate_virtual_to_real = |name: &mut latinoc_span::FileName| {
             debug!(
                 "try_to_translate_virtual_to_real(name={:?}): \
                  virtual_rust_source_base_dir={:?}, real_rust_source_base_dir={:?}",
@@ -1716,8 +1716,8 @@ impl<'a, 'tcx> CrateMetadataRef<'a> {
 
             if let Some(virtual_dir) = virtual_rust_source_base_dir {
                 if let Some(real_dir) = &sess.opts.real_rust_source_base_dir {
-                    if let rustc_span::FileName::Real(old_name) = name {
-                        if let rustc_span::RealFileName::Remapped { local_path: _, virtual_name } =
+                    if let latinoc_span::FileName::Real(old_name) = name {
+                        if let latinoc_span::RealFileName::Remapped { local_path: _, virtual_name } =
                             old_name
                         {
                             if let Ok(rest) = virtual_name.strip_prefix(virtual_dir) {
@@ -1757,7 +1757,7 @@ impl<'a, 'tcx> CrateMetadataRef<'a> {
                                     virtual_name.display(),
                                     new_path.display(),
                                 );
-                                let new_name = rustc_span::RealFileName::Remapped {
+                                let new_name = latinoc_span::RealFileName::Remapped {
                                     local_path: Some(new_path),
                                     virtual_name,
                                 };
@@ -1776,7 +1776,7 @@ impl<'a, 'tcx> CrateMetadataRef<'a> {
                 .map(|source_file_to_import| {
                     // We can't reuse an existing SourceFile, so allocate a new one
                     // containing the information we need.
-                    let rustc_span::SourceFile {
+                    let latinoc_span::SourceFile {
                         mut name,
                         src_hash,
                         start_pos,
@@ -1801,10 +1801,10 @@ impl<'a, 'tcx> CrateMetadataRef<'a> {
                         &sess.opts.debugging_opts.simulate_remapped_rust_src_base
                     {
                         if let Some(real_dir) = &sess.opts.real_rust_source_base_dir {
-                            if let rustc_span::FileName::Real(ref mut old_name) = name {
-                                if let rustc_span::RealFileName::LocalPath(local) = old_name {
+                            if let latinoc_span::FileName::Real(ref mut old_name) = name {
+                                if let latinoc_span::RealFileName::LocalPath(local) = old_name {
                                     if let Ok(rest) = local.strip_prefix(real_dir) {
-                                        *old_name = rustc_span::RealFileName::Remapped {
+                                        *old_name = latinoc_span::RealFileName::Remapped {
                                             local_path: None,
                                             virtual_name: virtual_dir.join(rest),
                                         };

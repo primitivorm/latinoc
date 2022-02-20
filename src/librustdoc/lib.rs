@@ -31,36 +31,36 @@ extern crate tracing;
 //
 // Dependencies listed in Cargo.toml do not need `extern crate`.
 
-extern crate rustc_ast;
+extern crate latinoc_ast;
+extern crate latinoc_driver;
+extern crate latinoc_expand;
+extern crate latinoc_interface;
+extern crate latinoc_lexer;
+extern crate latinoc_parse;
+extern crate latinoc_span;
 extern crate rustc_ast_lowering;
 extern crate rustc_ast_pretty;
 extern crate rustc_attr;
 extern crate rustc_const_eval;
 extern crate rustc_data_structures;
-extern crate latinoc_driver;
 extern crate rustc_errors;
-extern crate rustc_expand;
 extern crate rustc_feature;
 extern crate rustc_hir;
 extern crate rustc_hir_pretty;
 extern crate rustc_index;
 extern crate rustc_infer;
-extern crate latinoc_interface;
-extern crate latinoc_lexer;
-extern crate rustc_lint;
+extern crate latinoc_lint;
 extern crate rustc_lint_defs;
 extern crate rustc_macros;
 extern crate rustc_metadata;
 extern crate rustc_middle;
-extern crate latinoc_parse;
 extern crate rustc_passes;
 extern crate rustc_resolve;
 extern crate rustc_serialize;
 extern crate rustc_session;
-extern crate rustc_span;
 extern crate rustc_target;
 extern crate rustc_trait_selection;
-extern crate rustc_typeck;
+extern crate latinoc_typeck;
 extern crate test;
 
 #[cfg(feature = "jemalloc")]
@@ -77,8 +77,8 @@ use std::env;
 use std::process;
 
 use latinoc_driver::{abort_on_err, describe_lints};
-use rustc_errors::ErrorReported;
 use latinoc_interface::interface;
+use rustc_errors::ErrorReported;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{make_crate_type_option, ErrorOutputType, RustcOptGroup};
 use rustc_session::getopts;

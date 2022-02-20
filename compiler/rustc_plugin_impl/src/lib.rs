@@ -10,7 +10,7 @@
 #![feature(nll)]
 #![recursion_limit = "256"]
 
-use rustc_lint::LintStore;
+use latinoc_lint::LintStore;
 
 pub mod load;
 

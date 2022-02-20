@@ -3,7 +3,7 @@ use clippy_utils::diagnostics::span_lint;
 use clippy_utils::{match_def_path, match_trait_method, paths};
 use if_chain::if_chain;
 use rustc_hir::{Expr, ExprKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
 use std::cmp::Ordering;
 

@@ -2,7 +2,7 @@ use rustc_data_structures::fx::FxHashMap;
 use rustc_index::vec::IndexVec;
 use rustc_middle::infer::MemberConstraint;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::Span;
+use latinoc_span::Span;
 use std::hash::Hash;
 use std::ops::Index;
 

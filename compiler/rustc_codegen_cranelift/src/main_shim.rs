@@ -3,7 +3,7 @@ use rustc_hir::LangItem;
 use rustc_middle::ty::subst::GenericArg;
 use rustc_middle::ty::AssocKind;
 use rustc_session::config::EntryFnType;
-use rustc_span::symbol::Ident;
+use latinoc_span::symbol::Ident;
 
 use crate::prelude::*;
 

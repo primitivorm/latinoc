@@ -11,10 +11,10 @@
 
 use crate::bug;
 use crate::ty;
-use rustc_ast::Attribute;
+use latinoc_ast::Attribute;
 use rustc_session::Session;
 use rustc_session::{Limit, Limits};
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
 use std::num::IntErrorKind;
 

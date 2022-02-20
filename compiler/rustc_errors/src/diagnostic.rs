@@ -7,7 +7,7 @@ use crate::SuggestionStyle;
 use crate::ToolMetadata;
 use rustc_lint_defs::Applicability;
 use rustc_serialize::json::Json;
-use rustc_span::{MultiSpan, Span, DUMMY_SP};
+use latinoc_span::{MultiSpan, Span, DUMMY_SP};
 use std::fmt;
 use std::hash::{Hash, Hasher};
 

@@ -18,7 +18,7 @@ use rustc_middle::ty::ReStatic;
 use rustc_middle::ty::{self, Ty, TyCtxt};
 use rustc_middle::ty::{ReLateBound, ReVar};
 use rustc_middle::ty::{Region, RegionVid};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use std::collections::BTreeMap;
 use std::ops::Range;

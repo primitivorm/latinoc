@@ -7,16 +7,16 @@ use clippy_utils::{
     can_move_expr_to_closure, in_constant, is_else_clause, is_lang_ctor, is_lint_allowed, path_to_local_id,
     peel_hir_expr_refs, peel_hir_expr_while, CaptureKind,
 };
-use rustc_ast::util::parser::PREC_POSTFIX;
+use latinoc_ast::util::parser::PREC_POSTFIX;
 use rustc_errors::Applicability;
 use rustc_hir::LangItem::{OptionNone, OptionSome};
 use rustc_hir::{
     def::Res, Arm, BindingAnnotation, Block, Expr, ExprKind, HirId, Mutability, Pat, PatKind, Path, QPath,
 };
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{sym, SyntaxContext};
+use latinoc_span::{sym, SyntaxContext};
 
 declare_clippy_lint! {
     /// ### What it does

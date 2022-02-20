@@ -5,7 +5,7 @@ use rustc_infer::infer::opaque_types::OpaqueTypeDecl;
 use rustc_infer::infer::InferCtxt;
 use rustc_middle::ty::subst::GenericArgKind;
 use rustc_middle::ty::{self, OpaqueTypeKey, Ty, TyCtxt, TypeFoldable};
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_trait_selection::opaque_types::InferCtxtExt;
 
 use super::RegionInferenceContext;

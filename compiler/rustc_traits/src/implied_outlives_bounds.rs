@@ -10,7 +10,7 @@ use rustc_infer::traits::query::OutlivesBound;
 use rustc_infer::traits::TraitEngineExt as _;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::{self, Ty, TyCtxt, TypeFoldable};
-use rustc_span::source_map::DUMMY_SP;
+use latinoc_span::source_map::DUMMY_SP;
 use rustc_trait_selection::infer::InferCtxtBuilderExt;
 use rustc_trait_selection::traits::query::{CanonicalTyGoal, Fallible, NoSolution};
 use rustc_trait_selection::traits::wf;

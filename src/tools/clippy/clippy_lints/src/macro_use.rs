@@ -3,13 +3,13 @@ use clippy_utils::in_macro;
 use clippy_utils::source::snippet;
 use hir::def::{DefKind, Res};
 use if_chain::if_chain;
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::{edition::Edition, sym, Span};
+use latinoc_span::{edition::Edition, sym, Span};
 
 declare_clippy_lint! {
     /// ### What it does

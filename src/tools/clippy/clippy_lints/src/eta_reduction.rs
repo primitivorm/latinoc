@@ -7,7 +7,7 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::def_id::DefId;
 use rustc_hir::{Expr, ExprKind, Param, PatKind, Unsafety};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty::adjustment::{Adjust, Adjustment, AutoBorrow};
 use rustc_middle::ty::subst::Subst;
 use rustc_middle::ty::{self, ClosureKind, Ty, TypeFoldable};

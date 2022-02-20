@@ -5,9 +5,9 @@ use if_chain::if_chain;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_errors::Applicability;
 use rustc_hir::{self as hir, ExprKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 
 declare_clippy_lint! {
     /// ### What it does

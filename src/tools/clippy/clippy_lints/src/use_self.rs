@@ -2,6 +2,9 @@ use clippy_utils::diagnostics::span_lint_and_sugg;
 use clippy_utils::ty::same_type_and_consts;
 use clippy_utils::{in_macro, meets_msrv, msrvs};
 use if_chain::if_chain;
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_span::Span;
+use latinoc_typeck::hir_ty_to_ty;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::Applicability;
 use rustc_hir::{
@@ -11,13 +14,10 @@ use rustc_hir::{
     intravisit::{walk_inf, walk_ty, NestedVisitorMap, Visitor},
     Expr, ExprKind, FnRetTy, FnSig, GenericArg, HirId, Impl, ImplItemKind, Item, ItemKind, Path, QPath, TyKind,
 };
-use rustc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::hir::map::Map;
 use rustc_middle::ty::AssocKind;
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::Span;
-use rustc_typeck::hir_ty_to_ty;
 
 declare_clippy_lint! {
     /// ### What it does

@@ -3,7 +3,7 @@ use crate::infer::lexical_region_resolve::RegionResolutionError::*;
 use crate::infer::InferCtxt;
 use rustc_errors::{DiagnosticBuilder, ErrorReported};
 use rustc_middle::ty::{self, TyCtxt};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 mod different_lifetimes;
 pub mod find_anon_type;

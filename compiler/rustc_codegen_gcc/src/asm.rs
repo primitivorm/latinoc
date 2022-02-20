@@ -1,12 +1,12 @@
 use gccjit::{LValue, RValue, ToRValue, Type};
-use rustc_ast::ast::{InlineAsmOptions, InlineAsmTemplatePiece};
+use latinoc_ast::ast::{InlineAsmOptions, InlineAsmTemplatePiece};
 use rustc_codegen_ssa::mir::operand::OperandValue;
 use rustc_codegen_ssa::mir::place::PlaceRef;
 use rustc_codegen_ssa::traits::{AsmBuilderMethods, AsmMethods, BaseTypeMethods, BuilderMethods, GlobalAsmOperandRef, InlineAsmOperandRef};
 
 use rustc_hir::LlvmInlineAsmInner;
 use rustc_middle::{bug, ty::Instance};
-use rustc_span::{Span, Symbol};
+use latinoc_span::{Span, Symbol};
 use rustc_target::asm::*;
 
 use std::borrow::Cow;

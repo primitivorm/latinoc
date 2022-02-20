@@ -1,6 +1,6 @@
 //! Validity checking for weak lang items
 
-use rustc_ast::Attribute;
+use latinoc_ast::Attribute;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::struct_span_err;
 use rustc_hir as hir;
@@ -10,8 +10,8 @@ use rustc_hir::weak_lang_items::WEAK_ITEMS_REFS;
 use rustc_middle::middle::lang_items::required;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::config::CrateType;
-use rustc_span::symbol::Symbol;
-use rustc_span::Span;
+use latinoc_span::symbol::Symbol;
+use latinoc_span::Span;
 
 struct Context<'a, 'tcx> {
     tcx: TyCtxt<'tcx>,

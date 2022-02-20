@@ -1,5 +1,5 @@
 use rustc_data_structures::fingerprint::Fingerprint;
-use rustc_span::def_id::{DefIndex, DefPathHash};
+use latinoc_span::def_id::{DefIndex, DefPathHash};
 
 #[derive(Clone, Default)]
 pub struct Config;

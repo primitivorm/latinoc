@@ -11,7 +11,7 @@ use rustc_errors::{Applicability, ErrorReported};
 use rustc_hir as hir;
 use rustc_hir::intravisit::Visitor;
 use rustc_middle::ty::{self, TypeVisitor};
-use rustc_span::MultiSpan;
+use latinoc_span::MultiSpan;
 
 impl<'a, 'tcx> NiceRegionError<'a, 'tcx> {
     pub(super) fn try_report_mismatched_static_lifetime(&self) -> Option<ErrorReported> {

@@ -216,10 +216,10 @@ TrivialTypeFoldableAndLiftImpls! {
     String,
     crate::middle::region::Scope,
     crate::ty::FloatTy,
-    ::rustc_ast::InlineAsmOptions,
-    ::rustc_ast::InlineAsmTemplatePiece,
-    ::rustc_ast::NodeId,
-    ::rustc_span::symbol::Symbol,
+    ::latinoc_ast::InlineAsmOptions,
+    ::latinoc_ast::InlineAsmTemplatePiece,
+    ::latinoc_ast::NodeId,
+    ::latinoc_span::symbol::Symbol,
     ::rustc_hir::def::Res,
     ::rustc_hir::def_id::DefId,
     ::rustc_hir::def_id::LocalDefId,
@@ -258,7 +258,7 @@ TrivialTypeFoldableAndLiftImpls! {
     crate::ty::RegionVid,
     crate::ty::UniverseIndex,
     crate::ty::Variance,
-    ::rustc_span::Span,
+    ::latinoc_span::Span,
 }
 
 ///////////////////////////////////////////////////////////////////////////

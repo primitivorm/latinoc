@@ -8,8 +8,13 @@ use clippy_utils::{
     paths, SpanlessEq,
 };
 use if_chain::if_chain;
-use rustc_ast::ast::{Crate, ItemKind, LitKind, ModKind, NodeId};
-use rustc_ast::visit::FnKind;
+use latinoc_ast::ast::{Crate, ItemKind, LitKind, ModKind, NodeId};
+use latinoc_ast::visit::FnKind;
+use latinoc_lint::{EarlyContext, EarlyLintPass, LateContext, LateLintPass, LintContext};
+use latinoc_span::source_map::Spanned;
+use latinoc_span::symbol::{Symbol, SymbolStr};
+use latinoc_span::{BytePos, Span};
+use latinoc_typeck::hir_ty_to_ty;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_errors::Applicability;
 use rustc_hir as hir;
@@ -21,15 +26,10 @@ use rustc_hir::{
     BinOpKind, Block, Expr, ExprKind, HirId, Item, Local, MutTy, Mutability, Node, Path, Stmt, StmtKind, Ty, TyKind,
     UnOp,
 };
-use rustc_lint::{EarlyContext, EarlyLintPass, LateContext, LateLintPass, LintContext};
 use rustc_middle::hir::map::Map;
 use rustc_middle::mir::interpret::ConstValue;
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::Spanned;
-use rustc_span::symbol::{Symbol, SymbolStr};
-use rustc_span::{BytePos, Span};
-use rustc_typeck::hir_ty_to_ty;
 
 use std::borrow::{Borrow, Cow};
 

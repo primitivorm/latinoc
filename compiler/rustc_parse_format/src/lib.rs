@@ -22,7 +22,7 @@ use std::iter;
 use std::str;
 use std::string;
 
-use rustc_span::{InnerSpan, Symbol};
+use latinoc_span::{InnerSpan, Symbol};
 
 /// The type of format string that we are parsing.
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]

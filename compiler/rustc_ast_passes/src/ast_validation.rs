@@ -7,10 +7,10 @@
 // or type checking or some other kind of complex analysis.
 
 use itertools::{Either, Itertools};
-use rustc_ast::ptr::P;
-use rustc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
-use rustc_ast::walk_list;
-use rustc_ast::*;
+use latinoc_ast::ptr::P;
+use latinoc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
+use latinoc_ast::walk_list;
+use latinoc_ast::*;
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_errors::{error_code, pluralize, struct_span_err, Applicability};
@@ -18,9 +18,9 @@ use latinoc_parse::validate_attr;
 use rustc_session::lint::builtin::{MISSING_ABI, PATTERNS_IN_FNS_WITHOUT_BODY};
 use rustc_session::lint::{BuiltinLintDiagnostics, LintBuffer};
 use rustc_session::Session;
-use rustc_span::source_map::Spanned;
-use rustc_span::symbol::{kw, sym, Ident};
-use rustc_span::Span;
+use latinoc_span::source_map::Spanned;
+use latinoc_span::symbol::{kw, sym, Ident};
+use latinoc_span::Span;
 use rustc_target::spec::abi;
 use std::mem;
 use std::ops::DerefMut;
@@ -1666,7 +1666,7 @@ fn deny_equality_constraints(
                                     let gen_args = args.as_ref().map(|p| (**p).clone());
                                     // Build `<Bar = RhsTy>`.
                                     let arg = AngleBracketedArg::Constraint(AssocTyConstraint {
-                                        id: rustc_ast::node_id::DUMMY_NODE_ID,
+                                        id: latinoc_ast::node_id::DUMMY_NODE_ID,
                                         ident: *ident,
                                         gen_args,
                                         kind: AssocTyConstraintKind::Equality {

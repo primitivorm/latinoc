@@ -9,10 +9,10 @@ use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::{Applicability, DiagnosticBuilder};
 use rustc_hir::intravisit::{self, NestedVisitorMap, Visitor};
 use rustc_hir::{Block, Expr, ExprKind, HirId};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::hir::map::Map;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{source_map::Span, symbol::Symbol, BytePos};
+use latinoc_span::{source_map::Span, symbol::Symbol, BytePos};
 use std::borrow::Cow;
 
 declare_clippy_lint! {
@@ -580,7 +580,7 @@ impl<'a, 'tcx> Visitor<'tcx> for UsedValueFinderVisitor<'a, 'tcx> {
         }
     }
 
-    fn visit_qpath(&mut self, qpath: &'tcx rustc_hir::QPath<'tcx>, id: HirId, _span: rustc_span::Span) {
+    fn visit_qpath(&mut self, qpath: &'tcx rustc_hir::QPath<'tcx>, id: HirId, _span: latinoc_span::Span) {
         if let rustc_hir::QPath::Resolved(_, path) = *qpath {
             if path.segments.len() == 1 {
                 if let rustc_hir::def::Res::Local(var) = self.cx.qpath_res(qpath, id) {

@@ -9,7 +9,7 @@ mod simplify;
 crate mod types;
 crate mod utils;
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_attr as attr;
 use rustc_const_eval::const_eval::is_unstable_const_fn;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
@@ -22,12 +22,12 @@ use rustc_middle::ty::fold::TypeFolder;
 use rustc_middle::ty::subst::{InternalSubsts, Subst};
 use rustc_middle::ty::{self, AdtKind, DefIdTree, Lift, Ty, TyCtxt};
 use rustc_middle::{bug, span_bug};
-use rustc_span::hygiene::{AstPass, MacroKind};
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::{self, ExpnKind};
+use latinoc_span::hygiene::{AstPass, MacroKind};
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::{self, ExpnKind};
 use rustc_target::spec::abi::Abi;
-use rustc_typeck::check::intrinsic::intrinsic_operation_unsafety;
-use rustc_typeck::hir_ty_to_ty;
+use latinoc_typeck::check::intrinsic::intrinsic_operation_unsafety;
+use latinoc_typeck::hir_ty_to_ty;
 
 use std::assert_matches::assert_matches;
 use std::collections::hash_map::Entry;
@@ -540,7 +540,7 @@ impl<'a, 'tcx> Clean<Generics> for (&'a ty::Generics, ty::GenericPredicates<'tcx
         let mut impl_trait = BTreeMap::<ImplTraitParam, Vec<GenericBound>>::default();
 
         // Bounds in the type_params and lifetimes fields are repeated in the
-        // predicates field (see rustc_typeck::collect::ty_generics), so remove
+        // predicates field (see latinoc_typeck::collect::ty_generics), so remove
         // them.
         let stripped_params = gens
             .params

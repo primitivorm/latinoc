@@ -1,9 +1,9 @@
 use clippy_utils::diagnostics::span_lint_and_then;
 use clippy_utils::source::snippet;
 use clippy_utils::{meets_msrv, msrvs};
-use rustc_ast::ast::{Item, ItemKind, Ty, TyKind};
+use latinoc_ast::ast::{Item, ItemKind, Ty, TyKind};
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
 
@@ -64,7 +64,7 @@ impl RedundantStaticLifetimes {
                 if let Some(lifetime) = *optional_lifetime {
                     match borrow_type.ty.kind {
                         TyKind::Path(..) | TyKind::Slice(..) | TyKind::Array(..) | TyKind::Tup(..) => {
-                            if lifetime.ident.name == rustc_span::symbol::kw::StaticLifetime {
+                            if lifetime.ident.name == latinoc_span::symbol::kw::StaticLifetime {
                                 let snip = snippet(cx, borrow_type.ty.span, "<type>");
                                 let sugg = format!("&{}", snip);
                                 span_lint_and_then(

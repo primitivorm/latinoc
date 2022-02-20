@@ -1,8 +1,8 @@
 use gccjit::{FunctionType, ToRValue};
-use rustc_ast::expand::allocator::{AllocatorKind, AllocatorTy, ALLOCATOR_METHODS};
+use latinoc_ast::expand::allocator::{AllocatorKind, AllocatorTy, ALLOCATOR_METHODS};
 use rustc_middle::bug;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use crate::GccContext;
 

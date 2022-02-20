@@ -66,13 +66,13 @@ where
         }
     }
 
-    impl From<&FileName> for rustc_span::FileName {
-        fn from(filename: &FileName) -> rustc_span::FileName {
+    impl From<&FileName> for latinoc_span::FileName {
+        fn from(filename: &FileName) -> latinoc_span::FileName {
             match filename {
                 FileName::Real(path) => {
-                    rustc_span::FileName::Real(rustc_span::RealFileName::LocalPath(path.to_owned()))
+                    latinoc_span::FileName::Real(latinoc_span::RealFileName::LocalPath(path.to_owned()))
                 }
-                FileName::Stdin => rustc_span::FileName::Custom("stdin".to_owned()),
+                FileName::Stdin => latinoc_span::FileName::Custom("stdin".to_owned()),
             }
         }
     }

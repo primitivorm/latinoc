@@ -6,11 +6,11 @@ use clippy_utils::{can_mut_borrow_both, differing_macro_contexts, eq_expr_value}
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{BinOpKind, Block, Expr, ExprKind, PatKind, QPath, Stmt, StmtKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Spanned;
-use rustc_span::{sym, Span};
+use latinoc_span::source_map::Spanned;
+use latinoc_span::{sym, Span};
 
 declare_clippy_lint! {
     /// ### What it does

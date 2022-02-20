@@ -2,7 +2,7 @@ use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::source::snippet;
 use if_chain::if_chain;
 use rustc_hir::{Expr, ExprKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::mir::interpret::ConstValue;
 use rustc_middle::ty::layout::LayoutOf;
 use rustc_middle::ty::{self, ConstKind};

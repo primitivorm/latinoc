@@ -5,16 +5,16 @@
 extern crate latinoc_driver;
 extern crate rustc_hir;
 #[macro_use]
-extern crate rustc_lint;
+extern crate latinoc_lint;
 #[macro_use]
 extern crate rustc_session;
-extern crate rustc_ast;
-extern crate rustc_span;
+extern crate latinoc_ast;
+extern crate latinoc_span;
 
 use latinoc_driver::plugin::Registry;
-use rustc_lint::{LateContext, LateLintPass, LintContext};
-use rustc_span::def_id::CRATE_DEF_ID;
-use rustc_span::symbol::Symbol;
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_span::def_id::CRATE_DEF_ID;
+use latinoc_span::symbol::Symbol;
 
 declare_lint! {
     CRATE_NOT_OKAY,

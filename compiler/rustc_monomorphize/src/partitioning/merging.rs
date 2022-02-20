@@ -3,7 +3,7 @@ use std::cmp;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_hir::def_id::LOCAL_CRATE;
 use rustc_middle::mir::mono::{CodegenUnit, CodegenUnitNameBuilder};
-use rustc_span::symbol::{Symbol, SymbolStr};
+use latinoc_span::symbol::{Symbol, SymbolStr};
 
 use super::PartitioningCx;
 use crate::partitioning::PreInliningPartitioning;

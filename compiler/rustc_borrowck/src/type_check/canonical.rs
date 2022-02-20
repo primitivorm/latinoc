@@ -4,8 +4,8 @@ use rustc_infer::infer::canonical::Canonical;
 use rustc_infer::traits::query::NoSolution;
 use rustc_middle::mir::ConstraintCategory;
 use rustc_middle::ty::{self, ToPredicate, TypeFoldable};
-use rustc_span::def_id::DefId;
-use rustc_span::Span;
+use latinoc_span::def_id::DefId;
+use latinoc_span::Span;
 use rustc_trait_selection::traits::query::type_op::{self, TypeOpOutput};
 use rustc_trait_selection::traits::query::Fallible;
 

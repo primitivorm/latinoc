@@ -13,6 +13,6 @@ rustc_errors = { path = "../rustc_errors" }
 rustc_feature = { path = "../rustc_feature" }
 latinoc_parse = { path = "../latinoc_parse" }
 rustc_session = { path = "../rustc_session" }
-rustc_span = { path = "../rustc_span" }
+latinoc_span = { path = "../latinoc_span" }
 rustc_target = { path = "../rustc_target" }
-rustc_ast = { path = "../rustc_ast" }
+latinoc_ast = { path = "../latinoc_ast" }

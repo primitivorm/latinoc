@@ -2,8 +2,8 @@ use super::{write_code, DecorationInfo};
 use crate::html::format::Buffer;
 use expect_test::expect_file;
 use rustc_data_structures::fx::FxHashMap;
-use rustc_span::create_default_session_globals_then;
-use rustc_span::edition::Edition;
+use latinoc_span::create_default_session_globals_then;
+use latinoc_span::edition::Edition;
 
 const STYLE: &str = r#"
 <style>

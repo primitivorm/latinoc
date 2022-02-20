@@ -2,15 +2,15 @@ pub use crate::passes::BoxedResolver;
 use crate::util;
 
 use latinoc_parse::new_parser_from_source_str;
-use rustc_ast::token;
-use rustc_ast::{self as ast, MetaItemKind};
+use latinoc_ast::token;
+use latinoc_ast::{self as ast, MetaItemKind};
 use rustc_codegen_ssa::traits::CodegenBackend;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::sync::Lrc;
 use rustc_data_structures::OnDrop;
 use rustc_errors::registry::Registry;
 use rustc_errors::{ErrorReported, Handler};
-use rustc_lint::LintStore;
+use latinoc_lint::LintStore;
 use rustc_middle::ty;
 use rustc_query_impl::QueryCtxt;
 use rustc_session::config::{self, ErrorOutputType, Input, OutputFilenames};
@@ -18,7 +18,7 @@ use rustc_session::early_error;
 use rustc_session::lint;
 use rustc_session::parse::{CrateConfig, ParseSess};
 use rustc_session::{DiagnosticOutput, Session};
-use rustc_span::source_map::{FileLoader, FileName};
+use latinoc_span::source_map::{FileLoader, FileName};
 use std::path::PathBuf;
 use std::result;
 use std::sync::{Arc, Mutex};
@@ -82,7 +82,7 @@ impl Compiler {
 
 /// Converts strings provided as `--cfg [cfgspec]` into a `crate_cfg`.
 pub fn parse_cfgspecs(cfgspecs: Vec<String>) -> FxHashSet<(String, Option<String>)> {
-    rustc_span::create_default_session_if_not_set_then(move |_| {
+    latinoc_span::create_default_session_if_not_set_then(move |_| {
         let cfg = cfgspecs
             .into_iter()
             .map(|s| {
@@ -218,7 +218,7 @@ pub fn create_compiler_and_run<R>(config: Config, f: impl FnOnce(&Compiler) -> R
         override_queries: config.override_queries,
     };
 
-    rustc_span::with_source_map(compiler.sess.parse_sess.clone_source_map(), move || {
+    latinoc_span::with_source_map(compiler.sess.parse_sess.clone_source_map(), move || {
         let r = {
             let _sess_abort_error = OnDrop(|| {
                 compiler.sess.finish_diagnostics(registry);

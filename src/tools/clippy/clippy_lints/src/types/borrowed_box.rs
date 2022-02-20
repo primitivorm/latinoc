@@ -5,7 +5,7 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{self as hir, GenericArg, GenericBounds, GenericParamKind};
 use rustc_hir::{HirId, Lifetime, MutTy, Mutability, Node, QPath, TyKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 
 use super::BORROWED_BOX;
 

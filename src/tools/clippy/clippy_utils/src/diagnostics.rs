@@ -8,10 +8,10 @@
 //! Thank you!
 //! ~The `INTERNAL_METADATA_COLLECTOR` lint
 
+use latinoc_lint::{LateContext, Lint, LintContext};
+use latinoc_span::source_map::{MultiSpan, Span};
 use rustc_errors::{Applicability, DiagnosticBuilder};
 use rustc_hir::HirId;
-use rustc_lint::{LateContext, Lint, LintContext};
-use rustc_span::source_map::{MultiSpan, Span};
 use std::env;
 
 fn docs_link(diag: &mut DiagnosticBuilder<'_>, lint: &'static Lint) {

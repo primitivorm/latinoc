@@ -9,19 +9,19 @@
 #[macro_use]
 extern crate tracing;
 
-use rustc_ast as ast;
-use rustc_ast::token::{self, Nonterminal, Token, TokenKind};
-use rustc_ast::tokenstream::{self, AttributesData, CanSynthesizeMissingTokens, LazyTokenStream};
-use rustc_ast::tokenstream::{AttrAnnotatedTokenStream, AttrAnnotatedTokenTree};
-use rustc_ast::tokenstream::{Spacing, TokenStream};
-use rustc_ast::AstLike;
-use rustc_ast::Attribute;
-use rustc_ast::{AttrItem, MetaItem};
+use latinoc_ast as ast;
+use latinoc_ast::token::{self, Nonterminal, Token, TokenKind};
+use latinoc_ast::tokenstream::{self, AttributesData, CanSynthesizeMissingTokens, LazyTokenStream};
+use latinoc_ast::tokenstream::{AttrAnnotatedTokenStream, AttrAnnotatedTokenTree};
+use latinoc_ast::tokenstream::{Spacing, TokenStream};
+use latinoc_ast::AstLike;
+use latinoc_ast::Attribute;
+use latinoc_ast::{AttrItem, MetaItem};
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::{Applicability, Diagnostic, FatalError, Level, PResult};
 use rustc_session::parse::ParseSess;
-use rustc_span::{FileName, SourceFile, Span};
+use latinoc_span::{FileName, SourceFile, Span};
 
 use std::path::Path;
 use std::str;

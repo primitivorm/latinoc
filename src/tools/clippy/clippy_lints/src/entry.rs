@@ -13,9 +13,9 @@ use rustc_hir::{
     intravisit::{walk_expr, ErasedMap, NestedVisitorMap, Visitor},
     Block, Expr, ExprKind, Guard, HirId, Pat, Stmt, StmtKind, UnOp,
 };
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{Span, SyntaxContext, DUMMY_SP};
+use latinoc_span::{Span, SyntaxContext, DUMMY_SP};
 
 declare_clippy_lint! {
     /// ### What it does

@@ -6,7 +6,7 @@ use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_macros::HashStable;
 use rustc_query_system::ich::{NodeIdHashingMode, StableHashingContext};
-use rustc_span::def_id::LocalDefId;
+use latinoc_span::def_id::LocalDefId;
 use std::hash::Hash;
 
 /// Represents the levels of accessibility an item can have.

@@ -5,7 +5,7 @@ use crate::common::TypeKind;
 use crate::mir::place::PlaceRef;
 use rustc_middle::ty::layout::TyAndLayout;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 use rustc_target::abi::call::{ArgAbi, CastTarget, FnAbi, Reg};
 use rustc_target::abi::{AddressSpace, Integer};
 

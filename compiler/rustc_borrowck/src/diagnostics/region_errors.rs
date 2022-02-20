@@ -8,8 +8,8 @@ use rustc_infer::infer::{
 use rustc_middle::mir::{ConstraintCategory, ReturnConstraint};
 use rustc_middle::ty::subst::Subst;
 use rustc_middle::ty::{self, RegionVid, Ty};
-use rustc_span::symbol::{kw, sym};
-use rustc_span::{BytePos, Span};
+use latinoc_span::symbol::{kw, sym};
+use latinoc_span::{BytePos, Span};
 
 use crate::borrowck_errors;
 

@@ -5,9 +5,9 @@
 //! ```
 //! #![feature(rustc_private)]
 //!
-//! extern crate rustc_span;
+//! extern crate latinoc_span;
 //!
-//! use rustc_span::edition::Edition;
+//! use latinoc_span::edition::Edition;
 //! use rustdoc::html::markdown::{HeadingOffset, IdMap, Markdown, ErrorCodes};
 //!
 //! let s = "My *markdown* _text_";
@@ -29,8 +29,8 @@ use rustc_data_structures::fx::FxHashMap;
 use rustc_hir::def_id::DefId;
 use rustc_hir::HirId;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::edition::Edition;
-use rustc_span::Span;
+use latinoc_span::edition::Edition;
+use latinoc_span::Span;
 
 use std::borrow::Cow;
 use std::cell::RefCell;

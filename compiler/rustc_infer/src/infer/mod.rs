@@ -31,8 +31,8 @@ pub use rustc_middle::ty::IntVarValue;
 use rustc_middle::ty::{self, GenericParamDefKind, InferConst, Ty, TyCtxt};
 use rustc_middle::ty::{ConstVid, FloatVid, IntVid, TyVid};
 use rustc_session::config::BorrowckMode;
-use rustc_span::symbol::Symbol;
-use rustc_span::Span;
+use latinoc_span::symbol::Symbol;
+use latinoc_span::Span;
 
 use std::cell::{Cell, Ref, RefCell};
 use std::collections::BTreeMap;
@@ -564,7 +564,7 @@ impl TyCtxtInferExt<'tcx> for TyCtxt<'tcx> {
 }
 
 impl<'tcx> InferCtxtBuilder<'tcx> {
-    /// Used only by `rustc_typeck` during body type-checking/inference,
+    /// Used only by `latinoc_typeck` during body type-checking/inference,
     /// will initialize `in_progress_typeck_results` with fresh `TypeckResults`.
     /// Will also change the scope for opaque type defining use checks to the given owner.
     pub fn with_fresh_in_progress_typeck_results(mut self, table_owner: LocalDefId) -> Self {

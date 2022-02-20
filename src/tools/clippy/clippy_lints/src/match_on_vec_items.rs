@@ -4,10 +4,10 @@ use clippy_utils::ty::{is_type_diagnostic_item, is_type_lang_item};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind, LangItem, MatchSource};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::sym;
+use latinoc_span::sym;
 
 declare_clippy_lint! {
     /// ### What it does

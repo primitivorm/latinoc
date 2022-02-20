@@ -3,7 +3,7 @@
 use std::cmp;
 use std::iter::Peekable;
 
-use rustc_span::BytePos;
+use latinoc_span::BytePos;
 
 use crate::comment::{find_comment_end, rewrite_comment, FindUncommented};
 use crate::config::lists::*;

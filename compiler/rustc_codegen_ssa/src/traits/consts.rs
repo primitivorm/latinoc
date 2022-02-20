@@ -2,7 +2,7 @@ use super::BackendTypes;
 use crate::mir::place::PlaceRef;
 use rustc_middle::mir::interpret::{Allocation, Scalar};
 use rustc_middle::ty::layout::TyAndLayout;
-use rustc_span::Symbol;
+use latinoc_span::Symbol;
 use rustc_target::abi::{self, Size};
 
 pub trait ConstMethods<'tcx>: BackendTypes {

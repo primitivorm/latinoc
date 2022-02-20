@@ -1,4 +1,4 @@
-//! Utilities for manipulating and extracting information from `rustc_ast::ast`.
+//! Utilities for manipulating and extracting information from `latinoc_ast::ast`.
 //!
 //! - The `eq_foobar` functions test for semantic equality but ignores `NodeId`s and `Span`s.
 
@@ -6,9 +6,9 @@
 
 use crate::{both, over};
 use if_chain::if_chain;
-use rustc_ast::ptr::P;
-use rustc_ast::{self as ast, *};
-use rustc_span::symbol::Ident;
+use latinoc_ast::ptr::P;
+use latinoc_ast::{self as ast, *};
+use latinoc_span::symbol::Ident;
 use std::mem;
 
 pub mod ident_iter;

@@ -30,9 +30,9 @@ use rustc_middle::ty::{self, SymbolName, Ty, TyCtxt};
 use rustc_serialize::{opaque, Encodable, Encoder};
 use rustc_session::config::CrateType;
 use rustc_session::cstore::{ForeignModule, LinkagePreference, NativeLib};
-use rustc_span::symbol::{sym, Ident, Symbol};
-use rustc_span::{self, ExternalSource, FileName, SourceFile, Span, SyntaxContext};
-use rustc_span::{
+use latinoc_span::symbol::{sym, Ident, Symbol};
+use latinoc_span::{self, ExternalSource, FileName, SourceFile, Span, SyntaxContext};
+use latinoc_span::{
     hygiene::{ExpnIndex, HygieneEncodeContext, MacroKind},
     RealFileName,
 };
@@ -178,7 +178,7 @@ impl<'a, 'tcx> Encodable<EncodeContext<'a, 'tcx>> for ExpnIndex {
 
 impl<'a, 'tcx> Encodable<EncodeContext<'a, 'tcx>> for SyntaxContext {
     fn encode(&self, s: &mut EncodeContext<'a, 'tcx>) -> opaque::EncodeResult {
-        rustc_span::hygiene::raw_encode_syntax_context(*self, &s.hygiene_ctxt, s)
+        latinoc_span::hygiene::raw_encode_syntax_context(*self, &s.hygiene_ctxt, s)
     }
 }
 
@@ -229,7 +229,7 @@ impl<'a, 'tcx> Encodable<EncodeContext<'a, 'tcx>> for Span {
         // limited surface that proc-macros can expose.
         //
         // IMPORTANT: If this is ever changed, be sure to update
-        // `rustc_span::hygiene::raw_encode_expn_id` to handle
+        // `latinoc_span::hygiene::raw_encode_expn_id` to handle
         // encoding `ExpnData` for proc-macro crates.
         if s.is_proc_macro {
             SyntaxContext::root().encode(s)?;
@@ -478,7 +478,7 @@ impl<'a, 'tcx> EncodeContext<'a, 'tcx> {
         ))
     }
 
-    fn encode_source_map(&mut self) -> Lazy<[rustc_span::SourceFile]> {
+    fn encode_source_map(&mut self) -> Lazy<[latinoc_span::SourceFile]> {
         let source_map = self.tcx.sess.source_map();
         let all_source_files = source_map.files();
 

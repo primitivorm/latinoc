@@ -8,7 +8,7 @@ use std::fmt::Write;
 use rustc_data_structures::fx::{FxHashMap, FxIndexMap};
 use rustc_hir as hir;
 use rustc_hir::def_id::{DefId, LocalDefId};
-use rustc_span::{Span, Symbol};
+use latinoc_span::{Span, Symbol};
 
 use super::{Ty, TyCtxt};
 

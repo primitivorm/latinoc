@@ -18,7 +18,7 @@ use rustc_middle::ty::{
     subst::SubstsRef,
     Const, Ty, TyCtxt,
 };
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 use std::convert::TryInto;
 use std::ops::ControlFlow;
 

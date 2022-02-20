@@ -3,9 +3,9 @@
 use crate::def_id::DefId;
 use crate::{lang_items, LangItem, LanguageItems};
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::stable_map::StableMap;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
 use std::lazy::SyncLazy;
 

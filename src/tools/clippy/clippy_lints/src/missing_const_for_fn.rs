@@ -2,15 +2,15 @@ use clippy_utils::diagnostics::span_lint;
 use clippy_utils::qualify_min_const_fn::is_min_const_fn;
 use clippy_utils::ty::has_drop;
 use clippy_utils::{fn_has_unsatisfiable_preds, is_entrypoint_fn, meets_msrv, msrvs, trait_ref_of_method};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_span::Span;
+use latinoc_typeck::hir_ty_to_ty;
 use rustc_hir as hir;
 use rustc_hir::intravisit::FnKind;
 use rustc_hir::{Body, Constness, FnDecl, GenericParamKind, HirId};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::Span;
-use rustc_typeck::hir_ty_to_ty;
 
 declare_clippy_lint! {
     /// ### What it does

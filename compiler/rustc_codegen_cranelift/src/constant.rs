@@ -7,7 +7,7 @@ use rustc_middle::mir::interpret::{
     read_target_uint, AllocId, Allocation, ConstValue, ErrorHandled, GlobalAlloc, Scalar,
 };
 use rustc_middle::ty::ConstKind;
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 
 use cranelift_codegen::ir::GlobalValueData;
 use cranelift_module::*;

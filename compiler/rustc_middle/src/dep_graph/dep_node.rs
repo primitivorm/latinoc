@@ -64,7 +64,7 @@ use rustc_hir::def_id::{CrateNum, DefId, LocalDefId, CRATE_DEF_INDEX};
 use rustc_hir::definitions::DefPathHash;
 use rustc_hir::HirId;
 use rustc_query_system::dep_graph::FingerprintStyle;
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 use std::hash::Hash;
 
 pub use rustc_query_system::dep_graph::{DepContext, DepNodeParams};

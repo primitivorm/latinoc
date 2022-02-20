@@ -75,7 +75,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             stack = &stack[..index + FREE.len()];
         }
 
-        const TYPECK_ITEM_BODIES: &str = "rustc_typeck::check::typeck_item_bodies";
+        const TYPECK_ITEM_BODIES: &str = "latinoc_typeck::check::typeck_item_bodies";
         if let Some(index) = stack.find(TYPECK_ITEM_BODIES) {
             stack = &stack[..index + TYPECK_ITEM_BODIES.len()];
         }

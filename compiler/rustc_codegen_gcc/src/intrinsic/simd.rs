@@ -7,7 +7,7 @@ use rustc_hir as hir;
 use rustc_middle::span_bug;
 use rustc_middle::ty::layout::HasTyCtxt;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::{Span, Symbol, sym};
+use latinoc_span::{Span, Symbol, sym};
 
 use crate::builder::Builder;
 

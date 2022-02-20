@@ -1,14 +1,14 @@
 use clippy_utils::diagnostics::span_lint_and_then;
 use if_chain::if_chain;
+use latinoc_lint::{LateContext, LateLintPass};
+use latinoc_span::{BytePos, Pos, Span};
+use latinoc_typeck::hir_ty_to_ty;
 use rustc_errors::Applicability;
 use rustc_hir::{Item, ItemKind};
-use rustc_lint::{LateContext, LateLintPass};
 use rustc_middle::mir::interpret::ConstValue;
 use rustc_middle::ty::layout::LayoutOf;
 use rustc_middle::ty::{self, ConstKind};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::{BytePos, Pos, Span};
-use rustc_typeck::hir_ty_to_ty;
 
 declare_clippy_lint! {
     /// ### What it does

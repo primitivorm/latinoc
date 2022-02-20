@@ -15,5 +15,5 @@ rustc_hir = { path = "../rustc_hir" }
 rustc_index = { path = "../rustc_index" }
 rustc_middle = { path = "../rustc_middle" }
 rustc_session = { path = "../rustc_session" }
-rustc_span = { path = "../rustc_span" }
+latinoc_span = { path = "../latinoc_span" }
 rustc_target = { path = "../rustc_target" }

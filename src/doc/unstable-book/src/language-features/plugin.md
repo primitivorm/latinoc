@@ -39,18 +39,18 @@ that warns about any item named `lintme`.
 ```rust,ignore (requires-stage-2)
 #![feature(box_syntax, rustc_private)]
 
-extern crate rustc_ast;
+extern crate latinoc_ast;
 
 // Load rustc as a plugin to get macros
 extern crate latinoc_driver;
 #[macro_use]
-extern crate rustc_lint;
+extern crate latinoc_lint;
 #[macro_use]
 extern crate rustc_session;
 
 use latinoc_driver::plugin::Registry;
-use rustc_lint::{EarlyContext, EarlyLintPass, LintArray, LintContext, LintPass};
-use rustc_ast::ast;
+use latinoc_lint::{EarlyContext, EarlyLintPass, LintArray, LintContext, LintPass};
+use latinoc_ast::ast;
 declare_lint!(TEST_LINT, Warn, "Warn about items named 'lintme'");
 
 declare_lint_pass!(Pass => [TEST_LINT]);

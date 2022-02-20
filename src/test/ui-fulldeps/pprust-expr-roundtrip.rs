@@ -19,23 +19,23 @@
 
 #![feature(rustc_private)]
 
-extern crate rustc_ast;
+extern crate latinoc_ast;
 extern crate rustc_ast_pretty;
 extern crate rustc_data_structures;
 extern crate latinoc_parse;
 extern crate rustc_session;
-extern crate rustc_span;
+extern crate latinoc_span;
 
-use rustc_ast::mut_visit::{self, visit_clobber, MutVisitor};
-use rustc_ast::ptr::P;
-use rustc_ast::*;
+use latinoc_ast::mut_visit::{self, visit_clobber, MutVisitor};
+use latinoc_ast::ptr::P;
+use latinoc_ast::*;
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::thin_vec::ThinVec;
 use latinoc_parse::new_parser_from_source_str;
 use rustc_session::parse::ParseSess;
-use rustc_span::source_map::FilePathMapping;
-use rustc_span::source_map::{FileName, Spanned, DUMMY_SP};
-use rustc_span::symbol::Ident;
+use latinoc_span::source_map::FilePathMapping;
+use latinoc_span::source_map::{FileName, Spanned, DUMMY_SP};
+use latinoc_span::symbol::Ident;
 
 fn parse_expr(ps: &ParseSess, src: &str) -> Option<P<Expr>> {
     let src_as_string = src.to_string();
@@ -203,7 +203,7 @@ impl MutVisitor for AddParens {
 }
 
 fn main() {
-    rustc_span::create_default_session_globals_then(|| run());
+    latinoc_span::create_default_session_globals_then(|| run());
 }
 
 fn run() {

@@ -6,7 +6,7 @@ use rustc_middle::mir::{BasicBlock, Body, Operand, TerminatorKind};
 use rustc_middle::ty::subst::{GenericArg, InternalSubsts};
 use rustc_middle::ty::{self, AssocItem, AssocItemContainer, Instance, TyCtxt};
 use rustc_session::lint::builtin::UNCONDITIONAL_RECURSION;
-use rustc_span::Span;
+use latinoc_span::Span;
 use std::ops::ControlFlow;
 
 crate fn check<'tcx>(tcx: TyCtxt<'tcx>, body: &Body<'tcx>) {

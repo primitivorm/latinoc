@@ -7,7 +7,7 @@ use rustc_hir::LangItem;
 use rustc_middle::mir::interpret::ConstValue;
 use rustc_middle::ty::{self, layout::TyAndLayout, Ty, TyCtxt};
 use rustc_session::Session;
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use crate::base;
 use crate::traits::BuilderMethods;

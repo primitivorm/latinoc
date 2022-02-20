@@ -1,9 +1,9 @@
 use clippy_utils::consts::constant_simple;
 use clippy_utils::diagnostics::span_lint;
 use rustc_hir as hir;
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 declare_clippy_lint! {
     /// ### What it does
@@ -93,7 +93,7 @@ impl<'tcx> LateLintPass<'tcx> for Arithmetic {
                             hir::ExprKind::Lit(_lit) => (),
                             hir::ExprKind::Unary(hir::UnOp::Neg, expr) => {
                                 if let hir::ExprKind::Lit(lit) = &expr.kind {
-                                    if let rustc_ast::ast::LitKind::Int(1, _) = lit.node {
+                                    if let latinoc_ast::ast::LitKind::Int(1, _) = lit.node {
                                         span_lint(cx, INTEGER_ARITHMETIC, expr.span, "integer arithmetic detected");
                                         self.expr_span = Some(expr.span);
                                     }

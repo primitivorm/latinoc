@@ -7,7 +7,7 @@ use rustc_hir::def_id::DefId;
 use rustc_hir::intravisit::{self, NestedVisitorMap, Visitor};
 use rustc_hir::{ExprKind, GenericParam, GenericParamKind, HirId, Mod, Node};
 use rustc_middle::ty::TyCtxt;
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use std::path::{Path, PathBuf};
 

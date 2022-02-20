@@ -5,7 +5,7 @@ use std::fmt;
 use serde::{Serialize, Serializer};
 
 use rustc_hir::def::DefKind;
-use rustc_span::hygiene::MacroKind;
+use latinoc_span::hygiene::MacroKind;
 
 use crate::clean;
 

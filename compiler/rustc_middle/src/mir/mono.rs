@@ -9,8 +9,8 @@ use rustc_hir::def_id::{CrateNum, DefId, LOCAL_CRATE};
 use rustc_hir::{HirId, ItemId};
 use rustc_query_system::ich::{NodeIdHashingMode, StableHashingContext};
 use rustc_session::config::OptLevel;
-use rustc_span::source_map::Span;
-use rustc_span::symbol::Symbol;
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::Symbol;
 use std::fmt;
 use std::hash::Hash;
 

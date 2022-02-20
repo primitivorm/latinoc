@@ -5,9 +5,9 @@ use clippy_utils::source::snippet_with_applicability;
 use clippy_utils::ty::is_type_diagnostic_item;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, Mutability};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty, TyS};
-use rustc_span::sym;
+use latinoc_span::sym;
 
 pub(super) fn check(cx: &LateContext<'_>, self_arg: &Expr<'_>, arg: &Expr<'_>, method_name: &str) {
     let should_lint = match method_name {

@@ -1,9 +1,9 @@
+use latinoc_lint::{LateContext, LintContext};
+use latinoc_span::{sym, Span};
+use latinoc_typeck::hir_ty_to_ty;
 use rustc_hir as hir;
-use rustc_lint::{LateContext, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty;
-use rustc_span::{sym, Span};
-use rustc_typeck::hir_ty_to_ty;
 
 use if_chain::if_chain;
 

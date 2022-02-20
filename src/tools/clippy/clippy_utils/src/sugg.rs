@@ -3,14 +3,14 @@
 
 use crate::higher;
 use crate::source::{snippet, snippet_opt, snippet_with_context, snippet_with_macro_callsite};
-use rustc_ast::util::parser::AssocOp;
-use rustc_ast::{ast, token};
+use latinoc_ast::util::parser::AssocOp;
+use latinoc_ast::{ast, token};
 use rustc_ast_pretty::pprust::token_kind_to_string;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::{EarlyContext, LateContext, LintContext};
-use rustc_span::source_map::{CharPos, Span};
-use rustc_span::{BytePos, Pos, SyntaxContext};
+use latinoc_lint::{EarlyContext, LateContext, LintContext};
+use latinoc_span::source_map::{CharPos, Span};
+use latinoc_span::{BytePos, Pos, SyntaxContext};
 use std::borrow::Cow;
 use std::convert::TryInto;
 use std::fmt::Display;
@@ -163,7 +163,7 @@ impl<'a> Sugg<'a> {
 
     /// Prepare a suggestion from an expression.
     pub fn ast(cx: &EarlyContext<'_>, expr: &ast::Expr, default: &'a str) -> Self {
-        use rustc_ast::ast::RangeLimits;
+        use latinoc_ast::ast::RangeLimits;
 
         let snippet = if expr.span.from_expansion() {
             snippet_with_macro_callsite(cx, expr.span, default)
@@ -530,7 +530,7 @@ enum Associativity {
 /// associative.
 #[must_use]
 fn associativity(op: AssocOp) -> Associativity {
-    use rustc_ast::util::parser::AssocOp::{
+    use latinoc_ast::util::parser::AssocOp::{
         Add, As, Assign, AssignOp, BitAnd, BitOr, BitXor, Colon, Divide, DotDot, DotDotEq, Equal, Greater,
         GreaterEqual, LAnd, LOr, Less, LessEqual, Modulus, Multiply, NotEqual, ShiftLeft, ShiftRight, Subtract,
     };
@@ -546,7 +546,7 @@ fn associativity(op: AssocOp) -> Associativity {
 
 /// Converts a `hir::BinOp` to the corresponding assigning binary operator.
 fn hirbinop2assignop(op: hir::BinOp) -> AssocOp {
-    use rustc_ast::token::BinOpToken::{And, Caret, Minus, Or, Percent, Plus, Shl, Shr, Slash, Star};
+    use latinoc_ast::token::BinOpToken::{And, Caret, Minus, Or, Percent, Plus, Shl, Shr, Slash, Star};
 
     AssocOp::AssignOp(match op.node {
         hir::BinOpKind::Add => Plus,
@@ -573,10 +573,10 @@ fn hirbinop2assignop(op: hir::BinOp) -> AssocOp {
 
 /// Converts an `ast::BinOp` to the corresponding assigning binary operator.
 fn astbinop2assignop(op: ast::BinOp) -> AssocOp {
-    use rustc_ast::ast::BinOpKind::{
+    use latinoc_ast::ast::BinOpKind::{
         Add, And, BitAnd, BitOr, BitXor, Div, Eq, Ge, Gt, Le, Lt, Mul, Ne, Or, Rem, Shl, Shr, Sub,
     };
-    use rustc_ast::token::BinOpToken;
+    use latinoc_ast::token::BinOpToken;
 
     AssocOp::AssignOp(match op.node {
         Add => BinOpToken::Plus,
@@ -720,7 +720,7 @@ impl<T: LintContext> DiagnosticBuilderExt<T> for rustc_errors::DiagnosticBuilder
 mod test {
     use super::Sugg;
 
-    use rustc_ast::util::parser::AssocOp;
+    use latinoc_ast::util::parser::AssocOp;
     use std::borrow::Cow;
 
     const SUGGESTION: Sugg<'static> = Sugg::NonParen(Cow::Borrowed("function_call()"));

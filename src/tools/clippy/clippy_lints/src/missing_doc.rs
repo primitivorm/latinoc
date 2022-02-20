@@ -2,19 +2,19 @@
 // *rustc*'s
 // [`missing_doc`].
 //
-// [`missing_doc`]: https://github.com/rust-lang/rust/blob/cf9cf7c923eb01146971429044f216a3ca905e06/compiler/rustc_lint/src/builtin.rs#L415
+// [`missing_doc`]: https://github.com/rust-lang/rust/blob/cf9cf7c923eb01146971429044f216a3ca905e06/compiler/latinoc_lint/src/builtin.rs#L415
 //
 
 use clippy_utils::attrs::is_doc_hidden;
 use clippy_utils::diagnostics::span_lint;
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_hir as hir;
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::ty;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::def_id::CRATE_DEF_ID;
-use rustc_span::source_map::Span;
-use rustc_span::sym;
+use latinoc_span::def_id::CRATE_DEF_ID;
+use latinoc_span::source_map::Span;
+use latinoc_span::sym;
 
 declare_clippy_lint! {
     /// ### What it does

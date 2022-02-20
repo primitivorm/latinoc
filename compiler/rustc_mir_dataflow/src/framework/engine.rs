@@ -4,7 +4,7 @@ use std::borrow::BorrowMut;
 use std::ffi::OsString;
 use std::path::PathBuf;
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::work_queue::WorkQueue;
 use rustc_graphviz as dot;
 use rustc_hir::def_id::DefId;
@@ -13,7 +13,7 @@ use rustc_index::vec::{Idx, IndexVec};
 use rustc_middle::mir::{self, traversal, BasicBlock};
 use rustc_middle::mir::{create_dump_file, dump_enabled};
 use rustc_middle::ty::TyCtxt;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
 use super::fmt::DebugWithContext;
 use super::graphviz;

@@ -79,8 +79,8 @@ macro_rules! arena_types {
             [] upvars_mentioned: rustc_data_structures::fx::FxIndexMap<rustc_hir::HirId, rustc_hir::Upvar>,
             [] object_safety_violations: rustc_middle::traits::ObjectSafetyViolation,
             [] codegen_unit: rustc_middle::mir::mono::CodegenUnit<'tcx>,
-            [] attribute: rustc_ast::Attribute,
-            [] name_set: rustc_data_structures::fx::FxHashSet<rustc_span::symbol::Symbol>,
+            [] attribute: latinoc_ast::Attribute,
+            [] name_set: rustc_data_structures::fx::FxHashSet<latinoc_span::symbol::Symbol>,
             [] hir_id_set: rustc_hir::HirIdSet,
 
             // Interned types
@@ -90,10 +90,10 @@ macro_rules! arena_types {
             // Note that this deliberately duplicates items in the `rustc_hir::arena`,
             // since we need to allocate this type on both the `rustc_hir` arena
             // (during lowering) and the `librustc_middle` arena (for decoding MIR)
-            [decode] asm_template: rustc_ast::InlineAsmTemplatePiece,
+            [decode] asm_template: latinoc_ast::InlineAsmTemplatePiece,
 
             // This is used to decode the &'tcx [Span] for InlineAsm's line_spans.
-            [decode] span: rustc_span::Span,
+            [decode] span: latinoc_span::Span,
             [decode] used_trait_imports: rustc_data_structures::fx::FxHashSet<rustc_hir::def_id::LocalDefId>,
 
             [] dep_kind: rustc_middle::dep_graph::DepKindStruct,

@@ -3,16 +3,16 @@
 #![feature(rustc_private)]
 
 extern crate clippy_utils;
-extern crate rustc_ast;
+extern crate latinoc_ast;
 extern crate rustc_errors;
-extern crate rustc_lint;
+extern crate latinoc_lint;
 extern crate rustc_session;
-extern crate rustc_span;
+extern crate latinoc_span;
 
 use clippy_utils::diagnostics::{span_lint_and_help, span_lint_and_note, span_lint_and_sugg, span_lint_and_then};
-use rustc_ast::ast::Expr;
+use latinoc_ast::ast::Expr;
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
 
 declare_tool_lint! {

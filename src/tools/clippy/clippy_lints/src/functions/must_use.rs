@@ -1,14 +1,14 @@
-use rustc_ast::ast::Attribute;
+use latinoc_ast::ast::Attribute;
 use rustc_errors::Applicability;
 use rustc_hir::def_id::{DefIdSet, LocalDefId};
 use rustc_hir::{self as hir, def::Res, intravisit, QPath};
-use rustc_lint::{LateContext, LintContext};
+use latinoc_lint::{LateContext, LintContext};
 use rustc_middle::{
     hir::map::Map,
     lint::in_external_macro,
     ty::{self, Ty},
 };
-use rustc_span::{sym, Span};
+use latinoc_span::{sym, Span};
 
 use clippy_utils::attrs::is_proc_macro;
 use clippy_utils::diagnostics::{span_lint_and_help, span_lint_and_then};

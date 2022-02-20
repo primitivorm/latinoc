@@ -36,7 +36,7 @@ use rustc_middle::ty::{
     self, GenericParamDefKind, ToPredicate, Ty, TyCtxt, VtblEntry, WithConstness,
     COMMON_VTABLE_ENTRIES,
 };
-use rustc_span::{sym, Span};
+use latinoc_span::{sym, Span};
 use smallvec::SmallVec;
 
 use std::fmt::Debug;

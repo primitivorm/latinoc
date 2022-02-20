@@ -10,8 +10,8 @@ use std::collections::{BTreeSet, HashMap};
 /// ```ignore (pseudo-rust)
 /// # extern crate rustc_errors;
 /// # use rustc_errors::Applicability;
-/// # extern crate rustc_span;
-/// # use rustc_span::{symbol::Ident, Span};
+/// # extern crate latinoc_span;
+/// # use latinoc_span::{symbol::Ident, Span};
 /// # extern crate rust_middle;
 /// # use rustc_middle::ty::Ty;
 /// #[derive(SessionDiagnostic)]
@@ -388,7 +388,7 @@ impl<'a> SessionDiagnosticDeriveBuilder<'a> {
                 let formatted_str = self.build_format(&s.value(), attr.span());
                 match name {
                     "message" => {
-                        if type_matches_path(&info.ty, &["rustc_span", "Span"]) {
+                        if type_matches_path(&info.ty, &["latinoc_span", "Span"]) {
                             quote! {
                                 #diag.set_span(*#field_binding);
                                 #diag.set_primary_message(#formatted_str);
@@ -401,7 +401,7 @@ impl<'a> SessionDiagnosticDeriveBuilder<'a> {
                         }
                     }
                     "label" => {
-                        if type_matches_path(&info.ty, &["rustc_span", "Span"]) {
+                        if type_matches_path(&info.ty, &["latinoc_span", "Span"]) {
                             quote! {
                                 #diag.span_label(*#field_binding, #formatted_str);
                             }
@@ -431,7 +431,7 @@ impl<'a> SessionDiagnosticDeriveBuilder<'a> {
                         // Applicability) pair.
                         let (span, applicability) = (|| match &info.ty {
                             ty @ syn::Type::Path(..)
-                                if type_matches_path(ty, &["rustc_span", "Span"]) =>
+                                if type_matches_path(ty, &["latinoc_span", "Span"]) =>
                             {
                                 let binding = &info.binding.binding;
                                 Ok((
@@ -443,7 +443,7 @@ impl<'a> SessionDiagnosticDeriveBuilder<'a> {
                                 let mut span_idx = None;
                                 let mut applicability_idx = None;
                                 for (idx, elem) in tup.elems.iter().enumerate() {
-                                    if type_matches_path(elem, &["rustc_span", "Span"]) {
+                                    if type_matches_path(elem, &["latinoc_span", "Span"]) {
                                         if span_idx.is_none() {
                                             span_idx = Some(syn::Index::from(idx));
                                         } else {

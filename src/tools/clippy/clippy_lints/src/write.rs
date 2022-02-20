@@ -4,16 +4,16 @@ use std::ops::{Deref, Range};
 
 use clippy_utils::diagnostics::{span_lint, span_lint_and_sugg, span_lint_and_then};
 use clippy_utils::source::{snippet_opt, snippet_with_applicability};
-use rustc_ast::ast::{Expr, ExprKind, Impl, Item, ItemKind, MacCall, Path, StrLit, StrStyle};
-use rustc_ast::token::{self, LitKind};
-use rustc_ast::tokenstream::TokenStream;
+use latinoc_ast::ast::{Expr, ExprKind, Impl, Item, ItemKind, MacCall, Path, StrLit, StrStyle};
+use latinoc_ast::token::{self, LitKind};
+use latinoc_ast::tokenstream::TokenStream;
 use rustc_errors::Applicability;
 use latinoc_lexer::unescape::{self, EscapeError};
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use latinoc_parse::parser;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::symbol::{kw, Symbol};
-use rustc_span::{sym, BytePos, Span, DUMMY_SP};
+use latinoc_span::symbol::{kw, Symbol};
+use latinoc_span::{sym, BytePos, Span, DUMMY_SP};
 
 declare_clippy_lint! {
     /// ### What it does
@@ -512,7 +512,7 @@ impl Write {
         let expr = if is_write {
             match parser
                 .parse_expr()
-                .map(rustc_ast::ptr::P::into_inner)
+                .map(latinoc_ast::ptr::P::into_inner)
                 .map_err(|mut e| e.cancel())
             {
                 // write!(e, ...)

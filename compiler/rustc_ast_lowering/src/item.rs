@@ -2,18 +2,18 @@ use super::{AnonymousLifetimeMode, LoweringContext, ParamMode};
 use super::{ImplTraitContext, ImplTraitPosition};
 use crate::Arena;
 
-use rustc_ast::ptr::P;
-use rustc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
-use rustc_ast::*;
+use latinoc_ast::ptr::P;
+use latinoc_ast::visit::{self, AssocCtxt, FnCtxt, FnKind, Visitor};
+use latinoc_ast::*;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_errors::struct_span_err;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, Res};
 use rustc_hir::def_id::LocalDefId;
 use rustc_index::vec::Idx;
-use rustc_span::source_map::{respan, DesugaringKind};
-use rustc_span::symbol::{kw, sym, Ident};
-use rustc_span::Span;
+use latinoc_span::source_map::{respan, DesugaringKind};
+use latinoc_span::symbol::{kw, sym, Ident};
+use latinoc_span::Span;
 use rustc_target::spec::abi;
 use smallvec::{smallvec, SmallVec};
 use tracing::debug;
@@ -1114,7 +1114,7 @@ impl<'hir> LoweringContext<'_, 'hir> {
                     // This lets rustdoc render it correctly in documentation.
                     hir::PatKind::Binding(_, _, ident, _) => (ident, false),
                     hir::PatKind::Wild => {
-                        (Ident::with_dummy_span(rustc_span::symbol::kw::Underscore), false)
+                        (Ident::with_dummy_span(latinoc_span::symbol::kw::Underscore), false)
                     }
                     _ => {
                         // Replace the ident for bindings that aren't simple.

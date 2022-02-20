@@ -5,10 +5,10 @@ use clippy_utils::{path_to_local, path_to_local_id};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{BindingAnnotation, Block, Expr, ExprKind, HirId, Local, PatKind, Stmt, StmtKind};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 declare_clippy_lint! {
     /// ### What it does

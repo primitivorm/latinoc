@@ -18,7 +18,7 @@ use rustc_middle::mir::{
 use rustc_middle::traits::ObligationCause;
 use rustc_middle::traits::ObligationCauseCode;
 use rustc_middle::ty::{self, subst::SubstsRef, RegionVid, Ty, TyCtxt, TypeFoldable};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use crate::{
     constraints::{

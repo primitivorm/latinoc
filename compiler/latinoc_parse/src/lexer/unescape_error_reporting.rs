@@ -5,7 +5,7 @@ use std::ops::Range;
 
 use latinoc_lexer::unescape::{EscapeError, Mode};
 use rustc_errors::{pluralize, Applicability, Handler};
-use rustc_span::{BytePos, Span};
+use latinoc_span::{BytePos, Span};
 
 pub(crate) fn emit_unescape_error(
     handler: &Handler,

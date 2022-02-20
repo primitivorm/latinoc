@@ -1,5 +1,5 @@
 use crate::ich;
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::sorted_map::SortedMap;
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
@@ -9,9 +9,9 @@ use rustc_hir::def_id::{DefId, LocalDefId};
 use rustc_hir::definitions::{DefPathHash, Definitions};
 use rustc_session::cstore::CrateStore;
 use rustc_session::Session;
-use rustc_span::source_map::SourceMap;
-use rustc_span::symbol::Symbol;
-use rustc_span::{BytePos, CachingSourceMapView, SourceFile, Span, SpanData};
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::symbol::Symbol;
+use latinoc_span::{BytePos, CachingSourceMapView, SourceFile, Span, SpanData};
 
 fn compute_ignored_attr_names() -> FxHashSet<Symbol> {
     debug_assert!(!ich::IGNORED_ATTRIBUTES.is_empty());
@@ -192,7 +192,7 @@ impl<'a> HashStable<StableHashingContext<'a>> for ast::NodeId {
     }
 }
 
-impl<'a> rustc_span::HashStableContext for StableHashingContext<'a> {
+impl<'a> latinoc_span::HashStableContext for StableHashingContext<'a> {
     #[inline]
     fn hash_spans(&self) -> bool {
         self.hash_spans

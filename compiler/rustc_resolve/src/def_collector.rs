@@ -1,14 +1,14 @@
 use crate::{ImplTraitContext, Resolver};
-use rustc_ast::visit::{self, FnKind};
-use rustc_ast::walk_list;
-use rustc_ast::*;
+use latinoc_ast::visit::{self, FnKind};
+use latinoc_ast::walk_list;
+use latinoc_ast::*;
 use rustc_ast_lowering::ResolverAstLowering;
-use rustc_expand::expand::AstFragment;
+use latinoc_expand::expand::AstFragment;
 use rustc_hir::def_id::LocalDefId;
 use rustc_hir::definitions::*;
-use rustc_span::hygiene::LocalExpnId;
-use rustc_span::symbol::{kw, sym};
-use rustc_span::Span;
+use latinoc_span::hygiene::LocalExpnId;
+use latinoc_span::symbol::{kw, sym};
+use latinoc_span::Span;
 use tracing::debug;
 
 crate fn collect_definitions(

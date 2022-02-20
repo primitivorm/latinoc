@@ -27,8 +27,8 @@ use rustc_middle::ty::{
     TypeFoldable, WithConstness,
 };
 use rustc_session::DiagnosticMessageId;
-use rustc_span::symbol::{kw, sym};
-use rustc_span::{ExpnKind, MultiSpan, Span, DUMMY_SP};
+use latinoc_span::symbol::{kw, sym};
+use latinoc_span::{ExpnKind, MultiSpan, Span, DUMMY_SP};
 use std::fmt;
 use std::iter;
 
@@ -2109,7 +2109,7 @@ impl<'a, 'tcx> InferCtxtPrivExt<'tcx> for InferCtxt<'a, 'tcx> {
 /// Look for type `param` in an ADT being used only through a reference to confirm that suggesting
 /// `param: ?Sized` would be a valid constraint.
 struct FindTypeParam {
-    param: rustc_span::Symbol,
+    param: latinoc_span::Symbol,
     invalid_spans: Vec<Span>,
     nested: bool,
 }

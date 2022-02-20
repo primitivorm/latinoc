@@ -13,7 +13,7 @@ use rustc_index::vec::{Idx, IndexVec};
 use rustc_query_system::ich::StableHashingContext;
 use rustc_serialize::{self, Encodable, Encoder};
 use rustc_session::DataTypeKind;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 use rustc_target::abi::VariantIdx;
 
 use std::cell::RefCell;

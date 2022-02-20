@@ -15,9 +15,9 @@ use rustc_hir::{
     Body, FnDecl, FnRetTy, GenericArg, HirId, ImplItem, ImplItemKind, Item, ItemKind, Local, MutTy, QPath, TraitItem,
     TraitItemKind, TyKind,
 };
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 declare_clippy_lint! {
     /// ### What it does

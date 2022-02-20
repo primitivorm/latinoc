@@ -1,14 +1,14 @@
 use clippy_utils::diagnostics::{span_lint, span_lint_and_then};
-use rustc_ast::ast::{
+use latinoc_ast::ast::{
     self, Arm, AssocItem, AssocItemKind, Attribute, Block, FnDecl, Item, ItemKind, Local, Pat, PatKind,
 };
-use rustc_ast::visit::{walk_block, walk_expr, walk_pat, Visitor};
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_ast::visit::{walk_block, walk_expr, walk_pat, Visitor};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::Span;
-use rustc_span::sym;
-use rustc_span::symbol::{Ident, Symbol};
+use latinoc_span::source_map::Span;
+use latinoc_span::sym;
+use latinoc_span::symbol::{Ident, Symbol};
 use std::cmp::Ordering;
 
 declare_clippy_lint! {

@@ -4,7 +4,7 @@ use crate::prelude::*;
 
 use std::fmt::Write;
 
-use rustc_ast::ast::{InlineAsmOptions, InlineAsmTemplatePiece};
+use latinoc_ast::ast::{InlineAsmOptions, InlineAsmTemplatePiece};
 use rustc_middle::mir::InlineAsmOperand;
 use rustc_target::asm::*;
 

@@ -9,7 +9,7 @@ use rustc_target::abi::VariantIdx;
 
 use rustc_index::vec::{Idx, IndexVec};
 
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_target::spec::abi::Abi;
 
 use std::fmt;

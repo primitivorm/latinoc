@@ -6,7 +6,7 @@ use rustc_errors::{struct_span_err, DiagnosticBuilder};
 use rustc_hir as hir;
 use rustc_hir::def_id::DefId;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::{MultiSpan, Span};
+use latinoc_span::{MultiSpan, Span};
 use std::fmt;
 use std::iter;
 

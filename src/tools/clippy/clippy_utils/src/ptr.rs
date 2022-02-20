@@ -2,9 +2,9 @@ use crate::source::snippet;
 use crate::{path_to_local_id, strip_pat_refs};
 use rustc_hir::intravisit::{walk_expr, NestedVisitorMap, Visitor};
 use rustc_hir::{Body, BodyId, Expr, ExprKind, HirId, PatKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
-use rustc_span::Span;
+use latinoc_span::Span;
 use std::borrow::Cow;
 
 pub fn get_spans(

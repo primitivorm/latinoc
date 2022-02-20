@@ -4,7 +4,7 @@ use rustc_infer::infer::{InferOk, TyCtxtInferExt};
 use rustc_infer::traits;
 use rustc_middle::ty::subst::Subst;
 use rustc_middle::ty::{ToPredicate, WithConstness};
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 
 use super::*;
 

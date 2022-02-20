@@ -1,10 +1,10 @@
 use rustc_apfloat::Float;
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_middle::mir::interpret::{
     Allocation, ConstValue, LitToConstError, LitToConstInput, Scalar,
 };
 use rustc_middle::ty::{self, ParamEnv, TyCtxt};
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 use rustc_target::abi::Size;
 
 crate fn lit_to_const<'tcx>(

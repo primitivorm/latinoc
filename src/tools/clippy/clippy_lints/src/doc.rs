@@ -5,8 +5,8 @@ use clippy_utils::ty::{implements_trait, is_type_diagnostic_item};
 use clippy_utils::{is_entrypoint_fn, is_expn_of, match_panic_def_id, method_chain_args, return_ty};
 use if_chain::if_chain;
 use itertools::Itertools;
-use rustc_ast::ast::{Async, AttrKind, Attribute, Fn, FnRetTy, ItemKind};
-use rustc_ast::token::CommentKind;
+use latinoc_ast::ast::{Async, AttrKind, Attribute, Fn, FnRetTy, ItemKind};
+use latinoc_ast::token::CommentKind;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::emitter::EmitterWriter;
@@ -14,7 +14,7 @@ use rustc_errors::{Applicability, Handler};
 use rustc_hir as hir;
 use rustc_hir::intravisit::{self, NestedVisitorMap, Visitor};
 use rustc_hir::{AnonConst, Expr, ExprKind, QPath};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::hir::map::Map;
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty;
@@ -22,10 +22,10 @@ use latinoc_parse::maybe_new_parser_from_source_str;
 use latinoc_parse::parser::ForceCollect;
 use rustc_session::parse::ParseSess;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::def_id::LocalDefId;
-use rustc_span::edition::Edition;
-use rustc_span::source_map::{BytePos, FilePathMapping, MultiSpan, SourceMap, Span};
-use rustc_span::{sym, FileName, Pos};
+use latinoc_span::def_id::LocalDefId;
+use latinoc_span::edition::Edition;
+use latinoc_span::source_map::{BytePos, FilePathMapping, MultiSpan, SourceMap, Span};
+use latinoc_span::{sym, FileName, Pos};
 use std::io;
 use std::ops::Range;
 use std::thread;
@@ -363,8 +363,8 @@ fn lint_for_missing_headers<'tcx>(
 
 /// Cleanup documentation decoration.
 ///
-/// We can't use `rustc_ast::attr::AttributeMethods::with_desugared_doc` or
-/// `rustc_ast::parse::lexer::comments::strip_doc_comment_decoration` because we
+/// We can't use `latinoc_ast::attr::AttributeMethods::with_desugared_doc` or
+/// `latinoc_ast::parse::lexer::comments::strip_doc_comment_decoration` because we
 /// need to keep track of
 /// the spans but this function is inspired from the later.
 #[allow(clippy::cast_possible_truncation)]
@@ -611,7 +611,7 @@ fn get_current_span(spans: &[(usize, Span)], idx: usize) -> (usize, Span) {
 fn check_code(cx: &LateContext<'_>, text: &str, edition: Edition, span: Span) {
     fn has_needless_main(code: String, edition: Edition) -> bool {
         latinoc_driver::catch_fatal_errors(|| {
-            rustc_span::create_session_globals_then(edition, || {
+            latinoc_span::create_session_globals_then(edition, || {
                 let filename = FileName::anon_source_code(&code);
 
                 let sm = Lrc::new(SourceMap::new(FilePathMapping::empty()));

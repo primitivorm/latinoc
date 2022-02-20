@@ -1,7 +1,11 @@
+use latinoc_ast::mut_visit::{visit_clobber, MutVisitor, *};
+use latinoc_ast::ptr::P;
+use latinoc_ast::{self as ast, AttrVec, BlockCheckMode};
 use latinoc_parse::validate_attr;
-use rustc_ast::mut_visit::{visit_clobber, MutVisitor, *};
-use rustc_ast::ptr::P;
-use rustc_ast::{self as ast, AttrVec, BlockCheckMode};
+use latinoc_span::edition::Edition;
+use latinoc_span::lev_distance::find_best_match_for_name;
+use latinoc_span::source_map::FileLoader;
+use latinoc_span::symbol::{sym, Symbol};
 use rustc_codegen_ssa::traits::CodegenBackend;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 #[cfg(parallel_compiler)]
@@ -20,10 +24,6 @@ use rustc_session::config::{ErrorOutputType, Input, OutputFilenames};
 use rustc_session::lint::{self, BuiltinLintDiagnostics, LintBuffer};
 use rustc_session::parse::CrateConfig;
 use rustc_session::{early_error, filesearch, output, DiagnosticOutput, Session};
-use rustc_span::edition::Edition;
-use rustc_span::lev_distance::find_best_match_for_name;
-use rustc_span::source_map::FileLoader;
-use rustc_span::symbol::{sym, Symbol};
 use smallvec::SmallVec;
 use std::env;
 use std::env::consts::{DLL_PREFIX, DLL_SUFFIX};
@@ -141,7 +141,7 @@ pub fn setup_callbacks_and_run_in_thread_pool_with_globals<F: FnOnce() -> R + Se
     crate::callbacks::setup_callbacks();
 
     let main_handler = move || {
-        rustc_span::create_session_globals_then(edition, || {
+        latinoc_span::create_session_globals_then(edition, || {
             io::set_output_capture(stderr.clone());
             f()
         })
@@ -162,11 +162,11 @@ unsafe fn handle_deadlock() {
     rustc_data_structures::sync::assert_sync::<tls::ImplicitCtxt<'_, '_>>();
     let icx: &tls::ImplicitCtxt<'_, '_> = &*(context as *const tls::ImplicitCtxt<'_, '_>);
 
-    let session_globals = rustc_span::with_session_globals(|sg| sg as *const _);
+    let session_globals = latinoc_span::with_session_globals(|sg| sg as *const _);
     let session_globals = &*session_globals;
     thread::spawn(move || {
         tls::enter_context(icx, |_| {
-            rustc_span::set_session_globals_then(session_globals, || {
+            latinoc_span::set_session_globals_then(session_globals, || {
                 tls::with(|tcx| QueryCtxt::from_tcx(tcx).deadlock(&registry))
             })
         });
@@ -196,13 +196,13 @@ pub fn setup_callbacks_and_run_in_thread_pool_with_globals<F: FnOnce() -> R + Se
 
     let with_pool = move |pool: &rayon::ThreadPool| pool.install(f);
 
-    rustc_span::create_session_globals_then(edition, || {
-        rustc_span::with_session_globals(|session_globals| {
+    latinoc_span::create_session_globals_then(edition, || {
+        latinoc_span::with_session_globals(|session_globals| {
             // The main handler runs for each Rayon worker thread and sets up
             // the thread local rustc uses. `session_globals` is captured and set
             // on the new threads.
             let main_handler = move |thread: rayon::ThreadBuilder| {
-                rustc_span::set_session_globals_then(session_globals, || {
+                latinoc_span::set_session_globals_then(session_globals, || {
                     io::set_output_capture(stderr.clone());
                     thread.run()
                 })
@@ -256,7 +256,7 @@ pub fn get_codegen_backend(
         match backend_name.unwrap_or(DEFAULT_CODEGEN_BACKEND) {
             filename if filename.contains('.') => load_backend_from_dylib(filename.as_ref()),
             #[cfg(feature = "llvm")]
-            "llvm" => rustc_codegen_llvm::LlvmCodegenBackend::new,
+            "llvm" => latinoc_codegen_llvm::LlvmCodegenBackend::new,
             backend_name => get_codegen_sysroot(maybe_sysroot, backend_name),
         }
     });
@@ -816,7 +816,7 @@ impl<'a> MutVisitor for ReplaceBodyWithLoop<'a, '_> {
                 stmts: s.into_iter().collect(),
                 rules,
                 id: resolver.next_node_id(),
-                span: rustc_span::DUMMY_SP,
+                span: latinoc_span::DUMMY_SP,
                 tokens: None,
                 could_be_bare_literal: false,
             }
@@ -826,7 +826,7 @@ impl<'a> MutVisitor for ReplaceBodyWithLoop<'a, '_> {
             let expr = P(ast::Expr {
                 id: resolver.next_node_id(),
                 kind: ast::ExprKind::Block(P(b), None),
-                span: rustc_span::DUMMY_SP,
+                span: latinoc_span::DUMMY_SP,
                 attrs: AttrVec::new(),
                 tokens: None,
             });
@@ -834,7 +834,7 @@ impl<'a> MutVisitor for ReplaceBodyWithLoop<'a, '_> {
             ast::Stmt {
                 id: resolver.next_node_id(),
                 kind: ast::StmtKind::Expr(expr),
-                span: rustc_span::DUMMY_SP,
+                span: latinoc_span::DUMMY_SP,
             }
         }
 
@@ -842,14 +842,14 @@ impl<'a> MutVisitor for ReplaceBodyWithLoop<'a, '_> {
         let loop_expr = P(ast::Expr {
             kind: ast::ExprKind::Loop(P(empty_block), None),
             id: self.resolver.next_node_id(),
-            span: rustc_span::DUMMY_SP,
+            span: latinoc_span::DUMMY_SP,
             attrs: AttrVec::new(),
             tokens: None,
         });
 
         let loop_stmt = ast::Stmt {
             id: self.resolver.next_node_id(),
-            span: rustc_span::DUMMY_SP,
+            span: latinoc_span::DUMMY_SP,
             kind: ast::StmtKind::Expr(loop_expr),
         };
 

@@ -9,7 +9,7 @@ use crate::ty::{self, Lift, List, ParamConst, Ty, TyCtxt};
 use rustc_hir::def_id::DefId;
 use rustc_macros::HashStable;
 use rustc_serialize::{self, Decodable, Encodable};
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::{Span, DUMMY_SP};
 use smallvec::SmallVec;
 
 use core::intrinsics;

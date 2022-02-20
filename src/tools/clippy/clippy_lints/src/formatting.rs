@@ -2,11 +2,11 @@ use clippy_utils::diagnostics::{span_lint_and_help, span_lint_and_note};
 use clippy_utils::differing_macro_contexts;
 use clippy_utils::source::snippet_opt;
 use if_chain::if_chain;
-use rustc_ast::ast::{BinOpKind, Block, Expr, ExprKind, StmtKind, UnOp};
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_ast::ast::{BinOpKind, Block, Expr, ExprKind, StmtKind, UnOp};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 declare_clippy_lint! {
     /// ### What it does

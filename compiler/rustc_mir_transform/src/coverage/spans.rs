@@ -8,8 +8,8 @@ use rustc_middle::mir::{
     TerminatorKind,
 };
 use rustc_middle::ty::TyCtxt;
-use rustc_span::source_map::original_sp;
-use rustc_span::{BytePos, ExpnKind, MacroKind, Span, Symbol};
+use latinoc_span::source_map::original_sp;
+use latinoc_span::{BytePos, ExpnKind, MacroKind, Span, Symbol};
 
 use std::cell::RefCell;
 use std::cmp::Ordering;

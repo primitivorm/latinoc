@@ -6,7 +6,7 @@ use rustc_infer::infer::{InferCtxt, RegionResolutionError, SubregionOrigin, TyCt
 use rustc_infer::traits::{Normalized, ObligationCause, TraitEngine, TraitEngineExt};
 use rustc_middle::ty::error::TypeError;
 use rustc_middle::ty::{self, Ty, TyCtxt, TypeFoldable};
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_trait_selection::traits::query::type_op;
 use rustc_trait_selection::traits::{SelectionContext, TraitEngineExt as _};
 use rustc_traits::{type_op_ascribe_user_type_with_span, type_op_prove_predicate_with_cause};

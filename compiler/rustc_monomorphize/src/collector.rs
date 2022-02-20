@@ -199,7 +199,7 @@ use rustc_middle::{middle::codegen_fn_attrs::CodegenFnAttrFlags, mir::visit::TyC
 use rustc_session::config::EntryFnType;
 use rustc_session::lint::builtin::LARGE_ASSIGNMENTS;
 use rustc_session::Limit;
-use rustc_span::source_map::{dummy_spanned, respan, Span, Spanned, DUMMY_SP};
+use latinoc_span::source_map::{dummy_spanned, respan, Span, Spanned, DUMMY_SP};
 use rustc_target::abi::Size;
 use smallvec::SmallVec;
 use std::iter;

@@ -1,18 +1,18 @@
 use std::borrow::Cow;
 use std::collections::BTreeMap;
 
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::sym;
+use latinoc_typeck::hir_ty_to_ty;
 use rustc_errors::DiagnosticBuilder;
 use rustc_hir as hir;
 use rustc_hir::intravisit::{walk_body, walk_expr, walk_inf, walk_ty, NestedVisitorMap, Visitor};
 use rustc_hir::{Body, Expr, ExprKind, GenericArg, Item, ItemKind, QPath, TyKind};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::hir::map::Map;
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty::{Ty, TyS, TypeckResults};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Span;
-use rustc_span::symbol::sym;
-use rustc_typeck::hir_ty_to_ty;
 
 use if_chain::if_chain;
 
@@ -64,7 +64,7 @@ declare_lint_pass!(ImplicitHasher => [IMPLICIT_HASHER]);
 impl<'tcx> LateLintPass<'tcx> for ImplicitHasher {
     #[allow(clippy::cast_possible_truncation, clippy::too_many_lines)]
     fn check_item(&mut self, cx: &LateContext<'tcx>, item: &'tcx Item<'_>) {
-        use rustc_span::BytePos;
+        use latinoc_span::BytePos;
 
         fn suggestion<'tcx>(
             cx: &LateContext<'tcx>,

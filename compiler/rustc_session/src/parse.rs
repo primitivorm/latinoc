@@ -2,16 +2,16 @@
 //! It also serves as an input to the parser itself.
 
 use crate::lint::{BufferedEarlyLint, BuiltinLintDiagnostics, Lint, LintId};
-use rustc_ast::node_id::NodeId;
+use latinoc_ast::node_id::NodeId;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::sync::{Lock, Lrc};
 use rustc_errors::{emitter::SilentEmitter, ColorConfig, Handler};
 use rustc_errors::{error_code, Applicability, DiagnosticBuilder};
 use rustc_feature::{find_feature_issue, GateIssue, UnstableFeatures};
-use rustc_span::edition::Edition;
-use rustc_span::hygiene::ExpnId;
-use rustc_span::source_map::{FilePathMapping, SourceMap};
-use rustc_span::{MultiSpan, Span, Symbol};
+use latinoc_span::edition::Edition;
+use latinoc_span::hygiene::ExpnId;
+use latinoc_span::source_map::{FilePathMapping, SourceMap};
+use latinoc_span::{MultiSpan, Span, Symbol};
 
 use std::str;
 
@@ -74,7 +74,7 @@ impl SymbolGallery {
 }
 
 /// Construct a diagnostic for a language feature error due to the given `span`.
-/// The `feature`'s `Symbol` is the one you used in `active.rs` and `rustc_span::symbols`.
+/// The `feature`'s `Symbol` is the one you used in `active.rs` and `latinoc_span::symbols`.
 pub fn feature_err<'a>(
     sess: &'a ParseSess,
     feature: Symbol,

@@ -7,7 +7,7 @@ use AttributeType::*;
 use crate::{Features, Stability};
 
 use rustc_data_structures::fx::FxHashMap;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
 use std::lazy::SyncLazy;
 

@@ -436,7 +436,7 @@ impl<'mir, 'tcx: 'mir, M: Machine<'mir, 'tcx>> InterpCx<'mir, 'tcx, M> {
                 // We have to implement all "object safe receivers".  Currently we
                 // support built-in pointers `(&, &mut, Box)` as well as unsized-self.  We do
                 // not yet support custom self types.
-                // Also see `compiler/rustc_codegen_llvm/src/abi.rs` and `compiler/rustc_codegen_ssa/src/mir/block.rs`.
+                // Also see `compiler/latinoc_codegen_llvm/src/abi.rs` and `compiler/rustc_codegen_ssa/src/mir/block.rs`.
                 let receiver_place = match args[0].layout.ty.builtin_deref(true) {
                     Some(_) => {
                         // Built-in pointer.

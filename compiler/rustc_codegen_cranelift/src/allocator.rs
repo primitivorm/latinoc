@@ -4,7 +4,7 @@
 use crate::prelude::*;
 
 use cranelift_codegen::binemit::{NullStackMapSink, NullTrapSink};
-use rustc_ast::expand::allocator::{AllocatorKind, AllocatorTy, ALLOCATOR_METHODS};
+use latinoc_ast::expand::allocator::{AllocatorKind, AllocatorTy, ALLOCATOR_METHODS};
 
 /// Returns whether an allocator shim was created
 pub(crate) fn codegen(

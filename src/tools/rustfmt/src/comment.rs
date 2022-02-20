@@ -3,7 +3,7 @@
 use std::{self, borrow::Cow, iter};
 
 use itertools::{multipeek, MultiPeek};
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use crate::config::Config;
 use crate::rewrite::RewriteContext;

@@ -13,15 +13,15 @@ use crate::{CrateLint, Determinacy, ExternPreludeEntry, Module, ModuleKind, Modu
 use crate::{NameBinding, NameBindingKind, ParentScope, PathResult, PerNS, ResolutionError};
 use crate::{Resolver, ResolverArenas, Segment, ToNameBinding, VisResolutionError};
 
-use rustc_ast::visit::{self, AssocCtxt, Visitor};
-use rustc_ast::{self as ast, AssocItem, AssocItemKind, MetaItemKind, StmtKind};
-use rustc_ast::{Block, Fn, ForeignItem, ForeignItemKind, Impl, Item, ItemKind, NodeId};
+use latinoc_ast::visit::{self, AssocCtxt, Visitor};
+use latinoc_ast::{self as ast, AssocItem, AssocItemKind, MetaItemKind, StmtKind};
+use latinoc_ast::{Block, Fn, ForeignItem, ForeignItemKind, Impl, Item, ItemKind, NodeId};
 use rustc_ast_lowering::ResolverAstLowering;
 use rustc_attr as attr;
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::{struct_span_err, Applicability};
-use rustc_expand::base::SyntaxExtension;
-use rustc_expand::expand::AstFragment;
+use latinoc_expand::base::SyntaxExtension;
+use latinoc_expand::expand::AstFragment;
 use rustc_hir::def::{self, *};
 use rustc_hir::def_id::{DefId, LocalDefId, CRATE_DEF_INDEX};
 use rustc_metadata::creader::LoadedMacro;
@@ -29,10 +29,10 @@ use rustc_middle::bug;
 use rustc_middle::hir::exports::Export;
 use rustc_middle::ty;
 use rustc_session::cstore::CrateStore;
-use rustc_span::hygiene::{ExpnId, LocalExpnId, MacroKind};
-use rustc_span::source_map::{respan, Spanned};
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::Span;
+use latinoc_span::hygiene::{ExpnId, LocalExpnId, MacroKind};
+use latinoc_span::source_map::{respan, Spanned};
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::Span;
 
 use std::cell::Cell;
 use std::ptr;

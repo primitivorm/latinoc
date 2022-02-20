@@ -3,7 +3,7 @@ use clippy_utils::ty::{is_must_use_ty, match_type};
 use clippy_utils::{is_must_use_func_call, paths};
 use if_chain::if_chain;
 use rustc_hir::{Local, PatKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty::subst::GenericArgKind;
 use rustc_session::{declare_lint_pass, declare_tool_lint};

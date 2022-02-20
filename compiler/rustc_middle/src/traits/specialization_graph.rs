@@ -4,7 +4,7 @@ use crate::ty::{self, TyCtxt};
 use rustc_data_structures::fx::FxIndexMap;
 use rustc_errors::ErrorReported;
 use rustc_hir::def_id::{DefId, DefIdMap};
-use rustc_span::symbol::Ident;
+use latinoc_span::symbol::Ident;
 
 /// A per-trait graph of impls in specialization order. At the moment, this
 /// graph forms a tree rooted with the trait itself, with all other nodes

@@ -825,6 +825,9 @@ impl<'a> Builder<'a> {
         // Provide a RUSTC for this command to use.
         cmd.env("RUSTC", &self.initial_rustc);
 
+        // TODO: proman.
+        println!(">>> tool.rs RUSTC: {:?}", &self.initial_rustc);
+
         cmd
     }
 }

@@ -1,4 +1,4 @@
-use rustc_ast::entry::EntryPointType;
+use latinoc_ast::entry::EntryPointType;
 use rustc_errors::struct_span_err;
 use rustc_hir::def_id::{DefId, CRATE_DEF_ID, CRATE_DEF_INDEX, LOCAL_CRATE};
 use rustc_hir::itemlikevisit::ItemLikeVisitor;
@@ -9,8 +9,8 @@ use rustc_middle::ty::TyCtxt;
 use rustc_session::config::{CrateType, EntryFnType};
 use rustc_session::parse::feature_err;
 use rustc_session::Session;
-use rustc_span::symbol::sym;
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::symbol::sym;
+use latinoc_span::{Span, DUMMY_SP};
 
 struct EntryContext<'a, 'tcx> {
     session: &'a Session,

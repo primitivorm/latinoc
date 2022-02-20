@@ -7,7 +7,7 @@ use rustc_middle::ty::subst::SubstsRef;
 use rustc_middle::ty::util::{needs_drop_components, AlwaysRequiresDrop};
 use rustc_middle::ty::{self, Ty, TyCtxt};
 use rustc_session::Limit;
-use rustc_span::{sym, DUMMY_SP};
+use latinoc_span::{sym, DUMMY_SP};
 
 type NeedsDropResult<T> = Result<T, AlwaysRequiresDrop>;
 

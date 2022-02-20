@@ -8,9 +8,9 @@ use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::LangItem::{OptionSome, ResultOk};
 use rustc_hir::{Expr, ExprKind, Pat, PatKind, StmtKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty;
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 /// Check for unnecessary `if let` usage in a for loop where only the `Some` or `Ok` variant of the
 /// iterator element is used.

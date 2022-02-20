@@ -21,6 +21,8 @@ use std::process::{Child, Command};
 use std::str::FromStr;
 use std::time::Instant;
 
+// use std::ffi::OsString;
+
 fn main() {
     let args = env::args_os().skip(1).collect::<Vec<_>>();
 
@@ -34,24 +36,71 @@ fn main() {
         Err(_) => 0,
     };
 
+    eprintln!(">>>>>> rust.rs main");
+
     // Use a different compiler for build scripts, since there may not yet be a
     // libstd for the real compiler to use. However, if Cargo is attempting to
     // determine the version of the compiler, the real compiler needs to be
     // used. Currently, these two states are differentiated based on whether
     // --target and -vV is/isn't passed.
+    let can_change;
     let (rustc, libdir) = if target.is_none() && version.is_none() {
+        eprintln!(
+            ">>> RUSTC_SNAPSHOT: {:?}",
+            env::var_os("RUSTC_SNAPSHOT")
+                .unwrap_or_else(|| panic!("{:?} was not set", "RUSTC_SNAPSHOT"))
+        );
+        eprintln!(
+            ">>> RUSTC_SNAPSHOT_LIBDIR: {:?}",
+            env::var_os("RUSTC_SNAPSHOT_LIBDIR")
+                .unwrap_or_else(|| panic!("{:?} was not set", "RUSTC_SNAPSHOT_LIBDIR"))
+        );
+        can_change = 1;
         ("RUSTC_SNAPSHOT", "RUSTC_SNAPSHOT_LIBDIR")
     } else {
+        eprintln!(
+            ">>> RUSTC_REAL: {:?}",
+            env::var_os("RUSTC_REAL").unwrap_or_else(|| panic!("{:?} was not set", "RUSTC_REAL"))
+        );
+        eprintln!(
+            ">>> RUSTC_LIBDIR: {:?}",
+            env::var_os("RUSTC_LIBDIR")
+                .unwrap_or_else(|| panic!("{:?} was not set", "RUSTC_LIBDIR"))
+        );
+        can_change = 0;
         ("RUSTC_REAL", "RUSTC_LIBDIR")
     };
     let stage = env::var("RUSTC_STAGE").expect("RUSTC_STAGE was not set");
-    let sysroot = env::var_os("RUSTC_SYSROOT").expect("RUSTC_SYSROOT was not set");
+    let /*mut*/ sysroot = env::var_os("RUSTC_SYSROOT").expect("RUSTC_SYSROOT was not set");
     let on_fail = env::var_os("RUSTC_ON_FAIL").map(Command::new);
 
-    let rustc = env::var_os(rustc).unwrap_or_else(|| panic!("{:?} was not set", rustc));
-    let libdir = env::var_os(libdir).unwrap_or_else(|| panic!("{:?} was not set", libdir));
+    let /*mut*/ rustc = env::var_os(rustc).unwrap_or_else(|| panic!("{:?} was not set", rustc));
+    let /*mut*/ libdir = env::var_os(libdir).unwrap_or_else(|| panic!("{:?} was not set", libdir));
+
+    // TODO: proman.
+    // if can_change == 1 && stage == "1" {
+    //     sysroot = OsString::from_str(
+    //         "C:\\Users\\ciber\\.rustup\\toolchains\\1.58.1-x86_64-pc-windows-msvc\\bin",
+    //     )
+    //     .expect("Error al intentar asignar valor a OsString");
+    //     rustc = OsString::from_str(
+    //         "C:\\Users\\ciber\\.rustup\\toolchains\\1.58.1-x86_64-pc-windows-msvc\\bin\\rustc.exe",
+    //     )
+    //     .expect("Error al intentar asignar valor a OsString");
+    //     libdir = OsString::from_str(
+    //         "C:\\Users\\ciber\\.rustup\\toolchains\\1.58.1-x86_64-pc-windows-msvc\\bin",
+    //     )
+    //     .expect("Error al intentar asignar valor a OsString");
+    // }
+
     let mut dylib_path = bootstrap::util::dylib_path();
     dylib_path.insert(0, PathBuf::from(&libdir));
+
+    eprintln!(">>> can_change: {:?}", can_change);
+    eprintln!(">>> stage: {:?}", stage);
+    eprintln!(">>> sysroot: {:?}", sysroot);
+    eprintln!(">>> rustc: {:?}", rustc);
+    eprintln!(">>> dylib_path: {:?}", dylib_path);
 
     let mut cmd = Command::new(rustc);
     cmd.args(&args).env(bootstrap::util::dylib_path_var(), env::join_paths(&dylib_path).unwrap());

@@ -1,16 +1,16 @@
 // use crate::lexer::unicode_chars::UNICODE_ARRAY;
 use latinoc_lexer::unescape::{self, Mode};
 use latinoc_lexer::{Base, DocStyle, RawStrError};
-use rustc_ast::ast::{self, AttrStyle};
-use rustc_ast::token::{self, CommentKind, Token, TokenKind};
-use rustc_ast::tokenstream::{Spacing, TokenStream};
-use rustc_ast::util::unicode::contains_text_flow_control_chars;
+use latinoc_ast::ast::{self, AttrStyle};
+use latinoc_ast::token::{self, CommentKind, Token, TokenKind};
+use latinoc_ast::tokenstream::{Spacing, TokenStream};
+use latinoc_ast::util::unicode::contains_text_flow_control_chars;
 use rustc_errors::{error_code, Applicability, DiagnosticBuilder, FatalError, PResult};
 use rustc_session::lint::builtin::TEXT_DIRECTION_CODEPOINT_IN_COMMENT;
 use rustc_session::lint::BuiltinLintDiagnostics;
 use rustc_session::parse::ParseSess;
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::{/*edition::Edition,*/ BytePos, Pos, Span};
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::{/*edition::Edition,*/ BytePos, Pos, Span};
 
 use tracing::debug;
 
@@ -150,7 +150,7 @@ impl<'a> StringReader<'a> {
     }
 
     /// Turns simple `latinoc_lexer::TokenKind` enum into a rich
-    /// `rustc_ast::TokenKind`. This turns strings into interned
+    /// `latinoc_ast::TokenKind`. This turns strings into interned
     /// symbols and runs additional validation.
     fn cook_lexer_token(
         &self,

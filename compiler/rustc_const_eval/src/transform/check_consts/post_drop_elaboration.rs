@@ -1,7 +1,7 @@
 use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::{self, BasicBlock, Location};
 use rustc_middle::ty::TyCtxt;
-use rustc_span::{symbol::sym, Span};
+use latinoc_span::{symbol::sym, Span};
 
 use super::check::Qualifs;
 use super::ops::{self, NonConstOp};

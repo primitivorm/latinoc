@@ -1277,7 +1277,7 @@ impl Build {
                         || target
                             .map(|t| self.config.profiler_enabled(t))
                             .unwrap_or_else(|| self.config.any_profiler_enabled()))
-                    && (dep != "rustc_codegen_llvm" || self.config.llvm_enabled())
+                    && (dep != "latinoc_codegen_llvm" || self.config.llvm_enabled())
                 {
                     list.push(*dep);
                 }

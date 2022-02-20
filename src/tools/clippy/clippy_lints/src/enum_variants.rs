@@ -4,10 +4,10 @@ use clippy_utils::diagnostics::{span_lint, span_lint_and_help};
 use clippy_utils::source::is_present_in_source;
 use clippy_utils::str_utils::{self, count_match_end, count_match_start};
 use rustc_hir::{EnumDef, Item, ItemKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::Span;
-use rustc_span::symbol::Symbol;
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::Symbol;
 
 declare_clippy_lint! {
     /// ### What it does

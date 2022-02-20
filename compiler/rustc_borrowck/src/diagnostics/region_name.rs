@@ -7,8 +7,8 @@ use rustc_hir::def::{DefKind, Res};
 use rustc_middle::ty::print::RegionHighlightMode;
 use rustc_middle::ty::subst::{GenericArgKind, SubstsRef};
 use rustc_middle::ty::{self, RegionVid, Ty};
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::{Span, DUMMY_SP};
 
 use crate::{nll::ToRegionVid, universal_regions::DefiningTy, MirBorrowckCtxt};
 

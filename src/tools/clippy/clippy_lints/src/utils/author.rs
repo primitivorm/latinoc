@@ -2,13 +2,13 @@
 //! to generate a clippy lint detecting said code automatically.
 
 use clippy_utils::get_attr;
-use rustc_ast::ast::{LitFloatType, LitKind};
-use rustc_ast::walk_list;
+use latinoc_ast::ast::{LitFloatType, LitKind};
+use latinoc_ast::walk_list;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_hir as hir;
 use rustc_hir::intravisit::{NestedVisitorMap, Visitor};
 use rustc_hir::{Block, Expr, ExprKind, Pat, PatKind, QPath, Stmt, StmtKind, TyKind};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::hir::map::Map;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
 

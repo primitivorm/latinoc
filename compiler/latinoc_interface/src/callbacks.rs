@@ -13,19 +13,19 @@ use rustc_errors::{Diagnostic, TRACK_DIAGNOSTICS};
 use rustc_middle::ty::tls;
 use std::fmt;
 
-/// This is a callback from `rustc_ast` as it cannot access the implicit state
+/// This is a callback from `latinoc_ast` as it cannot access the implicit state
 /// in `rustc_middle` otherwise.
-fn span_debug(span: rustc_span::Span, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+fn span_debug(span: latinoc_span::Span, f: &mut fmt::Formatter<'_>) -> fmt::Result {
     tls::with_opt(|tcx| {
         if let Some(tcx) = tcx {
-            rustc_span::debug_with_source_map(span, f, tcx.sess.source_map())
+            latinoc_span::debug_with_source_map(span, f, tcx.sess.source_map())
         } else {
-            rustc_span::default_span_debug(span, f)
+            latinoc_span::default_span_debug(span, f)
         }
     })
 }
 
-fn track_span_parent(def_id: rustc_span::def_id::LocalDefId) {
+fn track_span_parent(def_id: latinoc_span::def_id::LocalDefId) {
     tls::with_opt(|tcx| {
         if let Some(tcx) = tcx {
             let _span = tcx.source_span(def_id);
@@ -35,7 +35,7 @@ fn track_span_parent(def_id: rustc_span::def_id::LocalDefId) {
     })
 }
 
-/// This is a callback from `rustc_ast` as it cannot access the implicit state
+/// This is a callback from `latinoc_ast` as it cannot access the implicit state
 /// in `rustc_middle` otherwise. It is used to when diagnostic messages are
 /// emitted and stores them in the current query, if there is one.
 fn track_diagnostic(diagnostic: &Diagnostic) {
@@ -65,8 +65,8 @@ fn def_id_debug(def_id: rustc_hir::def_id::DefId, f: &mut fmt::Formatter<'_>) ->
 /// Sets up the callbacks in prior crates which we want to refer to the
 /// TyCtxt in.
 pub fn setup_callbacks() {
-    rustc_span::SPAN_DEBUG.swap(&(span_debug as fn(_, &mut fmt::Formatter<'_>) -> _));
-    rustc_span::SPAN_TRACK.swap(&(track_span_parent as fn(_)));
+    latinoc_span::SPAN_DEBUG.swap(&(span_debug as fn(_, &mut fmt::Formatter<'_>) -> _));
+    latinoc_span::SPAN_TRACK.swap(&(track_span_parent as fn(_)));
     rustc_hir::def_id::DEF_ID_DEBUG.swap(&(def_id_debug as fn(_, &mut fmt::Formatter<'_>) -> _));
     TRACK_DIAGNOSTICS.swap(&(track_diagnostic as fn(&_)));
 }

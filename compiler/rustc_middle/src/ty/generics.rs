@@ -1,11 +1,11 @@
 use crate::middle::resolve_lifetime::ObjectLifetimeDefault;
 use crate::ty;
 use crate::ty::subst::{Subst, SubstsRef};
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_hir::def_id::DefId;
-use rustc_span::symbol::Symbol;
-use rustc_span::Span;
+use latinoc_span::symbol::Symbol;
+use latinoc_span::Span;
 
 use super::{EarlyBoundRegion, InstantiatedPredicates, ParamConst, ParamTy, Predicate, TyCtxt};
 

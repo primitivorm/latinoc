@@ -116,7 +116,7 @@ can be deleted, e.g., the first block in the example above when going from `1.x`
 to `2.x`.
 
 | Note: Only formatting changes with default options need to be gated. |
-| --- |
+| -------------------------------------------------------------------- |
 
 ### A quick tour of Rustfmt
 
@@ -138,8 +138,8 @@ format.
 
 There are different nodes for every kind of item and expression in Rust. For
 more details see the source code in the compiler -
-[ast.rs](https://github.com/rust-lang/rust/blob/master/compiler/rustc_ast/src/ast.rs) - and/or the
-[docs](https://doc.rust-lang.org/nightly/nightly-rustc/rustc_ast/ast/index.html).
+[ast.rs](https://github.com/rust-lang/rust/blob/master/compiler/latinoc_ast/src/ast.rs) - and/or the
+[docs](https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_ast/ast/index.html).
 
 Many nodes in the AST (but not all, annoyingly) have a `Span`. A `Span` is a
 range in the source code, it can easily be converted to a snippet of source

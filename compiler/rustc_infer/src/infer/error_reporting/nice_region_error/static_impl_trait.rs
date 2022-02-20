@@ -12,8 +12,8 @@ use rustc_hir::{self as hir, GenericBound, Item, ItemKind, Lifetime, LifetimeNam
 use rustc_middle::ty::{
     self, AssocItemContainer, RegionKind, Ty, TyCtxt, TypeFoldable, TypeVisitor,
 };
-use rustc_span::symbol::Ident;
-use rustc_span::{MultiSpan, Span};
+use latinoc_span::symbol::Ident;
+use latinoc_span::{MultiSpan, Span};
 
 use std::ops::ControlFlow;
 

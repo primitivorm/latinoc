@@ -6,7 +6,7 @@
 //! Paths in macros, imports, expressions, types, patterns are resolved here.
 //! Label and lifetime names are resolved here as well.
 //!
-//! Type-relative name resolution (methods, fields, associated items) happens in `rustc_typeck`.
+//! Type-relative name resolution (methods, fields, associated items) happens in `latinoc_typeck`.
 
 #![doc(html_root_url = "https://doc.rust-lang.org/nightly/nightly-rustc/")]
 #![feature(box_patterns)]
@@ -29,20 +29,20 @@ pub use rustc_hir::def::{Namespace, PerNS};
 use Determinacy::*;
 
 use rustc_arena::{DroplessArena, TypedArena};
-use rustc_ast::node_id::NodeMap;
-use rustc_ast::ptr::P;
-use rustc_ast::visit::{self, Visitor};
-use rustc_ast::{self as ast, NodeId};
-use rustc_ast::{Crate, CRATE_NODE_ID};
-use rustc_ast::{Expr, ExprKind, LitKind};
-use rustc_ast::{ItemKind, ModKind, Path};
+use latinoc_ast::node_id::NodeMap;
+use latinoc_ast::ptr::P;
+use latinoc_ast::visit::{self, Visitor};
+use latinoc_ast::{self as ast, NodeId};
+use latinoc_ast::{Crate, CRATE_NODE_ID};
+use latinoc_ast::{Expr, ExprKind, LitKind};
+use latinoc_ast::{ItemKind, ModKind, Path};
 use rustc_ast_lowering::ResolverAstLowering;
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet, FxIndexMap};
 use rustc_data_structures::ptr_key::PtrKey;
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder};
-use rustc_expand::base::{DeriveResolutions, SyntaxExtension, SyntaxExtensionKind};
+use latinoc_expand::base::{DeriveResolutions, SyntaxExtension, SyntaxExtensionKind};
 use rustc_hir::def::Namespace::*;
 use rustc_hir::def::{self, CtorOf, DefKind, NonMacroAttrKind, PartialRes};
 use rustc_hir::def_id::{CrateNum, DefId, DefIdMap, DefPathHash, LocalDefId};
@@ -60,11 +60,11 @@ use rustc_session::cstore::{CrateStore, MetadataLoaderDyn};
 use rustc_session::lint;
 use rustc_session::lint::{BuiltinLintDiagnostics, LintBuffer};
 use rustc_session::Session;
-use rustc_span::edition::Edition;
-use rustc_span::hygiene::{ExpnId, ExpnKind, LocalExpnId, MacroKind, SyntaxContext, Transparency};
-use rustc_span::source_map::Spanned;
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::edition::Edition;
+use latinoc_span::hygiene::{ExpnId, ExpnKind, LocalExpnId, MacroKind, SyntaxContext, Transparency};
+use latinoc_span::source_map::Spanned;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::{Span, DUMMY_SP};
 
 use smallvec::{smallvec, SmallVec};
 use std::cell::{Cell, RefCell};

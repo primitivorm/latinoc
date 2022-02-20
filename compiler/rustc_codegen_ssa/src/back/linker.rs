@@ -1,7 +1,7 @@
 use super::archive;
 use super::command::Command;
 use super::symbol_export;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use std::ffi::{OsStr, OsString};
 use std::fs::{self, File};
@@ -16,7 +16,7 @@ use rustc_middle::ty::TyCtxt;
 use rustc_serialize::{json, Encoder};
 use rustc_session::config::{self, CrateType, DebugInfo, LinkerPluginLto, Lto, OptLevel, Strip};
 use rustc_session::Session;
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 use rustc_target::spec::{LinkOutputKind, LinkerFlavor, LldFlavor};
 
 use cc::windows_registry;

@@ -2,11 +2,11 @@ use clippy_utils::last_path_segment;
 use clippy_utils::source::snippet;
 use clippy_utils::ty::is_normalizable;
 use if_chain::if_chain;
+use latinoc_lint::LateContext;
+use latinoc_span::DUMMY_SP;
+use latinoc_typeck::check::{cast::CastCheck, FnCtxt, Inherited};
 use rustc_hir::{Expr, GenericArg, QPath, TyKind};
-use rustc_lint::LateContext;
 use rustc_middle::ty::{self, cast::CastKind, Ty};
-use rustc_span::DUMMY_SP;
-use rustc_typeck::check::{cast::CastCheck, FnCtxt, Inherited};
 
 /// Gets the snippet of `Bar` in `…::transmute<Foo, &Bar>`. If that snippet is
 /// not available , use

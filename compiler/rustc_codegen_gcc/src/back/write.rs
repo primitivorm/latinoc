@@ -5,7 +5,7 @@ use rustc_codegen_ssa::{CompiledModule, ModuleCodegen};
 use rustc_codegen_ssa::back::write::{CodegenContext, EmitObj, ModuleConfig};
 use rustc_errors::Handler;
 use rustc_session::config::OutputType;
-use rustc_span::fatal_error::FatalError;
+use latinoc_span::fatal_error::FatalError;
 use rustc_target::spec::SplitDebuginfo;
 
 use crate::{GccCodegenBackend, GccContext};

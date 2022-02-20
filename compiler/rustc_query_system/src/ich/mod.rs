@@ -1,7 +1,7 @@
 //! ICH - Incremental Compilation Hash
 
 pub use self::hcx::{NodeIdHashingMode, StableHashingContext};
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
 mod hcx;
 mod impls_hir;

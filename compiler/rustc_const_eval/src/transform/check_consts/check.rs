@@ -13,7 +13,7 @@ use rustc_middle::ty::subst::{GenericArgKind, InternalSubsts};
 use rustc_middle::ty::{self, adjustment::PointerCast, Instance, InstanceDef, Ty, TyCtxt};
 use rustc_middle::ty::{Binder, TraitPredicate, TraitRef};
 use rustc_mir_dataflow::{self, Analysis};
-use rustc_span::{sym, Span, Symbol};
+use latinoc_span::{sym, Span, Symbol};
 use rustc_trait_selection::traits::error_reporting::InferCtxtExt;
 use rustc_trait_selection::traits::{self, SelectionContext, TraitEngine};
 

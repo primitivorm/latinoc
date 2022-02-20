@@ -1,11 +1,11 @@
-use crate::rustc_lint::LintContext;
+use crate::latinoc_lint::LintContext;
 use clippy_utils::diagnostics::span_lint_and_sugg;
 use clippy_utils::source::snippet_with_macro_callsite;
 use clippy_utils::sugg;
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{Block, ExprKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
 
 declare_clippy_lint! {

@@ -10,9 +10,9 @@ use rustc_middle::{
         LocalKind, Location,
     },
 };
-use rustc_span::source_map::DesugaringKind;
-use rustc_span::symbol::{kw, Symbol};
-use rustc_span::{BytePos, Span};
+use latinoc_span::source_map::DesugaringKind;
+use latinoc_span::symbol::{kw, Symbol};
+use latinoc_span::{BytePos, Span};
 
 use crate::diagnostics::BorrowedContentSource;
 use crate::MirBorrowckCtxt;

@@ -2,11 +2,11 @@
 //!
 //! These are the built-in lints that are emitted direct in the main
 //! compiler code, rather than using their own custom pass. Those
-//! lints are all available in `rustc_lint::builtin`.
+//! lints are all available in `latinoc_lint::builtin`.
 
 use crate::{declare_lint, declare_lint_pass, FutureIncompatibilityReason};
-use rustc_span::edition::Edition;
-use rustc_span::symbol::sym;
+use latinoc_span::edition::Edition;
+use latinoc_span::symbol::sym;
 
 declare_lint! {
     /// The `forbidden_lint_groups` lint detects violations of
@@ -352,7 +352,7 @@ declare_lint! {
     pub MUST_NOT_SUSPEND,
     Allow,
     "use of a `#[must_not_suspend]` value across a yield point",
-    @feature_gate = rustc_span::symbol::sym::must_not_suspend;
+    @feature_gate = latinoc_span::symbol::sym::must_not_suspend;
 }
 
 declare_lint! {

@@ -1,7 +1,7 @@
 use rustc_data_structures::temp_dir::MaybeTempDir;
 use rustc_session::cstore::DllImport;
 use rustc_session::Session;
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 
 use std::io;
 use std::path::{Path, PathBuf};

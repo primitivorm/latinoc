@@ -4,14 +4,14 @@ use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::source::snippet_opt;
 use clippy_utils::ty::is_type_diagnostic_item;
 use clippy_utils::LimitStack;
-use rustc_ast::ast::Attribute;
+use latinoc_ast::ast::Attribute;
 use rustc_hir::intravisit::{walk_expr, FnKind, NestedVisitorMap, Visitor};
 use rustc_hir::{Body, Expr, ExprKind, FnDecl, HirId};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::hir::map::Map;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::Span;
-use rustc_span::{sym, BytePos};
+use latinoc_span::source_map::Span;
+use latinoc_span::{sym, BytePos};
 
 declare_clippy_lint! {
     /// ### What it does

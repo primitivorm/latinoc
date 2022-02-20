@@ -3,10 +3,10 @@
 use std::borrow::Cow;
 use std::cmp::{max, min, Ordering};
 
+use latinoc_span::{symbol, BytePos, Span, DUMMY_SP};
 use regex::Regex;
-use rustc_ast::visit;
-use rustc_ast::{ast, ptr};
-use rustc_span::{symbol, BytePos, Span, DUMMY_SP};
+use latinoc_ast::visit;
+use latinoc_ast::{ast, ptr};
 
 use crate::attr::filter_inline_attrs;
 use crate::comment::{
@@ -587,7 +587,7 @@ impl<'a> FmtVisitor<'a> {
                 self.buffer.clear();
             }
 
-            fn is_type(ty: &Option<rustc_ast::ptr::P<ast::Ty>>) -> bool {
+            fn is_type(ty: &Option<latinoc_ast::ptr::P<ast::Ty>>) -> bool {
                 if let Some(lty) = ty {
                     if let ast::TyKind::ImplTrait(..) = lty.kind {
                         return false;
@@ -596,20 +596,20 @@ impl<'a> FmtVisitor<'a> {
                 true
             }
 
-            fn is_opaque(ty: &Option<rustc_ast::ptr::P<ast::Ty>>) -> bool {
+            fn is_opaque(ty: &Option<latinoc_ast::ptr::P<ast::Ty>>) -> bool {
                 !is_type(ty)
             }
 
             fn both_type(
-                a: &Option<rustc_ast::ptr::P<ast::Ty>>,
-                b: &Option<rustc_ast::ptr::P<ast::Ty>>,
+                a: &Option<latinoc_ast::ptr::P<ast::Ty>>,
+                b: &Option<latinoc_ast::ptr::P<ast::Ty>>,
             ) -> bool {
                 is_type(a) && is_type(b)
             }
 
             fn both_opaque(
-                a: &Option<rustc_ast::ptr::P<ast::Ty>>,
-                b: &Option<rustc_ast::ptr::P<ast::Ty>>,
+                a: &Option<latinoc_ast::ptr::P<ast::Ty>>,
+                b: &Option<latinoc_ast::ptr::P<ast::Ty>>,
             ) -> bool {
                 is_opaque(a) && is_opaque(b)
             }

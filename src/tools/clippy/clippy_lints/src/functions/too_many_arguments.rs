@@ -1,6 +1,6 @@
 use rustc_hir::{self as hir, intravisit};
-use rustc_lint::LateContext;
-use rustc_span::Span;
+use latinoc_lint::LateContext;
+use latinoc_span::Span;
 use rustc_target::spec::abi::Abi;
 
 use clippy_utils::diagnostics::span_lint;

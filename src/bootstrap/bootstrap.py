@@ -15,6 +15,7 @@ import tempfile
 
 from time import time
 
+
 def support_xz():
     try:
         with tempfile.NamedTemporaryFile(delete=False) as temp_file:
@@ -25,6 +26,7 @@ def support_xz():
     except tarfile.CompressionError:
         return False
 
+
 def get(base, url, path, checksums, verbose=False, do_verify=True):
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         temp_path = temp_file.name
@@ -32,7 +34,8 @@ def get(base, url, path, checksums, verbose=False, do_verify=True):
     try:
         if do_verify:
             if url not in checksums:
-                raise RuntimeError("src/stage0.json doesn't contain a checksum for {}".format(url))
+                raise RuntimeError(
+                    "src/stage0.json doesn't contain a checksum for {}".format(url))
             sha256 = checksums[url]
             if os.path.exists(path):
                 if verify(path, sha256, False):
@@ -42,7 +45,7 @@ def get(base, url, path, checksums, verbose=False, do_verify=True):
                 else:
                     if verbose:
                         print("ignoring already-download file",
-                            path, "due to failed verification")
+                              path, "due to failed verification")
                     os.unlink(path)
         download(temp_path, "{}/{}".format(base, url), True, verbose)
         if do_verify and not verify(temp_path, sha256, verbose):
@@ -184,7 +187,7 @@ def default_build_triple(verbose):
     default_encoding = sys.getdefaultencoding()
     try:
         version = subprocess.check_output(["rustc", "--version", "--verbose"],
-                stderr=subprocess.DEVNULL)
+                                          stderr=subprocess.DEVNULL)
         version = version.decode(default_encoding)
         host = next(x for x in version.split('\n') if x.startswith("host: "))
         triple = host.split("host: ")[1]
@@ -267,7 +270,7 @@ def default_build_triple(verbose):
 
     if cputype == 'powerpc' and ostype == 'unknown-freebsd':
         cputype = subprocess.check_output(
-              ['uname', '-p']).strip().decode(default_encoding)
+            ['uname', '-p']).strip().decode(default_encoding)
     cputype_mapper = {
         'BePC': 'i686',
         'aarch64': 'aarch64',
@@ -366,6 +369,7 @@ class Stage0Toolchain:
 
 class RustBuild(object):
     """Provide all the methods required to build Rust"""
+
     def __init__(self):
         self.checksums_sha256 = {}
         self.stage0_compiler = None
@@ -409,18 +413,22 @@ class RustBuild(object):
             filename = "rust-std-{}-{}{}".format(
                 rustc_channel, self.build, tarball_suffix)
             pattern = "rust-std-{}".format(self.build)
-            self._download_component_helper(filename, pattern, tarball_suffix, stage0)
+            self._download_component_helper(
+                filename, pattern, tarball_suffix, stage0)
             filename = "rustc-{}-{}{}".format(rustc_channel, self.build,
                                               tarball_suffix)
-            self._download_component_helper(filename, "rustc", tarball_suffix, stage0)
+            self._download_component_helper(
+                filename, "rustc", tarball_suffix, stage0)
             # download-rustc doesn't need its own cargo, it can just use beta's.
             if stage0:
                 filename = "cargo-{}-{}{}".format(rustc_channel, self.build,
-                                                tarball_suffix)
-                self._download_component_helper(filename, "cargo", tarball_suffix)
+                                                  tarball_suffix)
+                self._download_component_helper(
+                    filename, "cargo", tarball_suffix)
                 self.fix_bin_or_dylib("{}/bin/cargo".format(bin_root))
             else:
-                filename = "rustc-dev-{}-{}{}".format(rustc_channel, self.build, tarball_suffix)
+                filename = "rustc-dev-{}-{}{}".format(
+                    rustc_channel, self.build, tarball_suffix)
                 self._download_component_helper(
                     filename, "rustc-dev", tarball_suffix, stage0
                 )
@@ -483,7 +491,8 @@ class RustBuild(object):
             if self.program_out_of_date(self.llvm_stamp(), llvm_sha + str(llvm_assertions)):
                 self._download_ci_llvm(llvm_sha, llvm_assertions)
                 for binary in ["llvm-config", "FileCheck"]:
-                    self.fix_bin_or_dylib(os.path.join(llvm_root, "bin", binary))
+                    self.fix_bin_or_dylib(
+                        os.path.join(llvm_root, "bin", binary))
                 for lib in os.listdir(llvm_lib):
                     if lib.endswith(".so"):
                         self.fix_bin_or_dylib(os.path.join(llvm_lib, lib))
@@ -558,7 +567,8 @@ class RustBuild(object):
                 verbose=self.verbose,
                 do_verify=stage0,
             )
-        unpack(tarball, tarball_suffix, self.bin_root(stage0), match=pattern, verbose=self.verbose)
+        unpack(tarball, tarball_suffix, self.bin_root(
+            stage0), match=pattern, verbose=self.verbose)
 
     def _download_ci_llvm(self, llvm_sha, llvm_assertions):
         if not llvm_sha:
@@ -595,8 +605,8 @@ class RustBuild(object):
                 do_verify=False,
             )
         unpack(tarball, tarball_suffix, self.llvm_root(),
-                match="rust-dev",
-                verbose=self.verbose)
+               match="rust-dev",
+               verbose=self.verbose)
 
     def fix_bin_or_dylib(self, fname):
         """Modifies the interpreter section of 'fname' to fix the dynamic linker,
@@ -686,7 +696,8 @@ class RustBuild(object):
         if not fname.endswith(".so"):
             # Finally, set the corret .interp for binaries
             with open("{}/nix-support/dynamic-linker".format(nix_deps_dir)) as dynamic_linker:
-                patchelf_args += ["--set-interpreter", dynamic_linker.read().rstrip()]
+                patchelf_args += ["--set-interpreter",
+                                  dynamic_linker.read().rstrip()]
 
         try:
             subprocess.check_output([patchelf] + patchelf_args + [fname])
@@ -704,7 +715,8 @@ class RustBuild(object):
 
         # Handle running from a directory other than the top level
         rev_parse = ["git", "rev-parse", "--show-toplevel"]
-        top_level = subprocess.check_output(rev_parse, universal_newlines=True).strip()
+        top_level = subprocess.check_output(
+            rev_parse, universal_newlines=True).strip()
         compiler = "{}/compiler/".format(top_level)
         library = "{}/library/".format(top_level)
 
@@ -714,7 +726,8 @@ class RustBuild(object):
             "git", "rev-list", "--author=bors@rust-lang.org", "-n1",
             "--first-parent", "HEAD"
         ]
-        commit = subprocess.check_output(merge_base, universal_newlines=True).strip()
+        commit = subprocess.check_output(
+            merge_base, universal_newlines=True).strip()
         if not commit:
             print("error: could not find commit hash for downloading rustc")
             print("help: maybe your repository history is too shallow?")
@@ -723,7 +736,8 @@ class RustBuild(object):
             exit(1)
 
         # Warn if there were changes to the compiler or standard library since the ancestor commit.
-        status = subprocess.call(["git", "diff-index", "--quiet", commit, "--", compiler, library])
+        status = subprocess.call(
+            ["git", "diff-index", "--quiet", commit, "--", compiler, library])
         if status != 0:
             if download_rustc == "if-unchanged":
                 return None
@@ -767,7 +781,6 @@ class RustBuild(object):
         True
         """
         return os.path.join(self.llvm_root(), '.llvm-stamp')
-
 
     def program_out_of_date(self, stamp_path, key):
         """Check if the given program stamp is out of date"""
@@ -964,7 +977,8 @@ class RustBuild(object):
         elif self.get_toml("crt-static", build_section) == "false":
             target_features += ["-crt-static"]
         if target_features:
-            env["RUSTFLAGS"] += " -C target-feature=" + (",".join(target_features))
+            env["RUSTFLAGS"] += " -C target-feature=" + \
+                (",".join(target_features))
         target_linker = self.get_toml("linker", build_section)
         if target_linker is not None:
             env["RUSTFLAGS"] += " -C linker=" + target_linker
@@ -986,6 +1000,19 @@ class RustBuild(object):
             args.append("--locked")
         if self.use_vendored_sources:
             args.append("--frozen")
+
+        # print(">>> CARGO_BUILD_TARGET: %s" % env["CARGO_BUILD_TARGET"])
+        print(">>> CARGO_TARGET_DIR: %s" % env["CARGO_TARGET_DIR"])
+        print(">>> RUSTC: %s" % env["RUSTC"])
+        print(">>> LD_LIBRARY_PATH: %s" % env["LD_LIBRARY_PATH"])
+        print(">>> DYLD_LIBRARY_PATH: %s" % env["DYLD_LIBRARY_PATH"])
+        print(">>> LIBRARY_PATH: %s" % env["LIBRARY_PATH"])
+        print(">>> RUSTFLAGS: %s" % env["RUSTFLAGS"])
+        print(">>> PATH: %s" % env["PATH"])
+        print(">>> args: %s" % args)
+        print(">>> env: %s" % env)
+        print(">>> verbose: %s" % self.verbose)
+
         run(args, env=env, verbose=self.verbose)
 
     def build_triple(self):
@@ -1002,7 +1029,8 @@ class RustBuild(object):
     def check_submodule(self, module, slow_submodules):
         if not slow_submodules:
             checked_out = subprocess.Popen(["git", "rev-parse", "HEAD"],
-                                           cwd=os.path.join(self.rust_root, module),
+                                           cwd=os.path.join(
+                                               self.rust_root, module),
                                            stdout=subprocess.PIPE)
             return checked_out
         else:
@@ -1013,7 +1041,8 @@ class RustBuild(object):
 
         if checked_out is not None:
             default_encoding = sys.getdefaultencoding()
-            checked_out = checked_out.communicate()[0].decode(default_encoding).strip()
+            checked_out = checked_out.communicate(
+            )[0].decode(default_encoding).strip()
             if recorded_submodules[module] == checked_out:
                 return
 
@@ -1022,15 +1051,19 @@ class RustBuild(object):
         run(["git", "submodule", "-q", "sync", module],
             cwd=self.rust_root, verbose=self.verbose)
 
-        update_args = ["git", "submodule", "update", "--init", "--recursive", "--depth=1"]
+        update_args = ["git", "submodule", "update",
+                       "--init", "--recursive", "--depth=1"]
         if self.git_version >= distutils.version.LooseVersion("2.11.0"):
             update_args.append("--progress")
         update_args.append(module)
         try:
-            run(update_args, cwd=self.rust_root, verbose=self.verbose, exception=True)
+            run(update_args, cwd=self.rust_root,
+                verbose=self.verbose, exception=True)
         except RuntimeError:
-            print("Failed updating submodule. This is probably due to uncommitted local changes.")
-            print('Either stash the changes by running "git stash" within the submodule\'s')
+            print(
+                "Failed updating submodule. This is probably due to uncommitted local changes.")
+            print(
+                'Either stash the changes by running "git stash" within the submodule\'s')
             print('directory, reset them by running "git reset --hard", or commit them.')
             print("To reset all submodules' changes run", end=" ")
             print('"git submodule foreach --recursive git reset --hard".')
@@ -1050,7 +1083,8 @@ class RustBuild(object):
         default_encoding = sys.getdefaultencoding()
 
         # check the existence and version of 'git' command
-        git_version_str = require(['git', '--version']).split()[2].decode(default_encoding)
+        git_version_str = require(
+            ['git', '--version']).split()[2].decode(default_encoding)
         self.git_version = distutils.version.LooseVersion(git_version_str)
 
         slow_submodules = self.get_toml('fast-submodules') == "false"
@@ -1085,7 +1119,8 @@ class RustBuild(object):
             submodules_names.append(module)
         recorded = subprocess.Popen(["git", "ls-tree", "HEAD"] + submodules_names,
                                     cwd=self.rust_root, stdout=subprocess.PIPE)
-        recorded = recorded.communicate()[0].decode(default_encoding).strip().splitlines()
+        recorded = recorded.communicate()[0].decode(
+            default_encoding).strip().splitlines()
         # { filename: hash }
         recorded_submodules = {}
         for data in recorded:
@@ -1113,7 +1148,8 @@ class RustBuild(object):
                 print('      and so in order to preserve your $HOME this will now')
                 print('      use vendored sources by default.')
                 if not os.path.exists(vendor_dir):
-                    print('error: vendoring required, but vendor directory does not exist.')
+                    print(
+                        'error: vendoring required, but vendor directory does not exist.')
                     print('       Run `cargo vendor` without sudo to initialize the '
                           'vendor directory.')
                     raise Exception("{} not found".format(vendor_dir))
@@ -1131,7 +1167,8 @@ class RustBuild(object):
                 with output('.cargo/config') as cargo_config:
                     cargo_config.write(config)
             else:
-                print('info: using vendored source, but .cargo/config is already present.')
+                print(
+                    'info: using vendored source, but .cargo/config is already present.')
                 print('      Reusing the current configuration file. But you may want to '
                       'configure vendoring like this:')
                 print(config)
@@ -1195,7 +1232,8 @@ def bootstrap(help_triggered):
     profile = build.get_toml('profile')
     if profile is not None:
         include_file = 'config.{}.toml'.format(profile)
-        include_dir = os.path.join(build.rust_root, 'src', 'bootstrap', 'defaults')
+        include_dir = os.path.join(
+            build.rust_root, 'src', 'bootstrap', 'defaults')
         include_path = os.path.join(include_dir, include_file)
         # HACK: This works because `build.get_toml()` returns the first match it finds for a
         # specific key, so appending our defaults at the end allows the user to override them
@@ -1213,7 +1251,8 @@ def bootstrap(help_triggered):
     build.check_vendored_status()
 
     build_dir = build.get_toml('build-dir', 'build') or 'build'
-    build.build_dir = os.path.abspath(build_dir.replace("$ROOT", build.rust_root))
+    build.build_dir = os.path.abspath(
+        build_dir.replace("$ROOT", build.rust_root))
 
     with open(os.path.join(build.rust_root, "src", "stage0.json")) as f:
         data = json.load(f)

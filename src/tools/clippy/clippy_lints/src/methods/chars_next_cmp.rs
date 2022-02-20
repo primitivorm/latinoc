@@ -1,4 +1,4 @@
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 
 use super::CHARS_NEXT_CMP;
 

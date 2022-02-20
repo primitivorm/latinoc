@@ -4,10 +4,10 @@ use clippy_utils::{method_chain_args, single_segment_path};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
-use rustc_lint::Lint;
+use latinoc_lint::LateContext;
+use latinoc_lint::Lint;
 use rustc_middle::ty;
-use rustc_span::sym;
+use latinoc_span::sym;
 
 /// Wrapper fn for `CHARS_NEXT_CMP` and `CHARS_LAST_CMP` lints.
 pub(super) fn check(

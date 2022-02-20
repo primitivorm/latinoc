@@ -1,6 +1,6 @@
 //! Compiler intrinsics.
 //!
-//! The corresponding definitions are in `compiler/rustc_codegen_llvm/src/intrinsic.rs`.
+//! The corresponding definitions are in `compiler/latinoc_codegen_llvm/src/intrinsic.rs`.
 //! The corresponding const implementations are in `compiler/rustc_mir/src/interpret/intrinsics.rs`
 //!
 //! # Const intrinsics

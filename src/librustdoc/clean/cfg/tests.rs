@@ -1,10 +1,10 @@
 use super::*;
 
-use rustc_ast::attr;
-use rustc_ast::Path;
-use rustc_span::create_default_session_globals_then;
-use rustc_span::symbol::{Ident, Symbol};
-use rustc_span::DUMMY_SP;
+use latinoc_ast::attr;
+use latinoc_ast::Path;
+use latinoc_span::create_default_session_globals_then;
+use latinoc_span::symbol::{Ident, Symbol};
+use latinoc_span::DUMMY_SP;
 
 fn word_cfg(s: &str) -> Cfg {
     Cfg::Cfg(Symbol::intern(s), None)

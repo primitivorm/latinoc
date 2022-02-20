@@ -23,7 +23,7 @@ use rustc_middle::ty::subst::{InternalSubsts, Subst, SubstsRef};
 use rustc_middle::ty::{self, TyCtxt};
 use rustc_session::lint::builtin::COHERENCE_LEAK_CHECK;
 use rustc_session::lint::builtin::ORDER_DEPENDENT_TRAIT_OBJECTS;
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 
 use super::util::impl_trait_ref_and_oblig;
 use super::{FulfillmentContext, SelectionContext};

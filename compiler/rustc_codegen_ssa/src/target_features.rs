@@ -1,13 +1,13 @@
+use latinoc_span::symbol::sym;
+use latinoc_span::symbol::Symbol;
 use rustc_hir::def_id::LOCAL_CRATE;
 use rustc_middle::ty::query::Providers;
 use rustc_session::Session;
-use rustc_span::symbol::sym;
-use rustc_span::symbol::Symbol;
 
 // When adding features to the below lists
 // check whether they're named already elsewhere in rust
 // e.g. in stdarch and whether the given name matches LLVM's
-// if it doesn't, to_llvm_feature in llvm_util in rustc_codegen_llvm needs to be adapted
+// if it doesn't, to_llvm_feature in llvm_util in latinoc_codegen_llvm needs to be adapted
 
 const ARM_ALLOWED_FEATURES: &[(&str, Option<Symbol>)] = &[
     ("aclass", Some(sym::arm_target_feature)),

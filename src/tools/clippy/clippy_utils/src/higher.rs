@@ -5,13 +5,13 @@
 use crate::ty::is_type_diagnostic_item;
 use crate::{is_expn_of, last_path_segment, match_def_path, paths};
 use if_chain::if_chain;
-use rustc_ast::ast::{self, LitKind};
+use latinoc_ast::ast::{self, LitKind};
 use rustc_hir as hir;
 use rustc_hir::{
     Arm, Block, BorrowKind, Expr, ExprKind, HirId, LoopSource, MatchSource, Node, Pat, QPath, StmtKind, UnOp,
 };
-use rustc_lint::LateContext;
-use rustc_span::{sym, symbol, ExpnKind, Span, Symbol};
+use latinoc_lint::LateContext;
+use latinoc_span::{sym, symbol, ExpnKind, Span, Symbol};
 
 /// The essential nodes of a desugared for loop as well as the entire span:
 /// `for pat in arg { body }` becomes `(pat, arg, body)`. Return `(pat, arg, body, span)`.

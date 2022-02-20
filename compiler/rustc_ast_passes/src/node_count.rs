@@ -1,9 +1,9 @@
 // Simply gives a rough count of the number of nodes in an AST.
 
-use rustc_ast::visit::*;
-use rustc_ast::*;
-use rustc_span::symbol::Ident;
-use rustc_span::Span;
+use latinoc_ast::visit::*;
+use latinoc_ast::*;
+use latinoc_span::symbol::Ident;
+use latinoc_span::Span;
 
 pub struct NodeCounter {
     pub count: usize,

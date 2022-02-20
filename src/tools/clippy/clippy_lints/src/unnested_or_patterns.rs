@@ -3,15 +3,15 @@
 use clippy_utils::ast_utils::{eq_field_pat, eq_id, eq_maybe_qself, eq_pat, eq_path};
 use clippy_utils::diagnostics::span_lint_and_then;
 use clippy_utils::{meets_msrv, msrvs, over};
-use rustc_ast::mut_visit::*;
-use rustc_ast::ptr::P;
-use rustc_ast::{self as ast, Pat, PatKind, PatKind::*, DUMMY_NODE_ID};
+use latinoc_ast::mut_visit::*;
+use latinoc_ast::ptr::P;
+use latinoc_ast::{self as ast, Pat, PatKind, PatKind::*, DUMMY_NODE_ID};
 use rustc_ast_pretty::pprust;
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 
 use std::cell::Cell;
 use std::mem;

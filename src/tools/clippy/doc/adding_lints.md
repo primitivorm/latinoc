@@ -170,9 +170,9 @@ at `clippy_lints/src/foo_functions.rs`. That's the crate where all the
 lint code is. This file has already imported some initial things we will need:
 
 ```rust
-use rustc_lint::{EarlyLintPass, EarlyContext};
+use latinoc_lint::{EarlyLintPass, EarlyContext};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_ast::ast::*;
+use latinoc_ast::ast::*;
 ```
 
 The next step is to update the lint declaration. Lints are declared using the
@@ -268,8 +268,8 @@ Since we don't need type information for checking the function name, we used
 `--pass=early` when running the new lint automation and all the imports were
 added accordingly.
 
-[early_lint_pass]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/trait.EarlyLintPass.html
-[late_lint_pass]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/trait.LateLintPass.html
+[early_lint_pass]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_lint/trait.EarlyLintPass.html
+[late_lint_pass]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_lint/trait.LateLintPass.html
 
 ## Emitting a lint
 
@@ -322,7 +322,7 @@ capitalization and periods, unless multiple sentences are needed.
 When code or an identifier must appear in a message or label, it should be
 surrounded with single grave accents \`.
 
-[check_fn]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_lint/trait.EarlyLintPass.html#method.check_fn
+[check_fn]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_lint/trait.EarlyLintPass.html#method.check_fn
 [diagnostics]: https://github.com/rust-lang/rust-clippy/blob/master/clippy_utils/src/diagnostics.rs
 [the rustc-dev-guide]: https://rustc-dev-guide.rust-lang.org/diagnostics.html
 
@@ -385,9 +385,9 @@ implementation is not violating any Clippy lints itself.
 That should be it for the lint implementation. Running `cargo test` should now
 pass.
 
-[fn_kind]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_ast/visit/enum.FnKind.html
-[`FnKind::Fn`]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_ast/visit/enum.FnKind.html#variant.Fn
-[ident]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_span/symbol/struct.Ident.html
+[fn_kind]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_ast/visit/enum.FnKind.html
+[`FnKind::Fn`]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_ast/visit/enum.FnKind.html#variant.Fn
+[ident]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_span/symbol/struct.Ident.html
 
 ## Specifying the lint's minimum supported Rust version (MSRV)
 
@@ -648,7 +648,7 @@ Here are some pointers to things you are likely going to need for every lint:
 For `EarlyLintPass` lints:
 
 * [`EarlyLintPass`][early_lint_pass]
-* [`rustc_ast::ast`][ast]
+* [`latinoc_ast::ast`][ast]
 
 For `LateLintPass` lints:
 
@@ -662,12 +662,12 @@ don't hesitate to ask on [Zulip] or in the issue/PR.
 
 [utils]: https://github.com/rust-lang/rust-clippy/blob/master/clippy_utils/src/lib.rs
 [if_chain]: https://docs.rs/if_chain/*/if_chain/
-[from_expansion]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_span/struct.Span.html#method.from_expansion
+[from_expansion]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_span/struct.Span.html#method.from_expansion
 [in_external_macro]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/lint/fn.in_external_macro.html
-[span]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_span/struct.Span.html
+[span]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_span/struct.Span.html
 [applicability]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_errors/enum.Applicability.html
 [rustc-dev-guide]: https://rustc-dev-guide.rust-lang.org/
 [nightly_docs]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/
-[ast]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_ast/ast/index.html
+[ast]: https://doc.rust-lang.org/nightly/nightly-rustc/latinoc_ast/ast/index.html
 [ty]: https://doc.rust-lang.org/nightly/nightly-rustc/rustc_middle/ty/sty/index.html
 [Zulip]: https://rust-lang.zulipchat.com/#narrow/stream/clippy

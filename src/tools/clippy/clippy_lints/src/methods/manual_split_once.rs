@@ -5,9 +5,9 @@ use clippy_utils::{is_diag_item_method, match_def_path, paths};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind, HirId, LangItem, Node, QPath};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, adjustment::Adjust};
-use rustc_span::{symbol::sym, Span, SyntaxContext};
+use latinoc_span::{symbol::sym, Span, SyntaxContext};
 
 use super::MANUAL_SPLIT_ONCE;
 

@@ -1,6 +1,6 @@
-use rustc_ast::ast;
-use rustc_ast::visit::Visitor;
-use rustc_span::Symbol;
+use latinoc_ast::ast;
+use latinoc_ast::visit::Visitor;
+use latinoc_span::Symbol;
 
 use crate::attr::MetaVisitor;
 use crate::syntux::parser::Parser;

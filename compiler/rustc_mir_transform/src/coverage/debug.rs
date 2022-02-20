@@ -52,7 +52,7 @@
 //! code generation pass). For example:
 //!
 //! ```shell
-//! RUSTC_LOG=rustc_mir_transform::transform::coverage,rustc_codegen_ssa::coverageinfo,rustc_codegen_llvm::coverageinfo=debug
+//! RUSTC_LOG=rustc_mir_transform::transform::coverage,rustc_codegen_ssa::coverageinfo,latinoc_codegen_llvm::coverageinfo=debug
 //! ```
 //!
 //! Coverage Debug Options
@@ -115,11 +115,11 @@ use rustc_middle::mir::create_dump_file;
 use rustc_middle::mir::generic_graphviz::GraphvizWriter;
 use rustc_middle::mir::spanview::{self, SpanViewable};
 
+use latinoc_span::Span;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_middle::mir::coverage::*;
 use rustc_middle::mir::{self, BasicBlock, TerminatorKind};
 use rustc_middle::ty::TyCtxt;
-use rustc_span::Span;
 
 use std::iter;
 use std::lazy::SyncOnceCell;

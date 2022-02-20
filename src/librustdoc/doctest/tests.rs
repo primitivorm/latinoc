@@ -1,5 +1,5 @@
 use super::{make_test, TestOptions};
-use rustc_span::edition::DEFAULT_EDITION;
+use latinoc_span::edition::DEFAULT_EDITION;
 
 #[test]
 fn make_test_basic() {

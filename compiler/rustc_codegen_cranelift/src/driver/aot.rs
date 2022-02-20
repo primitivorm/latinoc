@@ -3,7 +3,7 @@
 
 use std::path::PathBuf;
 
-use rustc_ast::{InlineAsmOptions, InlineAsmTemplatePiece};
+use latinoc_ast::{InlineAsmOptions, InlineAsmTemplatePiece};
 use rustc_codegen_ssa::{CodegenResults, CompiledModule, CrateInfo, ModuleKind};
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_metadata::EncodedMetadata;
@@ -110,7 +110,7 @@ fn reuse_workproduct_for_cgu(
 
 fn module_codegen(
     tcx: TyCtxt<'_>,
-    (backend_config, cgu_name): (BackendConfig, rustc_span::Symbol),
+    (backend_config, cgu_name): (BackendConfig, latinoc_span::Symbol),
 ) -> ModuleCodegenResult {
     let cgu = tcx.codegen_unit(cgu_name);
     let mono_items = cgu.items_in_deterministic_order(tcx);

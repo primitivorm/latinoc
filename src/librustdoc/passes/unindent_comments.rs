@@ -1,6 +1,6 @@
 use std::cmp;
 
-use rustc_span::symbol::kw;
+use latinoc_span::symbol::kw;
 
 use crate::clean::{self, DocFragment, DocFragmentKind, Item};
 use crate::core::DocContext;

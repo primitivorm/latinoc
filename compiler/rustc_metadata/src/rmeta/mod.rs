@@ -2,7 +2,7 @@ use decoder::Metadata;
 use def_path_hash_map::DefPathHashMapRef;
 use table::{Table, TableBuilder};
 
-use rustc_ast::{self as ast, MacroDef};
+use latinoc_ast::{self as ast, MacroDef};
 use rustc_attr as attr;
 use rustc_data_structures::svh::Svh;
 use rustc_data_structures::sync::MetadataRef;
@@ -20,10 +20,10 @@ use rustc_middle::ty::{self, ReprOptions, Ty};
 use rustc_serialize::opaque::Encoder;
 use rustc_session::config::SymbolManglingVersion;
 use rustc_session::cstore::{CrateDepKind, ForeignModule, LinkagePreference, NativeLib};
-use rustc_span::edition::Edition;
-use rustc_span::hygiene::{ExpnIndex, MacroKind};
-use rustc_span::symbol::{Ident, Symbol};
-use rustc_span::{self, ExpnData, ExpnHash, ExpnId, Span};
+use latinoc_span::edition::Edition;
+use latinoc_span::hygiene::{ExpnIndex, MacroKind};
+use latinoc_span::symbol::{Ident, Symbol};
+use latinoc_span::{self, ExpnData, ExpnHash, ExpnId, Span};
 use rustc_target::spec::{PanicStrategy, TargetTriple};
 
 use std::marker::PhantomData;
@@ -34,7 +34,7 @@ pub use decoder::{provide, provide_extern};
 crate use decoder::{CrateMetadata, CrateNumMap, MetadataBlob};
 use encoder::EncodeContext;
 pub use encoder::{encode_metadata, EncodedMetadata};
-use rustc_span::hygiene::SyntaxContextData;
+use latinoc_span::hygiene::SyntaxContextData;
 
 mod decoder;
 mod def_path_hash_map;
@@ -236,7 +236,7 @@ crate struct CrateRoot<'tcx> {
 
     def_path_hash_map: Lazy<DefPathHashMapRef<'tcx>>,
 
-    source_map: Lazy<[rustc_span::SourceFile]>,
+    source_map: Lazy<[latinoc_span::SourceFile]>,
 
     compiler_builtins: bool,
     needs_allocator: bool,

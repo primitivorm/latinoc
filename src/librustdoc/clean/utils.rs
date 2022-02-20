@@ -8,15 +8,15 @@ use crate::core::DocContext;
 use crate::formats::item_type::ItemType;
 use crate::visit_lib::LibEmbargoVisitor;
 
-use rustc_ast as ast;
-use rustc_ast::tokenstream::TokenTree;
+use latinoc_ast as ast;
+use latinoc_ast::tokenstream::TokenTree;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, Res};
 use rustc_hir::def_id::{DefId, LOCAL_CRATE};
 use rustc_middle::mir::interpret::ConstValue;
 use rustc_middle::ty::subst::{GenericArgKind, SubstsRef};
 use rustc_middle::ty::{self, DefIdTree, TyCtxt};
-use rustc_span::symbol::{kw, sym, Symbol};
+use latinoc_span::symbol::{kw, sym, Symbol};
 use std::fmt::Write as _;
 use std::mem;
 

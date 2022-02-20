@@ -7,19 +7,19 @@ use std::ptr;
 use clippy_utils::diagnostics::span_lint_and_then;
 use clippy_utils::in_constant;
 use if_chain::if_chain;
+use latinoc_lint::{LateContext, LateLintPass, Lint};
+use latinoc_span::{InnerSpan, Span, DUMMY_SP};
+use latinoc_typeck::hir_ty_to_ty;
 use rustc_hir::def::{DefKind, Res};
 use rustc_hir::def_id::DefId;
 use rustc_hir::{
     BodyId, Expr, ExprKind, HirId, Impl, ImplItem, ImplItemKind, Item, ItemKind, Node, TraitItem, TraitItemKind, UnOp,
 };
 use rustc_infer::traits::specialization_graph;
-use rustc_lint::{LateContext, LateLintPass, Lint};
 use rustc_middle::mir::interpret::{ConstValue, ErrorHandled};
 use rustc_middle::ty::adjustment::Adjust;
 use rustc_middle::ty::{self, AssocKind, Const, Ty};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{InnerSpan, Span, DUMMY_SP};
-use rustc_typeck::hir_ty_to_ty;
 
 // FIXME: this is a correctness problem but there's no suitable
 // warn-by-default category.

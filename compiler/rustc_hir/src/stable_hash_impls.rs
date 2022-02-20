@@ -5,13 +5,13 @@ use crate::hir::{
     ItemId, Mod, OwnerNodes, TraitCandidate, TraitItem, TraitItemId, Ty, VisibilityKind,
 };
 use crate::hir_id::{HirId, ItemLocalId};
-use rustc_span::def_id::DefPathHash;
+use latinoc_span::def_id::DefPathHash;
 
 /// Requirements for a `StableHashingContext` to be used in this crate.
 /// This is a hack to allow using the `HashStable_Generic` derive macro
 /// instead of implementing everything in `rustc_middle`.
 pub trait HashStableContext:
-    rustc_ast::HashStableContext + rustc_target::HashStableContext
+    latinoc_ast::HashStableContext + rustc_target::HashStableContext
 {
     fn hash_hir_id(&mut self, _: HirId, hasher: &mut StableHasher);
     fn hash_body_id(&mut self, _: BodyId, hasher: &mut StableHasher);

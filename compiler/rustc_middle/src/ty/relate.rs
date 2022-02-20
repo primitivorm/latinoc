@@ -10,7 +10,7 @@ use crate::ty::subst::{GenericArg, GenericArgKind, SubstsRef};
 use crate::ty::{self, Ty, TyCtxt, TypeFoldable};
 use rustc_hir as ast;
 use rustc_hir::def_id::DefId;
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 use rustc_target::spec::abi;
 use std::iter;
 

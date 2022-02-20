@@ -1,22 +1,22 @@
 use std::panic::{catch_unwind, AssertUnwindSafe};
 use std::path::{Path, PathBuf};
 
-use rustc_ast::token::{DelimToken, TokenKind};
-use rustc_ast::{ast, ptr};
-use rustc_errors::Diagnostic;
+use latinoc_ast::token::{DelimToken, TokenKind};
+use latinoc_ast::{ast, ptr};
 use latinoc_parse::{
     new_parser_from_file,
     parser::{ForceCollect, Parser as RawParser},
 };
-use rustc_span::{sym, symbol::kw, Span};
+use latinoc_span::{sym, symbol::kw, Span};
+use rustc_errors::Diagnostic;
 
 use crate::attr::first_attr_value_str_by_name;
 use crate::syntux::session::ParseSess;
 use crate::Input;
 
-pub(crate) type DirectoryOwnership = rustc_expand::module::DirOwnership;
-pub(crate) type ModulePathSuccess = rustc_expand::module::ModulePathSuccess;
-pub(crate) type ModError<'a> = rustc_expand::module::ModError<'a>;
+pub(crate) type DirectoryOwnership = latinoc_expand::module::DirOwnership;
+pub(crate) type ModulePathSuccess = latinoc_expand::module::ModulePathSuccess;
+pub(crate) type ModError<'a> = latinoc_expand::module::ModError<'a>;
 
 #[derive(Clone)]
 pub(crate) struct Directory {
@@ -76,7 +76,7 @@ impl<'a> ParserBuilder<'a> {
             .map_err(|_| None),
             Input::Text(text) => latinoc_parse::maybe_new_parser_from_source_str(
                 sess,
-                rustc_span::FileName::Custom("stdin".to_owned()),
+                latinoc_span::FileName::Custom("stdin".to_owned()),
                 text,
             )
             .map_err(Some),

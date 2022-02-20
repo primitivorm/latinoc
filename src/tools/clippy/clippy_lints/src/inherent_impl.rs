@@ -4,9 +4,9 @@ use clippy_utils::diagnostics::span_lint_and_note;
 use clippy_utils::{in_macro, is_lint_allowed};
 use rustc_data_structures::fx::FxHashMap;
 use rustc_hir::{def_id::LocalDefId, Item, ItemKind, Node};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::Span;
+use latinoc_span::Span;
 use std::collections::hash_map::Entry;
 
 declare_clippy_lint! {

@@ -6,11 +6,11 @@ use clippy_utils::{is_diag_trait_item, match_def_path, paths};
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty::adjustment::{Adjust, Adjustment};
 use rustc_middle::ty::Ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{sym, BytePos, ExpnData, ExpnKind, Span, Symbol};
+use latinoc_span::{sym, BytePos, ExpnData, ExpnKind, Span, Symbol};
 
 declare_clippy_lint! {
     /// ### What it does

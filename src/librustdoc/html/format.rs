@@ -18,7 +18,7 @@ use rustc_hir::def_id::DefId;
 use rustc_middle::ty;
 use rustc_middle::ty::DefIdTree;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::def_id::CRATE_DEF_INDEX;
+use latinoc_span::def_id::CRATE_DEF_INDEX;
 use rustc_target::spec::abi::Abi;
 
 use crate::clean::{self, utils::find_nearest_parent_module, ExternalCrate, ItemId, PrimitiveType};

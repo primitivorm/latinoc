@@ -9,8 +9,8 @@ mod dumper;
 mod span_utils;
 mod sig;
 
-use rustc_ast as ast;
-use rustc_ast::util::comments::beautify_doc_string;
+use latinoc_ast as ast;
+use latinoc_ast::util::comments::beautify_doc_string;
 use rustc_ast_pretty::pprust::attribute_to_string;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind as HirDefKind, Res};
@@ -25,9 +25,9 @@ use rustc_middle::{bug, span_bug};
 use rustc_session::config::{CrateType, Input, OutputType};
 use rustc_session::cstore::ExternCrate;
 use rustc_session::output::{filename_for_metadata, out_filename};
-use rustc_span::source_map::Spanned;
-use rustc_span::symbol::Ident;
-use rustc_span::*;
+use latinoc_span::source_map::Spanned;
+use latinoc_span::symbol::Ident;
+use latinoc_span::*;
 
 use std::cell::Cell;
 use std::default::Default;

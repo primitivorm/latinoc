@@ -19,7 +19,7 @@ use rustc_data_structures::sync::{Lock, LockGuard};
 use rustc_data_structures::thin_vec::ThinVec;
 use rustc_errors::{DiagnosticBuilder, FatalError};
 use rustc_session::Session;
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::{Span, DUMMY_SP};
 use std::cell::Cell;
 use std::collections::hash_map::Entry;
 use std::fmt::Debug;

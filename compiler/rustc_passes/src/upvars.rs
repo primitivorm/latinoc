@@ -7,7 +7,7 @@ use rustc_hir::intravisit::{self, NestedVisitorMap, Visitor};
 use rustc_hir::{self, HirId};
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::Span;
+use latinoc_span::Span;
 
 pub fn provide(providers: &mut Providers) {
     providers.upvars_mentioned = |tcx, def_id| {

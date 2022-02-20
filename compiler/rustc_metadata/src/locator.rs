@@ -227,8 +227,8 @@ use rustc_session::filesearch::{FileDoesntMatch, FileMatches, FileSearch};
 use rustc_session::search_paths::PathKind;
 use rustc_session::utils::CanonicalizedPath;
 use rustc_session::Session;
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::Span;
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::Span;
 use rustc_target::spec::{Target, TargetTriple};
 
 use snap::read::FrameDecoder;

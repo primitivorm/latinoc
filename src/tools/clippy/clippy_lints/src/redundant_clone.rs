@@ -8,7 +8,7 @@ use rustc_errors::Applicability;
 use rustc_hir::intravisit::FnKind;
 use rustc_hir::{def_id, Body, FnDecl, HirId};
 use rustc_index::bit_set::{BitSet, HybridBitSet};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::mir::{
     self, traversal,
     visit::{MutatingUseContext, NonMutatingUseContext, PlaceContext, Visitor as _},
@@ -17,8 +17,8 @@ use rustc_middle::mir::{
 use rustc_middle::ty::{self, fold::TypeVisitor, Ty, TyCtxt};
 use rustc_mir_dataflow::{Analysis, AnalysisDomain, GenKill, GenKillAnalysis, ResultsCursor};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::{BytePos, Span};
-use rustc_span::sym;
+use latinoc_span::source_map::{BytePos, Span};
+use latinoc_span::sym;
 use std::convert::TryFrom;
 use std::ops::ControlFlow;
 

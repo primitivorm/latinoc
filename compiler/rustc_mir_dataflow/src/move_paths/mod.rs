@@ -2,7 +2,7 @@ use rustc_data_structures::fx::FxHashMap;
 use rustc_index::vec::IndexVec;
 use rustc_middle::mir::*;
 use rustc_middle::ty::{ParamEnv, Ty, TyCtxt};
-use rustc_span::Span;
+use latinoc_span::Span;
 use smallvec::SmallVec;
 
 use std::fmt;

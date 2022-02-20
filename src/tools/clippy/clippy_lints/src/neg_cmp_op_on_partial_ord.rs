@@ -3,7 +3,7 @@ use clippy_utils::ty::implements_trait;
 use clippy_utils::{self, get_trait_def_id, paths};
 use if_chain::if_chain;
 use rustc_hir::{BinOpKind, Expr, ExprKind, UnOp};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
 

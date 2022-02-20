@@ -3,7 +3,7 @@
 //! output.
 
 use rustc_data_structures::fx::FxHashMap;
-use rustc_span::{Span, Symbol};
+use latinoc_span::{Span, Symbol};
 use std::sync::{Arc, Mutex};
 use tracing::debug;
 

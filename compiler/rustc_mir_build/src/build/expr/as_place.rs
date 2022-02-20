@@ -12,7 +12,7 @@ use rustc_middle::mir::*;
 use rustc_middle::thir::*;
 use rustc_middle::ty::AdtDef;
 use rustc_middle::ty::{self, CanonicalUserTypeAnnotation, Ty, TyCtxt, Variance};
-use rustc_span::Span;
+use latinoc_span::Span;
 use rustc_target::abi::VariantIdx;
 
 use rustc_index::vec::Idx;

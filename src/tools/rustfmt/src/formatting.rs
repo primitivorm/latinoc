@@ -4,8 +4,8 @@ use std::collections::HashMap;
 use std::io::{self, Write};
 use std::time::{Duration, Instant};
 
-use rustc_ast::ast;
-use rustc_span::Span;
+use latinoc_span::Span;
+use latinoc_ast::ast;
 
 use self::newline_style::apply_newline_style;
 use crate::comment::{CharClasses, FullCodeCharKind};
@@ -36,7 +36,7 @@ impl<'b, T: Write + 'b> Session<'b, T> {
             return Err(ErrorKind::VersionMismatch);
         }
 
-        rustc_span::create_session_if_not_set_then(self.config.edition().into(), |_| {
+        latinoc_span::create_session_if_not_set_then(self.config.edition().into(), |_| {
             if self.config.disable_all_formatting() {
                 // When the input is from stdin, echo back the input.
                 if let Input::Text(ref buf) = input {

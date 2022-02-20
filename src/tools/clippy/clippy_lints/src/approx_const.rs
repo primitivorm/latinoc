@@ -1,11 +1,11 @@
 use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::{meets_msrv, msrvs};
-use rustc_ast::ast::{FloatTy, LitFloatType, LitKind};
+use latinoc_ast::ast::{FloatTy, LitFloatType, LitKind};
 use rustc_hir::{Expr, ExprKind};
-use rustc_lint::{LateContext, LateLintPass, LintContext};
+use latinoc_lint::{LateContext, LateLintPass, LintContext};
 use rustc_semver::RustcVersion;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::symbol;
+use latinoc_span::symbol;
 use std::f64::consts as f64;
 
 declare_clippy_lint! {

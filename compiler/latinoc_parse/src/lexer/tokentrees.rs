@@ -1,7 +1,7 @@
 use super::{StringReader, UnmatchedBrace};
 
-use rustc_ast::token::{self, DelimToken, Token};
-use rustc_ast::tokenstream::{
+use latinoc_ast::token::{self, DelimToken, Token};
+use latinoc_ast::tokenstream::{
     DelimSpan,
     Spacing::{self, *},
     TokenStream, TokenTree, TreeAndSpacing,
@@ -9,7 +9,7 @@ use rustc_ast::tokenstream::{
 use rustc_ast_pretty::pprust::token_to_string;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_errors::PResult;
-use rustc_span::Span;
+use latinoc_span::Span;
 
 impl<'a> StringReader<'a> {
     pub(super) fn into_token_trees(self) -> (PResult<'a, TokenStream>, Vec<UnmatchedBrace>) {

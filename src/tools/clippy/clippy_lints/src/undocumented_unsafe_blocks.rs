@@ -5,12 +5,12 @@ use rustc_errors::Applicability;
 use rustc_hir::intravisit::{walk_expr, NestedVisitorMap, Visitor};
 use rustc_hir::{Block, BlockCheckMode, Expr, ExprKind, HirId, Local, UnsafeSource};
 use latinoc_lexer::TokenKind;
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::hir::map::Map;
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::{BytePos, Span};
+use latinoc_span::{BytePos, Span};
 use std::borrow::Cow;
 
 declare_clippy_lint! {

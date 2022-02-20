@@ -13,7 +13,7 @@ use std::convert::TryFrom;
 use std::fmt;
 use std::ptr;
 
-use rustc_ast::Mutability;
+use latinoc_ast::Mutability;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_middle::mir::display_allocation;
 use rustc_middle::ty::{Instance, ParamEnv, TyCtxt};

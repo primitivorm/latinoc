@@ -2,7 +2,7 @@
 //! process.
 
 use rustc_middle::ty::TyCtxt;
-use rustc_span::{InnerSpan, Span, DUMMY_SP};
+use latinoc_span::{InnerSpan, Span, DUMMY_SP};
 use std::ops::Range;
 
 use self::Condition::*;

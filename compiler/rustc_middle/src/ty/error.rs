@@ -6,8 +6,8 @@ use rustc_errors::Applicability::{MachineApplicable, MaybeIncorrect};
 use rustc_errors::{pluralize, DiagnosticBuilder};
 use rustc_hir as hir;
 use rustc_hir::def_id::DefId;
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::{BytePos, MultiSpan, Span};
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::{BytePos, MultiSpan, Span};
 use rustc_target::spec::abi;
 
 use std::borrow::Cow;

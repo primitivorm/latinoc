@@ -1,8 +1,8 @@
 use std::iter::ExactSizeIterator;
 use std::ops::Deref;
 
-use rustc_ast::ast::{self, FnRetTy, Mutability};
-use rustc_span::{symbol::kw, BytePos, Pos, Span};
+use latinoc_ast::ast::{self, FnRetTy, Mutability};
+use latinoc_span::{symbol::kw, BytePos, Pos, Span};
 
 use crate::comment::{combine_strs_with_missing_comments, contains_comment};
 use crate::config::lists::*;

@@ -1,9 +1,9 @@
-use rustc_ast::ptr::P;
-use rustc_ast::token::{self, Nonterminal, NonterminalKind, Token};
-use rustc_ast::AstLike;
+use latinoc_ast::ptr::P;
+use latinoc_ast::token::{self, Nonterminal, NonterminalKind, Token};
+use latinoc_ast::AstLike;
 use rustc_ast_pretty::pprust;
 use rustc_errors::PResult;
-use rustc_span::symbol::{kw, Ident};
+use latinoc_span::symbol::{kw, Ident};
 
 use crate::parser::pat::{RecoverColon, RecoverComma};
 use crate::parser::{FollowedByType, ForceCollect, Parser, PathStyle};

@@ -12,8 +12,8 @@ use rustc_middle::mir::{
 use rustc_middle::ty::subst::GenericArgKind;
 use rustc_middle::ty::{self, adjustment::PointerCast, Ty, TyCtxt};
 use rustc_semver::RustcVersion;
-use rustc_span::symbol::sym;
-use rustc_span::Span;
+use latinoc_span::symbol::sym;
+use latinoc_span::Span;
 use rustc_target::spec::abi::Abi::RustIntrinsic;
 use std::borrow::Cow;
 

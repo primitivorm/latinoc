@@ -1,5 +1,5 @@
 use rustc_middle::ty::TyCtxt;
-use rustc_span::Symbol;
+use latinoc_span::Symbol;
 
 use crate::clean;
 use crate::config::RenderOptions;

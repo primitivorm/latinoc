@@ -4,7 +4,7 @@ use rustc_middle::mir;
 use rustc_middle::mir::interpret::{ConstValue, ErrorHandled};
 use rustc_middle::ty::layout::HasTyCtxt;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 use rustc_target::abi::Abi;
 
 use super::FunctionCx;

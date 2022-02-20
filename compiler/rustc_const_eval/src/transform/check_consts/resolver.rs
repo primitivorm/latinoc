@@ -7,7 +7,7 @@ use rustc_middle::mir::visit::Visitor;
 use rustc_middle::mir::{self, BasicBlock, Local, Location, Statement, StatementKind};
 use rustc_mir_dataflow::fmt::DebugWithContext;
 use rustc_mir_dataflow::JoinSemiLattice;
-use rustc_span::DUMMY_SP;
+use latinoc_span::DUMMY_SP;
 
 use std::fmt;
 use std::marker::PhantomData;

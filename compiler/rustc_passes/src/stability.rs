@@ -1,7 +1,7 @@
 //! A pass that annotates every item and method with its stability level,
 //! propagating default levels lexically from parent to children ast nodes.
 
-use rustc_ast::Attribute;
+use latinoc_ast::Attribute;
 use rustc_attr::{self as attr, ConstStability, Stability};
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_errors::struct_span_err;
@@ -19,8 +19,8 @@ use rustc_session::lint;
 use rustc_session::lint::builtin::{INEFFECTIVE_UNSTABLE_TRAIT_IMPL, USELESS_DEPRECATED};
 use rustc_session::parse::feature_err;
 use rustc_session::Session;
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::{Span, DUMMY_SP};
 use rustc_target::spec::abi::Abi;
 
 use std::cmp::Ordering;

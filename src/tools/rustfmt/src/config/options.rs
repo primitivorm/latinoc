@@ -431,7 +431,7 @@ impl Default for Edition {
     }
 }
 
-impl From<Edition> for rustc_span::edition::Edition {
+impl From<Edition> for latinoc_span::edition::Edition {
     fn from(edition: Edition) -> Self {
         match edition {
             Edition::Edition2015 => Self::Edition2015,
@@ -443,7 +443,7 @@ impl From<Edition> for rustc_span::edition::Edition {
 
 impl PartialOrd for Edition {
     fn partial_cmp(&self, other: &Edition) -> Option<std::cmp::Ordering> {
-        rustc_span::edition::Edition::partial_cmp(&(*self).into(), &(*other).into())
+        latinoc_span::edition::Edition::partial_cmp(&(*self).into(), &(*other).into())
     }
 }
 

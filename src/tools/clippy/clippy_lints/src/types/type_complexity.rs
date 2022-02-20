@@ -2,7 +2,7 @@ use clippy_utils::diagnostics::span_lint;
 use rustc_hir as hir;
 use rustc_hir::intravisit::{walk_inf, walk_ty, NestedVisitorMap, Visitor};
 use rustc_hir::{GenericParamKind, TyKind};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::hir::map::Map;
 use rustc_target::spec::abi::Abi;
 

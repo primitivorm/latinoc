@@ -2,9 +2,9 @@ use std::fs::{create_dir_all, read_to_string, File};
 use std::io::prelude::*;
 use std::path::Path;
 
-use rustc_span::edition::Edition;
-use rustc_span::source_map::DUMMY_SP;
-use rustc_span::Symbol;
+use latinoc_span::edition::Edition;
+use latinoc_span::source_map::DUMMY_SP;
+use latinoc_span::Symbol;
 
 use crate::config::{Options, RenderOptions};
 use crate::doctest::{Collector, TestOptions};

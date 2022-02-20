@@ -6,10 +6,10 @@ use clippy_utils::{path_to_local_id, paths, peel_ref_operators, remove_blocks, s
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{BinOpKind, Expr, ExprKind, PatKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty::{self, UintTy};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::sym;
+use latinoc_span::sym;
 
 declare_clippy_lint! {
     /// ### What it does

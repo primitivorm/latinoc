@@ -20,8 +20,8 @@ use rustc_middle::middle::region;
 use rustc_middle::mir::*;
 use rustc_middle::thir::{self, *};
 use rustc_middle::ty::{self, CanonicalUserTypeAnnotation, Ty};
-use rustc_span::symbol::Symbol;
-use rustc_span::{BytePos, Pos, Span};
+use latinoc_span::symbol::Symbol;
+use latinoc_span::{BytePos, Pos, Span};
 use rustc_target::abi::VariantIdx;
 use smallvec::{smallvec, SmallVec};
 
@@ -1946,7 +1946,7 @@ impl<'a, 'tcx> Builder<'a, 'tcx> {
 
             let arm_span = arm_span.unwrap();
             let match_scope = match_scope.unwrap();
-            let mut guard_span = rustc_span::DUMMY_SP;
+            let mut guard_span = latinoc_span::DUMMY_SP;
 
             let (post_guard_block, otherwise_post_guard_block) =
                 self.in_if_then_scope(match_scope, |this| match *guard {

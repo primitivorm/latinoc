@@ -1,8 +1,8 @@
 //! Format attributes and meta items.
 
-use rustc_ast::ast;
-use rustc_ast::AstLike;
-use rustc_span::{symbol::sym, Span, Symbol};
+use latinoc_ast::ast;
+use latinoc_ast::AstLike;
+use latinoc_span::{symbol::sym, Span, Symbol};
 
 use self::doc_comment::DocCommentFormatter;
 use crate::comment::{contains_comment, rewrite_doc_comment, CommentStyle};

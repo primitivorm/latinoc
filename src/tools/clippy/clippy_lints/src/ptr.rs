@@ -12,11 +12,11 @@ use rustc_hir::{
     BinOpKind, BodyId, Expr, ExprKind, FnDecl, FnRetTy, GenericArg, Impl, ImplItem, ImplItemKind, Item, ItemKind,
     Lifetime, MutTy, Mutability, Node, PathSegment, QPath, TraitFn, TraitItem, TraitItemKind, Ty, TyKind,
 };
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Span;
-use rustc_span::symbol::Symbol;
-use rustc_span::{sym, MultiSpan};
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::Symbol;
+use latinoc_span::{sym, MultiSpan};
 use std::borrow::Cow;
 
 declare_clippy_lint! {

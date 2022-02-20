@@ -6,8 +6,8 @@ use rustc_infer::infer::InferCtxt;
 use rustc_middle::ty::{self, TraitRef, Ty, TyCtxt, WithConstness};
 use rustc_middle::ty::{ToPredicate, TypeFoldable};
 use rustc_session::{DiagnosticMessageId, Limit};
-use rustc_span::def_id::LOCAL_CRATE;
-use rustc_span::Span;
+use latinoc_span::def_id::LOCAL_CRATE;
+use latinoc_span::Span;
 
 #[derive(Copy, Clone, Debug)]
 pub enum AutoderefKind {

@@ -2,10 +2,10 @@ use clippy_utils::diagnostics::span_lint_and_sugg;
 use clippy_utils::numeric_literal::NumericLiteral;
 use clippy_utils::source::snippet_opt;
 use if_chain::if_chain;
-use rustc_ast::{LitFloatType, LitIntType, LitKind};
+use latinoc_ast::{LitFloatType, LitIntType, LitKind};
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind, Lit, UnOp};
-use rustc_lint::{LateContext, LintContext};
+use latinoc_lint::{LateContext, LintContext};
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty::{self, FloatTy, InferTy, Ty};
 

@@ -5,9 +5,9 @@ use clippy_utils::usage::mutated_variables;
 use clippy_utils::{meets_msrv, msrvs};
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_semver::RustcVersion;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use super::MAP_UNWRAP_OR;
 

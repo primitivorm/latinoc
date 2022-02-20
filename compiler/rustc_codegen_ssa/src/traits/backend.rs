@@ -3,7 +3,7 @@ use super::CodegenObject;
 use crate::back::write::TargetMachineFactoryFn;
 use crate::{CodegenResults, ModuleCodegen};
 
-use rustc_ast::expand::allocator::AllocatorKind;
+use latinoc_ast::expand::allocator::AllocatorKind;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_errors::ErrorReported;
 use rustc_metadata::EncodedMetadata;
@@ -16,7 +16,7 @@ use rustc_session::{
     cstore::MetadataLoaderDyn,
     Session,
 };
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 use rustc_target::abi::call::FnAbi;
 use rustc_target::spec::Target;
 

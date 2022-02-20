@@ -1,11 +1,11 @@
 use super::{ForceCollect, Parser, TrailingToken};
 
-use rustc_ast::token;
-use rustc_ast::{
+use latinoc_ast::token;
+use latinoc_ast::{
     self as ast, Attribute, GenericBounds, GenericParam, GenericParamKind, WhereClause,
 };
 use rustc_errors::PResult;
-use rustc_span::symbol::{kw, sym};
+use latinoc_span::symbol::{kw, sym};
 
 impl<'a> Parser<'a> {
     /// Parses bounds of a lifetime parameter `BOUND + BOUND + BOUND`, possibly with trailing `+`.

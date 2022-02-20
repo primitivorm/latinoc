@@ -1,12 +1,12 @@
 use super::LoweringContext;
 
-use rustc_ast::*;
+use latinoc_ast::*;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::stable_set::FxHashSet;
 use rustc_errors::struct_span_err;
 use rustc_hir as hir;
 use rustc_session::parse::feature_err;
-use rustc_span::{sym, Span, Symbol};
+use latinoc_span::{sym, Span, Symbol};
 use rustc_target::asm;
 use std::collections::hash_map::Entry;
 use std::fmt::Write;

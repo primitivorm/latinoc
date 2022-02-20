@@ -608,7 +608,7 @@ impl Step for Rustc {
 
         if paths.is_empty() {
             // Find dependencies for top level crates.
-            for root_crate in &["latinoc_driver", "rustc_codegen_llvm", "rustc_codegen_ssa"] {
+            for root_crate in &["latinoc_driver", "latinoc_codegen_llvm", "rustc_codegen_ssa"] {
                 compiler_crates.extend(
                     builder
                         .in_tree_crates(root_crate, Some(target))

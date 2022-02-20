@@ -7,10 +7,10 @@ use rustc_hir::{
     def::{DefKind, Res},
     Item, ItemKind, PathSegment, UseKind,
 };
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::symbol::kw;
-use rustc_span::{sym, BytePos};
+use latinoc_span::symbol::kw;
+use latinoc_span::{sym, BytePos};
 
 declare_clippy_lint! {
     /// ### What it does

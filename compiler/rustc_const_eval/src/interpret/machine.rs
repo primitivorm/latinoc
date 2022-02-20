@@ -8,7 +8,7 @@ use std::hash::Hash;
 
 use rustc_middle::mir;
 use rustc_middle::ty::{self, Ty};
-use rustc_span::def_id::DefId;
+use latinoc_span::def_id::DefId;
 use rustc_target::abi::Size;
 use rustc_target::spec::abi::Abi;
 

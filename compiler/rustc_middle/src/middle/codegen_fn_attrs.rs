@@ -1,6 +1,6 @@
 use crate::mir::mono::Linkage;
 use rustc_attr::{InlineAttr, InstructionSetAttr, OptimizeAttr};
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 use rustc_target::spec::SanitizerSet;
 
 #[derive(Clone, TyEncodable, TyDecodable, HashStable, Debug)]

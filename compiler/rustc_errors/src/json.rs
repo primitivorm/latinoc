@@ -9,7 +9,7 @@
 
 // FIXME: spec the JSON output properly.
 
-use rustc_span::source_map::{FilePathMapping, SourceMap};
+use latinoc_span::source_map::{FilePathMapping, SourceMap};
 
 use crate::emitter::{Emitter, HumanReadableErrorType};
 use crate::registry::Registry;
@@ -19,8 +19,8 @@ use crate::{CodeSuggestion, SubDiagnostic};
 use rustc_lint_defs::Applicability;
 
 use rustc_data_structures::sync::Lrc;
-use rustc_span::hygiene::ExpnData;
-use rustc_span::{MultiSpan, Span, SpanLabel};
+use latinoc_span::hygiene::ExpnData;
+use latinoc_span::{MultiSpan, Span, SpanLabel};
 use std::io::{self, Write};
 use std::path::Path;
 use std::sync::{Arc, Mutex};
@@ -508,7 +508,7 @@ impl DiagnosticSpan {
 
 impl DiagnosticSpanLine {
     fn line_from_source_file(
-        sf: &rustc_span::SourceFile,
+        sf: &latinoc_span::SourceFile,
         index: usize,
         h_start: usize,
         h_end: usize,

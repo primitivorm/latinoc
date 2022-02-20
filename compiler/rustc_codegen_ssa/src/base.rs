@@ -28,7 +28,7 @@ use rustc_middle::ty::{self, Instance, Ty, TyCtxt};
 use rustc_session::cgu_reuse_tracker::CguReuse;
 use rustc_session::config::{self, EntryFnType};
 use rustc_session::Session;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 use rustc_target::abi::{Align, VariantIdx};
 
 use std::convert::TryFrom;

@@ -3,9 +3,9 @@ use clippy_utils::ty::{implements_trait, is_type_diagnostic_item};
 use clippy_utils::{get_trait_def_id, paths, return_ty, trait_ref_of_method};
 use if_chain::if_chain;
 use rustc_hir::{ImplItem, ImplItemKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::sym;
+use latinoc_span::sym;
 
 declare_clippy_lint! {
     /// ### What it does

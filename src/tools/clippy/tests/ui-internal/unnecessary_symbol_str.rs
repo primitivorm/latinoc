@@ -3,9 +3,9 @@
 #![deny(clippy::internal)]
 #![allow(clippy::unnecessary_operation, unused_must_use)]
 
-extern crate rustc_span;
+extern crate latinoc_span;
 
-use rustc_span::symbol::{Ident, Symbol};
+use latinoc_span::symbol::{Ident, Symbol};
 
 fn main() {
     Symbol::intern("foo").as_str() == "clippy";

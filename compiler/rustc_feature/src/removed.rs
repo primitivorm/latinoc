@@ -1,7 +1,7 @@
 //! List of the removed feature gates.
 
 use super::{to_nonzero, Feature, State};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 macro_rules! declare_features {
     ($(

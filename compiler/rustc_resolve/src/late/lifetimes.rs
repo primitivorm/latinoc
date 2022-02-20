@@ -7,7 +7,7 @@
 //! way. Therefore, we break lifetime name resolution into a separate pass.
 
 use crate::late::diagnostics::{ForLifetimeSpanType, MissingLifetimeSpot};
-use rustc_ast::walk_list;
+use latinoc_ast::walk_list;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet, FxIndexMap};
 use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder};
 use rustc_hir as hir;
@@ -22,9 +22,9 @@ use rustc_middle::middle::resolve_lifetime::*;
 use rustc_middle::ty::{self, DefIdTree, GenericParamDefKind, TyCtxt};
 use rustc_middle::{bug, span_bug};
 use rustc_session::lint;
-use rustc_span::def_id::DefId;
-use rustc_span::symbol::{kw, sym, Ident, Symbol};
-use rustc_span::Span;
+use latinoc_span::def_id::DefId;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
+use latinoc_span::Span;
 use std::borrow::Cow;
 use std::cell::Cell;
 use std::fmt;
@@ -685,7 +685,7 @@ impl<'a, 'tcx> Visitor<'tcx> for LifetimeContext<'a, 'tcx> {
         fk: intravisit::FnKind<'tcx>,
         fd: &'tcx hir::FnDecl<'tcx>,
         b: hir::BodyId,
-        s: rustc_span::Span,
+        s: latinoc_span::Span,
         hir_id: hir::HirId,
     ) {
         let name = match fk {
@@ -2711,7 +2711,7 @@ impl<'a, 'tcx> LifetimeContext<'a, 'tcx> {
                 Scope::Root | Scope::Body { .. } => {
                     // See issues #83907 and #83693. Just bail out from looking inside.
                     self.tcx.sess.delay_span_bug(
-                        rustc_span::DUMMY_SP,
+                        latinoc_span::DUMMY_SP,
                         "In fn_like_elision without appropriate scope above",
                     );
                     return;
@@ -3132,7 +3132,7 @@ impl<'a, 'tcx> LifetimeContext<'a, 'tcx> {
         // diagnostic pass and we don't want to emit more errors.
         if self.map.scope_for_path.is_some() {
             self.tcx.sess.delay_span_bug(
-                rustc_span::DUMMY_SP,
+                latinoc_span::DUMMY_SP,
                 "Encountered unexpected errors during diagnostics related part",
             );
             return;

@@ -4,12 +4,12 @@ use crate::dynamic_lib::DynamicLibrary;
 use crate::locator::{CrateError, CrateLocator, CratePaths};
 use crate::rmeta::{CrateDep, CrateMetadata, CrateNumMap, CrateRoot, MetadataBlob};
 
-use rustc_ast::expand::allocator::AllocatorKind;
-use rustc_ast::{self as ast, *};
+use latinoc_ast::expand::allocator::AllocatorKind;
+use latinoc_ast::{self as ast, *};
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::svh::Svh;
 use rustc_data_structures::sync::Lrc;
-use rustc_expand::base::SyntaxExtension;
+use latinoc_expand::base::SyntaxExtension;
 use rustc_hir::def_id::{CrateNum, LocalDefId, StableCrateId, LOCAL_CRATE};
 use rustc_hir::definitions::Definitions;
 use rustc_index::vec::IndexVec;
@@ -22,9 +22,9 @@ use rustc_session::lint::{self, BuiltinLintDiagnostics, ExternDepSpec};
 use rustc_session::output::validate_crate_name;
 use rustc_session::search_paths::PathKind;
 use rustc_session::Session;
-use rustc_span::edition::Edition;
-use rustc_span::symbol::{sym, Symbol};
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::edition::Edition;
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::{Span, DUMMY_SP};
 use rustc_target::spec::{PanicStrategy, TargetTriple};
 
 use proc_macro::bridge::client::ProcMacro;

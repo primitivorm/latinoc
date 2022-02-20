@@ -3,11 +3,11 @@ use clippy_utils::higher::{get_vec_init_kind, VecInitKind};
 use clippy_utils::ty::{is_type_diagnostic_item, is_uninit_value_valid_for_ty};
 use clippy_utils::{is_lint_allowed, path_to_local_id, peel_hir_expr_while, SpanlessEq};
 use rustc_hir::{Block, Expr, ExprKind, HirId, PatKind, PathSegment, Stmt, StmtKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::{sym, Span};
+use latinoc_span::{sym, Span};
 
 // TODO: add `ReadBuf` (RFC 2930) in "How to fix" once it is available in std
 declare_clippy_lint! {

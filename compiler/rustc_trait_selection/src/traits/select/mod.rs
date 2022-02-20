@@ -42,7 +42,7 @@ use rustc_middle::ty::subst::{GenericArgKind, Subst, SubstsRef};
 use rustc_middle::ty::WithConstness;
 use rustc_middle::ty::{self, PolyProjectionPredicate, ToPolyTraitRef, ToPredicate};
 use rustc_middle::ty::{Ty, TyCtxt, TypeFoldable};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use std::cell::{Cell, RefCell};
 use std::cmp;

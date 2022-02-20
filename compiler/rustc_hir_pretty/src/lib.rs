@@ -1,16 +1,16 @@
 #![recursion_limit = "256"]
 
-use rustc_ast as ast;
-use rustc_ast::util::parser::{self, AssocOp, Fixity};
+use latinoc_ast as ast;
+use latinoc_ast::util::parser::{self, AssocOp, Fixity};
 use rustc_ast_pretty::pp::Breaks::{Consistent, Inconsistent};
 use rustc_ast_pretty::pp::{self, Breaks};
 use rustc_ast_pretty::pprust::{Comments, PrintState};
 use rustc_hir as hir;
 use rustc_hir::{GenericArg, GenericParam, GenericParamKind, Node};
 use rustc_hir::{GenericBound, PatKind, RangeEnd, TraitBoundModifier};
-use rustc_span::source_map::{SourceMap, Spanned};
-use rustc_span::symbol::{kw, Ident, IdentPrinter, Symbol};
-use rustc_span::{self, BytePos, FileName};
+use latinoc_span::source_map::{SourceMap, Spanned};
+use latinoc_span::symbol::{kw, Ident, IdentPrinter, Symbol};
+use latinoc_span::{self, BytePos, FileName};
 use rustc_target::spec::abi::Abi;
 
 use std::borrow::Cow;
@@ -234,7 +234,7 @@ pub fn enum_def_to_string(
     enum_definition: &hir::EnumDef<'_>,
     generics: &hir::Generics<'_>,
     name: Symbol,
-    span: rustc_span::Span,
+    span: latinoc_span::Span,
     visibility: &hir::Visibility<'_>,
 ) -> String {
     to_string(NO_ANN, |s| s.print_enum_def(enum_definition, generics, name, span, visibility))
@@ -271,7 +271,7 @@ impl<'a> State<'a> {
         self.end(); // close the head-box
     }
 
-    pub fn bclose_maybe_open(&mut self, span: rustc_span::Span, close_box: bool) {
+    pub fn bclose_maybe_open(&mut self, span: latinoc_span::Span, close_box: bool) {
         self.maybe_print_comment(span.hi());
         self.break_offset_if_not_bol(1, -(INDENT_UNIT as isize));
         self.s.word("}");
@@ -280,7 +280,7 @@ impl<'a> State<'a> {
         }
     }
 
-    pub fn bclose(&mut self, span: rustc_span::Span) {
+    pub fn bclose(&mut self, span: latinoc_span::Span) {
         self.bclose_maybe_open(span, true)
     }
 
@@ -314,7 +314,7 @@ impl<'a> State<'a> {
     pub fn commasep_cmnt<T, F, G>(&mut self, b: Breaks, elts: &[T], mut op: F, mut get_span: G)
     where
         F: FnMut(&mut State<'_>, &T),
-        G: FnMut(&T) -> rustc_span::Span,
+        G: FnMut(&T) -> latinoc_span::Span,
     {
         self.rbox(0, b);
         let len = elts.len();
@@ -809,7 +809,7 @@ impl<'a> State<'a> {
         enum_definition: &hir::EnumDef<'_>,
         generics: &hir::Generics<'_>,
         name: Symbol,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         visibility: &hir::Visibility<'_>,
     ) {
         self.head(visibility_qualified(visibility, "enum"));
@@ -820,7 +820,7 @@ impl<'a> State<'a> {
         self.print_variants(&enum_definition.variants, span)
     }
 
-    pub fn print_variants(&mut self, variants: &[hir::Variant<'_>], span: rustc_span::Span) {
+    pub fn print_variants(&mut self, variants: &[hir::Variant<'_>], span: latinoc_span::Span) {
         self.bopen();
         for v in variants {
             self.space_if_not_bol();
@@ -868,7 +868,7 @@ impl<'a> State<'a> {
         struct_def: &hir::VariantData<'_>,
         generics: &hir::Generics<'_>,
         name: Symbol,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         print_finalizer: bool,
     ) {
         self.print_name(name);
@@ -944,18 +944,18 @@ impl<'a> State<'a> {
         match ti.kind {
             hir::TraitItemKind::Const(ref ty, default) => {
                 let vis =
-                    Spanned { span: rustc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
+                    Spanned { span: latinoc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
                 self.print_associated_const(ti.ident, &ty, default, &vis);
             }
             hir::TraitItemKind::Fn(ref sig, hir::TraitFn::Required(ref arg_names)) => {
                 let vis =
-                    Spanned { span: rustc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
+                    Spanned { span: latinoc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
                 self.print_method_sig(ti.ident, sig, &ti.generics, &vis, arg_names, None);
                 self.s.word(";");
             }
             hir::TraitItemKind::Fn(ref sig, hir::TraitFn::Provided(body)) => {
                 let vis =
-                    Spanned { span: rustc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
+                    Spanned { span: latinoc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited };
                 self.head("");
                 self.print_method_sig(ti.ident, sig, &ti.generics, &vis, &[], Some(body));
                 self.nbsp();
@@ -2385,8 +2385,8 @@ impl<'a> State<'a> {
         }
         let generics = hir::Generics {
             params: &[],
-            where_clause: hir::WhereClause { predicates: &[], span: rustc_span::DUMMY_SP },
-            span: rustc_span::DUMMY_SP,
+            where_clause: hir::WhereClause { predicates: &[], span: latinoc_span::DUMMY_SP },
+            span: latinoc_span::DUMMY_SP,
         };
         self.print_fn(
             decl,
@@ -2398,7 +2398,7 @@ impl<'a> State<'a> {
             },
             name,
             &generics,
-            &Spanned { span: rustc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited },
+            &Spanned { span: latinoc_span::DUMMY_SP, node: hir::VisibilityKind::Inherited },
             arg_names,
             None,
         );
@@ -2407,7 +2407,7 @@ impl<'a> State<'a> {
 
     pub fn maybe_print_trailing_comment(
         &mut self,
-        span: rustc_span::Span,
+        span: latinoc_span::Span,
         next_pos: Option<BytePos>,
     ) {
         if let Some(cmnts) = self.comments() {

@@ -1,14 +1,14 @@
 use super::{ForceCollect, Parser, PathStyle, TrailingToken};
 use crate::{maybe_recover_from_interpolated_ty_qpath, maybe_whole};
-//use rustc_ast::mut_visit::{noop_visit_pat, MutVisitor};
-use rustc_ast::ptr::P;
-use rustc_ast::token;
-use rustc_ast::{self as ast, AttrVec, Attribute, MacCall, Pat, PatField, PatKind, RangeEnd};
-use rustc_ast::{BindingMode, Expr, ExprKind, Mutability, Path, QSelf, RangeSyntax};
+//use latinoc_ast::mut_visit::{noop_visit_pat, MutVisitor};
+use latinoc_ast::ptr::P;
+use latinoc_ast::token;
+use latinoc_ast::{self as ast, AttrVec, Attribute, MacCall, Pat, PatField, PatKind, RangeEnd};
+use latinoc_ast::{BindingMode, Expr, ExprKind, Mutability, Path, QSelf, RangeSyntax};
 use rustc_ast_pretty::pprust;
 use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder, PResult};
-use rustc_span::source_map::{respan, Span, Spanned};
-use rustc_span::symbol::{kw, sym, Ident};
+use latinoc_span::source_map::{respan, Span, Spanned};
+use latinoc_span::symbol::{kw, sym, Ident};
 
 type Expected = Option<&'static str>;
 

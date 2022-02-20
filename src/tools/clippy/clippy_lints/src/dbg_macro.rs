@@ -1,11 +1,11 @@
 use clippy_utils::diagnostics::{span_lint_and_help, span_lint_and_sugg};
 use clippy_utils::source::snippet_opt;
-use rustc_ast::ast;
-use rustc_ast::tokenstream::TokenStream;
+use latinoc_ast::ast;
+use latinoc_ast::tokenstream::TokenStream;
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 declare_clippy_lint! {
     /// ### What it does

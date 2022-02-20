@@ -5,7 +5,7 @@ use rustc_errors::{DiagnosticBuilder, ErrorReported};
 use rustc_hir as hir;
 use rustc_middle::mir::AssertKind;
 use rustc_middle::ty::{layout::LayoutError, query::TyCtxtAt, ConstInt};
-use rustc_span::{Span, Symbol};
+use latinoc_span::{Span, Symbol};
 
 use super::InterpCx;
 use crate::interpret::{

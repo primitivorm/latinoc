@@ -5,9 +5,9 @@
 use crate::line_span;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind};
-use rustc_lint::{LateContext, LintContext};
-use rustc_span::hygiene;
-use rustc_span::{BytePos, Pos, Span, SyntaxContext};
+use latinoc_lint::{LateContext, LintContext};
+use latinoc_span::hygiene;
+use latinoc_span::{BytePos, Pos, Span, SyntaxContext};
 use std::borrow::Cow;
 
 /// Like `snippet_block`, but add braces if the expr is not an `ExprKind::Block`.

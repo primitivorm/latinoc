@@ -5,7 +5,7 @@ use super::usefulness::{
 use super::{PatCtxt, PatternError};
 
 use rustc_arena::TypedArena;
-use rustc_ast::Mutability;
+use latinoc_ast::Mutability;
 use rustc_errors::{error_code, struct_span_err, Applicability, DiagnosticBuilder};
 use rustc_hir as hir;
 use rustc_hir::def::*;
@@ -17,7 +17,7 @@ use rustc_session::lint::builtin::{
     BINDINGS_WITH_VARIANT_NAME, IRREFUTABLE_LET_PATTERNS, UNREACHABLE_PATTERNS,
 };
 use rustc_session::Session;
-use rustc_span::{DesugaringKind, ExpnKind, Span};
+use latinoc_span::{DesugaringKind, ExpnKind, Span};
 
 crate fn check_match(tcx: TyCtxt<'_>, def_id: DefId) {
     let body_id = match def_id.as_local() {

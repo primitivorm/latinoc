@@ -39,7 +39,7 @@ use crate::spec::abi::{lookup as lookup_abi, Abi};
 use crate::spec::crt_objects::{CrtObjects, CrtObjectsFallback};
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
 use rustc_serialize::json::{Json, ToJson};
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 use std::collections::BTreeMap;
 use std::convert::TryFrom;
 use std::ops::{Deref, DerefMut};

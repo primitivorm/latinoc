@@ -7,12 +7,12 @@ use std::fmt::{self, Write};
 use std::mem;
 use std::ops;
 
-use rustc_ast::{LitKind, MetaItem, MetaItemKind, NestedMetaItem};
+use latinoc_ast::{LitKind, MetaItem, MetaItemKind, NestedMetaItem};
 use rustc_feature::Features;
 use rustc_session::parse::ParseSess;
-use rustc_span::symbol::{sym, Symbol};
+use latinoc_span::symbol::{sym, Symbol};
 
-use rustc_span::Span;
+use latinoc_span::Span;
 
 use crate::html::escape::Escape;
 

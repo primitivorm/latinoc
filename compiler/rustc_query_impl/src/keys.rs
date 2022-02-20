@@ -7,8 +7,8 @@ use rustc_middle::traits;
 use rustc_middle::ty::fast_reject::SimplifiedType;
 use rustc_middle::ty::subst::{GenericArg, SubstsRef};
 use rustc_middle::ty::{self, Ty, TyCtxt};
-use rustc_span::symbol::{Ident, Symbol};
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::symbol::{Ident, Symbol};
+use latinoc_span::{Span, DUMMY_SP};
 
 /// The `Key` trait controls what types can legally be used as the key
 /// for a query.

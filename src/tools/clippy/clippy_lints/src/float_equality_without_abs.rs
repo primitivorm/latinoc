@@ -1,14 +1,14 @@
 use clippy_utils::diagnostics::span_lint_and_then;
 use clippy_utils::{match_def_path, paths, sugg};
 use if_chain::if_chain;
-use rustc_ast::util::parser::AssocOp;
+use latinoc_ast::util::parser::AssocOp;
 use rustc_errors::Applicability;
 use rustc_hir::def::{DefKind, Res};
 use rustc_hir::{BinOpKind, Expr, ExprKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Spanned;
+use latinoc_span::source_map::Spanned;
 
 declare_clippy_lint! {
     /// ### What it does

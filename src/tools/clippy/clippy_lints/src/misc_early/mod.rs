@@ -9,13 +9,13 @@ mod zero_prefixed_literal;
 
 use clippy_utils::diagnostics::span_lint;
 use clippy_utils::source::snippet_opt;
-use rustc_ast::ast::{Expr, ExprKind, Generics, Lit, LitFloatType, LitIntType, LitKind, NodeId, Pat, PatKind};
-use rustc_ast::visit::FnKind;
+use latinoc_ast::ast::{Expr, ExprKind, Generics, Lit, LitFloatType, LitIntType, LitKind, NodeId, Pat, PatKind};
+use latinoc_ast::visit::FnKind;
 use rustc_data_structures::fx::FxHashMap;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_middle::lint::in_external_macro;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 declare_clippy_lint! {
     /// ### What it does

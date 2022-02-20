@@ -3,7 +3,7 @@
 
 use std::cell::Cell;
 
-use rustc_ast::Mutability;
+use latinoc_ast::Mutability;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_hir::def::DefKind;
 use rustc_hir::HirId;
@@ -23,7 +23,7 @@ use rustc_middle::ty::{
     self, ConstInt, ConstKind, Instance, ParamEnv, ScalarInt, Ty, TyCtxt, TypeFoldable,
 };
 use rustc_session::lint;
-use rustc_span::{def_id::DefId, Span};
+use latinoc_span::{def_id::DefId, Span};
 use rustc_target::abi::{HasDataLayout, Size, TargetDataLayout};
 use rustc_target::spec::abi::Abi;
 use rustc_trait_selection::traits;

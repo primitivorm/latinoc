@@ -10,8 +10,8 @@ use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_hir::def_id::LOCAL_CRATE;
 use rustc_middle::ty::TyCtxt;
 use rustc_session::Session;
-use rustc_span::edition::Edition;
-use rustc_span::source_map::FileName;
+use latinoc_span::edition::Edition;
+use latinoc_span::source_map::FileName;
 use std::ffi::OsStr;
 use std::fs;
 use std::path::{Component, Path, PathBuf};
@@ -147,7 +147,7 @@ impl SourceCollector<'_, 'tcx> {
     fn emit_source(
         &mut self,
         filename: &FileName,
-        file_span: rustc_span::Span,
+        file_span: latinoc_span::Span,
     ) -> Result<(), Error> {
         let p = match *filename {
             FileName::Real(ref file) => {
@@ -265,7 +265,7 @@ crate fn print_src(
     buf: &mut Buffer,
     s: &str,
     edition: Edition,
-    file_span: rustc_span::Span,
+    file_span: latinoc_span::Span,
     context: &Context<'_>,
     root_path: &str,
     decoration_info: Option<highlight::DecorationInfo>,

@@ -1,7 +1,7 @@
 #![feature(rustc_private)]
 
 extern crate latinoc_driver;
-extern crate rustc_span;
+extern crate latinoc_span;
 
 use std::cell::RefCell;
 use std::collections::BTreeMap;
@@ -12,7 +12,7 @@ use std::io::Write;
 use std::path::Path;
 use std::path::PathBuf;
 
-use rustc_span::edition::DEFAULT_EDITION;
+use latinoc_span::edition::DEFAULT_EDITION;
 
 use rustdoc::html::markdown::{ErrorCodes, HeadingOffset, IdMap, Markdown, Playground};
 
@@ -271,7 +271,7 @@ fn main() {
     latinoc_driver::init_env_logger("RUST_LOG");
     let (format, dst) = parse_args();
     let result =
-        rustc_span::create_default_session_globals_then(move || main_with_result(format, &dst));
+        latinoc_span::create_default_session_globals_then(move || main_with_result(format, &dst));
     if let Err(e) = result {
         panic!("{}", e.to_string());
     }

@@ -294,7 +294,7 @@ use rustc_hir::def_id::DefId;
 use rustc_hir::HirId;
 use rustc_middle::ty::{self, Ty, TyCtxt};
 use rustc_session::lint::builtin::NON_EXHAUSTIVE_OMITTED_PATTERNS;
-use rustc_span::{Span, DUMMY_SP};
+use latinoc_span::{Span, DUMMY_SP};
 
 use smallvec::{smallvec, SmallVec};
 use std::fmt;
@@ -720,7 +720,7 @@ impl<'p, 'tcx> Witness<'p, 'tcx> {
 /// Report that a match of a `non_exhaustive` enum marked with `non_exhaustive_omitted_patterns`
 /// is not exhaustive enough.
 ///
-/// NB: The partner lint for structs lives in `compiler/rustc_typeck/src/check/pat.rs`.
+/// NB: The partner lint for structs lives in `compiler/latinoc_typeck/src/check/pat.rs`.
 fn lint_non_exhaustive_omitted_patterns<'p, 'tcx>(
     cx: &MatchCheckCtxt<'p, 'tcx>,
     scrut_ty: Ty<'tcx>,

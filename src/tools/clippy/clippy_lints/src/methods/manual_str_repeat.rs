@@ -4,12 +4,12 @@ use clippy_utils::sugg::Sugg;
 use clippy_utils::ty::{is_type_diagnostic_item, is_type_lang_item, match_type};
 use clippy_utils::{is_expr_path_def_path, paths};
 use if_chain::if_chain;
-use rustc_ast::LitKind;
+use latinoc_ast::LitKind;
 use rustc_errors::Applicability;
 use rustc_hir::{Expr, ExprKind, LangItem};
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::{self, Ty, TyS};
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 use std::borrow::Cow;
 
 use super::MANUAL_STR_REPEAT;

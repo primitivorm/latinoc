@@ -6,11 +6,11 @@ use clippy_utils::ty::is_copy;
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir::{BorrowKind, Expr, ExprKind, Mutability};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::ty::layout::LayoutOf;
 use rustc_middle::ty::{self, Ty};
 use rustc_session::{declare_tool_lint, impl_lint_pass};
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 
 #[allow(clippy::module_name_repetitions)]
 #[derive(Copy, Clone)]

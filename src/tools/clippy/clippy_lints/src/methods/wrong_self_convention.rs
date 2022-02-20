@@ -1,9 +1,9 @@
 use crate::methods::SelfKind;
 use clippy_utils::diagnostics::span_lint_and_help;
 use clippy_utils::ty::is_copy;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty::TyS;
-use rustc_span::source_map::Span;
+use latinoc_span::source_map::Span;
 use std::fmt;
 
 use super::WRONG_SELF_CONVENTION;

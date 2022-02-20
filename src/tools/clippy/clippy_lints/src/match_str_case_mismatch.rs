@@ -1,16 +1,16 @@
 use clippy_utils::diagnostics::span_lint_and_sugg;
 use clippy_utils::ty::is_type_diagnostic_item;
-use rustc_ast::ast::LitKind;
+use latinoc_ast::ast::LitKind;
 use rustc_errors::Applicability;
 use rustc_hir::intravisit::{walk_expr, NestedVisitorMap, Visitor};
 use rustc_hir::{Arm, Expr, ExprKind, MatchSource, PatKind};
-use rustc_lint::{LateContext, LateLintPass};
+use latinoc_lint::{LateContext, LateLintPass};
 use rustc_middle::hir::map::Map;
 use rustc_middle::lint::in_external_macro;
 use rustc_middle::ty;
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::symbol::SymbolStr;
-use rustc_span::{sym, Span};
+use latinoc_span::symbol::SymbolStr;
+use latinoc_span::{sym, Span};
 
 declare_clippy_lint! {
     /// ### What it does

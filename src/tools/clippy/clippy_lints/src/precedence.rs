@@ -1,11 +1,11 @@
 use clippy_utils::diagnostics::span_lint_and_sugg;
 use clippy_utils::source::snippet_with_applicability;
 use if_chain::if_chain;
-use rustc_ast::ast::{BinOpKind, Expr, ExprKind, LitKind, UnOp};
+use latinoc_ast::ast::{BinOpKind, Expr, ExprKind, LitKind, UnOp};
 use rustc_errors::Applicability;
-use rustc_lint::{EarlyContext, EarlyLintPass};
+use latinoc_lint::{EarlyContext, EarlyLintPass};
 use rustc_session::{declare_lint_pass, declare_tool_lint};
-use rustc_span::source_map::Spanned;
+use latinoc_span::source_map::Spanned;
 
 const ALLOWED_ODD_FUNCTIONS: [&str; 14] = [
     "asin",
@@ -149,12 +149,12 @@ fn is_arith_expr(expr: &Expr) -> bool {
 
 #[must_use]
 fn is_bit_op(op: BinOpKind) -> bool {
-    use rustc_ast::ast::BinOpKind::{BitAnd, BitOr, BitXor, Shl, Shr};
+    use latinoc_ast::ast::BinOpKind::{BitAnd, BitOr, BitXor, Shl, Shr};
     matches!(op, BitXor | BitAnd | BitOr | Shl | Shr)
 }
 
 #[must_use]
 fn is_arith_op(op: BinOpKind) -> bool {
-    use rustc_ast::ast::BinOpKind::{Add, Div, Mul, Rem, Sub};
+    use latinoc_ast::ast::BinOpKind::{Add, Div, Mul, Rem, Sub};
     matches!(op, Add | Sub | Mul | Div | Rem)
 }

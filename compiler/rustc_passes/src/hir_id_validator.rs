@@ -27,7 +27,7 @@ pub fn check_crate(tcx: TyCtxt<'_>) {
 
     if !errors.is_empty() {
         let message = errors.iter().fold(String::new(), |s1, s2| s1 + "\n" + s2);
-        tcx.sess.delay_span_bug(rustc_span::DUMMY_SP, &message);
+        tcx.sess.delay_span_bug(latinoc_span::DUMMY_SP, &message);
     }
 }
 

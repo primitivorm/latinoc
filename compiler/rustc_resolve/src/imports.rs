@@ -9,7 +9,7 @@ use crate::{BindingKey, ModuleKind, ResolutionError, Resolver, Segment};
 use crate::{CrateLint, Module, ModuleOrUniformRoot, ParentScope, PerNS, ScopeSet, Weak};
 use crate::{NameBinding, NameBindingKind, PathResult, PrivacyError, ToNameBinding};
 
-use rustc_ast::NodeId;
+use latinoc_ast::NodeId;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_data_structures::ptr_key::PtrKey;
 use rustc_errors::{pluralize, struct_span_err, Applicability};
@@ -20,10 +20,10 @@ use rustc_middle::span_bug;
 use rustc_middle::ty;
 use rustc_session::lint::builtin::{PUB_USE_OF_PRIVATE_EXTERN_CRATE, UNUSED_IMPORTS};
 use rustc_session::lint::BuiltinLintDiagnostics;
-use rustc_span::hygiene::LocalExpnId;
-use rustc_span::lev_distance::find_best_match_for_name;
-use rustc_span::symbol::{kw, Ident, Symbol};
-use rustc_span::{MultiSpan, Span};
+use latinoc_span::hygiene::LocalExpnId;
+use latinoc_span::lev_distance::find_best_match_for_name;
+use latinoc_span::symbol::{kw, Ident, Symbol};
+use latinoc_span::{MultiSpan, Span};
 
 use tracing::*;
 

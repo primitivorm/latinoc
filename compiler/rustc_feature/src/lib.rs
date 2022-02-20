@@ -22,7 +22,7 @@ mod removed;
 #[cfg(test)]
 mod tests;
 
-use rustc_span::{edition::Edition, symbol::Symbol, Span};
+use latinoc_span::{edition::Edition, symbol::Symbol, Span};
 use std::fmt;
 use std::num::NonZeroU32;
 

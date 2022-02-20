@@ -5,13 +5,13 @@
 use crate::search_paths::PathKind;
 use crate::utils::NativeLibKind;
 use crate::Session;
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::sync::{self, MetadataRef};
 use rustc_hir::def_id::{CrateNum, DefId, StableCrateId, LOCAL_CRATE};
 use rustc_hir::definitions::{DefKey, DefPath, DefPathHash};
-use rustc_span::hygiene::{ExpnHash, ExpnId};
-use rustc_span::symbol::Symbol;
-use rustc_span::Span;
+use latinoc_span::hygiene::{ExpnHash, ExpnId};
+use latinoc_span::symbol::Symbol;
+use latinoc_span::Span;
 use rustc_target::spec::Target;
 
 use std::any::Any;

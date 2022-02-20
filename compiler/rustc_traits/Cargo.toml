@@ -10,8 +10,8 @@ rustc_middle = { path = "../rustc_middle" }
 rustc_data_structures = { path = "../rustc_data_structures" }
 rustc_hir = { path = "../rustc_hir" }
 rustc_index = { path = "../rustc_index" }
-rustc_ast = { path = "../rustc_ast" }
-rustc_span = { path = "../rustc_span" }
+latinoc_ast = { path = "../latinoc_ast" }
+latinoc_span = { path = "../latinoc_span" }
 chalk-ir = "0.55.0"
 chalk-solve = "0.55.0"
 chalk-engine = "0.55.0"

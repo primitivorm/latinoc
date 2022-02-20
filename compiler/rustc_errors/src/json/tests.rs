@@ -1,12 +1,12 @@
 use super::*;
 
 use crate::json::JsonEmitter;
-use rustc_span::source_map::{FilePathMapping, SourceMap};
+use latinoc_span::source_map::{FilePathMapping, SourceMap};
 
 use crate::emitter::{ColorConfig, HumanReadableErrorType};
 use crate::Handler;
 use rustc_serialize::json::decode;
-use rustc_span::{BytePos, Span};
+use latinoc_span::{BytePos, Span};
 
 use std::str;
 
@@ -43,7 +43,7 @@ impl<T: Write> Write for Shared<T> {
 fn test_positions(code: &str, span: (u32, u32), expected_output: SpanTestData) {
     let expected_output = TestData { spans: vec![expected_output] };
 
-    rustc_span::create_default_session_globals_then(|| {
+    latinoc_span::create_default_session_globals_then(|| {
         let sm = Lrc::new(SourceMap::new(FilePathMapping::empty()));
         sm.new_source_file(Path::new("test.rs").to_owned().into(), code.to_owned());
 

@@ -9,9 +9,9 @@ use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_hir::def_id::{DefId, LOCAL_CRATE};
 use rustc_middle::ty::TyCtxt;
 use rustc_session::Session;
-use rustc_span::edition::Edition;
-use rustc_span::source_map::FileName;
-use rustc_span::symbol::sym;
+use latinoc_span::edition::Edition;
+use latinoc_span::source_map::FileName;
+use latinoc_span::symbol::sym;
 
 use super::cache::{build_index, ExternalLocation};
 use super::print_item::{full_path, item_path, print_item};
@@ -124,7 +124,7 @@ crate struct SharedContext<'tcx> {
 
     /// Correspondance map used to link types used in the source code pages to allow to click on
     /// links to jump to the type's definition.
-    crate span_correspondance_map: FxHashMap<rustc_span::Span, LinkFromSrc>,
+    crate span_correspondance_map: FxHashMap<latinoc_span::Span, LinkFromSrc>,
     /// The [`Cache`] used during rendering.
     crate cache: Cache,
 

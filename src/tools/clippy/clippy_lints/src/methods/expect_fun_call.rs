@@ -4,10 +4,10 @@ use clippy_utils::source::snippet_with_applicability;
 use clippy_utils::ty::is_type_diagnostic_item;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty;
-use rustc_span::source_map::Span;
-use rustc_span::symbol::sym;
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::sym;
 use std::borrow::Cow;
 
 use super::EXPECT_FUN_CALL;

@@ -30,8 +30,8 @@ use rustc_data_structures::AtomicRef;
 pub use rustc_lint_defs::{pluralize, Applicability};
 use rustc_serialize::json::Json;
 use rustc_serialize::{Decodable, Decoder, Encodable, Encoder};
-use rustc_span::source_map::SourceMap;
-use rustc_span::{Loc, MultiSpan, Span};
+use latinoc_span::source_map::SourceMap;
+use latinoc_span::{Loc, MultiSpan, Span};
 
 use std::borrow::Cow;
 use std::hash::{Hash, Hasher};
@@ -203,7 +203,7 @@ impl CodeSuggestion {
         // corresponds to the output snippet's lines, while the second level corresponds to the
         // substrings within that line that should be highlighted.
 
-        use rustc_span::{CharPos, Pos};
+        use latinoc_span::{CharPos, Pos};
 
         /// Append to a buffer the remainder of the line of existing source code, and return the
         /// count of lines that have been added for accurate highlighting.
@@ -379,7 +379,7 @@ impl CodeSuggestion {
     }
 }
 
-pub use rustc_span::fatal_error::{FatalError, FatalErrorMarker};
+pub use latinoc_span::fatal_error::{FatalError, FatalErrorMarker};
 
 /// Signifies that the compiler died with an explicit call to `.bug`
 /// or `.span_bug` rather than a failed assertion, etc.

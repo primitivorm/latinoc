@@ -4,15 +4,15 @@
 // and `#[unstable (..)]`), but are not declared in one single location
 // (unlike lang features), which means we need to collect them instead.
 
-use rustc_ast::{Attribute, MetaItem, MetaItemKind};
+use latinoc_ast::{Attribute, MetaItem, MetaItemKind};
 use rustc_errors::struct_span_err;
 use rustc_hir::intravisit::{NestedVisitorMap, Visitor};
 use rustc_middle::hir::map::Map;
 use rustc_middle::middle::lib_features::LibFeatures;
 use rustc_middle::ty::query::Providers;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::symbol::Symbol;
-use rustc_span::{sym, Span};
+use latinoc_span::symbol::Symbol;
+use latinoc_span::{sym, Span};
 
 fn new_lib_features() -> LibFeatures {
     LibFeatures { stable: Default::default(), unstable: Default::default() }

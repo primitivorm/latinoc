@@ -3,14 +3,14 @@
 #![deny(clippy::internal)]
 #![allow(clippy::unnecessary_operation, unused_must_use)]
 
-extern crate rustc_span;
+extern crate latinoc_span;
 
-use rustc_span::symbol::{Ident, Symbol};
+use latinoc_span::symbol::{Ident, Symbol};
 
 fn main() {
-    Symbol::intern("foo") == rustc_span::sym::clippy;
-    Symbol::intern("foo") == rustc_span::symbol::kw::SelfLower;
-    Symbol::intern("foo") != rustc_span::symbol::kw::SelfUpper;
-    Ident::empty().name == rustc_span::sym::clippy;
-    rustc_span::sym::clippy == Ident::empty().name;
+    Symbol::intern("foo") == latinoc_span::sym::clippy;
+    Symbol::intern("foo") == latinoc_span::symbol::kw::SelfLower;
+    Symbol::intern("foo") != latinoc_span::symbol::kw::SelfUpper;
+    Ident::empty().name == latinoc_span::sym::clippy;
+    latinoc_span::sym::clippy == Ident::empty().name;
 }

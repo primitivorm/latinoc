@@ -10,7 +10,7 @@
 //! cargo test symbols::test_symbols -- --nocapture
 //! ```
 //!
-//! This unit test finds the `symbols!` invocation in `compiler/rustc_span/src/symbol.rs`
+//! This unit test finds the `symbols!` invocation in `compiler/latinoc_span/src/symbol.rs`
 //! and runs it. It verifies that the output token stream can be parsed as valid module
 //! items and that no errors were produced.
 //!
@@ -18,8 +18,8 @@
 //!
 //! ```bash
 //! cargo install cargo-expand          # this is necessary only once
-//! cd compiler/rustc_span
-//! cargo expand > /tmp/rustc_span.rs   # it's a big file
+//! cd compiler/latinoc_span
+//! cargo expand > /tmp/latinoc_span.rs   # it's a big file
 //! ```
 
 use proc_macro2::{Span, TokenStream};
@@ -229,7 +229,7 @@ fn symbols_with_errors(input: TokenStream) -> (TokenStream, Vec<syn::Error>) {
     // Do this once to install:
     //      cargo install cargo-expand
     //
-    // Then, cd to rustc_span and run:
+    // Then, cd to latinoc_span and run:
     //      cargo expand > /tmp/rustc_span_expanded.rs
     //
     // and read that file.

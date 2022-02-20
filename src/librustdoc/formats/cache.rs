@@ -4,7 +4,7 @@ use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_hir::def_id::{CrateNum, DefId, CRATE_DEF_INDEX};
 use rustc_middle::middle::privacy::AccessLevels;
 use rustc_middle::ty::TyCtxt;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use crate::clean::{self, ExternalCrate, ItemId, PrimitiveType};
 use crate::core::DocContext;

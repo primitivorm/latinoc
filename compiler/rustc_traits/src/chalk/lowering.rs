@@ -31,12 +31,12 @@
 //! not. To lower anything wrapped in a `Binder`, we first deeply find any bound
 //! variables from the current `Binder`.
 
-use rustc_ast::ast;
+use latinoc_ast::ast;
 use rustc_middle::traits::{ChalkEnvironmentAndGoal, ChalkRustInterner as RustInterner};
 use rustc_middle::ty::fold::TypeFolder;
 use rustc_middle::ty::subst::{GenericArg, GenericArgKind, SubstsRef};
 use rustc_middle::ty::{self, Binder, Region, RegionKind, Ty, TyCtxt, TypeFoldable, TypeVisitor};
-use rustc_span::def_id::DefId;
+use latinoc_span::def_id::DefId;
 
 use chalk_ir::{FnSig, ForeignDefId};
 use rustc_hir::Unsafety;
@@ -749,8 +749,8 @@ impl<'tcx> LowerInto<'tcx, chalk_solve::rust_ir::TraitBound<RustInterner<'tcx>>>
 impl<'tcx> LowerInto<'tcx, chalk_ir::Mutability> for ast::Mutability {
     fn lower_into(self, _interner: &RustInterner<'tcx>) -> chalk_ir::Mutability {
         match self {
-            rustc_ast::Mutability::Mut => chalk_ir::Mutability::Mut,
-            rustc_ast::Mutability::Not => chalk_ir::Mutability::Not,
+            latinoc_ast::Mutability::Mut => chalk_ir::Mutability::Mut,
+            latinoc_ast::Mutability::Not => chalk_ir::Mutability::Not,
         }
     }
 }

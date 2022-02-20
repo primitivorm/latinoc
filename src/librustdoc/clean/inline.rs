@@ -3,7 +3,7 @@
 use std::iter::once;
 use std::sync::Arc;
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fx::FxHashSet;
 use rustc_hir as hir;
 use rustc_hir::def::{DefKind, Res};
@@ -11,8 +11,8 @@ use rustc_hir::def_id::DefId;
 use rustc_hir::Mutability;
 use rustc_metadata::creader::{CStore, LoadedMacro};
 use rustc_middle::ty::{self, TyCtxt};
-use rustc_span::hygiene::MacroKind;
-use rustc_span::symbol::{kw, sym, Symbol};
+use latinoc_span::hygiene::MacroKind;
+use latinoc_span::symbol::{kw, sym, Symbol};
 
 use crate::clean::{
     self, utils, Attributes, AttributesExt, ImplKind, ItemId, NestedAttributesExt, Type,

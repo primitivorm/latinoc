@@ -20,7 +20,7 @@ extern crate tracing;
 #[macro_use]
 extern crate rustc_middle;
 
-use rustc_ast as ast;
+use latinoc_ast as ast;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::sync::Lrc;
 use rustc_hir::def_id::CrateNum;
@@ -31,7 +31,7 @@ use rustc_middle::ty::query::{ExternProviders, Providers};
 use rustc_session::config::{CrateType, OutputFilenames, OutputType, RUST_CGU_EXT};
 use rustc_session::cstore::{self, CrateSource};
 use rustc_session::utils::NativeLibKind;
-use rustc_span::symbol::Symbol;
+use latinoc_span::symbol::Symbol;
 use std::path::{Path, PathBuf};
 
 pub mod back;

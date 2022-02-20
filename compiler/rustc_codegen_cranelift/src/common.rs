@@ -350,7 +350,7 @@ impl<'tcx> FunctionCx<'_, '_, 'tcx> {
         let topmost = span.ctxt().outer_expn().expansion_cause().unwrap_or(span);
         let caller = self.tcx.sess.source_map().lookup_char_pos(topmost.lo());
         let const_loc = self.tcx.const_caller_location((
-            rustc_span::symbol::Symbol::intern(
+            latinoc_span::symbol::Symbol::intern(
                 &caller.file.name.prefer_remapped().to_string_lossy(),
             ),
             caller.line as u32,

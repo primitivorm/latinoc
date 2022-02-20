@@ -5,9 +5,9 @@ use clippy_utils::ty::is_type_diagnostic_item;
 use if_chain::if_chain;
 use rustc_errors::Applicability;
 use rustc_hir as hir;
-use rustc_lint::LateContext;
+use latinoc_lint::LateContext;
 use rustc_middle::ty;
-use rustc_span::symbol::sym;
+use latinoc_span::symbol::sym;
 
 use super::MAP_COLLECT_RESULT_UNIT;
 

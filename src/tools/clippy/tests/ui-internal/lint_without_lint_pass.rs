@@ -5,8 +5,8 @@
 extern crate rustc_middle;
 #[macro_use]
 extern crate rustc_session;
-extern crate rustc_lint;
-use rustc_lint::LintPass;
+extern crate latinoc_lint;
+use latinoc_lint::LintPass;
 
 declare_tool_lint! {
     pub clippy::TEST_LINT,

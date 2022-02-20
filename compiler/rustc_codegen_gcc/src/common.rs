@@ -15,7 +15,7 @@ use rustc_middle::mir::Mutability;
 use rustc_middle::ty::ScalarInt;
 use rustc_middle::ty::layout::{TyAndLayout, LayoutOf};
 use rustc_middle::mir::interpret::{Allocation, GlobalAlloc, Scalar};
-use rustc_span::Symbol;
+use latinoc_span::Symbol;
 use rustc_target::abi::{self, HasDataLayout, Pointer, Size};
 
 use crate::consts::const_alloc_to_gcc;
