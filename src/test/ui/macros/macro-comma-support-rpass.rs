@@ -139,7 +139,7 @@ fn eprint() {
 
 #[cfg(std)]
 #[test]
-fn eprintln() {
+fn eprintln!() {
     eprintln!();
     eprintln!("hello");
     eprintln!("hello",);

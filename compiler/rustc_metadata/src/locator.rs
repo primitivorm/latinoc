@@ -215,6 +215,8 @@
 use crate::creader::Library;
 use crate::rmeta::{rustc_version, MetadataBlob, METADATA_HEADER};
 
+use latinoc_span::symbol::{sym, Symbol};
+use latinoc_span::Span;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::memmap::Mmap;
 use rustc_data_structures::owning_ref::OwningRef;
@@ -227,8 +229,6 @@ use rustc_session::filesearch::{FileDoesntMatch, FileMatches, FileSearch};
 use rustc_session::search_paths::PathKind;
 use rustc_session::utils::CanonicalizedPath;
 use rustc_session::Session;
-use latinoc_span::symbol::{sym, Symbol};
-use latinoc_span::Span;
 use rustc_target::spec::{Target, TargetTriple};
 
 use snap::read::FrameDecoder;
@@ -377,6 +377,12 @@ impl<'a> CrateLocator<'a> {
         let staticlib_prefix =
             format!("{}{}{}", self.target.staticlib_prefix, self.crate_name, extra_prefix);
 
+        // TODO: proman. locator.rs find_library_crate
+        // println!(">>>>>> locator.rs find_library_crate");
+        // println!(">>> dylib_prefix: {:?}", dylib_prefix);
+        // println!(">>> rlib_prefix: {:?}", rlib_prefix);
+        // println!(">>> staticlib_prefix: {:?}", staticlib_prefix);
+
         let mut candidates: FxHashMap<_, (FxHashMap<_, _>, FxHashMap<_, _>, FxHashMap<_, _>)> =
             Default::default();
         let mut staticlibs = vec![];
@@ -425,6 +431,7 @@ impl<'a> CrateLocator<'a> {
             if seen_paths.contains(&path) {
                 return FileDoesntMatch;
             };
+            // println!(">>> path.clone(): {:?}", path.clone());
             seen_paths.insert(path.clone());
             match found_kind {
                 CrateFlavor::Rlib => rlibs.insert(path, kind),

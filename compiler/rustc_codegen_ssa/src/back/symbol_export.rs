@@ -159,6 +159,7 @@ fn exported_symbols_provider_local(
     cnum: CrateNum,
 ) -> &'tcx [(ExportedSymbol<'tcx>, SymbolExportLevel)] {
     assert_eq!(cnum, LOCAL_CRATE);
+    eprintln!("exported_symbols_provider_local");
 
     if !tcx.sess.opts.output_types.should_codegen() {
         return &[];
@@ -171,7 +172,8 @@ fn exported_symbols_provider_local(
         .collect();
 
     if tcx.entry_fn(()).is_some() {
-        let exported_symbol = ExportedSymbol::NoDefId(SymbolName::new(tcx, "main"));
+        // TODO: proman. Se cambia main pòr principal
+        let exported_symbol = ExportedSymbol::NoDefId(SymbolName::new(tcx, "principal"));
 
         symbols.push((exported_symbol, SymbolExportLevel::C));
     }

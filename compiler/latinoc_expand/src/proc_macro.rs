@@ -5,11 +5,11 @@ use latinoc_ast as ast;
 use latinoc_ast::ptr::P;
 use latinoc_ast::token;
 use latinoc_ast::tokenstream::{CanSynthesizeMissingTokens, TokenStream, TokenTree};
-use rustc_data_structures::sync::Lrc;
-use rustc_errors::ErrorReported;
 use latinoc_parse::nt_to_tokenstream;
 use latinoc_parse::parser::ForceCollect;
 use latinoc_span::{Span, DUMMY_SP};
+use rustc_data_structures::sync::Lrc;
+use rustc_errors::ErrorReported;
 
 const EXEC_STRATEGY: pm::bridge::server::SameThread = pm::bridge::server::SameThread;
 
@@ -76,6 +76,7 @@ impl MultiItemModifier for ProcMacroDerive {
         _meta_item: &ast::MetaItem,
         item: Annotatable,
     ) -> ExpandResult<Vec<Annotatable>, Annotatable> {
+        // eprintln!("proc_macro.rs expand");
         // We need special handling for statement items
         // (e.g. `fn foo() { #[derive(Debug)] struct Bar; }`)
         let mut is_stmt = false;
@@ -114,8 +115,11 @@ impl MultiItemModifier for ProcMacroDerive {
         };
 
         let error_count_before = ecx.sess.parse_sess.span_diagnostic.err_count();
-        let mut parser =
-            latinoc_parse::stream_to_parser(&ecx.sess.parse_sess, stream, Some("proc-macro derive"));
+        let mut parser = latinoc_parse::stream_to_parser(
+            &ecx.sess.parse_sess,
+            stream,
+            Some("proc-macro derive"),
+        );
         let mut items = vec![];
 
         loop {

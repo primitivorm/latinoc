@@ -162,7 +162,9 @@ impl Step for Rustc {
     const DEFAULT: bool = true;
 
     fn should_run(run: ShouldRun<'_>) -> ShouldRun<'_> {
-        run.all_krates("rustc-main")
+        // run.all_krates("rustc-main")
+        // TODO: proman. run.all_krates("rustc-main")
+        run.all_krates("latinoc-main")
     }
 
     fn make_run(run: RunConfig<'_>) {

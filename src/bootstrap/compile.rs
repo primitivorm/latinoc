@@ -254,6 +254,10 @@ fn copy_self_contained_objects(
         }
     }
 
+    // TODO: proman. copy_self_contained_objects
+    println!(">>>>>> compiler.rs. copy_self_contained_objects");
+    println!(">>> target_deps: {:?}", target_deps);
+
     target_deps
 }
 
@@ -389,6 +393,10 @@ impl Step for StdLink {
         ));
         let libdir = builder.sysroot_libdir(target_compiler, target);
         let hostdir = builder.sysroot_libdir(target_compiler, compiler.host);
+        // TODO: proman. compile.rs StdLink run
+        println!(">>> compile.rs StdLink run. libdir: {:?}", libdir);
+        println!(">>> compile.rs StdLink run. hostdir: {:?}", hostdir);
+
         add_to_sysroot(builder, &libdir, &hostdir, &libstd_stamp(builder, compiler, target));
     }
 }
@@ -553,6 +561,7 @@ impl Step for Rustc {
             // Copy the existing artifacts instead of rebuilding them.
             // NOTE: this path is only taken for tools linking to rustc-dev.
             builder.ensure(Sysroot { compiler });
+            println!(">>> builder.config.download_rustc && compiler.stage != 0");
             return;
         }
 
@@ -626,6 +635,7 @@ impl Step for Rustc {
             "Building stage{} compiler artifacts ({} -> {})",
             compiler.stage, &compiler.host, target
         ));
+
         run_cargo(
             builder,
             cargo,
@@ -655,6 +665,9 @@ pub fn rustc_cargo(builder: &Builder<'_>, cargo: &mut Cargo, target: TargetSelec
 }
 
 pub fn rustc_cargo_env(builder: &Builder<'_>, cargo: &mut Cargo, target: TargetSelection) {
+    // TODO: proman. compile.rs rustc_cargo_env
+    println!(">>>>>> compile.rs rustc_cargo_env");
+
     // Set some configuration variables picked up by build scripts and
     // the compiler alike
     cargo
@@ -662,19 +675,27 @@ pub fn rustc_cargo_env(builder: &Builder<'_>, cargo: &mut Cargo, target: TargetS
         .env("CFG_RELEASE_CHANNEL", &builder.config.channel)
         .env("CFG_VERSION", builder.rust_version());
 
+    println!(">>> CFG_RELEASE: {:?}", builder.rust_release());
+    println!(">>> CFG_RELEASE_CHANNEL: {:?}", &builder.config.channel);
+
     let libdir_relative = builder.config.libdir_relative().unwrap_or_else(|| Path::new("lib"));
     cargo.env("CFG_LIBDIR_RELATIVE", libdir_relative);
 
+    println!(">>> CFG_LIBDIR_RELATIVE: {:?}", libdir_relative);
+
     if let Some(ref ver_date) = builder.rust_info.commit_date() {
+        println!(">>> CFG_VER_DATE: {:?}", ver_date);
         cargo.env("CFG_VER_DATE", ver_date);
     }
     if let Some(ref ver_hash) = builder.rust_info.sha() {
+        println!(">>> CFG_VER_HASH: {:?}", ver_hash);
         cargo.env("CFG_VER_HASH", ver_hash);
     }
     if !builder.unstable_features() {
         cargo.env("CFG_DISABLE_UNSTABLE_FEATURES", "1");
     }
     if let Some(ref s) = builder.config.rustc_default_linker {
+        println!(">>> CFG_DEFAULT_LINKER: {:?}", s);
         cargo.env("CFG_DEFAULT_LINKER", s);
     }
     if builder.config.rustc_parallel {
@@ -701,13 +722,16 @@ pub fn rustc_cargo_env(builder: &Builder<'_>, cargo: &mut Cargo, target: TargetS
         }
         let llvm_config = builder.ensure(native::Llvm { target });
         cargo.env("LLVM_CONFIG", &llvm_config);
+        println!(">>> LLVM_CONFIG: {:?}", &llvm_config);
         let target_config = builder.config.target_config.get(&target);
         if let Some(s) = target_config.and_then(|c| c.llvm_config.as_ref()) {
             cargo.env("CFG_LLVM_ROOT", s);
+            println!(">>> CFG_LLVM_ROOT: {:?}", s);
         }
         // Some LLVM linker flags (-L and -l) may be needed to link rustc_llvm.
         if let Some(ref s) = builder.config.llvm_ldflags {
             cargo.env("LLVM_LINKER_FLAGS", s);
+            println!(">>> LLVM_LINKER_FLAGS: {:?}", s);
         }
         // Building with a static libstdc++ is only supported on linux right now,
         // not for MSVC or macOS
@@ -717,16 +741,20 @@ pub fn rustc_cargo_env(builder: &Builder<'_>, cargo: &mut Cargo, target: TargetS
             && !target.contains("apple")
         {
             let file = compiler_file(builder, builder.cxx(target).unwrap(), target, "libstdc++.a");
+            println!(">>> LLVM_STATIC_STDCPP: {:?}", file);
             cargo.env("LLVM_STATIC_STDCPP", file);
         }
         if builder.config.llvm_link_shared {
             cargo.env("LLVM_LINK_SHARED", "1");
+            println!(">>> LLVM_LINK_SHARED: {:?}", "1");
         }
         if builder.config.llvm_use_libcxx {
             cargo.env("LLVM_USE_LIBCXX", "1");
+            println!(">>> LLVM_USE_LIBCXX: {:?}", "1");
         }
         if builder.config.llvm_optimize && !builder.config.llvm_release_debuginfo {
             cargo.env("LLVM_NDEBUG", "1");
+            println!(">>> LLVM_NDEBUG: {:?}", "1");
         }
     }
 }
@@ -1029,7 +1057,7 @@ impl Step for Assemble {
 
     fn should_run(run: ShouldRun<'_>) -> ShouldRun<'_> {
         // run.path("compiler/rustc")
-        // TODO: proman. run.path("compiler/latinoc")
+        // TODO: proman. run.path("compiler/rustc")
         run.path("compiler/latinoc")
     }
 
@@ -1190,6 +1218,7 @@ impl Step for Assemble {
 
         println!(">>>>>> compile.rs Assemble");
         println!(">>> rustc: {:?}", rustc);
+        println!(">>> compiler: {:?}", compiler);
         println!(">>> out_dir: {:?}", out_dir);
         println!(">>> sysroot: {:?}", sysroot);
         println!(">>> rustc_libdir: {:?}", rustc_libdir);
@@ -1212,6 +1241,13 @@ pub fn add_to_sysroot(
     sysroot_host_dst: &Path,
     stamp: &Path,
 ) {
+    // TODO: proman. compile.rs add_to_sysroot
+    println!(">>>>>> compile.rs add_to_sysroot");
+    // println!(">>> builder: {:?}", builder);
+    println!(">>> sysroot_dst: {:?}", sysroot_dst);
+    println!(">>> sysroot_host_dst: {:?}", sysroot_host_dst);
+    println!(">>> stamp: {:?}", stamp);
+
     let self_contained_dst = &sysroot_dst.join("self-contained");
     t!(fs::create_dir_all(&sysroot_dst));
     t!(fs::create_dir_all(&sysroot_host_dst));
@@ -1250,6 +1286,12 @@ pub fn run_cargo(
         .unwrap() // chop off `$target`
         .join(target_root_dir.file_name().unwrap());
 
+    // TODO: proman. compile.rs. run_cargo
+    println!(">>>>>> compile.rs. run_cargo");
+    println!(">>> target_root_dir: {:?}", target_root_dir);
+    println!(">>> target_deps_dir: {:?}", target_deps_dir);
+    println!(">>> host_root_dir: {:?}", host_root_dir);
+
     // Spawn Cargo slurping up its JSON output. We'll start building up the
     // `deps` array of all files it generated along with a `toplevel` array of
     // files we need to probe for later.
@@ -1265,6 +1307,8 @@ pub fn run_cargo(
             _ => return,
         };
         for filename in filenames {
+            // TODO: proman. compile.rs. filename
+            println!(">>> filename: {:?}", filename);
             // Skip files like executables
             if !(filename.ends_with(".rlib")
                 || filename.ends_with(".lib")
@@ -1291,6 +1335,7 @@ pub fn run_cargo(
             // If this was output in the `deps` dir then this is a precise file
             // name (hash included) so we start tracking it.
             if filename.starts_with(&target_deps_dir) {
+                println!(">>> filename with hash included: {:?}", filename);
                 deps.push((filename.to_path_buf(), DependencyType::Target));
                 continue;
             }

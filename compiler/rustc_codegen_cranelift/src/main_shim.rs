@@ -1,9 +1,9 @@
 use cranelift_codegen::binemit::{NullStackMapSink, NullTrapSink};
+use latinoc_span::symbol::Ident;
 use rustc_hir::LangItem;
 use rustc_middle::ty::subst::GenericArg;
 use rustc_middle::ty::AssocKind;
 use rustc_session::config::EntryFnType;
-use latinoc_span::symbol::Ident;
 
 use crate::prelude::*;
 
@@ -16,6 +16,7 @@ pub(crate) fn maybe_create_entry_wrapper(
     is_jit: bool,
     is_primary_cgu: bool,
 ) {
+    eprintln!("maybe_create_entry_wrapper");
     let (main_def_id, is_main_fn) = match tcx.entry_fn(()) {
         Some((def_id, entry_ty)) => (
             def_id,
@@ -63,7 +64,8 @@ pub(crate) fn maybe_create_entry_wrapper(
             call_conv: CallConv::triple_default(m.isa().triple()),
         };
 
-        let cmain_func_id = m.declare_function("main", Linkage::Export, &cmain_sig).unwrap();
+        // TODO: proman. Se cambia main pòr principal
+        let cmain_func_id = m.declare_function("principal", Linkage::Export, &cmain_sig).unwrap();
 
         let instance = Instance::mono(tcx, rust_main_def_id).polymorphize(tcx);
 

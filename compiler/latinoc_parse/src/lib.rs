@@ -17,11 +17,11 @@ use latinoc_ast::tokenstream::{Spacing, TokenStream};
 use latinoc_ast::AstLike;
 use latinoc_ast::Attribute;
 use latinoc_ast::{AttrItem, MetaItem};
+use latinoc_span::{FileName, SourceFile, Span};
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::{Applicability, Diagnostic, FatalError, Level, PResult};
 use rustc_session::parse::ParseSess;
-use latinoc_span::{FileName, SourceFile, Span};
 
 use std::path::Path;
 use std::str;
@@ -57,6 +57,7 @@ macro_rules! panictry_buffer {
 }
 
 pub fn parse_crate_from_file<'a>(input: &Path, sess: &'a ParseSess) -> PResult<'a, ast::Crate> {
+    // eprintln!("parse_crate_from_file");
     let mut parser = new_parser_from_file(sess, input, None);
     parser.parse_crate_mod()
 }
@@ -65,6 +66,7 @@ pub fn parse_crate_attrs_from_file<'a>(
     input: &Path,
     sess: &'a ParseSess,
 ) -> PResult<'a, Vec<ast::Attribute>> {
+    // eprintln!("parse_crate_attrs_from_file");
     let mut parser = new_parser_from_file(sess, input, None);
     parser.parse_inner_attributes()
 }
@@ -74,6 +76,7 @@ pub fn parse_crate_from_source_str(
     source: String,
     sess: &ParseSess,
 ) -> PResult<'_, ast::Crate> {
+    // eprintln!("parse_crate_from_source_str");
     new_parser_from_source_str(sess, name, source).parse_crate_mod()
 }
 
@@ -82,6 +85,7 @@ pub fn parse_crate_attrs_from_source_str(
     source: String,
     sess: &ParseSess,
 ) -> PResult<'_, Vec<ast::Attribute>> {
+    // eprintln!("parse_crate_attrs_from_source_str");
     new_parser_from_source_str(sess, name, source).parse_inner_attributes()
 }
 
@@ -91,21 +95,17 @@ pub fn parse_stream_from_source_str(
     sess: &ParseSess,
     override_span: Option<Span>,
 ) -> TokenStream {
-    let (stream, mut errors) = source_file_to_stream(
-        sess,
-        sess.source_map().new_source_file(name, source),
-        override_span,
-    );
+    // eprintln!("parse_stream_from_source_str");
+    let (stream, mut errors) =
+        source_file_to_stream(sess, sess.source_map().new_source_file(name, source), override_span);
     emit_unclosed_delims(&mut errors, &sess);
     stream
 }
 
 /// Creates a new parser from a source string.
 pub fn new_parser_from_source_str(sess: &ParseSess, name: FileName, source: String) -> Parser<'_> {
-    panictry_buffer!(
-        &sess.span_diagnostic,
-        maybe_new_parser_from_source_str(sess, name, source)
-    )
+    // eprintln!("new_parser_from_source_str");
+    panictry_buffer!(&sess.span_diagnostic, maybe_new_parser_from_source_str(sess, name, source))
 }
 
 /// Creates a new parser from a source string. Returns any buffered errors from lexing the initial
@@ -115,21 +115,21 @@ pub fn maybe_new_parser_from_source_str(
     name: FileName,
     source: String,
 ) -> Result<Parser<'_>, Vec<Diagnostic>> {
+    // eprintln!("maybe_new_parser_from_source_str");
     maybe_source_file_to_parser(sess, sess.source_map().new_source_file(name, source))
 }
 
 /// Creates a new parser, handling errors as appropriate if the file doesn't exist.
 /// If a span is given, that is used on an error as the source of the problem.
 pub fn new_parser_from_file<'a>(sess: &'a ParseSess, path: &Path, sp: Option<Span>) -> Parser<'a> {
+    // eprintln!("new_parser_from_file");
     source_file_to_parser(sess, file_to_source_file(sess, path, sp))
 }
 
 /// Given a `source_file` and config, returns a parser.
 fn source_file_to_parser(sess: &ParseSess, source_file: Lrc<SourceFile>) -> Parser<'_> {
-    panictry_buffer!(
-        &sess.span_diagnostic,
-        maybe_source_file_to_parser(sess, source_file)
-    )
+    // eprintln!("source_file_to_parser");
+    panictry_buffer!(&sess.span_diagnostic, maybe_source_file_to_parser(sess, source_file))
 }
 
 /// Given a `source_file` and config, return a parser. Returns any buffered errors from lexing the
@@ -138,6 +138,7 @@ fn maybe_source_file_to_parser(
     sess: &ParseSess,
     source_file: Lrc<SourceFile>,
 ) -> Result<Parser<'_>, Vec<Diagnostic>> {
+    // eprintln!("maybe_source_file_to_parser");
     let end_pos = source_file.end_pos;
     let (stream, unclosed_delims) = maybe_file_to_stream(sess, source_file, None)?;
     let mut parser = stream_to_parser(sess, stream, None);
@@ -159,6 +160,7 @@ fn try_file_to_source_file(
     path: &Path,
     spanopt: Option<Span>,
 ) -> Result<Lrc<SourceFile>, Diagnostic> {
+    // eprintln!("try_file_to_source_file");
     sess.source_map().load_file(path).map_err(|e| {
         let msg = format!("couldn't read {}: {}", path.display(), e);
         let mut diag = Diagnostic::new(Level::Fatal, &msg);
@@ -172,6 +174,7 @@ fn try_file_to_source_file(
 /// Given a session and a path and an optional span (for error reporting),
 /// adds the path to the session's `source_map` and returns the new `source_file`.
 fn file_to_source_file(sess: &ParseSess, path: &Path, spanopt: Option<Span>) -> Lrc<SourceFile> {
+    // eprintln!("file_to_source_file");
     match try_file_to_source_file(sess, path, spanopt) {
         Ok(source_file) => source_file,
         Err(d) => {
@@ -187,10 +190,8 @@ pub fn source_file_to_stream(
     source_file: Lrc<SourceFile>,
     override_span: Option<Span>,
 ) -> (TokenStream, Vec<lexer::UnmatchedBrace>) {
-    panictry_buffer!(
-        &sess.span_diagnostic,
-        maybe_file_to_stream(sess, source_file, override_span)
-    )
+    // eprintln!("source_file_to_stream");
+    panictry_buffer!(&sess.span_diagnostic, maybe_file_to_stream(sess, source_file, override_span))
 }
 
 /// Given a source file, produces a sequence of token trees. Returns any buffered errors from
@@ -200,11 +201,11 @@ pub fn maybe_file_to_stream(
     source_file: Lrc<SourceFile>,
     override_span: Option<Span>,
 ) -> Result<(TokenStream, Vec<lexer::UnmatchedBrace>), Vec<Diagnostic>> {
+    // eprintln!("maybe_file_to_stream");
     let src = source_file.src.as_ref().unwrap_or_else(|| {
         sess.span_diagnostic.bug(&format!(
             "cannot lex `source_file` without source: {}",
-            sess.source_map()
-                .filename_for_diagnostics(&source_file.name)
+            sess.source_map().filename_for_diagnostics(&source_file.name)
         ));
     });
 
@@ -233,6 +234,7 @@ pub fn stream_to_parser<'a>(
     stream: TokenStream,
     subparser_name: Option<&'static str>,
 ) -> Parser<'a> {
+    // eprintln!("stream_to_parser");
     Parser::new(sess, stream, false, subparser_name)
 }
 
@@ -243,6 +245,7 @@ pub fn parse_in<'a, T>(
     name: &'static str,
     mut f: impl FnMut(&mut Parser<'a>) -> PResult<'a, T>,
 ) -> PResult<'a, T> {
+    // eprintln!("parse_in");
     let mut parser = Parser::new(sess, tts, false, Some(name));
     let result = f(&mut parser)?;
     if parser.token != token::Eof {
@@ -272,6 +275,7 @@ pub fn nt_to_tokenstream(
     // came from. Here we attempt to extract these lossless token streams
     // before we fall back to the stringification.
 
+    // eprintln!("nt_to_tokenstream");
     let convert_tokens =
         |tokens: Option<&LazyTokenStream>| Some(tokens?.create_token_stream().to_tokenstream());
 
@@ -321,14 +325,12 @@ pub fn nt_to_tokenstream(
 }
 
 fn prepend_attrs(attrs: &[Attribute], tokens: Option<&LazyTokenStream>) -> Option<TokenStream> {
+    // eprintln!("prepend_attrs");
     let tokens = tokens?;
     if attrs.is_empty() {
         return Some(tokens.create_token_stream().to_tokenstream());
     }
-    let attr_data = AttributesData {
-        attrs: attrs.to_vec().into(),
-        tokens: tokens.clone(),
-    };
+    let attr_data = AttributesData { attrs: attrs.to_vec().into(), tokens: tokens.clone() };
     let wrapped = AttrAnnotatedTokenStream::new(vec![(
         AttrAnnotatedTokenTree::Attributes(attr_data),
         Spacing::Alone,
@@ -337,6 +339,7 @@ fn prepend_attrs(attrs: &[Attribute], tokens: Option<&LazyTokenStream>) -> Optio
 }
 
 pub fn fake_token_stream(sess: &ParseSess, nt: &Nonterminal) -> TokenStream {
+    // eprintln!("fake_token_stream");
     let source = pprust::nonterminal_to_string(nt);
     let filename = FileName::macro_expansion_source_code(&source);
     parse_stream_from_source_str(filename, source, sess, Some(nt.span()))
@@ -346,13 +349,12 @@ pub fn parse_cfg_attr(
     attr: &Attribute,
     parse_sess: &ParseSess,
 ) -> Option<(MetaItem, Vec<(AttrItem, Span)>)> {
+    // eprintln!("parse_cfg_attr");
     match attr.get_normal_item().args {
         ast::MacArgs::Delimited(dspan, delim, ref tts) if !tts.is_empty() => {
             let msg = "wrong `cfg_attr` delimiters";
             crate::validate_attr::check_meta_bad_delim(parse_sess, dspan, delim, msg);
-            match parse_in(parse_sess, tts.clone(), "`cfg_attr` input", |p| {
-                p.parse_cfg_attr()
-            }) {
+            match parse_in(parse_sess, tts.clone(), "`cfg_attr` input", |p| p.parse_cfg_attr()) {
                 Ok(r) => return Some(r),
                 Err(mut e) => {
                     e.help(&format!("the valid syntax is `{}`", CFG_ATTR_GRAMMAR_HELP))
@@ -372,6 +374,7 @@ const CFG_ATTR_NOTE_REF: &str = "for more information, visit \
     #the-cfg_attr-attribute>";
 
 fn error_malformed_cfg_attr_missing(span: Span, parse_sess: &ParseSess) {
+    // eprintln!("error_malformed_cfg_attr_missing");
     parse_sess
         .span_diagnostic
         .struct_span_err(span, "malformed `cfg_attr` attribute input")

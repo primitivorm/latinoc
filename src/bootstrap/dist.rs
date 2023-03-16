@@ -316,7 +316,9 @@ impl Step for Rustc {
     const ONLY_HOSTS: bool = true;
 
     fn should_run(run: ShouldRun<'_>) -> ShouldRun<'_> {
-        run.path("rustc")
+        // run.path("rustc")
+        // TODO: proman. run.path("rustc")
+        run.path("latinoc")
     }
 
     fn make_run(run: RunConfig<'_>) {
@@ -329,7 +331,9 @@ impl Step for Rustc {
         let compiler = self.compiler;
         let host = self.compiler.host;
 
-        let tarball = Tarball::new(builder, "rustc", &host.triple);
+        // let tarball = Tarball::new(builder, "rustc", &host.triple);
+        // TODO: proman. let tarball = Tarball::new(builder, "rustc", &host.triple);
+        let tarball = Tarball::new(builder, "latinoc", &host.triple);
 
         // Prepare the rustc "image", what will actually end up getting installed
         prepare_image(builder, compiler, tarball.image_dir());
@@ -352,8 +356,15 @@ impl Step for Rustc {
         return tarball.generate();
 
         fn prepare_image(builder: &Builder<'_>, compiler: Compiler, image: &Path) {
+            // TODO: proman. dist.rs prepare_image
+            println!(">>>>>> dist.rs prepare_image");
+
             let host = compiler.host;
             let src = builder.sysroot(compiler);
+
+            println!(">>> dist.rs prepare_image. image: {:?}", image);
+            println!(">>> dist.rs prepare_image. host: {:?}", host);
+            println!(">>> dist.rs prepare_image. src: {:?}", src);
 
             // Copy rustc/rustdoc binaries
             t!(fs::create_dir_all(image.join("bin")));
@@ -362,10 +373,12 @@ impl Step for Rustc {
             builder.install(&builder.rustdoc(compiler), &image.join("bin"), 0o755);
 
             let libdir_relative = builder.libdir_relative(compiler);
+            println!(">>> dist.rs prepare_image. libdir_relative: {:?}", libdir_relative);
 
             // Copy runtime DLLs needed by the compiler
             if libdir_relative.to_str() != Some("bin") {
                 let libdir = builder.rustc_libdir(compiler);
+                println!(">>> dist.rs prepare_image. libdir: {:?}", libdir);
                 for entry in builder.read_dir(&libdir) {
                     let name = entry.file_name();
                     if let Some(s) = name.to_str() {
@@ -2170,6 +2183,10 @@ impl Step for ReproducibleArtifacts {
             tarball.add_file(path, ".", 0o644);
             added_anything = true;
         }
-        if added_anything { Some(tarball.generate()) } else { None }
+        if added_anything {
+            Some(tarball.generate())
+        } else {
+            None
+        }
     }
 }

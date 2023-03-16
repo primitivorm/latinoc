@@ -529,7 +529,9 @@ impl Step for Rustc {
 
     fn should_run(run: ShouldRun<'_>) -> ShouldRun<'_> {
         let builder = run.builder;
-        run.krate("rustc-main").path("compiler").default_condition(builder.config.compiler_docs)
+        // run.krate("rustc-main").path("compiler").default_condition(builder.config.compiler_docs)
+        // TODO: proman. run.krate("rustc-main").path("compiler").default_condition(builder.config.compiler_docs)
+        run.krate("latinoc-main").path("compiler").default_condition(builder.config.compiler_docs)
     }
 
     fn make_run(run: RunConfig<'_>) {

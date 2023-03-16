@@ -23,6 +23,11 @@ use crate::type_error_struct;
 
 use crate::errors::{AddressOfTemporaryTaken, ReturnStmtOutsideOfFnBody, StructExprNonExhaustive};
 use latinoc_ast as ast;
+use latinoc_span::edition::LATEST_STABLE_EDITION;
+use latinoc_span::hygiene::DesugaringKind;
+use latinoc_span::lev_distance::find_best_match_for_name;
+use latinoc_span::source_map::Span;
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::stack::ensure_sufficient_stack;
 use rustc_errors::ErrorReported;
@@ -41,11 +46,6 @@ use rustc_middle::ty::relate::expected_found_bool;
 use rustc_middle::ty::subst::SubstsRef;
 use rustc_middle::ty::{self, AdtKind, Ty, TypeFoldable};
 use rustc_session::parse::feature_err;
-// use latinoc_span::edition::LATEST_STABLE_EDITION;
-use latinoc_span::hygiene::DesugaringKind;
-use latinoc_span::lev_distance::find_best_match_for_name;
-use latinoc_span::source_map::Span;
-use latinoc_span::symbol::{kw, sym, Ident, Symbol};
 use rustc_trait_selection::traits::{self, ObligationCauseCode};
 
 impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
@@ -1972,7 +1972,6 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
             _ => {}
         }
 
-        /*
         if field.name == kw::Await {
             // We know by construction that `<expr>.await` is either on Rust 2015
             // or results in `ExprKind::Await`. Suggest switching the edition to 2018.
@@ -1980,7 +1979,6 @@ impl<'a, 'tcx> FnCtxt<'a, 'tcx> {
             err.help(&format!("set `edition = \"{}\"` in `Cargo.toml`", LATEST_STABLE_EDITION));
             err.note("for more on editions, read https://doc.rust-lang.org/edition-guide");
         }
-        */
 
         err.emit();
     }

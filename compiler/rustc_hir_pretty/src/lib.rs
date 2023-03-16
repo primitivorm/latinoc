@@ -2,15 +2,15 @@
 
 use latinoc_ast as ast;
 use latinoc_ast::util::parser::{self, AssocOp, Fixity};
+use latinoc_span::source_map::{SourceMap, Spanned};
+use latinoc_span::symbol::{kw, Ident, IdentPrinter, Symbol};
+use latinoc_span::{self, BytePos, FileName};
 use rustc_ast_pretty::pp::Breaks::{Consistent, Inconsistent};
 use rustc_ast_pretty::pp::{self, Breaks};
 use rustc_ast_pretty::pprust::{Comments, PrintState};
 use rustc_hir as hir;
 use rustc_hir::{GenericArg, GenericParam, GenericParamKind, Node};
 use rustc_hir::{GenericBound, PatKind, RangeEnd, TraitBoundModifier};
-use latinoc_span::source_map::{SourceMap, Spanned};
-use latinoc_span::symbol::{kw, Ident, IdentPrinter, Symbol};
-use latinoc_span::{self, BytePos, FileName};
 use rustc_target::spec::abi::Abi;
 
 use std::borrow::Cow;

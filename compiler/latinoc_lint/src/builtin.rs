@@ -1987,12 +1987,11 @@ impl KeywordIdents {
     fn check_ident_token(
         &mut self,
         cx: &EarlyContext<'_>,
-        UnderMacro(_under_macro): UnderMacro,
+        UnderMacro(under_macro): UnderMacro,
         ident: Ident,
     ) {
-        /*
+        // eprintln!("builtin.rs check_ident_token");
         let next_edition = match cx.sess.edition() {
-
             Edition::Edition2015 => {
                 match ident.name {
                     kw::Async | kw::Await | kw::Try => Edition::Edition2018,
@@ -2018,14 +2017,12 @@ impl KeywordIdents {
             // There are no new keywords yet for the 2018 edition and beyond.
             _ => return,
         };
-        */
 
         // Don't lint `r#foo`.
         if cx.sess.parse_sess.raw_identifier_spans.borrow().contains(&ident.span) {
             return;
         }
 
-        /*
         cx.struct_span_lint(KEYWORD_IDENTS, ident.span, |lint| {
             lint.build(&format!("`{}` is a keyword in the {} edition", ident, next_edition))
                 .span_suggestion(
@@ -2036,7 +2033,6 @@ impl KeywordIdents {
                 )
                 .emit()
         });
-        */
     }
 }
 

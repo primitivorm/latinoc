@@ -131,9 +131,7 @@ pub fn setup_callbacks_and_run_in_thread_pool_with_globals<F: FnOnce() -> R + Se
     stderr: &Option<Arc<Mutex<Vec<u8>>>>,
     f: F,
 ) -> R {
-    // TODO: proman. setup_callbacks_and_run_in_thread_pool_with_globals
-    // let mut cfg = thread::Builder::new().name("rustc".to_string());
-    let mut cfg = thread::Builder::new().name("latinoc".to_string());
+    let mut cfg = thread::Builder::new().name("rustc".to_string());    
 
     if let Some(size) = get_stack_size() {
         cfg = cfg.stack_size(size);
@@ -183,10 +181,8 @@ pub fn setup_callbacks_and_run_in_thread_pool_with_globals<F: FnOnce() -> R + Se
 ) -> R {
     crate::callbacks::setup_callbacks();
 
-    // TODO: proman. setup_callbacks_and_run_in_thread_pool_with_globals
     let mut config = rayon::ThreadPoolBuilder::new()
-        // .thread_name(|_| "rustc".to_string())
-        .thread_name(|_| "latinoc".to_string())
+        .thread_name(|_| "rustc".to_string())        
         .acquire_thread_handler(jobserver::acquire_thread)
         .release_thread_handler(jobserver::release_thread)
         .num_threads(threads)
@@ -277,13 +273,12 @@ pub fn rustc_path<'a>() -> Option<&'a Path> {
 
     const BIN_PATH: &str = env!("RUSTC_INSTALL_BINDIR");
 
-    // TODO: proman. rustc_path
+    // TODO: proman
     println!(">>> BIN_PATH: {:?}", BIN_PATH);
     RUSTC_PATH.get_or_init(|| get_rustc_path_inner(BIN_PATH)).as_ref().map(|v| &**v)
 }
 
 fn get_rustc_path_inner(bin_path: &str) -> Option<PathBuf> {
-    // TODO: proman. get_rustc_path_inner.
     sysroot_candidates().iter().find_map(|sysroot| {
         let candidate = sysroot.join(bin_path).join(if cfg!(target_os = "windows") {
             // "rustc.exe"

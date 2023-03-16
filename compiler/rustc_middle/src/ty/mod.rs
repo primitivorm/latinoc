@@ -26,6 +26,8 @@ use crate::ty;
 use crate::ty::subst::{GenericArg, InternalSubsts, Subst, SubstsRef};
 use crate::ty::util::Discr;
 use latinoc_ast as ast;
+use latinoc_span::symbol::{kw, Ident, Symbol};
+use latinoc_span::{sym, Span};
 use rustc_attr as attr;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
 use rustc_data_structures::stable_hasher::{HashStable, StableHasher};
@@ -37,8 +39,6 @@ use rustc_hir::Node;
 use rustc_macros::HashStable;
 use rustc_query_system::ich::StableHashingContext;
 use rustc_session::cstore::CrateStoreDyn;
-use latinoc_span::symbol::{kw, Ident, Symbol};
-use latinoc_span::{sym, Span};
 use rustc_target::abi::Align;
 
 use std::cmp::Ordering;
@@ -150,7 +150,11 @@ pub struct MainDefinition {
 
 impl MainDefinition {
     pub fn opt_fn_def_id(self) -> Option<DefId> {
-        if let Res::Def(DefKind::Fn, def_id) = self.res { Some(def_id) } else { None }
+        if let Res::Def(DefKind::Fn, def_id) = self.res {
+            Some(def_id)
+        } else {
+            None
+        }
     }
 }
 
@@ -1174,7 +1178,11 @@ impl WithOptConstParam<LocalDefId> {
     }
 
     pub fn def_id_for_type_of(self) -> DefId {
-        if let Some(did) = self.const_param_did { did } else { self.did.to_def_id() }
+        if let Some(did) = self.const_param_did {
+            did
+        } else {
+            self.did.to_def_id()
+        }
     }
 }
 

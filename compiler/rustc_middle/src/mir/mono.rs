@@ -86,6 +86,7 @@ impl<'tcx> MonoItem<'tcx> {
     }
 
     pub fn instantiation_mode(&self, tcx: TyCtxt<'tcx>) -> InstantiationMode {
+        eprintln!("instantiation_mode");
         let generate_cgu_internal_copies = tcx
             .sess
             .opts

@@ -14,16 +14,18 @@ extern crate tracing;
 
 pub extern crate rustc_plugin_impl as plugin;
 
+use latinoc_ast as ast;
 use latinoc_interface::util::{self, collect_crate_types, get_codegen_backend};
 use latinoc_interface::{interface, Queries};
-use latinoc_ast as ast;
+use latinoc_lint::LintStore;
+use latinoc_span::source_map::{FileLoader, FileName};
+use latinoc_span::symbol::sym;
 use rustc_codegen_ssa::{traits::CodegenBackend, CodegenResults};
 use rustc_data_structures::profiling::{get_resident_set_size, print_time_passes_entry};
 use rustc_data_structures::sync::SeqCst;
 use rustc_errors::registry::{InvalidErrorCode, Registry};
 use rustc_errors::{ErrorReported, PResult};
 use rustc_feature::find_gated_cfg;
-use latinoc_lint::LintStore;
 use rustc_metadata::locator;
 use rustc_save_analysis as save;
 use rustc_save_analysis::DumpHandler;
@@ -35,8 +37,6 @@ use rustc_session::getopts;
 use rustc_session::lint::{Lint, LintId};
 use rustc_session::{config, DiagnosticOutput, Session};
 use rustc_session::{early_error, early_error_no_abort, early_warn};
-use latinoc_span::source_map::{FileLoader, FileName};
-use latinoc_span::symbol::sym;
 
 use std::borrow::Cow;
 use std::cmp::max;
@@ -289,6 +289,7 @@ fn run_compiler(
     };
 
     interface::run_compiler(config, |compiler| {
+        // eprintln!("interface::run_compiler");
         let sess = compiler.session();
         let should_stop = RustcDefaultCalls::print_crate_info(
             &***compiler.codegen_backend(),
@@ -1088,6 +1089,8 @@ pub fn handle_options(args: &[String]) -> Option<getopts::Matches> {
     }
 
     if matches.opt_present("version") {
+        // TODO: proman. latinoc_driver/lib.rs handle_options
+        // version("rustc", &matches);
         version("latinoc", &matches);
         return None;
     }
@@ -1362,6 +1365,8 @@ mod signal_handler {
 }
 
 pub fn main() -> ! {
+    // eprintln!("latinoc_driver. fn main()");
+
     let start_time = Instant::now();
     let start_rss = get_resident_set_size();
     init_rustc_env_logger();

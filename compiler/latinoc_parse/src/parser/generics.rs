@@ -4,8 +4,8 @@ use latinoc_ast::token;
 use latinoc_ast::{
     self as ast, Attribute, GenericBounds, GenericParam, GenericParamKind, WhereClause,
 };
-use rustc_errors::PResult;
 use latinoc_span::symbol::{kw, sym};
+use rustc_errors::PResult;
 
 impl<'a> Parser<'a> {
     /// Parses bounds of a lifetime parameter `BOUND + BOUND + BOUND`, possibly with trailing `+`.
@@ -36,11 +36,7 @@ impl<'a> Parser<'a> {
             Vec::new()
         };
 
-        let default = if self.eat(&token::Eq) {
-            Some(self.parse_ty()?)
-        } else {
-            None
-        };
+        let default = if self.eat(&token::Eq) { Some(self.parse_ty()?) } else { None };
 
         Ok(GenericParam {
             ident,
@@ -71,9 +67,7 @@ impl<'a> Parser<'a> {
             let start = self.prev_token.span;
             let const_arg = self.parse_const_arg()?;
             let span = start.to(const_arg.value.span);
-            self.sess
-                .gated_spans
-                .gate(sym::const_generics_defaults, span);
+            self.sess.gated_spans.gate(sym::const_generics_defaults, span);
             Some(const_arg)
         } else {
             None
@@ -84,11 +78,7 @@ impl<'a> Parser<'a> {
             id: ast::DUMMY_NODE_ID,
             attrs: preceding_attrs.into(),
             bounds: Vec::new(),
-            kind: GenericParamKind::Const {
-                ty,
-                kw_span: const_span,
-                default,
-            },
+            kind: GenericParamKind::Const { ty, kw_span: const_span, default },
             is_placeholder: false,
         })
     }
@@ -218,7 +208,7 @@ impl<'a> Parser<'a> {
     /// ```ignore (only-for-syntax-highlight)
     /// where T : Trait<U, V> + 'b, 'a : 'b
     /// ```
-    /*pub(super) fn parse_where_clause(&mut self) -> PResult<'a, WhereClause> {
+    pub(super) fn parse_where_clause(&mut self) -> PResult<'a, WhereClause> {
         let mut where_clause = WhereClause {
             has_where_token: false,
             predicates: Vec::new(),
@@ -251,19 +241,15 @@ impl<'a> Parser<'a> {
                 // Bounds starting with a colon are mandatory, but possibly empty.
                 self.expect(&token::Colon)?;
                 let bounds = self.parse_lt_param_bounds();
-                where_clause
-                    .predicates
-                    .push(ast::WherePredicate::RegionPredicate(
-                        ast::WhereRegionPredicate {
-                            span: lo.to(self.prev_token.span),
-                            lifetime,
-                            bounds,
-                        },
-                    ));
+                where_clause.predicates.push(ast::WherePredicate::RegionPredicate(
+                    ast::WhereRegionPredicate {
+                        span: lo.to(self.prev_token.span),
+                        lifetime,
+                        bounds,
+                    },
+                ));
             } else if self.check_type() {
-                where_clause
-                    .predicates
-                    .push(self.parse_ty_where_predicate()?);
+                where_clause.predicates.push(self.parse_ty_where_predicate()?);
             } else {
                 break;
             }
@@ -275,7 +261,7 @@ impl<'a> Parser<'a> {
 
         where_clause.span = lo.to(self.prev_token.span);
         Ok(where_clause)
-    }*/
+    }
 
     fn parse_ty_where_predicate(&mut self) -> PResult<'a, ast::WherePredicate> {
         let lo = self.token.span;
@@ -293,14 +279,12 @@ impl<'a> Parser<'a> {
         let ty = self.parse_ty_for_where_clause()?;
         if self.eat(&token::Colon) {
             let bounds = self.parse_generic_bounds(Some(self.prev_token.span))?;
-            Ok(ast::WherePredicate::BoundPredicate(
-                ast::WhereBoundPredicate {
-                    span: lo.to(self.prev_token.span),
-                    bound_generic_params: lifetime_defs,
-                    bounded_ty: ty,
-                    bounds,
-                },
-            ))
+            Ok(ast::WherePredicate::BoundPredicate(ast::WhereBoundPredicate {
+                span: lo.to(self.prev_token.span),
+                bound_generic_params: lifetime_defs,
+                bounded_ty: ty,
+                bounds,
+            }))
         // FIXME: Decide what should be used here, `=` or `==`.
         // FIXME: We are just dropping the binders in lifetime_defs on the floor here.
         } else if self.eat(&token::Eq) || self.eat(&token::EqEq) {

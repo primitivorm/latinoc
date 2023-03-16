@@ -1,4 +1,4 @@
-use crate::abi::{/*Abi,*/ FnAbi, /*FnAbiLlvmExt,*/ LlvmType, PassMode};
+use crate::abi::{Abi, FnAbi, FnAbiLlvmExt, LlvmType, PassMode};
 use crate::builder::Builder;
 use crate::context::CodegenCx;
 use crate::llvm;
@@ -8,22 +8,22 @@ use crate::va_arg::emit_va_arg;
 use crate::value::Value;
 
 use latinoc_ast as ast;
-use latinoc_span::{sym, /*symbol::kw,*/ Span, Symbol};
-use rustc_codegen_ssa::base::compare_simd_types;
+use latinoc_span::{sym, symbol::kw, Span, Symbol};
+use rustc_codegen_ssa::base::{compare_simd_types, wants_msvc_seh};
 use rustc_codegen_ssa::common::span_invalid_monomorphization_error;
 use rustc_codegen_ssa::common::{IntPredicate, TypeKind};
 use rustc_codegen_ssa::mir::operand::OperandRef;
 use rustc_codegen_ssa::mir::place::PlaceRef;
 use rustc_codegen_ssa::traits::*;
 use rustc_hir as hir;
-use rustc_middle::ty::layout::{/*FnAbiOf,*/ HasTyCtxt, LayoutOf};
+use rustc_middle::ty::layout::{FnAbiOf, HasTyCtxt, LayoutOf};
 use rustc_middle::ty::{self, Ty};
 use rustc_middle::{bug, span_bug};
 use rustc_target::abi::{self, Align, HasDataLayout, Primitive};
-use rustc_target::spec::HasTargetSpec;
+use rustc_target::spec::{HasTargetSpec, PanicStrategy};
 
 use std::cmp::Ordering;
-// use std::iter;
+use std::iter;
 
 fn get_simple_intrinsic(cx: &CodegenCx<'ll, '_>, name: Symbol) -> Option<(&'ll Type, &'ll Value)> {
     let llvm_name = match name {
@@ -116,7 +116,7 @@ impl IntrinsicCallMethods<'tcx> for Builder<'a, 'll, 'tcx> {
             }
             sym::unlikely => self
                 .call_intrinsic("llvm.expect.i1", &[args[0].immediate(), self.const_bool(false)]),
-            /*kw::Try => {
+            kw::Try => {
                 try_intrinsic(
                     self,
                     args[0].immediate(),
@@ -125,7 +125,7 @@ impl IntrinsicCallMethods<'tcx> for Builder<'a, 'll, 'tcx> {
                     llresult,
                 );
                 return;
-            }*/
+            }
             sym::breakpoint => self.call_intrinsic("llvm.debugtrap", &[]),
             sym::va_copy => {
                 self.call_intrinsic("llvm.va_copy", &[args[0].immediate(), args[1].immediate()])
@@ -409,7 +409,6 @@ impl IntrinsicCallMethods<'tcx> for Builder<'a, 'll, 'tcx> {
     }
 }
 
-/*
 fn try_intrinsic(
     bx: &mut Builder<'a, 'll, 'tcx>,
     try_func: &'ll Value,
@@ -432,9 +431,7 @@ fn try_intrinsic(
         codegen_gnu_try(bx, try_func, data, catch_func, dest);
     }
 }
-*/
 
-/*
 // MSVC's definition of the `rust_try` function.
 //
 // This implementation uses the new exception handling instructions in LLVM
@@ -582,9 +579,7 @@ fn codegen_msvc_try(
     let i32_align = bx.tcx().data_layout.i32_align.abi;
     bx.store(ret, dest, i32_align);
 }
-*/
 
-/*
 // Definition of the standard `try` function for Rust using the GNU-like model
 // of exceptions (e.g., the normal semantics of LLVM's `landingpad` and `invoke`
 // instructions).
@@ -648,9 +643,7 @@ fn codegen_gnu_try(
     let i32_align = bx.tcx().data_layout.i32_align.abi;
     bx.store(ret, dest, i32_align);
 }
-*/
 
-/*
 // Variant of codegen_gnu_try used for emscripten where Rust panics are
 // implemented using C++ exceptions. Here we use exceptions of a specific type
 // (`struct rust_panic`) to represent Rust panics.
@@ -738,9 +731,7 @@ fn codegen_emcc_try(
     let i32_align = bx.tcx().data_layout.i32_align.abi;
     bx.store(ret, dest, i32_align);
 }
-*/
 
-/*
 // Helper function to give a Block to a closure to codegen a shim function.
 // This is currently primarily used for the `try` intrinsic functions above.
 fn gen_fn<'ll, 'tcx>(
@@ -761,9 +752,7 @@ fn gen_fn<'ll, 'tcx>(
     codegen(bx);
     (llty, llfn)
 }
-*/
 
-/*
 // Helper function used to get a handle to the `__rust_try` function used to
 // catch exceptions.
 //
@@ -807,7 +796,6 @@ fn get_rust_try_fn<'ll, 'tcx>(
     cx.rust_try_fn.set(Some(rust_try));
     rust_try
 }
-*/
 
 fn generic_simd_intrinsic(
     bx: &mut Builder<'a, 'll, 'tcx>,

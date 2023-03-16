@@ -418,11 +418,9 @@ fn parse_options<'a>(
             try_set_option(p, args, sym::nostack, ast::InlineAsmOptions::NOSTACK);
         } else if p.eat_keyword(sym::att_syntax) {
             try_set_option(p, args, sym::att_syntax, ast::InlineAsmOptions::ATT_SYNTAX);
-        }
-        /*else if p.eat_keyword(kw::Raw) {
+        } else if p.eat_keyword(kw::Raw) {
             try_set_option(p, args, kw::Raw, ast::InlineAsmOptions::RAW);
-        } */
-        else {
+        } else {
             return p.unexpected();
         }
 

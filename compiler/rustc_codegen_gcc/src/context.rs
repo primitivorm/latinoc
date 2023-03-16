@@ -1,30 +1,22 @@
 use std::cell::{Cell, RefCell};
 
-use gccjit::{
-    Block,
-    Context,
-    CType,
-    Function,
-    FunctionType,
-    LValue,
-    RValue,
-    Struct,
-    Type,
-};
+use gccjit::{Block, CType, Context, Function, FunctionType, LValue, RValue, Struct, Type};
+use latinoc_span::{Span, Symbol};
 use rustc_codegen_ssa::base::wants_msvc_seh;
-use rustc_codegen_ssa::traits::{
-    BackendTypes,
-    MiscMethods,
-};
+use rustc_codegen_ssa::traits::{BackendTypes, MiscMethods};
 use rustc_data_structures::base_n;
 use rustc_data_structures::fx::{FxHashMap, FxHashSet};
-use rustc_middle::span_bug;
 use rustc_middle::mir::mono::CodegenUnit;
+use rustc_middle::span_bug;
+use rustc_middle::ty::layout::{
+    FnAbiError, FnAbiOfHelpers, FnAbiRequest, HasParamEnv, HasTyCtxt, LayoutError, LayoutOfHelpers,
+    TyAndLayout,
+};
 use rustc_middle::ty::{self, Instance, ParamEnv, PolyExistentialTraitRef, Ty, TyCtxt};
-use rustc_middle::ty::layout::{FnAbiError, FnAbiOfHelpers, FnAbiRequest, HasParamEnv, HasTyCtxt, LayoutError, TyAndLayout, LayoutOfHelpers};
 use rustc_session::Session;
-use latinoc_span::{Span, Symbol};
-use rustc_target::abi::{call::FnAbi, HasDataLayout, PointeeInfo, Size, TargetDataLayout, VariantIdx};
+use rustc_target::abi::{
+    call::FnAbi, HasDataLayout, PointeeInfo, Size, TargetDataLayout, VariantIdx,
+};
 use rustc_target::spec::{HasTargetSpec, Target, TlsModel};
 
 use crate::callee::get_fn;
@@ -89,7 +81,8 @@ pub struct CodegenCx<'gcc, 'tcx> {
     /// Cache function instances of monomorphic and polymorphic items
     pub function_instances: RefCell<FxHashMap<Instance<'tcx>, RValue<'gcc>>>,
     /// Cache generated vtables
-    pub vtables: RefCell<FxHashMap<(Ty<'tcx>, Option<ty::PolyExistentialTraitRef<'tcx>>), RValue<'gcc>>>,
+    pub vtables:
+        RefCell<FxHashMap<(Ty<'tcx>, Option<ty::PolyExistentialTraitRef<'tcx>>), RValue<'gcc>>>,
 
     /// Cache of emitted const globals (value -> global)
     pub const_globals: RefCell<FxHashMap<RValue<'gcc>, RValue<'gcc>>>,
@@ -117,7 +110,11 @@ pub struct CodegenCx<'gcc, 'tcx> {
 }
 
 impl<'gcc, 'tcx> CodegenCx<'gcc, 'tcx> {
-    pub fn new(context: &'gcc Context<'gcc>, codegen_unit: &'tcx CodegenUnit<'tcx>, tcx: TyCtxt<'tcx>) -> Self {
+    pub fn new(
+        context: &'gcc Context<'gcc>,
+        codegen_unit: &'tcx CodegenUnit<'tcx>,
+        tcx: TyCtxt<'tcx>,
+    ) -> Self {
         let check_overflow = tcx.sess.overflow_checks();
         // TODO(antoyo): fix this mess. libgccjit seems to return random type when using new_int_type().
         let isize_type = context.new_c_type(CType::LongLong);
@@ -151,14 +148,64 @@ impl<'gcc, 'tcx> CodegenCx<'gcc, 'tcx> {
 
         let mut functions = FxHashMap::default();
         let builtins = [
-            "__builtin_unreachable", "abort", "__builtin_expect", "__builtin_add_overflow", "__builtin_mul_overflow",
-            "__builtin_saddll_overflow", /*"__builtin_sadd_overflow",*/ "__builtin_smulll_overflow", /*"__builtin_smul_overflow",*/
-            "__builtin_ssubll_overflow", /*"__builtin_ssub_overflow",*/ "__builtin_sub_overflow", "__builtin_uaddll_overflow",
-            "__builtin_uadd_overflow", "__builtin_umulll_overflow", "__builtin_umul_overflow", "__builtin_usubll_overflow",
-            "__builtin_usub_overflow", "sqrtf", "sqrt", "__builtin_powif", "__builtin_powi", "sinf", "sin", "cosf", "cos",
-            "powf", "pow", "expf", "exp", "exp2f", "exp2", "logf", "log", "log10f", "log10", "log2f", "log2", "fmaf",
-            "fma", "fabsf", "fabs", "fminf", "fmin", "fmaxf", "fmax", "copysignf", "copysign", "floorf", "floor", "ceilf",
-            "ceil", "truncf", "trunc", "rintf", "rint", "nearbyintf", "nearbyint", "roundf", "round",
+            "__builtin_unreachable",
+            "abort",
+            "__builtin_expect",
+            "__builtin_add_overflow",
+            "__builtin_mul_overflow",
+            "__builtin_saddll_overflow",
+            /*"__builtin_sadd_overflow",*/
+            "__builtin_smulll_overflow", /*"__builtin_smul_overflow",*/
+            "__builtin_ssubll_overflow",
+            /*"__builtin_ssub_overflow",*/ "__builtin_sub_overflow",
+            "__builtin_uaddll_overflow",
+            "__builtin_uadd_overflow",
+            "__builtin_umulll_overflow",
+            "__builtin_umul_overflow",
+            "__builtin_usubll_overflow",
+            "__builtin_usub_overflow",
+            "sqrtf",
+            "sqrt",
+            "__builtin_powif",
+            "__builtin_powi",
+            "sinf",
+            "sin",
+            "cosf",
+            "cos",
+            "powf",
+            "pow",
+            "expf",
+            "exp",
+            "exp2f",
+            "exp2",
+            "logf",
+            "log",
+            "log10f",
+            "log10",
+            "log2f",
+            "log2",
+            "fmaf",
+            "fma",
+            "fabsf",
+            "fabs",
+            "fminf",
+            "fmin",
+            "fmaxf",
+            "fmax",
+            "copysignf",
+            "copysign",
+            "floorf",
+            "floor",
+            "ceilf",
+            "ceil",
+            "truncf",
+            "trunc",
+            "rintf",
+            "rint",
+            "nearbyintf",
+            "nearbyint",
+            "roundf",
+            "round",
             "__builtin_expect_with_probability",
         ];
 
@@ -222,8 +269,12 @@ impl<'gcc, 'tcx> CodegenCx<'gcc, 'tcx> {
 
     pub fn rvalue_as_function(&self, value: RValue<'gcc>) -> Function<'gcc> {
         let function: Function<'gcc> = unsafe { std::mem::transmute(value) };
-        debug_assert!(self.functions.borrow().values().find(|value| **value == function).is_some(),
-            "{:?} ({:?}) is not a function", value, value.get_type());
+        debug_assert!(
+            self.functions.borrow().values().find(|value| **value == function).is_some(),
+            "{:?} ({:?}) is not a function",
+            value,
+            value.get_type()
+        );
         function
     }
 
@@ -246,7 +297,9 @@ impl<'gcc, 'tcx> BackendTypes for CodegenCx<'gcc, 'tcx> {
 }
 
 impl<'gcc, 'tcx> MiscMethods<'tcx> for CodegenCx<'gcc, 'tcx> {
-    fn vtables(&self) -> &RefCell<FxHashMap<(Ty<'tcx>, Option<PolyExistentialTraitRef<'tcx>>), RValue<'gcc>>> {
+    fn vtables(
+        &self,
+    ) -> &RefCell<FxHashMap<(Ty<'tcx>, Option<PolyExistentialTraitRef<'tcx>>), RValue<'gcc>>> {
         &self.vtables
     }
 
@@ -302,7 +355,8 @@ impl<'gcc, 'tcx> MiscMethods<'tcx> for CodegenCx<'gcc, 'tcx> {
                     def_id,
                     tcx.intern_substs(&[]),
                 )
-                .unwrap().unwrap(),
+                .unwrap()
+                .unwrap(),
             ),
             _ => {
                 let _name = if wants_msvc_seh(self.sess()) {
@@ -350,10 +404,10 @@ impl<'gcc, 'tcx> MiscMethods<'tcx> for CodegenCx<'gcc, 'tcx> {
     }
 
     fn declare_c_main(&self, fn_type: Self::Type) -> Option<Self::Function> {
-        if self.get_declared_value("main").is_none() {
-            Some(self.declare_cfn("main", fn_type))
-        }
-        else {
+        // TODO: proman. Se cambia main pòr principal
+        if self.get_declared_value("principal").is_none() {
+            Some(self.declare_cfn("principal", fn_type))
+        } else {
             // If the symbol already exists, it is an error: for example, the user wrote
             // #[no_mangle] extern "C" fn main(..) {..}
             // instead of #[start]

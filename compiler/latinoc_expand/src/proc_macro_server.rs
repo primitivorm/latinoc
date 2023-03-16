@@ -4,19 +4,19 @@ use latinoc_ast as ast;
 use latinoc_ast::token::{self, Nonterminal, NtIdent};
 use latinoc_ast::tokenstream::{self, CanSynthesizeMissingTokens};
 use latinoc_ast::tokenstream::{DelimSpan, Spacing::*, TokenStream, TreeAndSpacing};
+use latinoc_parse::lexer::nfc_normalize;
+use latinoc_parse::{nt_to_tokenstream, parse_stream_from_source_str};
+use latinoc_span::def_id::CrateNum;
+use latinoc_span::hygiene::ExpnKind;
+use latinoc_span::symbol::{self, kw, sym, Symbol};
+use latinoc_span::{BytePos, FileName, MultiSpan, Pos, RealFileName, SourceFile, Span};
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::{Diagnostic, PResult};
 use rustc_lint_defs::builtin::PROC_MACRO_BACK_COMPAT;
 use rustc_lint_defs::BuiltinLintDiagnostics;
-use latinoc_parse::lexer::nfc_normalize;
-use latinoc_parse::{nt_to_tokenstream, parse_stream_from_source_str};
 use rustc_session::parse::ParseSess;
-use latinoc_span::def_id::CrateNum;
-use latinoc_span::hygiene::ExpnKind;
-use latinoc_span::symbol::{self, kw, sym, Symbol};
-use latinoc_span::{BytePos, FileName, MultiSpan, Pos, RealFileName, SourceFile, Span};
 
 use pm::bridge::{server, TokenTree};
 use pm::{Delimiter, Level, LineColumn, Spacing};
@@ -433,6 +433,7 @@ impl server::TokenStream for Rustc<'_, '_> {
         pprust::tts_to_string(stream)
     }
     fn expand_expr(&mut self, stream: &Self::TokenStream) -> Result<Self::TokenStream, ()> {
+        // eprintln!(">>> proc_macro_server. expand_expr");
         // Parse the expression from our tokenstream.
         let expr: PResult<'_, _> = try {
             let mut p = latinoc_parse::stream_to_parser(
@@ -566,7 +567,11 @@ impl server::Punct for Rustc<'_, '_> {
         punct.ch
     }
     fn spacing(&mut self, punct: Self::Punct) -> Spacing {
-        if punct.joint { Spacing::Joint } else { Spacing::Alone }
+        if punct.joint {
+            Spacing::Joint
+        } else {
+            Spacing::Alone
+        }
     }
     fn span(&mut self, punct: Self::Punct) -> Self::Span {
         punct.span

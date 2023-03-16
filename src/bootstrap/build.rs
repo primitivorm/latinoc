@@ -6,11 +6,11 @@ fn main() {
     println!("cargo:rustc-env=BUILD_TRIPLE={}", env::var("HOST").unwrap());
 
     // This may not be a canonicalized path.
-    // TODO: proman. To debug with vscode. let mut rustc = PathBuf::from(env::var_os("RUSTC").unwrap());
-    // let mut rustc = PathBuf::from(env::var_os("RUSTC").unwrap());
-    let mut rustc = PathBuf::from(
-        "C:\\Users\\ciber\\.rustup\\toolchains\\1.58.1-x86_64-pc-windows-msvc\\bin\\rustc.exe",
-    );
+    // TODO: proman. To debug bootstrap with vscode. let mut rustc = PathBuf::from(env::var_os("RUSTC").unwrap());
+    let mut rustc = PathBuf::from(env::var_os("RUSTC").unwrap());
+    // let mut rustc = PathBuf::from(
+    //     "C:\\Users\\ciber\\.rustup\\toolchains\\1.58.1-x86_64-pc-windows-msvc\\bin\\rustc.exe",
+    // );
     println!(">>> RUSTC: {}", rustc.to_str().unwrap());
 
     if rustc.is_relative() {

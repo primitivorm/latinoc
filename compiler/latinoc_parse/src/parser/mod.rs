@@ -25,16 +25,16 @@ use latinoc_ast::tokenstream::{TokenStream, TokenTree};
 use latinoc_ast::AttrId;
 use latinoc_ast::DUMMY_NODE_ID;
 use latinoc_ast::{self as ast, AnonConst, AstLike, AttrStyle, AttrVec, Const, CrateSugar, Extern};
-use latinoc_ast::{/*Async,*/ Expr, ExprKind, MacArgs, MacDelimiter, Mutability, StrLit, Unsafe,};
+use latinoc_ast::{Async, Expr, ExprKind, MacArgs, MacDelimiter, Mutability, StrLit, Unsafe};
 use latinoc_ast::{Visibility, VisibilityKind};
+use latinoc_span::source_map::{MultiSpan, Span, DUMMY_SP};
+use latinoc_span::symbol::{kw, sym, Ident, Symbol};
 use rustc_ast_pretty::pprust;
 use rustc_data_structures::fx::FxHashMap;
 use rustc_data_structures::sync::Lrc;
 use rustc_errors::PResult;
 use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder, FatalError};
 use rustc_session::parse::ParseSess;
-use latinoc_span::source_map::{MultiSpan, Span, DUMMY_SP};
-use latinoc_span::symbol::{kw, sym, Ident, Symbol};
 use tracing::debug;
 
 use std::ops::Range;
@@ -399,7 +399,7 @@ fn token_descr_opt(token: &Token) -> Option<&'static str> {
     Some(match token.kind {
         _ if token.is_special_ident() => "reserved identifier",
         _ if token.is_used_keyword() => "keyword",
-        //_ if token.is_unused_keyword() => "reserved keyword",
+        _ if token.is_unused_keyword() => "reserved keyword",
         token::DocComment(..) => "doc comment",
         _ => return None,
     })
@@ -598,7 +598,6 @@ impl<'a> Parser<'a> {
         }
     }
 
-    /*
     fn eat_keyword_noexpect(&mut self, kw: Symbol) -> bool {
         if self.token.is_keyword(kw) {
             self.bump();
@@ -607,7 +606,6 @@ impl<'a> Parser<'a> {
             false
         }
     }
-    */
 
     /// If the given word is not a keyword, signals an error.
     /// If the next token is not the given word, signals an error.
@@ -1082,18 +1080,14 @@ impl<'a> Parser<'a> {
     }
 
     /// Parses asyncness: `async` or nothing.
-    /*fn parse_asyncness(&mut self) -> Async {
+    fn parse_asyncness(&mut self) -> Async {
         if self.eat_keyword(kw::Async) {
             let span = self.prev_token.uninterpolated_span();
-            Async::Yes {
-                span,
-                closure_id: DUMMY_NODE_ID,
-                return_impl_trait_id: DUMMY_NODE_ID,
-            }
+            Async::Yes { span, closure_id: DUMMY_NODE_ID, return_impl_trait_id: DUMMY_NODE_ID }
         } else {
             Async::No
         }
-    }*/
+    }
 
     /// Parses unsafety: `unsafe` or nothing.
     fn parse_unsafety(&mut self) -> Unsafe {
@@ -1135,19 +1129,19 @@ impl<'a> Parser<'a> {
 
     /// Parses mutability (`mut` or nothing).
     fn parse_mutability(&mut self) -> Mutability {
-        /*if self.eat_keyword(kw::Mut) {
+        eprintln!("parser/mods.rs parse_mutability");
+        if self.eat_keyword(kw::Mut) {
             Mutability::Mut
-        } else {*/
-        Mutability::Not
-        /*}*/
+        } else {
+            Mutability::Not
+        }
     }
 
     /// Possibly parses mutability (`const` or `mut`).
     fn parse_const_or_mut(&mut self) -> Option<Mutability> {
-        /*if self.eat_keyword(kw::Mut) {
+        if self.eat_keyword(kw::Mut) {
             Some(Mutability::Mut)
-        } else*/
-        if self.eat_keyword(kw::Const) {
+        } else if self.eat_keyword(kw::Const) {
             Some(Mutability::Not)
         } else {
             None

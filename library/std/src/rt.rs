@@ -82,7 +82,9 @@ unsafe fn init(argc: isize, argv: *const *const u8) {
         // created. Note that this isn't necessary in general for new threads,
         // but we just do this to name the main thread and to give it correct
         // info about the stack bounds.
-        let thread = Thread::new(Some(rtunwrap!(Ok, CString::new("main"))));
+
+        // TODO: proman. Se cambia main pòr principal
+        let thread = Thread::new(Some(rtunwrap!(Ok, CString::new("principal"))));
         thread_info::set(main_guard, thread);
     }
 }

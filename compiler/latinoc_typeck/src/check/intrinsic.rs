@@ -7,7 +7,7 @@ use crate::errors::{
 };
 use crate::require_same_types;
 
-use latinoc_span::symbol::{/*kw,*/ sym, Symbol};
+use latinoc_span::symbol::{kw, sym, Symbol};
 use rustc_errors::{pluralize, struct_span_err};
 use rustc_hir as hir;
 use rustc_middle::traits::{ObligationCause, ObligationCauseCode};
@@ -15,7 +15,7 @@ use rustc_middle::ty::subst::Subst;
 use rustc_middle::ty::{self, TyCtxt};
 use rustc_target::spec::abi::Abi;
 
-// use std::iter;
+use std::iter;
 
 fn equate_intrinsic_type<'tcx>(
     tcx: TyCtxt<'tcx>,
@@ -339,7 +339,6 @@ pub fn check_intrinsic_type(tcx: TyCtxt<'_>, it: &hir::ForeignItem<'_>) {
                 )
             }
 
-            /*
             kw::Try => {
                 let mut_u8 = tcx.mk_mut_ptr(tcx.types.u8);
                 let try_fn_ty = ty::Binder::dummy(tcx.mk_fn_sig(
@@ -362,7 +361,7 @@ pub fn check_intrinsic_type(tcx: TyCtxt<'_>, it: &hir::ForeignItem<'_>) {
                     tcx.types.i32,
                 )
             }
-            */
+
             sym::va_start | sym::va_end => match mk_va_list_ty(hir::Mutability::Mut) {
                 Some((va_list_ref_ty, _)) => (0, vec![va_list_ref_ty], tcx.mk_unit()),
                 None => bug!("`va_list` language item needed for C-variadic intrinsics"),

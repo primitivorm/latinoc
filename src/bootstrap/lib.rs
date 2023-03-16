@@ -346,8 +346,14 @@ impl Build {
     ///
     /// By default all build output will be placed in the current directory.
     pub fn new(config: Config) -> Build {
+        // TODO: proman. bootstrap/lib.rs
+        println!(">>>>>> bootstrap/lib.rs Build new");
+
         let src = config.src.clone();
         let out = config.out.clone();
+
+        println!(">>> src: {:?}", config.src.clone());
+        println!(">>> out: {:?}", config.out.clone());
 
         let is_sudo = match env::var_os("SUDO_USER") {
             Some(sudo_user) => match env::var_os("USER") {
@@ -468,6 +474,12 @@ impl Build {
 
         build.verbose("learning about cargo");
         metadata::build(&mut build);
+
+        println!(">>> initial_target_dir: {:?}", &initial_target_dir);
+        println!(">>> initial_libdir: {:?}", build.initial_libdir);
+        println!(">>> initial_sysroot: {:?}", initial_sysroot);
+        println!(">>> initial_rustc: {:?}", build.initial_rustc);
+        println!(">>> initial_cargo: {:?}", build.initial_cargo);
 
         build
     }
@@ -699,7 +711,11 @@ impl Build {
     /// Component directory that Cargo will produce output into (e.g.
     /// release/debug)
     fn cargo_dir(&self) -> &'static str {
-        if self.config.rust_optimize { "release" } else { "debug" }
+        if self.config.rust_optimize {
+            "release"
+        } else {
+            "debug"
+        }
     }
 
     fn tools_dir(&self, compiler: Compiler) -> PathBuf {
@@ -847,6 +863,11 @@ impl Build {
 
     /// Returns the sysroot of the snapshot compiler.
     fn rustc_snapshot_sysroot(&self) -> &Path {
+        // TODO: proman. bootstrap/lib.rs rustc_snapshot_sysroot
+        println!(
+            ">>> rustc_snapshot_sysroot: {:?}",
+            self.initial_rustc.parent().unwrap().parent().unwrap()
+        );
         self.initial_rustc.parent().unwrap().parent().unwrap()
     }
 
@@ -1076,6 +1097,11 @@ impl Build {
 
     /// Returns the sysroot for the wasi target, if defined
     fn wasi_root(&self, target: TargetSelection) -> Option<&Path> {
+        // TODO: proman. bootstrap/lib.rs wasi_root
+        println!(
+            ">>> wasi_root: {:?}",
+            self.config.target_config.get(&target).and_then(|t| t.wasi_root.as_ref()).map(|p| &**p)
+        );
         self.config.target_config.get(&target).and_then(|t| t.wasi_root.as_ref()).map(|p| &**p)
     }
 
@@ -1308,6 +1334,8 @@ impl Build {
             let path = PathBuf::from(t!(str::from_utf8(&part[1..])));
             paths.push((path, dependency_type));
         }
+        println!(">>>>>> bootstrap/lib.rs. read_stamp_file");
+        println!(">>> read_stamp_file path: {:?}", paths);
         paths
     }
 

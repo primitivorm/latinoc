@@ -1,14 +1,14 @@
 use super::{ForceCollect, Parser, PathStyle, TrailingToken};
 use crate::{maybe_recover_from_interpolated_ty_qpath, maybe_whole};
-//use latinoc_ast::mut_visit::{noop_visit_pat, MutVisitor};
+use latinoc_ast::mut_visit::{noop_visit_pat, MutVisitor};
 use latinoc_ast::ptr::P;
 use latinoc_ast::token;
 use latinoc_ast::{self as ast, AttrVec, Attribute, MacCall, Pat, PatField, PatKind, RangeEnd};
 use latinoc_ast::{BindingMode, Expr, ExprKind, Mutability, Path, QSelf, RangeSyntax};
-use rustc_ast_pretty::pprust;
-use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder, PResult};
 use latinoc_span::source_map::{respan, Span, Spanned};
 use latinoc_span::symbol::{kw, sym, Ident};
+use rustc_ast_pretty::pprust;
+use rustc_errors::{struct_span_err, Applicability, DiagnosticBuilder, PResult};
 
 type Expected = Option<&'static str>;
 
@@ -67,8 +67,7 @@ impl<'a> Parser<'a> {
         rc: RecoverComma,
         ra: RecoverColon,
     ) -> PResult<'a, P<Pat>> {
-        self.parse_pat_allow_top_alt_inner(expected, rc, ra)
-            .map(|(pat, _)| pat)
+        self.parse_pat_allow_top_alt_inner(expected, rc, ra).map(|(pat, _)| pat)
     }
 
     /// Returns the pattern and a bool indicating whether we recovered from a trailing vert (true =
@@ -153,10 +152,7 @@ impl<'a> Parser<'a> {
                 // If there was a leading vert, treat this as an or-pattern. This improves
                 // diagnostics.
                 let span = leading_vert_span.to(self.prev_token.span);
-                return Ok((
-                    self.mk_pat(span, PatKind::Or(vec![first_pat])),
-                    trailing_vert,
-                ));
+                return Ok((self.mk_pat(span, PatKind::Or(vec![first_pat])), trailing_vert));
             }
 
             return Ok((first_pat, trailing_vert));
@@ -183,10 +179,7 @@ impl<'a> Parser<'a> {
         }
         let or_pattern_span = lo.to(self.prev_token.span);
 
-        Ok((
-            self.mk_pat(or_pattern_span, PatKind::Or(pats)),
-            trailing_vert,
-        ))
+        Ok((self.mk_pat(or_pattern_span, PatKind::Or(pats)), trailing_vert))
     }
 
     /// Parse a pattern and (maybe) a `Colon` in positions where a pattern may be followed by a
@@ -431,20 +424,18 @@ impl<'a> Parser<'a> {
         } else if self.eat_keyword(kw::Underscore) {
             // Parse _
             PatKind::Wild
-        } /*else if self.eat_keyword(kw::Mut) {
+        } else if self.eat_keyword(kw::Mut) {
             self.parse_pat_ident_mut()?
-        } */else if self.eat_keyword(kw::Ref) {
+        } else if self.eat_keyword(kw::Ref) {
             // Parse ref ident @ pat / ref mut ident @ pat
             let mutbl = self.parse_mutability();
             self.parse_pat_ident(BindingMode::ByRef(mutbl))?
-        }
-        /*else if self.eat_keyword(kw::Box) {
+        } else if self.eat_keyword(kw::Box) {
             // Parse `box pat`
             let pat = self.parse_pat_with_range_pat(false, None)?;
             self.sess.gated_spans.gate(sym::box_patterns, lo.to(self.prev_token.span));
             PatKind::Box(pat)
-        } */
-        else if self.check_inline_const(0) {
+        } else if self.check_inline_const(0) {
             // Parse `const pat`
             let const_expr = self.parse_const_block(lo.to(self.token.span), true)?;
 
@@ -567,12 +558,7 @@ impl<'a> Parser<'a> {
             self.struct_span_err(sp, "pattern on wrong side of `@`")
                 .span_label(lhs_span, "pattern on the left, should be on the right")
                 .span_label(rhs.span, "binding on the right, should be on the left")
-                .span_suggestion(
-                    sp,
-                    "switch the order",
-                    pprust::pat_to_string(&rhs),
-                    applicability,
-                )
+                .span_suggestion(sp, "switch the order", pprust::pat_to_string(&rhs), applicability)
                 .emit();
         } else {
             // The special case above doesn't apply so we may have e.g. `A(x) @ B(y)`.
@@ -593,27 +579,21 @@ impl<'a> Parser<'a> {
         match pat.kind {
             PatKind::Range(
                 ..,
-                Spanned {
-                    node: RangeEnd::Included(RangeSyntax::DotDotDot),
-                    ..
-                },
+                Spanned { node: RangeEnd::Included(RangeSyntax::DotDotDot), .. },
             ) => return,
             PatKind::Range(..) => {}
             _ => return,
         }
 
-        self.struct_span_err(
-            pat.span,
-            "the range pattern here has ambiguous interpretation",
-        )
-        .span_suggestion(
-            pat.span,
-            "add parentheses to clarify the precedence",
-            format!("({})", pprust::pat_to_string(&pat)),
-            // "ambiguous interpretation" implies that we have to be guessing
-            Applicability::MaybeIncorrect,
-        )
-        .emit();
+        self.struct_span_err(pat.span, "the range pattern here has ambiguous interpretation")
+            .span_suggestion(
+                pat.span,
+                "add parentheses to clarify the precedence",
+                format!("({})", pprust::pat_to_string(&pat)),
+                // "ambiguous interpretation" implies that we have to be guessing
+                Applicability::MaybeIncorrect,
+            )
+            .emit();
     }
 
     /// Parse `&pat` / `&mut pat`.
@@ -649,17 +629,14 @@ impl<'a> Parser<'a> {
 
         // Here, `(pat,)` is a tuple pattern.
         // For backward compatibility, `(..)` is a tuple pattern as well.
-        Ok(
-            if fields.len() == 1 && !(trailing_comma || fields[0].is_rest()) {
-                PatKind::Paren(fields.into_iter().next().unwrap())
-            } else {
-                PatKind::Tuple(fields)
-            },
-        )
+        Ok(if fields.len() == 1 && !(trailing_comma || fields[0].is_rest()) {
+            PatKind::Paren(fields.into_iter().next().unwrap())
+        } else {
+            PatKind::Tuple(fields)
+        })
     }
 
-    /// Parse a mutable binding with the `mut` token already eaten.
-    /*
+    /// Parse a mutable binding with the `mut` token already eaten.    
     fn parse_pat_ident_mut(&mut self) -> PResult<'a, PatKind> {
         let mut_span = self.prev_token.span;
 
@@ -692,11 +669,9 @@ impl<'a> Parser<'a> {
 
         Ok(pat.into_inner().kind)
     }
-    */
 
     /// Recover on `mut ref? ident @ pat` and suggest
-    /// that the order of `mut` and `ref` is incorrect.
-    /*
+    /// that the order of `mut` and `ref` is incorrect.    
     fn recover_mut_ref_ident(&mut self, lo: Span) -> PResult<'a, PatKind> {
         let mutref_span = lo.to(self.prev_token.span);
         self.struct_span_err(mutref_span, "the order of `mut` and `ref` is incorrect")
@@ -710,11 +685,9 @@ impl<'a> Parser<'a> {
 
         self.parse_pat_ident(BindingMode::ByRef(Mutability::Mut))
     }
-    */
 
     /// Turn all by-value immutable bindings in a pattern into mutable bindings.
     /// Returns `true` if any change was made.
-    /*
     fn make_all_value_bindings_mutable(pat: &mut P<Pat>) -> bool {
         struct AddMut(bool);
         impl MutVisitor for AddMut {
@@ -732,36 +705,26 @@ impl<'a> Parser<'a> {
         add_mut.visit_pat(pat);
         add_mut.0
     }
-    */
 
     /// Error on `mut $pat` where `$pat` is not an ident.
-    /*
     fn ban_mut_general_pat(&self, lo: Span, pat: &Pat, changed_any_binding: bool) {
         let span = lo.to(pat.span);
         let fix = pprust::pat_to_string(&pat);
         let (problem, suggestion) = if changed_any_binding {
-            (
-                "`mut` must be attached to each individual binding",
-                "add `mut` to each binding",
-            )
+            ("`mut` must be attached to each individual binding", "add `mut` to each binding")
         } else {
-            (
-                "`mut` must be followed by a named binding",
-                "remove the `mut` prefix",
-            )
+            ("`mut` must be followed by a named binding", "remove the `mut` prefix")
         };
         self.struct_span_err(span, problem)
             .span_suggestion(span, suggestion, fix, Applicability::MachineApplicable)
             .note("`mut` may be followed by `variable` and `variable @ pattern`")
             .emit();
     }
-    */
 
     /// Eat any extraneous `mut`s and error + recover if we ate any.
-    /*
     fn recover_additional_muts(&mut self) {
         let lo = self.token.span;
-        /*while self.eat_keyword(kw::Mut) {}*/
+        while self.eat_keyword(kw::Mut) {}
         if lo == self.token.span {
             return;
         }
@@ -776,17 +739,12 @@ impl<'a> Parser<'a> {
             )
             .emit();
     }
-    */
 
     /// Parse macro invocation
     fn parse_pat_mac_invoc(&mut self, path: Path) -> PResult<'a, PatKind> {
         self.bump();
         let args = self.parse_mac_args()?;
-        let mac = MacCall {
-            path,
-            args,
-            prior_type_ascription: self.last_type_ascription,
-        };
+        let mac = MacCall { path, args, prior_type_ascription: self.last_type_ascription };
         Ok(PatKind::MacCall(mac))
     }
 
@@ -798,11 +756,7 @@ impl<'a> Parser<'a> {
         err.cancel();
 
         let expected = expected.unwrap_or("pattern");
-        let msg = format!(
-            "expected {}, found {}",
-            expected,
-            super::token_descr(&self.token)
-        );
+        let msg = format!("expected {}, found {}", expected, super::token_descr(&self.token));
 
         let mut err = self.struct_span_err(self.token.span, &msg);
         err.span_label(self.token.span, format!("expected {}", expected));
@@ -885,20 +839,15 @@ impl<'a> Parser<'a> {
     }
 
     fn error_inclusive_range_with_no_end(&self, span: Span) {
-        struct_span_err!(
-            self.sess.span_diagnostic,
-            span,
-            E0586,
-            "inclusive range with no end"
-        )
-        .span_suggestion_short(
-            span,
-            "use `..` instead",
-            "..".to_string(),
-            Applicability::MachineApplicable,
-        )
-        .note("inclusive ranges must be bounded at the end (`..=b` or `a..=b`)")
-        .emit();
+        struct_span_err!(self.sess.span_diagnostic, span, E0586, "inclusive range with no end")
+            .span_suggestion_short(
+                span,
+                "use `..` instead",
+                "..".to_string(),
+                Applicability::MachineApplicable,
+            )
+            .note("inclusive ranges must be bounded at the end (`..=b` or `a..=b`)")
+            .emit();
     }
 
     /// Parse a range-to pattern, `..X` or `..=X` where `X` remains to be parsed.
@@ -907,10 +856,7 @@ impl<'a> Parser<'a> {
     /// expression syntax `...expr` for splatting in expressions.
     fn parse_pat_range_to(&mut self, mut re: Spanned<RangeEnd>) -> PResult<'a, PatKind> {
         let end = self.parse_pat_range_end()?;
-        self.sess.gated_spans.gate(
-            sym::half_open_range_patterns,
-            re.span.to(self.prev_token.span),
-        );
+        self.sess.gated_spans.gate(sym::half_open_range_patterns, re.span.to(self.prev_token.span));
         if let RangeEnd::Included(ref mut syn @ RangeSyntax::DotDotDot) = &mut re.node {
             *syn = RangeSyntax::DotDotEq;
             self.struct_span_err(re.span, "range-to patterns with `...` are not allowed")
@@ -995,10 +941,8 @@ impl<'a> Parser<'a> {
         // binding mode then we do not end up here, because the lookahead
         // will direct us over to `parse_enum_variant()`.
         if self.token == token::OpenDelim(token::Paren) {
-            return Err(self.struct_span_err(
-                self.prev_token.span,
-                "expected identifier, found enum pattern",
-            ));
+            return Err(self
+                .struct_span_err(self.prev_token.span, "expected identifier, found enum pattern"));
         }
 
         Ok(PatKind::Ident(binding_mode, ident, sub))
@@ -1008,9 +952,7 @@ impl<'a> Parser<'a> {
     fn parse_pat_struct(&mut self, qself: Option<QSelf>, path: Path) -> PResult<'a, PatKind> {
         if qself.is_some() {
             // Feature gate the use of qualified paths in patterns
-            self.sess
-                .gated_spans
-                .gate(sym::more_qualified_paths, path.span);
+            self.sess.gated_spans.gate(sym::more_qualified_paths, path.span);
         }
         self.bump();
         let (fields, etc) = self.parse_pat_fields().unwrap_or_else(|mut e| {
@@ -1029,9 +971,7 @@ impl<'a> Parser<'a> {
             p.parse_pat_allow_top_alt(None, RecoverComma::No, RecoverColon::No)
         })?;
         if qself.is_some() {
-            self.sess
-                .gated_spans
-                .gate(sym::more_qualified_paths, path.span);
+            self.sess.gated_spans.gate(sym::more_qualified_paths, path.span);
         }
         Ok(PatKind::TupleStruct(qself, path, fields))
     }
@@ -1085,10 +1025,7 @@ impl<'a> Parser<'a> {
                 let mut comma_sp = None;
                 if self.token == token::Comma {
                     // Issue #49257
-                    let nw_span = self
-                        .sess
-                        .source_map()
-                        .span_until_non_whitespace(self.token.span);
+                    let nw_span = self.sess.source_map().span_until_non_whitespace(self.token.span);
                     etc_sp = etc_sp.to(nw_span);
                     err.span_label(
                         etc_sp,
@@ -1157,10 +1094,7 @@ impl<'a> Parser<'a> {
                     "move the `..` to the end of the field list",
                     vec![
                         (etc_span, String::new()),
-                        (
-                            self.token.span,
-                            format!("{}.. }}", if ate_comma { "" } else { ", " }),
-                        ),
+                        (self.token.span, format!("{}.. }}", if ate_comma { "" } else { ", " })),
                     ],
                     Applicability::MachineApplicable,
                 );
@@ -1202,7 +1136,8 @@ impl<'a> Parser<'a> {
             //let is_box = self.eat_keyword(kw::Box);
             let boxed_span = self.token.span;
             let is_ref = self.eat_keyword(kw::Ref);
-            let is_mut = false; //self.eat_keyword(kw::Mut);
+            let is_mut = false;
+            self.eat_keyword(kw::Mut);
             let fieldname = self.parse_field_name()?;
             hi = self.prev_token.span;
 
@@ -1235,11 +1170,6 @@ impl<'a> Parser<'a> {
     }
 
     fn mk_pat(&self, span: Span, kind: PatKind) -> P<Pat> {
-        P(Pat {
-            kind,
-            span,
-            id: ast::DUMMY_NODE_ID,
-            tokens: None,
-        })
+        P(Pat { kind, span, id: ast::DUMMY_NODE_ID, tokens: None })
     }
 }

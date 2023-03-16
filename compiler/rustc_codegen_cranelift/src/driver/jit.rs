@@ -164,7 +164,9 @@ pub(crate) fn run_jit(tcx: TyCtxt<'_>, backend_config: BackendConfig) -> ! {
         returns: vec![AbiParam::new(jit_module.target_config().pointer_type() /*isize*/)],
         call_conv: jit_module.target_config().default_call_conv,
     };
-    let start_func_id = jit_module.declare_function("main", Linkage::Import, &start_sig).unwrap();
+    // TODO: proman. Se cambia main pòr principal
+    let start_func_id =
+        jit_module.declare_function("principal", Linkage::Import, &start_sig).unwrap();
     let finalized_start: *const u8 = jit_module.get_finalized_function(start_func_id);
 
     LAZY_JIT_STATE.with(|lazy_jit_state| {

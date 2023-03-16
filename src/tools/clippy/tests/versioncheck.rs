@@ -49,6 +49,8 @@ fn check_that_clippy_has_the_same_major_version_as_rustc() {
     // get the rustc version either from the rustc installed with the toolchain file or from
     // `RUSTC_REAL` if Clippy is build in the Rust repo with `./x.py`.
     let rustc = std::env::var("RUSTC_REAL").unwrap_or_else(|_| "rustc".to_string());
+    // TODO: proman. versioncheck.rs
+    println!(">>> versioncheck.rs rustc: {:?}", rustc);
     let rustc_version = String::from_utf8(
         std::process::Command::new(&rustc)
             .arg("--version")

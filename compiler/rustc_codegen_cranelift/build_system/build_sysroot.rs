@@ -44,6 +44,7 @@ pub(crate) fn build_sysroot(
     );
 
     // Build and copy cargo wrapper
+    // TODO: proman. cambiar por latinoc y colibri
     let mut build_cargo_wrapper_cmd = Command::new("rustc");
     build_cargo_wrapper_cmd
         .arg("scripts/cargo.rs")

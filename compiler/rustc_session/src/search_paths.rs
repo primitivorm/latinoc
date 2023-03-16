@@ -29,6 +29,8 @@ pub struct SearchPathFile {
 impl SearchPathFile {
     fn new(path: PathBuf) -> SearchPathFile {
         let file_name_str = path.file_name().and_then(|f| f.to_str()).map(|s| s.to_string());
+        // TODO: proman. search_path.rs. new
+        // eprintln!(">>> file_name_str: {:?}", file_name_str);
         SearchPathFile { path, file_name_str }
     }
 }
@@ -89,6 +91,11 @@ impl SearchPath {
                 .collect::<Vec<_>>(),
             Err(..) => vec![],
         };
+
+        // TODO: proman. search_path.rs. new
+        // eprintln!(">>> kind: {:?}", kind);
+        // eprintln!(">>> dir: {:?}", dir);
+        // eprintln!(">>> files: {:?}", files);
 
         SearchPath { kind, dir, files }
     }
